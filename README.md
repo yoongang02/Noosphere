@@ -1,7 +1,7 @@
 # NooSphere
 
 ### 커밋 메세지 규칙</br>
-Title: `[#이슈번호] Type: 내용`</br>
+Title: `Type: 내용`</br>
 Body: 세부 변경사항 설명</br>
 | Type | 내용 |
 | ------------ | ------------- |
