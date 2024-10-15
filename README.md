@@ -18,3 +18,16 @@ Body: 세부 변경사항 설명</br>
 | Remove | 파일을 삭제하는 작업만 수행한 경우 |
 | !BREAKING CHANGE | 커다란 API 변경의 경우 |
 | !HOTFIX | 급하게 치명적인 버그를 고쳐야 하는 경우 |
+
+***
+
+### 브랜치 규칙</br>
+
+`develop 에서 각자 브랜치를 파서 작업 후, merge 브랜치에 매주 합친뒤 다시 develop 브랜치에 push.`</br>
+`최종으로는 develop브랜치를 main에 합쳐서 배포.`
+
+1. **feature 브랜치 컨벤션**: 새로운 기능마다 브랜치를 생성할 때, 해당 기능을 식별할 수 있는 브랜치 네임을 사용. ex) "feature/새로운_기능"
+2. **main 브랜치 컨벤션** : 프로젝트가 최종으로 끝나면 main 브랜치에 그동안 작업했던 것들을 push.
+3. **merge 브랜치 컨벤션** : 매주 그동안 해왔던 feature 브랜치들을 합쳐서 넣을 예정. ex) “merge/prototype_1”, “merge/prototype_2"
+4. **develop 브랜치 컨벤션** : merge 브랜치에 문제가 없다면 develop에 계속 push.
+5. **fix 브랜치 컨벤션** : 고칠 기능이 있다면 “fix/고칠기능”과 같은 형태로 브랜치 생성.
