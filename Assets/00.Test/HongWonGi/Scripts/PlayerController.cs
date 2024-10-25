@@ -22,6 +22,7 @@ public class PlayerController : Singleton<PlayerController>
     private GameObject _currentNPC;
     public delegate void MoveDelegate(Vector3 direction);
     public event MoveDelegate OnMove;
+    public bool isPlayerMove = false;
     
     private void Start()
     {
