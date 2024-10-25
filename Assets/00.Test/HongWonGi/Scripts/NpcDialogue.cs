@@ -42,11 +42,11 @@ public class NpcDialogue : MonoBehaviour
         _isTyping = true; 
 
         string fullText = _dialogueSO.dialogueText[_currentDialogueIndex];
-        UIManager.Instance.dialogueUI.text = ""; 
+        UIManager2.Instance.dialogueUI.text = ""; 
         
         foreach (char letter in fullText)
         {
-            UIManager.Instance.dialogueUI.text += letter;
+            UIManager2.Instance.dialogueUI.text += letter;
             await UniTask.Delay(TimeSpan.FromSeconds(_typingSpeed)); 
         }
 
@@ -56,7 +56,7 @@ public class NpcDialogue : MonoBehaviour
     private void EndDialogue()
     {
         isOnDialogue = false;
-        UIManager.Instance.popUpUI.SetActive(false);
+        UIManager2.Instance.popUpUI.SetActive(false);
     }
 
     public void ResetDialogue()

@@ -53,8 +53,8 @@ public class PlayerController : Singleton<PlayerController>
     private void StartDialogue()
     {
         isDialogueOn = true;
-        UIManager.Instance.popUpUI.SetActive(false); 
-        UIManager.Instance.dialogueUI.gameObject.SetActive(true);
+        UIManager2.Instance.popUpUI.SetActive(false); 
+        UIManager2.Instance.dialogueUI.gameObject.SetActive(true);
         NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
         if (npcDialogue != null)
         {
@@ -69,7 +69,7 @@ public class PlayerController : Singleton<PlayerController>
             npcDialogue.AdvanceDialogue(); // NPC의 다음 대화 내용으로 이동
             if (!npcDialogue.isOnDialogue) // 대화가 끝났다면 대화 상태 종료
             {
-                UIManager.Instance.dialogueUI.gameObject.SetActive(false);
+                UIManager2.Instance.dialogueUI.gameObject.SetActive(false);
                 isDialogueOn = false;
             }
         }
@@ -77,7 +77,7 @@ public class PlayerController : Singleton<PlayerController>
     private void EndDialogue()
     {
         isDialogueOn = false;
-        UIManager.Instance.dialogueUI.gameObject.SetActive(false);
+        UIManager2.Instance.dialogueUI.gameObject.SetActive(false);
         NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
         if (npcDialogue != null)
         {
@@ -138,7 +138,7 @@ public class PlayerController : Singleton<PlayerController>
         {
             isPlayerNearNPC = true;  // 플레이어가 NPC 범위 안에 들어옴
             _currentNPC = other.gameObject; 
-            UIManager.Instance.popUpUI.SetActive(true);
+            UIManager2.Instance.popUpUI.SetActive(true);
         }
     }
 
@@ -148,7 +148,7 @@ public class PlayerController : Singleton<PlayerController>
         {
             isPlayerNearNPC = false;  // 플레이어가 NPC 범위에서 벗어남
             _currentNPC = null;
-            UIManager.Instance.popUpUI.SetActive(false);
+            UIManager2.Instance.popUpUI.SetActive(false);
         }
     }
 }
