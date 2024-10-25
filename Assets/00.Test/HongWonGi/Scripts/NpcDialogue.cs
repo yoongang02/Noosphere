@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 // npc 대화 관련
 // 최초 작성자: 홍원기
 // 수정자: 
@@ -10,26 +11,25 @@ public class NpcDialogue : MonoBehaviour
 {
     [SerializeField] private float _detectionRange;
     [SerializeField] private DialogueSO _dialogueSO;
-    private GameObject _player;
-    private int currentDialogueIndex = 0;
+    [SerializeField] private float _typingSpeed;
+    private int _currentDialogueIndex = 0;
+    private bool _isTyping = false; 
     public bool isOnDialogue = false;
-    private void Start()
-    {
-        _player = GameObject.FindGameObjectWithTag("Player");
-    }
     public void StartDialogue()
     {
         isOnDialogue = true;
-        currentDialogueIndex = 0;
-        DisplayDialogue();
+        _currentDialogueIndex = 0;
+        DisplayDialogue().Forget(); 
     }
 
     public void AdvanceDialogue()
     {
-        currentDialogueIndex++;
-        if (currentDialogueIndex < _dialogueSO.dialogueCount)
+        if (_isTyping) return; 
+
+        _currentDialogueIndex++;
+        if (_currentDialogueIndex < _dialogueSO.dialogueCount)
         {
-            DisplayDialogue();
+            DisplayDialogue().Forget();
         }
         else
         {
@@ -37,9 +37,20 @@ public class NpcDialogue : MonoBehaviour
         }
     }
 
-    private void DisplayDialogue()
+    private async UniTaskVoid DisplayDialogue()
     {
-        UIManager.Instance.dialogueUI.text = _dialogueSO.dialogueText[currentDialogueIndex];
+        _isTyping = true; 
+
+        string fullText = _dialogueSO.dialogueText[_currentDialogueIndex];
+        UIManager.Instance.dialogueUI.text = ""; 
+        
+        foreach (char letter in fullText)
+        {
+            UIManager.Instance.dialogueUI.text += letter;
+            await UniTask.Delay(TimeSpan.FromSeconds(_typingSpeed)); 
+        }
+
+        _isTyping = false; 
     }
 
     private void EndDialogue()
@@ -47,9 +58,10 @@ public class NpcDialogue : MonoBehaviour
         isOnDialogue = false;
         UIManager.Instance.popUpUI.SetActive(false);
     }
+
     public void ResetDialogue()
     {
-        currentDialogueIndex = 0;
+        _currentDialogueIndex = 0;
         isOnDialogue = false;
     }
 }
