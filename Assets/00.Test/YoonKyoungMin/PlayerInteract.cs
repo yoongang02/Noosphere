@@ -43,6 +43,7 @@ public class PlayerInteract : MonoBehaviour
             else
             {
                 //진입 불가능 NPC
+                Debug.Log("여기 실행??");
                 _uiManager._showPressBtnUI.GetComponent<TextMeshProUGUI>().text = "정신세계에 진입하기 올바른 대상이 아닙니다";
                 _uiManager._showPressBtnUI.SetActive(true);
             }
@@ -71,6 +72,7 @@ public class PlayerInteract : MonoBehaviour
             GetComponent<PlayerController>().isDialogueOn = false;
             _uiManager._bookPopUp.SetActive(false);
             isInteracting = false;
+            _uiManager.isPopUpOpen = false;
         }
     }
 

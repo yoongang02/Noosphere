@@ -34,7 +34,7 @@ public class PlayerController : Singleton<PlayerController>
     private void Update()
     {
         HandleInput();
-        if (isDialogueOn)
+        if (isDialogueOn && !FindObjectOfType<UIManager>().isPopUpOpen)
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
