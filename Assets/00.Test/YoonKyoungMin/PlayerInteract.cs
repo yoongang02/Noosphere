@@ -56,6 +56,7 @@ public class PlayerInteract : MonoBehaviour
             if (value >= 1f)
             {
                 _isComplete = true;
+                StartCoroutine(_uiManager.ActiveEndingMessage());
             }
         }
         else
@@ -145,7 +146,7 @@ public class PlayerInteract : MonoBehaviour
         _progressBarFill.InitFillAmount();
         _timer = 0f;
         _progressBar.SetActive(false);
-        _uiManager.transitionAnimator.Play("TS_4_Normal_Reveal", 0, 0);
+        if(!_isComplete) _uiManager.transitionAnimator.Play("TS_4_Normal_Reveal", 0, 0);
         _startEnter = false;
     }
 }
