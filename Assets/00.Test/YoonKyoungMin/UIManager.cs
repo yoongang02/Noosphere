@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     {
         Debug.Log("no 클릭");
         _bookInfo.SetActive(false);
+        FindObjectOfType<PlayerController>().isDialogueOn = false;
         FindObjectOfType<PlayerInteract>().isInteracting = false;
     }
 

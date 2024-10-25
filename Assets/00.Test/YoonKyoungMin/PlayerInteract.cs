@@ -24,6 +24,7 @@ public class PlayerInteract : MonoBehaviour
         //상호작용 가능한데, E 버튼 클릭하면
         if (_canInteract && Input.GetKeyUp(KeyCode.E))
         {
+            GetComponent<PlayerController>().isDialogueOn = true;
             //현재 상호작용 오브젝트 내의 public 함수 호출
             _uiManager._showPressBtnUI.SetActive(false);
             _uiManager._bookInfo.SetActive(true);
@@ -66,6 +67,7 @@ public class PlayerInteract : MonoBehaviour
         //팝업 열려있으면 ESC버튼을 통해 팝업 끌 수 있음.
         if (_uiManager.isPopUpOpen && Input.GetKeyUp(KeyCode.Escape))
         {
+            GetComponent<PlayerController>().isDialogueOn = false;
             _uiManager._bookPopUp.SetActive(false);
             isInteracting = false;
         }
@@ -106,13 +108,14 @@ public class PlayerInteract : MonoBehaviour
     {
         if(other.CompareTag("InvestigateObj"))
         {
+            _uiManager._showPressBtnUI.GetComponent<TextMeshProUGUI>().text = "E를 눌러 확인";
             _canInteract = true;
             _curInteractableObj = other.gameObject;
             //ui에 텍스트 띄우기
             _uiManager._showPressBtnUI.SetActive(true);
         }
 
-        if (other.CompareTag("NPC"))
+        if (other.CompareTag("ProgressNPC"))
         {
             _canEnter = true;
             _curEnterNPC = other.gameObject;
@@ -129,7 +132,7 @@ public class PlayerInteract : MonoBehaviour
             _uiManager._showPressBtnUI.SetActive(false);
         }
         
-        if (other.CompareTag("NPC"))
+        if (other.CompareTag("ProgressNPC"))
         {
             _canEnter = false;
             _curEnterNPC = null;
