@@ -51,11 +51,17 @@ public class PlayerInteract : MonoBehaviour
         if (_canEnter && !_isComplete && Input.GetKey(KeyCode.Space))
         {
             float value = _progressBarFill.FillAmount();
+            _uiManager.transitionAnimator.Play("TS_4_Normal_Reveal", 0, value);
             if (value >= 1f)
             {
                 _isComplete = true;
             }
         }
+        else
+        {
+            _uiManager.transitionAnimator.speed = 0;
+        }
+        
         
         //팝업 열려있으면 ESC버튼을 통해 팝업 끌 수 있음.
         if (_uiManager.isPopUpOpen && Input.GetKeyUp(KeyCode.Escape))
@@ -133,8 +139,10 @@ public class PlayerInteract : MonoBehaviour
 
     void InitProgressBar()
     {
+        _progressBarFill.InitFillAmount();
         _timer = 0f;
         _progressBar.SetActive(false);
+        _uiManager.transitionAnimator.Play("TS_4_Normal_Reveal", 0, 0);
         _startEnter = false;
     }
 }

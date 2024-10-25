@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     public GameObject _bookInfo;
     public GameObject _bookPopUp;
     public bool isPopUpOpen = false;
+    public Animator transitionAnimator;
 
     public void CancelInvestigate()
     {
