@@ -31,5 +31,6 @@ public class UIManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
         _endingMessage.SetActive(true);
+        FindObjectOfType<PlayerInteract>().isEnd = true;
     }
 }

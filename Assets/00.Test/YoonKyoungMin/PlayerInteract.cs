@@ -19,6 +19,8 @@ public class PlayerInteract : MonoBehaviour
     [SerializeField] private EnterProgressBar _progressBarFill;
     [SerializeField] private float _enterTime = 5.0f;
 
+    public bool isEnd = false;
+
     void Update()
     {
         //상호작용 가능한데, E 버튼 클릭하면
@@ -32,11 +34,12 @@ public class PlayerInteract : MonoBehaviour
         }
         
         //진입 가능하며, space 버튼 클릭하면
-        if (_canEnter && Input.GetKeyUp(KeyCode.Space))
+        if (_canEnter && Input.GetKeyDown(KeyCode.Space))
         {
             if (_curEnterNPC.GetComponent<NPCController>()._canEnterMentalWorld)
             {
                 //진입 가능 NPC
+                _uiManager._showPressBtnUI.SetActive(false);
                 _progressBar.SetActive(true);
                 _startEnter = true;
             }
@@ -73,6 +76,13 @@ public class PlayerInteract : MonoBehaviour
             _uiManager._bookPopUp.SetActive(false);
             isInteracting = false;
             _uiManager.isPopUpOpen = false;
+        }
+        
+        //게임이 완료되고, esc를 누르면 게임 종료
+        if (isEnd && Input.GetKeyUp(KeyCode.Escape))
+        {
+            Debug.Log("게임 종료");
+            Application.Quit();
         }
     }
 
@@ -120,6 +130,8 @@ public class PlayerInteract : MonoBehaviour
 
         if (other.CompareTag("ProgressNPC"))
         {
+            _uiManager._showPressBtnUI.GetComponent<TextMeshProUGUI>().text = "SPACE를 눌러 정신 세계 진입";
+            _uiManager._showPressBtnUI.SetActive(true);
             _canEnter = true;
             _curEnterNPC = other.gameObject;
         }
