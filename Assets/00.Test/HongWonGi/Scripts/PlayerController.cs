@@ -1,11 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-using System.Net.WebSockets;
-
 // 플레이어 이동관련 함수
-// ==> 추후 로직변경 필요
+//InputManager사용
 // 최초 작성자: 홍원기
 // 수정자: 
 // 최종 수정일: 2024-10-25
@@ -20,37 +17,32 @@ public class PlayerController : Singleton<PlayerController>
     public bool isDialogueOn=false; //대화시작
     private bool isPlayerNearNPC = false;//플레이어 NPC가까이있나? 
     private GameObject _currentNPC;
-    public delegate void MoveDelegate(Vector3 direction);
-    public event MoveDelegate OnMove;
-    public bool isPlayerMove = false;
-    
+    private InputManager _inputManager = new InputManager();
     private void Start()
     {
         _animator = GetComponent<Animator>();
         _defaultSpeed = _moveSpeed;
-        OnMove += Move;
+        _inputManager.moveAction += HandleInput;
+        _inputManager.exitBtnAction += EndDialogue;
+        _inputManager.selectBtnAction += OnEKey;
     }
     
     private void Update()
     {
-        HandleInput();
-        if (isDialogueOn && !FindObjectOfType<UIManager>().isPopUpOpen)
+        _inputManager.OnUpdate();
+    }
+    private void OnEKey()
+    {
+        if (_currentNPC == null) return;
+        if (isDialogueOn && !UIManager.Instance.isPopUpOpen)
         {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                ContinueDialogue();
-            }
-            else if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                EndDialogue();
-            }
+            ContinueDialogue();
         }
-        else if (!isDialogueOn && isPlayerNearNPC && Input.GetKeyDown(KeyCode.E))
+        else if (!isDialogueOn && isPlayerNearNPC)
         {
             StartDialogue();
         }
     }
-
     private void StartDialogue()
     {
         isDialogueOn = true;
@@ -64,11 +56,12 @@ public class PlayerController : Singleton<PlayerController>
     }
     private void ContinueDialogue()
     {
+        if (!isDialogueOn) return;
         NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
         if (npcDialogue != null)
         {
-            npcDialogue.AdvanceDialogue(); // NPC의 다음 대화 내용으로 이동
-            if (!npcDialogue.isOnDialogue) // 대화가 끝났다면 대화 상태 종료
+            npcDialogue.AdvanceDialogue();
+            if (!npcDialogue.isOnDialogue) 
             {
                 UIManager2.Instance.dialogueUI.gameObject.SetActive(false);
                 isDialogueOn = false;
@@ -77,12 +70,16 @@ public class PlayerController : Singleton<PlayerController>
     }
     private void EndDialogue()
     {
+        if (!isDialogueOn) return;
         isDialogueOn = false;
         UIManager2.Instance.dialogueUI.gameObject.SetActive(false);
-        NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
-        if (npcDialogue != null)
+        if (_currentNPC != null)
         {
-            npcDialogue.ResetDialogue();
+            NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
+            if (npcDialogue != null)
+            {
+                npcDialogue.ResetDialogue();
+            }
         }
     }
     public void HandleInput()
@@ -117,27 +114,21 @@ public class PlayerController : Singleton<PlayerController>
     
         if (_moveDirection != Vector3.zero)
         {
-            OnMove?.Invoke(_moveDirection);
+            Move(_moveDirection);
         }
     }
     
     private void Move(Vector3 direction)
     {
-        // 캐릭터가 이동하는 방식
         transform.rotation = Quaternion.LookRotation(direction);
         transform.Translate(Vector3.forward * Time.deltaTime * _moveSpeed);
-    }
-    
-    private void OnDisable()
-    {
-        OnMove -= Move;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("NPC"))
         {
-            isPlayerNearNPC = true;  // 플레이어가 NPC 범위 안에 들어옴
+            isPlayerNearNPC = true;
             _currentNPC = other.gameObject; 
             UIManager2.Instance.popUpUI.SetActive(true);
         }
@@ -147,7 +138,7 @@ public class PlayerController : Singleton<PlayerController>
     {
         if (other.CompareTag("NPC"))
         {
-            isPlayerNearNPC = false;  // 플레이어가 NPC 범위에서 벗어남
+            isPlayerNearNPC = false;
             _currentNPC = null;
             UIManager2.Instance.popUpUI.SetActive(false);
         }
