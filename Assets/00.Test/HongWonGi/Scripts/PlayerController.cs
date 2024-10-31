@@ -29,6 +29,7 @@ public class PlayerController : Singleton<PlayerController>
     
     private void Update()
     {
+        _animator.SetFloat("MoveSpeed",0);
         _inputManager.OnUpdate();
     }
     private void OnEKey()
@@ -111,11 +112,33 @@ public class PlayerController : Singleton<PlayerController>
         {
             _moveSpeed = _defaultSpeed; 
         }
-    
+        
         if (_moveDirection != Vector3.zero)
         {
             Move(_moveDirection);
         }
+        // _moveDirection = new Vector3(moveX, 0f, moveY).normalized;
+        //
+        // // 이동 중일 때와 멈췄을 때 애니메이션 속도 설정
+        // if (_moveDirection != Vector3.zero)
+        // {
+        //     _animator.SetFloat("MoveSpeed", _moveSpeed);
+        //     Move(_moveDirection); // 이동
+        // }
+        // else
+        // {
+        //     _animator.SetFloat("MoveSpeed", 0f); // 움직임이 없으면 애니메이션 속도를 0으로 설정
+        // }
+        //
+        // // 스프린트 기능 처리
+        // if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        // {
+        //     _moveSpeed = _defaultSpeed * _sprintMultiplier;
+        // }
+        // else
+        // {
+        //     _moveSpeed = _defaultSpeed;
+        // }
     }
     
     private void Move(Vector3 direction)
