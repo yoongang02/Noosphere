@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class InputManager : MonoBehaviour
+public class InputManager : Singleton<InputManager>
 {
     public Action moveAction = null;
     public Action selectBtnAction = null;

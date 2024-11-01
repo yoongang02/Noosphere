@@ -2,36 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 // 플레이어 이동관련 함수
-//InputManager사용
+//플레이어 이동방식 변경
 // 최초 작성자: 홍원기
-// 수정자: 
-// 최종 수정일: 2024-10-25
+// 수정자: 홍원기
+// 최종 수정일: 2024-11-01
 public class PlayerController : Singleton<PlayerController>
-{ 
+{
     [SerializeField] private float _moveSpeed;       
     [SerializeField] private float _sprintMultiplier = 2f; 
+    [SerializeField] private Camera _mainCamera;
     
     private Vector3 _moveDirection;
     private Animator _animator; 
     private float _defaultSpeed;
-    public bool isDialogueOn=false; //대화시작
+    public bool isDialogueOn = false; //대화시작
     private bool isPlayerNearNPC = false;//플레이어 NPC가까이있나? 
     private GameObject _currentNPC;
-    private InputManager _inputManager = new InputManager();
+
     private void Start()
     {
         _animator = GetComponent<Animator>();
         _defaultSpeed = _moveSpeed;
-        _inputManager.moveAction += HandleInput;
-        _inputManager.exitBtnAction += EndDialogue;
-        _inputManager.selectBtnAction += OnEKey;
+        InputManager.Instance.moveAction += HandleInput;
+        InputManager.Instance.exitBtnAction += EndDialogue;
+        InputManager.Instance.selectBtnAction += OnEKey;
+
+        if (_mainCamera == null)
+            _mainCamera = Camera.main;
     }
     
     private void Update()
     {
-        _animator.SetFloat("MoveSpeed",0);
-        _inputManager.OnUpdate();
+        _animator.SetFloat("MoveSpeed", 0);
+        InputManager.Instance.OnUpdate();
     }
+
     private void OnEKey()
     {
         if (_currentNPC == null) return;
@@ -44,6 +49,7 @@ public class PlayerController : Singleton<PlayerController>
             StartDialogue();
         }
     }
+
     private void StartDialogue()
     {
         isDialogueOn = true;
@@ -52,9 +58,10 @@ public class PlayerController : Singleton<PlayerController>
         NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
         if (npcDialogue != null)
         {
-            npcDialogue.StartDialogue(); // NPC의 대화 시작 메서드 호출
+            npcDialogue.StartDialogue();
         }
     }
+
     private void ContinueDialogue()
     {
         if (!isDialogueOn) return;
@@ -69,6 +76,7 @@ public class PlayerController : Singleton<PlayerController>
             }
         }
     }
+
     private void EndDialogue()
     {
         if (!isDialogueOn) return;
@@ -83,68 +91,71 @@ public class PlayerController : Singleton<PlayerController>
             }
         }
     }
+
     public void HandleInput()
     {
         if (isDialogueOn)
         {
-            _animator.SetFloat("MoveSpeed",0f);
+            _animator.SetFloat("MoveSpeed", 0f);
             return;
         }
 
         float moveX = 0f;
         float moveY = 0f;
-        float currentSpeed = _moveDirection.magnitude * _moveSpeed;
-        _animator.SetFloat("MoveSpeed",currentSpeed);
-    
+        
         // WASD 키 입력 처리
         if (Input.GetKey(KeyCode.W)) moveY = 1f;
         if (Input.GetKey(KeyCode.S)) moveY = -1f;
         if (Input.GetKey(KeyCode.A)) moveX = -1f;
         if (Input.GetKey(KeyCode.D)) moveX = 1f;
     
-        _moveDirection = new Vector3(moveX, 0f, moveY).normalized;
+        Vector3 inputDirection = new Vector3(moveX, 0f, moveY).normalized;
         
-        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        if (inputDirection != Vector3.zero)
         {
-            _moveSpeed = _defaultSpeed * _sprintMultiplier;
+            Vector3 cameraForward = _mainCamera.transform.forward;
+            cameraForward.y = 0;
+            cameraForward.Normalize();
+            
+            Vector3 cameraRight = _mainCamera.transform.right;
+            cameraRight.y = 0;
+            cameraRight.Normalize();
+            
+            _moveDirection = (cameraForward * inputDirection.z + cameraRight * inputDirection.x).normalized;
+            
+            // 이동 속도 설정
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            {
+                _moveSpeed = _defaultSpeed * _sprintMultiplier;
+            }
+            else
+            {
+                _moveSpeed = _defaultSpeed; 
+            }
+
+            Move(_moveDirection);
         }
         else
         {
-            _moveSpeed = _defaultSpeed; 
+            _moveDirection = Vector3.zero;
         }
-        
-        if (_moveDirection != Vector3.zero)
-        {
-            Move(_moveDirection);
-        }
-        // _moveDirection = new Vector3(moveX, 0f, moveY).normalized;
-        //
-        // // 이동 중일 때와 멈췄을 때 애니메이션 속도 설정
-        // if (_moveDirection != Vector3.zero)
-        // {
-        //     _animator.SetFloat("MoveSpeed", _moveSpeed);
-        //     Move(_moveDirection); // 이동
-        // }
-        // else
-        // {
-        //     _animator.SetFloat("MoveSpeed", 0f); // 움직임이 없으면 애니메이션 속도를 0으로 설정
-        // }
-        //
-        // // 스프린트 기능 처리
-        // if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-        // {
-        //     _moveSpeed = _defaultSpeed * _sprintMultiplier;
-        // }
-        // else
-        // {
-        //     _moveSpeed = _defaultSpeed;
-        // }
+
+        float currentSpeed = _moveDirection.magnitude * _moveSpeed;
+        _animator.SetFloat("MoveSpeed", currentSpeed);
     }
     
     private void Move(Vector3 direction)
     {
-        transform.rotation = Quaternion.LookRotation(direction);
-        transform.Translate(Vector3.forward * Time.deltaTime * _moveSpeed);
+        if (direction != Vector3.zero)
+        {
+            // 부드러운 회전 구현
+            transform.rotation = Quaternion.Lerp(transform.rotation, 
+                                              Quaternion.LookRotation(direction), 
+                                              Time.deltaTime * 10f);
+            
+            // 로컬 좌표계 기준으로 전방 이동
+            transform.Translate(Vector3.forward * Time.deltaTime * _moveSpeed, Space.Self);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
