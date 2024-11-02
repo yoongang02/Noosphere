@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 // 플레이어 이동관련 함수
 //플레이어 이동방식 변경
 // 최초 작성자: 홍원기
@@ -9,8 +10,9 @@ using UnityEngine;
 public class PlayerController : Singleton<PlayerController>
 {
     [SerializeField] private float _moveSpeed;       
-    [SerializeField] private float _sprintMultiplier = 2f; 
+    [SerializeField] private float _sprintMultiplier = 2f;
     [SerializeField] private Camera _mainCamera;
+    [SerializeField] private CinemachineVirtualCamera _dialogueCamera;
     
     private Vector3 _moveDirection;
     private Animator _animator; 
@@ -52,6 +54,23 @@ public class PlayerController : Singleton<PlayerController>
 
     private void StartDialogue()
     {
+        //Dialogue Camera On
+        var transposer = _dialogueCamera.GetCinemachineComponent<CinemachineTransposer>();
+        if (transposer != null)
+        {
+            //플레이어가 npc보다 오른쪽에 위치함
+            if (transform.position.x > _currentNPC.transform.position.x)
+            {
+                transposer.m_FollowOffset = new Vector3(-2,transposer.m_FollowOffset.y, transposer.m_FollowOffset.z);
+            }
+            else
+            {
+                transposer.m_FollowOffset = new Vector3(2,transposer.m_FollowOffset.y, transposer.m_FollowOffset.z);
+            }
+        }
+        _dialogueCamera.LookAt = _currentNPC.transform;
+        _dialogueCamera.Priority = 20;
+        
         isDialogueOn = true;
         UIManager2.Instance.popUpUI.SetActive(false); 
         UIManager2.Instance.dialogueUI.gameObject.SetActive(true);
@@ -79,6 +98,10 @@ public class PlayerController : Singleton<PlayerController>
 
     private void EndDialogue()
     {
+        //Dialogue Camera On
+        _dialogueCamera.LookAt = null;
+        _dialogueCamera.Priority = 0;
+        
         if (!isDialogueOn) return;
         isDialogueOn = false;
         UIManager2.Instance.dialogueUI.gameObject.SetActive(false);
