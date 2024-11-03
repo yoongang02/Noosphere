@@ -98,10 +98,6 @@ public class PlayerController : Singleton<PlayerController>
 
     private void EndDialogue()
     {
-        //Dialogue Camera On
-        _dialogueCamera.LookAt = null;
-        _dialogueCamera.Priority = 0;
-        
         if (!isDialogueOn) return;
         isDialogueOn = false;
         UIManager2.Instance.dialogueUI.gameObject.SetActive(false);
@@ -115,7 +111,12 @@ public class PlayerController : Singleton<PlayerController>
         }
     }
 
-    public void HandleInput()
+    public void ResetCamera()
+    {
+        _dialogueCamera.LookAt = null;
+        _dialogueCamera.Priority = 0;
+    }
+    private void HandleInput()
     {
         if (isDialogueOn)
         {
