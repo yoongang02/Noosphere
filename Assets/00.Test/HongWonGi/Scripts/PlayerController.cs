@@ -115,7 +115,12 @@ public class PlayerController : Singleton<PlayerController>
         }
     }
 
-    public void HandleInput()
+    public void ResetCamera()
+    {
+        _dialogueCamera.LookAt = null;
+        _dialogueCamera.Priority = 0;
+    }
+    private void HandleInput()
     {
         if (isDialogueOn)
         {

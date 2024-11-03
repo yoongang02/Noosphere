@@ -57,11 +57,13 @@ public class NpcDialogue : MonoBehaviour
     {
         isOnDialogue = false;
         UIManager2.Instance.popUpUI.SetActive(false);
+        PlayerController.Instance.ResetCamera();
     }
 
     public void ResetDialogue()
     {
         _currentDialogueIndex = 0;
         isOnDialogue = false;
+        PlayerController.Instance.ResetCamera();
     }
 }
