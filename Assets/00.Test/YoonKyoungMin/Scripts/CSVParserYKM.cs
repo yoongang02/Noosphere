@@ -42,8 +42,10 @@ public class CSVParserYKM : MonoBehaviour
         //헤더 값 저장하기
         string[] headers = datas[5].Split(',');
         //7번째 줄부터 읽어오기(1~5번째 줄은 설명, 6번째 줄은 헤더)
-        for (int i = 6; i < datas.Length;)
+        for (int i = 6; i < datas.Length; i++)
         {
+            //빈 줄이라면 다음 줄로 넘어가기
+            if(string.IsNullOrWhiteSpace(datas[i])) continue;
             //쉼표를 기준으로 분리하기
             string[] values = datas[i].Split(',');
             //첫번째 값은 키 값으로 사용
