@@ -4,24 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-class EventStructure
-{
-    public string event_id;
-    public string description;
-    public string repeat_Type;
-    public string condition_Type;
-    public string condition1;
-    public string conditon2;
-    public string condition3;
-    public string result_id_1;
-    public string result_id_2;
-    public string result_id_3;
-    public string evidence_id;
-    public string lock_condition_id;
-    public string location_id;
-    public string next_Event_id;
-}
-public class CSVParserYKM : MonoBehaviour
+public class CSVParserYKM
 {
     public Dictionary<string, T> Parse<T>(string _CSVFileName) where T : new()
     {
@@ -60,7 +43,8 @@ public class CSVParserYKM : MonoBehaviour
 
                 if (field != null)
                 {
-                    field.SetValue(entry,values[j]);
+                    //해당 필드 타입으로 값을 변환해서 저장하기
+                    field.SetValue(entry,Convert.ChangeType(values[j],field.FieldType));
                 }
             }
             
@@ -68,13 +52,5 @@ public class CSVParserYKM : MonoBehaviour
             dictionary[key] = entry;
         }
         return dictionary;
-    }
-
-    void Start()
-    {
-        foreach (var line in Parse<EventStructure>("Noosphere Data Table - Event"))
-        {
-            Debug.Log(line.Key);
-        }
     }
 }
