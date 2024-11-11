@@ -46,6 +46,9 @@ public class CSVParserYKM
             }
     
             T entry = new T();
+            
+            List<string> conditionsList = new List<string>(); 
+            List<string> resultIDsList = new List<string>();
     
             for (int j = 1; j < headers.Length && j < values.Length; j++)
             {
@@ -56,9 +59,8 @@ public class CSVParserYKM
                     continue;
                 }
                 string value = values[j].Trim().Replace("\"", "");
-    
                 FieldInfo field = typeof(T).GetField(header, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-    
+
                 if (field != null)
                 {
                     try
@@ -74,10 +76,29 @@ public class CSVParserYKM
                 }
                 else
                 {
-                    // 빈 헤더는 건너뛰고 경고 로그를 출력하지 않음
+                    if (header.StartsWith("condition_id")) 
+                    {
+                        conditionsList.Add(value);
+                    }
+                    else if (header.StartsWith("result_id")) 
+                    {
+                        resultIDsList.Add(value);
+                    }
                 }
             }
-    
+            FieldInfo conditionsField = typeof(T).GetField("conditions", BindingFlags.Public | BindingFlags.Instance);
+            FieldInfo resultsField = typeof(T).GetField("resultIDs", BindingFlags.Public | BindingFlags.Instance);
+            
+            if (conditionsField != null && conditionsField.FieldType == typeof(string[]))
+            {
+                conditionsField.SetValue(entry, conditionsList.ToArray());
+            }
+            
+            if (resultsField != null && resultsField.FieldType == typeof(string[]))
+            {
+                resultsField.SetValue(entry, resultIDsList.ToArray());
+            }
+            
             dictionary[key] = entry;
         }
     
