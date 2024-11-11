@@ -1,56 +1,147 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.Networking;
+using Cysharp.Threading.Tasks;
 
 public class CSVParserYKM
 {
-    public Dictionary<string, T> Parse<T>(string _CSVFileName) where T : new()
+    public async UniTask<Dictionary<string, T>> Parse<T>(string sheetName) where T : new()
     {
-        //딕셔너리 생성하기
+        // 딕셔너리 생성
         Dictionary<string, T> dictionary = new Dictionary<string, T>();
+        string csvUrl = $"https://docs.google.com/spreadsheets/d/1_FGkVesLGBKbpmC8z1mUbG4eAKJRUxRIqBI6XJeGda8/gviz/tq?tqx=out:csv&sheet={sheetName}";
         
-        //CSV 데이터 가져오기
-        TextAsset csvData = Resources.Load<TextAsset>(_CSVFileName);
-
-        if (csvData == null)
+        // CSV 데이터 가져오기
+        string csvData = await LoadCSVFromURL(csvUrl);
+        if (string.IsNullOrWhiteSpace(csvData))
         {
-            Debug.Log(_CSVFileName + " 이름의 csv file을 찾을 수 없음.");
+            Debug.Log("CSV 데이터를 로드할 수 없습니다.");
             return dictionary;
         }
         
-        //엔터를 기준으로 줄 나누기
-        string[] datas = csvData.text.Split('\n');
-        //헤더 값 저장하기
-        string[] headers = datas[5].Split(',');
-        //7번째 줄부터 읽어오기(1~5번째 줄은 설명, 6번째 줄은 헤더)
-        for (int i = 6; i < datas.Length; i++)
+        string[] lines = csvData.Split("\n");
+        int headerLineIndex = 5;
+        string[] headers = SplitCsvLine(lines[5]);
+    
+        // 데이터 줄 순회
+        for (int i = headerLineIndex + 1; i < lines.Length; i++)
         {
-            //빈 줄이라면 다음 줄로 넘어가기
-            if(string.IsNullOrWhiteSpace(datas[i])) continue;
-            //쉼표를 기준으로 분리하기
-            string[] values = datas[i].Split(',');
-            //첫번째 값은 키 값으로 사용
-            string key = values[0];
-            //제너릭 객체 생성
+            string line = lines[i].Trim();
+            if (string.IsNullOrWhiteSpace(line)) continue;
+    
+            string[] values = SplitCsvLine(line);
+            if (values.Length == 0)
+            {
+                Debug.LogWarning($"빈 데이터 줄: {line}");
+                continue;
+            }
+    
+            string key = values[0].Trim().Replace("\"", "");
+            if (string.IsNullOrEmpty(key))
+            {
+                Debug.LogWarning($"키가 없는 데이터 줄: {line}");
+                continue;
+            }
+    
             T entry = new T();
-            
-            //나머지 값들을 T class 내의 필드들에 저장하기
+    
             for (int j = 1; j < headers.Length && j < values.Length; j++)
             {
-                FieldInfo field = typeof(T).GetField(headers[j], BindingFlags.Public);
-
+                string header = headers[j].Trim().Replace("\"", "");
+                if(string.IsNullOrEmpty(header))
+                {
+                    // 빈 헤더는 건너뜀
+                    continue;
+                }
+                string value = values[j].Trim().Replace("\"", "");
+    
+                FieldInfo field = typeof(T).GetField(header, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+    
                 if (field != null)
                 {
-                    //해당 필드 타입으로 값을 변환해서 저장하기
-                    field.SetValue(entry,Convert.ChangeType(values[j],field.FieldType));
+                    try
+                    {
+                        // 해당 필드 타입으로 값을 변환해서 저장하기
+                        object convertedValue = Convert.ChangeType(value, field.FieldType);
+                        field.SetValue(entry, convertedValue);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"필드 변환 오류 - 필드: {header}, 값: {value}, 오류: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    // 빈 헤더는 건너뛰고 경고 로그를 출력하지 않음
                 }
             }
-            
-            //딕셔너리에 추가하기
+    
             dictionary[key] = entry;
         }
+    
         return dictionary;
+    }
+   
+    
+    private async UniTask<string> LoadCSVFromURL(string url)
+    {
+        using (UnityWebRequest www = UnityWebRequest.Get(url))
+        {
+            try
+            {
+                await www.SendWebRequest();
+
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.LogError($"CSV 다운로드 실패: {www.error}");
+                    return string.Empty;
+                }
+
+                string csvText = www.downloadHandler.text;
+                return csvText;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"CSV 다운로드 중 오류: {e.Message}");
+                return string.Empty;
+            }
+        }
+    }
+
+    // CSV 라인을 쉼표로 정확히 분리하는 메서드 (따옴표 처리 포함)
+    private string[] SplitCsvLine(string line)
+    {
+        List<string> values = new List<string>();
+        bool inQuotes = false;
+        string current = "";
+
+        foreach (char c in line)
+        {
+            if (c == '\"')
+            {
+                inQuotes = !inQuotes;
+                continue;
+            }
+
+            if (c == ',' && !inQuotes)
+            {
+                values.Add(current);
+                current = "";
+            }
+            else
+            {
+                current += c;
+            }
+        }
+        values.Add(current);
+        
+        int lastNonEmpty = values.Count - 1;
+        while (lastNonEmpty >= 0 && string.IsNullOrEmpty(values[lastNonEmpty]))
+        {
+            lastNonEmpty--;
+        }
+        return values.GetRange(0, lastNonEmpty + 1).ToArray();
     }
 }

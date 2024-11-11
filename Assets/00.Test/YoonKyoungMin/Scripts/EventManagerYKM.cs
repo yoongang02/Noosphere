@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 class EventStructure
 {
@@ -49,19 +51,18 @@ class EventStructure
 
 public class EventManagerYKM : MonoBehaviour
 {
-    [SerializeField] private string _csvFileName;
     private Dictionary<string, EventStructure> _events = new Dictionary<string, EventStructure>();
 
     void Start()
     {
-        LoadEvents(_csvFileName);
+        LoadEvents("Event").Forget();
     }
 
     //이벤트 로드
-    void LoadEvents(string fileName)
+    async UniTask LoadEvents(string fileName)
     {
         CSVParserYKM parser = new CSVParserYKM();
-        _events = parser.Parse<EventStructure>(fileName);
+        _events = await parser.Parse<EventStructure>(fileName);
     }
 
     //이벤트 실행
@@ -74,7 +75,7 @@ public class EventManagerYKM : MonoBehaviour
         }
 
         EventStructure eventStructure = _events[eventID];
-
+        Debug.Log(eventStructure.description);
         //실행 조건 만족하는지 체크
         if (eventStructure.CheckCondition())
         {
@@ -101,5 +102,4 @@ public class EventManagerYKM : MonoBehaviour
     {
         Debug.Log(effectID + " 효과 시작");
     }
-
 }
