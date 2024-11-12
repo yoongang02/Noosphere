@@ -25,7 +25,7 @@ public class EventManagerYKM : MonoBehaviour
     
     public Dictionary<string, EventStructure> _events = new Dictionary<string, EventStructure>();
     public Dictionary<string, LockConditionStructure> _lockConditions = new Dictionary<string, LockConditionStructure>();
-
+    public Dictionary<string, EvidenceStructure> _evidences = new Dictionary<string, EvidenceStructure>();
     void Awake()
     {
         if (_instance != null && _instance != this)
@@ -47,8 +47,10 @@ public class EventManagerYKM : MonoBehaviour
     {
         _events = await LoadData<EventStructure>("Event");
         _lockConditions = await LoadData<LockConditionStructure>("Lock_condition");
+        _evidences = await LoadData<EvidenceStructure>("Evidence");
         Debug.Log("Event 데이터 로드 완료");
         Debug.Log("Lock_Condition 데이터 로드 완료");
+        Debug.Log("Evidence 데이터 로드 완료");
     }
 
     public async UniTask<Dictionary<string, T>> LoadData<T>(string fileName) where T : new()
