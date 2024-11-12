@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -10,6 +11,7 @@ public class UIManager : Singleton<UIManager>
     public bool isPopUpOpen = false;
     public Animator transitionAnimator;
     public GameObject _endingMessage;
+    public TextMeshProUGUI dialogueUI;
 
     public void CancelInvestigate()
     {
