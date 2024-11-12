@@ -5,88 +5,56 @@ using UnityEditor;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
-class EventStructure
-{
-    //csv 필드
-    public string event_id;
-    public string description;
-    public bool repeat_Type; //반복 여부 true,false
-    public string condition_Type; //조건 타입 or,and
-    public string[] conditions;
-    public string[] resultIDs;
-    public string evidence_id;
-    public string lock_condition_id; //이벤트 실행 시 락되는 조건
-    public string location_id;
-    public string next_Event_id;
-    
-    //이벤트 실행 횟수
-    public int executionCnt;
-    
-    //조건 체크
-    public bool CheckCondition()
-    {
-        //반복 불가능인데 실행 횟수가 0 초과라면 실행 불가능
-        if (!repeat_Type && executionCnt > 0) return false;
-        //조건 타입 and 인데, 조건을 만족하지 못했다면
-        foreach (var condition in conditions)
-        {
-            if (condition_Type == "and" && !IsConditionMet(condition))
-            {
-                return false;
-            }
-        }
-        
-        return true;
-    }
-    
-    //조건 충족하는지
-    private bool IsConditionMet(string conditionID)
-    {
-        //Condition Manager
-        return true;
-        return false;
-    }
-}
-
 public class EventManagerYKM : MonoBehaviour
 {
-    private Dictionary<string, EventStructure> _events = new Dictionary<string, EventStructure>();
+    private static EventManagerYKM _instance;
 
+    public static EventManagerYKM Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                GameObject singletonObject = new GameObject("EventManagerYKM");
+                _instance = singletonObject.AddComponent<EventManagerYKM>();
+                DontDestroyOnLoad(singletonObject);
+            }
+            return _instance;
+        }
+    }
+    
+    public Dictionary<string, EventStructure> _events = new Dictionary<string, EventStructure>();
+    public Dictionary<string, LockConditionStructure> _lockConditions = new Dictionary<string, LockConditionStructure>();
+
+    void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+    
     void Start()
     {
-        LoadEvents("Event").Forget();
+        InitializeData().Forget();
     }
 
-    //이벤트 로드
-    async UniTask LoadEvents(string fileName)
+    private async UniTaskVoid InitializeData()
+    {
+        _events = await LoadData<EventStructure>("Event");
+        _lockConditions = await LoadData<LockConditionStructure>("Lock_condition");
+        Debug.Log("Event 데이터 로드 완료");
+        Debug.Log("Lock_Condition 데이터 로드 완료");
+    }
+
+    public async UniTask<Dictionary<string, T>> LoadData<T>(string fileName) where T : new()
     {
         CSVParserYKM parser = new CSVParserYKM();
-        _events = await parser.Parse<EventStructure>(fileName);
-        
-        
-        foreach (var _event in _events)
-        {
-            Debug.Log(_event.Key);
-            Debug.Log(_event.Value.description);
-            Debug.Log(_event.Value.repeat_Type);
-            Debug.Log(_event.Value.condition_Type);
-            for(int i=0; i<_event.Value.conditions.Length; i++)
-            {
-                Debug.Log(_event.Value.conditions[i]);
-            }
-
-            for (int i = 0; i < _event.Value.resultIDs.Length; i++)
-            {
-                Debug.Log(_event.Value.resultIDs[i]);
-            }
-
-            Debug.Log(_event.Value.evidence_id);
-            Debug.Log(_event.Value.lock_condition_id);
-            Debug.Log(_event.Value.location_id);
-            Debug.Log(_event.Value.next_Event_id);
-            Debug.Log("---------------------------------------------");
-        }
-        
+        return await parser.Parse<T>(fileName);
     }
 
     //이벤트 실행
@@ -99,10 +67,16 @@ public class EventManagerYKM : MonoBehaviour
         }
 
         EventStructure eventStructure = _events[eventID];
-        Debug.Log(eventStructure.description);
+
         //실행 조건 만족하는지 체크
         if (eventStructure.CheckCondition())
         {
+            //락 조건이 있다면, 락 걸기
+            if (_lockConditions.ContainsKey(eventStructure.lock_condition_id))
+            {
+                _lockConditions[eventStructure.lock_condition_id].Lock();
+            }
+            //결과 실행하기
             foreach (var resultID in eventStructure.resultIDs)
             {
                 string resultType = resultID.Substring(0, resultID.IndexOf('_'));
