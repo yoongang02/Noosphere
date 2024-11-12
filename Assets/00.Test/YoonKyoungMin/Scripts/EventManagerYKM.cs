@@ -23,9 +23,14 @@ public class EventManagerYKM : MonoBehaviour
         }
     }
     
+    //csv 파일 데이터들
     public Dictionary<string, EventStructure> _events = new Dictionary<string, EventStructure>();
     public Dictionary<string, LockConditionStructure> _lockConditions = new Dictionary<string, LockConditionStructure>();
     public Dictionary<string, EvidenceStructure> _evidences = new Dictionary<string, EvidenceStructure>();
+    
+    
+    //추가 변수
+    public string nextEventID = "";
     void Awake()
     {
         if (_instance != null && _instance != this)
@@ -65,6 +70,12 @@ public class EventManagerYKM : MonoBehaviour
         if (!_events.ContainsKey(eventID))
         {
             Debug.Log(eventID + " 이벤트가 존재하지 않음.");
+            return;
+        }
+
+        if (eventID != nextEventID)
+        {
+            Debug.Log("현재 실행되어야 하는 이벤트는 " + nextEventID + "입니다.");
             return;
         }
 
