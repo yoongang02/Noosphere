@@ -1,16 +1,44 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
+public class InventorySlot
+{
+    public string evidence_id;
+    public string evidence_name;
+    public string can_Use;
+    //public string evidence_Text_Display;
+    public string artresource_id;
+
+    public InventorySlot(EvidenceStructure evidence)
+    {
+        evidence_id = evidence.evidence_id;
+        evidence_name = evidence.evidence_name;
+        can_Use = evidence.can_Use;
+        artresource_id = evidence.artresource_id;
+    }
+}
 public class ChapterInventory
 {
     public List<InventorySlot> realWorldEvidences { get; set; } = new List<InventorySlot>();
     public List<InventorySlot> mentalWorldEvidences { get; set; } = new List<InventorySlot>();
 }
-public class InventoryManager : MonoBehaviour
+public class InventoryManager : Singleton<InventoryManager>
 {
     //key : 챕터 숫자
     Dictionary<int, ChapterInventory> chapterInventories = new Dictionary<int, ChapterInventory>();
+    
+    //인벤토리 창 오픈 여부
+    private bool isInventoryOpen = false;
+    
+    //인벤토리 UI
+    [SerializeField] private GameObject _inventoryWindow;
+    [SerializeField] private GameObject _realWorldInventory;
+    [SerializeField] private GameObject _mentalWorldInventory;
+    [SerializeField] private GameObject _inventorySlotPrefab;
+    private int _currentViewChapter = 0;
 
     void Start()
     {
@@ -18,18 +46,119 @@ public class InventoryManager : MonoBehaviour
         InitInventory();
     }
 
+    void Update()
+    {
+        //인벤토리 열기 or 닫기
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            isInventoryOpen = !isInventoryOpen;
+            ControlWindow();
+        }
+        
+        //인벤토리 닫기
+        if (isInventoryOpen && Input.GetKeyDown(KeyCode.Escape))
+        {
+            isInventoryOpen = !isInventoryOpen;
+            ControlWindow();
+        }
+    }
+
     void InitInventory()
     {
-        
+        isInventoryOpen = false;
+        _currentViewChapter = 0;
+        chapterInventories.Clear();
     }
 
-    void AddEvidence(EvidenceStructure evidence)
+    public void AddEvidence(EvidenceStructure evidence)
     {
+        //현재 어디 챕터인지 정보 가져오기
+        int chapterNum = (int)EventManagerYKM.Instance.curStageInfo;
+        ChapterInventory _chapterInventory = chapterInventories[chapterNum];
+        
+        //인벤토리 슬롯 생성
+        InventorySlot newSlot = new InventorySlot(evidence);
+        
         //현실 증거인지 정신세계 증거인지 csv에서 구분 필요
+        if (evidence.evidence_Type == 'M')
+        {
+            //정신세계 증거
+            _chapterInventory.mentalWorldEvidences.Add(newSlot);
+            
+        }
+        else if (evidence.evidence_Type == 'R')
+        {
+            //현실세계 증거
+            _chapterInventory.realWorldEvidences.Add(newSlot);
+        }
+        UpdateInventoryUI();
     }
 
+    //현재 보이는 인벤토리 UI 업데이트
     void UpdateInventoryUI()
     {
+        foreach (Transform child in _realWorldInventory.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (Transform child in _mentalWorldInventory.transform)
+        {
+            Destroy(child.gameObject);
+        }
         
+        ChapterInventory currentInventory = chapterInventories[_currentViewChapter];
+
+        // 현실 세계 증거물 추가
+        foreach (var evidence in currentInventory.realWorldEvidences)
+        {
+            GameObject slot = Instantiate(_inventorySlotPrefab, _realWorldInventory.transform);
+            UpdateSlotUI(slot, evidence);
+        }
+
+        // 정신 세계 증거물 추가
+        foreach (var evidence in currentInventory.mentalWorldEvidences)
+        {
+            GameObject slot = Instantiate(_inventorySlotPrefab, _mentalWorldInventory.transform);
+            UpdateSlotUI(slot, evidence);
+        }
+    }
+    
+    //slot UI 업데이트 함수
+    void UpdateSlotUI(GameObject slot, InventorySlot evidence)
+    {
+        TextMeshPro nameText = slot.transform.Find("EvidenceName").GetComponent<TextMeshPro>();
+        nameText.text = evidence.evidence_name;
+        
+        Image iconImage = slot.transform.Find("EvidenceImg").GetComponent<Image>();
+        //아트 리소스 불러오기
+    }
+
+    
+    //인벤토리 내에 해당 증거물이 존재하는지 확인
+    public bool IsAcquiredEvidence(string evidence_id)
+    {
+        foreach (var chapter in chapterInventories)
+        {
+            foreach (var slot in chapter.Value.realWorldEvidences)
+            {
+                if (slot.evidence_id == evidence_id)
+                {
+                    return true;
+                }
+            }
+            foreach (var slot in chapter.Value.mentalWorldEvidences)
+            {
+                if (slot.evidence_id == evidence_id)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    void ControlWindow()
+    {
+        _inventoryWindow.SetActive(isInventoryOpen);
     }
 }
