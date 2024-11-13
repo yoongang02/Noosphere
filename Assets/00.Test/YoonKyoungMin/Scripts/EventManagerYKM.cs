@@ -5,23 +5,8 @@ using UnityEditor;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
-public class EventManagerYKM : MonoBehaviour
+public class EventManagerYKM : Singleton<EventManagerYKM>
 {
-    private static EventManagerYKM _instance;
-
-    public static EventManagerYKM Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                GameObject singletonObject = new GameObject("EventManagerYKM");
-                _instance = singletonObject.AddComponent<EventManagerYKM>();
-                DontDestroyOnLoad(singletonObject);
-            }
-            return _instance;
-        }
-    }
     
     //csv 파일 데이터들
     public Dictionary<string, EventStructure> _events = new Dictionary<string, EventStructure>();
@@ -30,17 +15,23 @@ public class EventManagerYKM : MonoBehaviour
     
     
     //추가 변수
+    
+    //스테이지 번호
+    public enum StageInfo
+    {
+        Tutorial,
+        Stage1,
+        Stage2
+    }
+    public StageInfo curStageInfo;
+    
+    //다음 이벤트 정보
     public string nextEventID = "";
+    
     void Awake()
     {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        _instance = this;
-        DontDestroyOnLoad(gameObject);
+        //게임 시작 시, 스테이지 정보 초기화
+        curStageInfo = StageInfo.Tutorial;
     }
     
     void Start()
@@ -103,6 +94,11 @@ public class EventManagerYKM : MonoBehaviour
                 }
             }
             
+            //evidence_id가 "" 이 아니라면, evidence 정보에 해당 id 값이 존재한다면
+            if (eventStructure.evidence_id != "" && _evidences.ContainsKey(eventStructure.evidence_id)){}
+            {
+                _evidences[eventStructure.evidence_id].AcquireEvidence();
+            }
         }
     }
 
