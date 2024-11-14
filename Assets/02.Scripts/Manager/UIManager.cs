@@ -12,6 +12,7 @@ public class UIManager : Singleton<UIManager>
     public Animator transitionAnimator;
     public GameObject _endingMessage;
     public TextMeshProUGUI dialogueUI;
+    public TextMeshProUGUI popUI;
 
     public void CancelInvestigate()
     {
@@ -34,5 +35,11 @@ public class UIManager : Singleton<UIManager>
         yield return new WaitForSeconds(1.5f);
         _endingMessage.SetActive(true);
         FindObjectOfType<PlayerInteract>().isEnd = true;
+    }
+
+    public void PopUp(bool isActive,string text="")
+    {
+        popUI.gameObject.SetActive(isActive);
+        popUI.text = text;
     }
 }
