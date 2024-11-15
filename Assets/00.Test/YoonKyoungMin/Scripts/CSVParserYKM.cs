@@ -1,0 +1,168 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using UnityEngine;
+using UnityEngine.Networking;
+using Cysharp.Threading.Tasks;
+
+public class CSVParserYKM
+{
+    public async UniTask<Dictionary<string, T>> Parse<T>(string sheetName) where T : new()
+    {
+        // 딕셔너리 생성
+        Dictionary<string, T> dictionary = new Dictionary<string, T>();
+        string csvUrl = $"https://docs.google.com/spreadsheets/d/1_FGkVesLGBKbpmC8z1mUbG4eAKJRUxRIqBI6XJeGda8/gviz/tq?tqx=out:csv&sheet={sheetName}";
+        
+        // CSV 데이터 가져오기
+        string csvData = await LoadCSVFromURL(csvUrl);
+        if (string.IsNullOrWhiteSpace(csvData))
+        {
+            Debug.Log("CSV 데이터를 로드할 수 없습니다.");
+            return dictionary;
+        }
+        
+        string[] lines = csvData.Split("\n");
+        int headerLineIndex = 5;
+        string[] headers = SplitCsvLine(lines[5]);
+    
+        // 데이터 줄 순회
+        for (int i = headerLineIndex + 1; i < lines.Length; i++)
+        {
+            string line = lines[i].Trim();
+            if (string.IsNullOrWhiteSpace(line)) continue;
+    
+            string[] values = SplitCsvLine(line);
+            if (values.Length == 0)
+            {
+                Debug.LogWarning($"빈 데이터 줄: {line}");
+                continue;
+            }
+    
+            string key = values[0].Trim().Replace("\"", "");
+            if (string.IsNullOrEmpty(key))
+            {
+                Debug.LogWarning($"키가 없는 데이터 줄: {line}");
+                continue;
+            }
+    
+            T entry = new T();
+            
+            List<string> conditionsList = new List<string>(); 
+            List<string> resultIDsList = new List<string>();
+    
+            for (int j = 1; j < headers.Length && j < values.Length; j++)
+            {
+                string header = headers[j].Trim().Replace("\"", "");
+                if(string.IsNullOrEmpty(header))
+                {
+                    // 빈 헤더는 건너뜀
+                    continue;
+                }
+                string value = values[j].Trim().Replace("\"", "");
+                FieldInfo field = typeof(T).GetField(header, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+
+                if (field != null)
+                {
+                    try
+                    {
+                        // 해당 필드 타입으로 값을 변환해서 저장하기
+                        object convertedValue = Convert.ChangeType(value, field.FieldType);
+                        field.SetValue(entry, convertedValue);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"필드 변환 오류 - 필드: {header}, 값: {value}, 오류: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    if (header.StartsWith("condition_id")) 
+                    {
+                        conditionsList.Add(value);
+                    }
+                    else if (header.StartsWith("result_id")) 
+                    {
+                        resultIDsList.Add(value);
+                    }
+                }
+            }
+            FieldInfo conditionsField = typeof(T).GetField("conditions", BindingFlags.Public | BindingFlags.Instance);
+            FieldInfo resultsField = typeof(T).GetField("resultIDs", BindingFlags.Public | BindingFlags.Instance);
+            
+            if (conditionsField != null && conditionsField.FieldType == typeof(string[]))
+            {
+                conditionsField.SetValue(entry, conditionsList.ToArray());
+            }
+            
+            if (resultsField != null && resultsField.FieldType == typeof(string[]))
+            {
+                resultsField.SetValue(entry, resultIDsList.ToArray());
+            }
+            
+            dictionary[key] = entry;
+        }
+    
+        return dictionary;
+    }
+   
+    
+    private async UniTask<string> LoadCSVFromURL(string url)
+    {
+        using (UnityWebRequest www = UnityWebRequest.Get(url))
+        {
+            try
+            {
+                await www.SendWebRequest();
+
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.LogError($"CSV 다운로드 실패: {www.error}");
+                    return string.Empty;
+                }
+
+                string csvText = www.downloadHandler.text;
+                return csvText;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"CSV 다운로드 중 오류: {e.Message}");
+                return string.Empty;
+            }
+        }
+    }
+
+    // CSV 라인을 쉼표로 정확히 분리하는 메서드 (따옴표 처리 포함)
+    private string[] SplitCsvLine(string line)
+    {
+        List<string> values = new List<string>();
+        bool inQuotes = false;
+        string current = "";
+
+        foreach (char c in line)
+        {
+            if (c == '\"')
+            {
+                inQuotes = !inQuotes;
+                continue;
+            }
+
+            if (c == ',' && !inQuotes)
+            {
+                values.Add(current);
+                current = "";
+            }
+            else
+            {
+                current += c;
+            }
+        }
+        values.Add(current);
+        
+        int lastNonEmpty = values.Count - 1;
+        while (lastNonEmpty >= 0 && string.IsNullOrEmpty(values[lastNonEmpty]))
+        {
+            lastNonEmpty--;
+        }
+        return values.GetRange(0, lastNonEmpty + 1).ToArray();
+    }
+}

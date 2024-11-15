@@ -1,0 +1,216 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Cysharp.Threading.Tasks;
+using TMPro;
+
+public class DialogueManager : Singleton<DialogueManager>
+{
+    public Dictionary<string, DialogueStructure> _dialogue = new Dictionary<string, DialogueStructure>();
+    [SerializeField] private GameObject _toggleIcon;
+    private string _currentDialogueId = "";
+    private int _currentLineIndex = 0;
+    private string _initialDialogueId = "";
+
+    private float _letterDelay = 0.05f;
+    private float _currentTextElapsedTime = 0f;
+    private int _currentLetterIndex = 0;
+    public bool isTyping = false;
+    public bool isDialogeEnd=false;// 완전히 대화 끝났을때 true반환
+
+    private void Start()
+    {
+        InitializeDialogue().Forget();
+        InputManager.Instance.exitBtnAction += OnEscapePressed;
+    }
+    private void OnDestroy()
+    {
+        InputManager.Instance.exitBtnAction -= OnEscapePressed;
+    }
+    private async UniTaskVoid InitializeDialogue()
+    {
+        await LoadDialogue("Dialogue");
+    }
+
+    private async UniTask LoadDialogue(string sheetName)
+    {
+        CSVParserYKM parser = new CSVParserYKM();
+        _dialogue = await parser.Parse<DialogueStructure>(sheetName);
+        Debug.Log("대화 로드 완료");
+    }
+
+    public void SetDialogue(string id)
+    {
+        _currentDialogueId = id;
+        isDialogeEnd = false;
+        if (_dialogue.TryGetValue(_currentDialogueId, out DialogueStructure dialogue))
+        {
+            if (dialogue.trigger_type == "auto") //대화창 바로 뜨기
+            {
+                PlayerController.Instance.isDialogueOn = true;
+                UIManager.Instance.dialogueUI.gameObject.SetActive(true);
+                ShowNextLine().Forget();
+            }
+
+            if (dialogue.trigger_type == "interact")
+            {
+                SetInteractDialogue(dialogue.interaction_type);
+            }
+        }
+        else
+        {
+            Debug.LogWarning($" {_currentDialogueId} 못찾음");
+        }
+    }
+
+    private void SetInteractDialogue(string interactionType)
+    {
+        if (interactionType == "npc")
+        {
+            GameObject npcObject = GameObject.Find(_dialogue[_currentDialogueId].character_id);
+            if (npcObject != null)
+            {
+                NpcDialogue npcDialogue = npcObject.GetComponent<NpcDialogue>();
+                npcDialogue.dialogueId = _currentDialogueId;
+                // npcDialogue.dialogueText = _dialogue[_currentDialogueId].Dialogue_Text_List;
+            }
+            else
+            {
+                Debug.LogWarning($"{_dialogue[_currentDialogueId].character_id} npc가 없습니다");
+            }
+        }
+        else if (interactionType == "object")
+        {
+            //상호작용 대상이 물건일때 .
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (!string.IsNullOrEmpty(_currentDialogueId) && 
+                _dialogue[_currentDialogueId].trigger_type == "auto") // auto 타입 체크
+            {
+                if (isTyping)
+                {
+                    isTyping = false;
+                }
+                else
+                {
+                    ShowNextLine().Forget();
+                }
+            }
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SetDialogue("dialogue_0001");
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            SetDialogue("dialogue_0012");
+        }
+    }
+
+    public void StartDialogue(string dialogueId)
+    {
+        UIManager.Instance.popUI.gameObject.SetActive(false);
+        if (_dialogue.ContainsKey(dialogueId))
+        {
+            _currentDialogueId = dialogueId;
+            _currentLineIndex = 0;
+            ShowNextLine().Forget();
+        }
+        else
+        {
+            Debug.LogWarning($"Dialogue ID {dialogueId} not found.");
+        }
+    }
+
+    public async UniTaskVoid ShowNextLine()
+    {
+        _toggleIcon.SetActive(false);
+        if (string.IsNullOrEmpty(_currentDialogueId))
+        {
+            Debug.LogWarning("현재 대화 ID가 설정되지 않았습니다.");
+            return;
+        }
+
+        if (!_dialogue.TryGetValue(_currentDialogueId, out DialogueStructure dialogue))
+        {
+            Debug.LogWarning($"Dialogue ID {_currentDialogueId} not found.");
+            return;
+        }
+
+        if (_currentLineIndex < dialogue.Dialogue_Text_List.Count)
+        {
+            // 타이핑 시작
+            await TypeText(dialogue.Dialogue_Text_List[_currentLineIndex]);
+            // 타이핑이 완료되었거나 스킵되었을 때만 다음 라인으로 진행
+            _currentLineIndex++;
+        }
+        else
+        {
+            if (!string.IsNullOrEmpty(dialogue.next_dialouge_id))
+            {
+                if (_dialogue.ContainsKey(dialogue.next_dialouge_id))
+                {
+                    _currentDialogueId = dialogue.next_dialouge_id;
+                    _currentLineIndex = 0;
+                    ShowNextLine().Forget();
+                }
+                else
+                {
+                    Debug.LogWarning($"Next Dialogue ID {dialogue.next_dialouge_id} not found.");
+                }
+            }
+            else
+            {
+                Debug.Log("대화가 종료되었습니다.");
+                PlayerController.Instance.isDialogueOn = false;
+                isDialogeEnd = true;
+                _currentDialogueId = "";
+                _currentLineIndex = 0;
+                UIManager.Instance.dialogueUI.gameObject.SetActive(false);
+            }
+        }
+    }
+
+
+    private async UniTask TypeText(string text)
+    {
+        isTyping = true;
+        UIManager.Instance.dialogueUI.text = "";
+
+        if (!isTyping)
+        {
+            UIManager.Instance.dialogueUI.text = text;
+            return;
+        }
+
+        for (int i = 0; i < text.Length && isTyping; i++)
+        {
+            UIManager.Instance.dialogueUI.text += text[i];
+            await UniTask.Delay((int)(_letterDelay * 1000));
+        }
+
+        UIManager.Instance.dialogueUI.text = text;
+        isTyping = false;
+        _toggleIcon.SetActive(true);
+    }
+    private void OnEscapePressed()
+    {
+        if (!string.IsNullOrEmpty(_currentDialogueId) && 
+            _dialogue[_currentDialogueId].trigger_type == "interact"&&PlayerController.Instance.isDialogueOn)
+        {
+            PlayerController.Instance.isDialogueOn = false;
+            isDialogeEnd = true;
+            _currentDialogueId = "";
+            _currentLineIndex = 0;
+            UIManager.Instance.dialogueUI.gameObject.SetActive(false);
+            UIManager.Instance.PopUp(true, "E를 눌러 대화시작");
+        }
+    }
+}

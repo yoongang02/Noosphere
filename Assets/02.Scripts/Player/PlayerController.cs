@@ -26,9 +26,7 @@ public class PlayerController : Singleton<PlayerController>
         _animator = GetComponent<Animator>();
         _defaultSpeed = _moveSpeed;
         InputManager.Instance.moveAction += HandleInput;
-        InputManager.Instance.exitBtnAction += EndDialogue;
         InputManager.Instance.selectBtnAction += OnEKey;
-
         if (_mainCamera == null)
             _mainCamera = Camera.main;
     }
@@ -42,6 +40,30 @@ public class PlayerController : Singleton<PlayerController>
     private void OnEKey()
     {
         if (_currentNPC == null) return;
+        
+        if (!isDialogueOn && isPlayerNearNPC)
+        {
+            StartDialogue();
+        }
+        else if (isDialogueOn) 
+        {
+            // interact 타입일 때만 처리
+            NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
+            if (npcDialogue != null && 
+                DialogueManager.Instance._dialogue[npcDialogue.dialogueId].trigger_type == "interact")
+            {
+                if (DialogueManager.Instance.isTyping)
+                {
+                    DialogueManager.Instance.isTyping = false;
+                }
+                else
+                {
+                    DialogueManager.Instance.ShowNextLine().Forget();
+                }
+            }
+        }
+        
+        /*
         if (isDialogueOn && !UIManager.Instance.isPopUpOpen)
         {
             ContinueDialogue();
@@ -50,68 +72,33 @@ public class PlayerController : Singleton<PlayerController>
         {
             StartDialogue();
         }
+        */
     }
 
     private void StartDialogue()
     {
         //Dialogue Camera On
-        var transposer = _dialogueCamera.GetCinemachineComponent<CinemachineTransposer>();
-        if (transposer != null)
-        {
-            //플레이어가 npc보다 오른쪽에 위치함
-            if (transform.position.x > _currentNPC.transform.position.x)
-            {
-                transposer.m_FollowOffset = new Vector3(-2,transposer.m_FollowOffset.y, transposer.m_FollowOffset.z);
-            }
-            else
-            {
-                transposer.m_FollowOffset = new Vector3(2,transposer.m_FollowOffset.y, transposer.m_FollowOffset.z);
-            }
-        }
-        _dialogueCamera.LookAt = _currentNPC.transform;
-        _dialogueCamera.Priority = 20;
+        // var transposer = _dialogueCamera.GetCinemachineComponent<CinemachineTransposer>();
+        // if (transposer != null)
+        // {
+        //     if (transform.position.x > _currentNPC.transform.position.x)
+        //     {
+        //         transposer.m_FollowOffset = new Vector3(-2,transposer.m_FollowOffset.y, transposer.m_FollowOffset.z);
+        //     }
+        //     else
+        //     {
+        //         transposer.m_FollowOffset = new Vector3(2,transposer.m_FollowOffset.y, transposer.m_FollowOffset.z);
+        //     }
+        // }
+        // _dialogueCamera.LookAt = _currentNPC.transform;
+        // _dialogueCamera.Priority = 20;
         
         isDialogueOn = true;
-        UIManager2.Instance.popUpUI.SetActive(false); 
-        UIManager2.Instance.dialogueUI.gameObject.SetActive(true);
         NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
-        if (npcDialogue != null)
+        if (npcDialogue != null && !string.IsNullOrEmpty(npcDialogue.dialogueId))
         {
-            npcDialogue.StartDialogue();
-        }
-    }
-
-    private void ContinueDialogue()
-    {
-        if (!isDialogueOn) return;
-        NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
-        if (npcDialogue != null)
-        {
-            npcDialogue.AdvanceDialogue();
-            if (!npcDialogue.isOnDialogue) 
-            {
-                UIManager2.Instance.dialogueUI.gameObject.SetActive(false);
-                isDialogueOn = false;
-            }
-        }
-    }
-
-    private void EndDialogue()
-    {
-        //Dialogue Camera On
-        _dialogueCamera.LookAt = null;
-        _dialogueCamera.Priority = 0;
-        
-        if (!isDialogueOn) return;
-        isDialogueOn = false;
-        UIManager2.Instance.dialogueUI.gameObject.SetActive(false);
-        if (_currentNPC != null)
-        {
-            NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
-            if (npcDialogue != null)
-            {
-                npcDialogue.ResetDialogue();
-            }
+            UIManager.Instance.dialogueUI.gameObject.SetActive(true);
+            DialogueManager.Instance.StartDialogue(npcDialogue.dialogueId);
         }
     }
 
@@ -174,14 +161,20 @@ public class PlayerController : Singleton<PlayerController>
     
     private void Move(Vector3 direction)
     {
+        // if (direction != Vector3.zero)
+        // {
+        //     // 부드러운 회전 구현
+        //     transform.rotation = Quaternion.Lerp(transform.rotation, 
+        //                                       Quaternion.LookRotation(direction), 
+        //                                       Time.deltaTime * 10f);
+        //     
+        //     // 로컬 좌표계 기준으로 전방 이동
+        //     transform.Translate(Vector3.forward * Time.deltaTime * _moveSpeed, Space.Self);
+        // }
         if (direction != Vector3.zero)
         {
-            // 부드러운 회전 구현
-            transform.rotation = Quaternion.Lerp(transform.rotation, 
-                                              Quaternion.LookRotation(direction), 
-                                              Time.deltaTime * 10f);
+            transform.rotation = Quaternion.LookRotation(direction);
             
-            // 로컬 좌표계 기준으로 전방 이동
             transform.Translate(Vector3.forward * Time.deltaTime * _moveSpeed, Space.Self);
         }
     }
@@ -192,7 +185,7 @@ public class PlayerController : Singleton<PlayerController>
         {
             isPlayerNearNPC = true;
             _currentNPC = other.gameObject; 
-            UIManager2.Instance.popUpUI.SetActive(true);
+            UIManager.Instance.PopUp(true,"E를 눌러 대화시작");
         }
     }
 
@@ -202,7 +195,7 @@ public class PlayerController : Singleton<PlayerController>
         {
             isPlayerNearNPC = false;
             _currentNPC = null;
-            UIManager2.Instance.popUpUI.SetActive(false);
+            UIManager.Instance.PopUp(false);
         }
     }
 }
