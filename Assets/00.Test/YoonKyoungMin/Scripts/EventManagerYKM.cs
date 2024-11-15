@@ -19,7 +19,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     //스테이지 번호
     public enum ChapterInfo
     {
-        Tutorial,
+        Prologue,
         Stage1,
         Stage2
     }
@@ -31,7 +31,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     void Awake()
     {
         //게임 시작 시, 스테이지 정보 초기화
-        curStageInfo = ChapterInfo.Tutorial;
+        curStageInfo = ChapterInfo.Prologue;
         InitializeData().Forget();
     }
     
