@@ -64,7 +64,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             return;
         }
 
-        if (eventID != nextEventID)
+        if (nextEventID != "" && nextEventID != eventID)
         {
             Debug.Log("현재 실행되어야 하는 이벤트는 " + nextEventID + "입니다.");
             return;
@@ -83,22 +83,28 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             //결과 실행하기
             foreach (var resultID in eventStructure.resultIDs)
             {
-                string resultType = resultID.Substring(0, resultID.IndexOf('_'));
-                if (resultType == "dialogue")
+                if (resultID != "")
                 {
-                    StartDialogue(resultID);
-                }
-                else if (resultType == "effect")
-                {
-                    StartEffect(resultID);
+                    string resultType = resultID.Substring(0, resultID.IndexOf('_'));
+                    if (resultType == "dialogue")
+                    {
+                        StartDialogue(resultID);
+                    }
+                    else if (resultType == "effect")
+                    {
+                        StartEffect(resultID);
+                    }
                 }
             }
             
-            //evidence_id가 "" 이 아니라면, evidence 정보에 해당 id 값이 존재한다면
-            if (eventStructure.evidence_id != "" && _evidences.ContainsKey(eventStructure.evidence_id)){}
+            //evidence 정보에 해당 id 값이 존재한다면
+            if (_evidences.ContainsKey(eventStructure.evidence_id))
             {
                 _evidences[eventStructure.evidence_id].AcquireEvidence();
             }
+            
+            //이벤트가 다 실행되었다면 이벤트 실행되었음을 표시.
+            eventStructure.isExecuted = true;
         }
     }
 

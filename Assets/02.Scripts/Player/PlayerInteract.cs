@@ -23,6 +23,7 @@ public class PlayerInteract : MonoBehaviour
 
     void Update()
     {
+        /*
         //상호작용 가능한데, E 버튼 클릭하면
         if (_canInteract && Input.GetKeyUp(KeyCode.E))
         {
@@ -84,10 +85,12 @@ public class PlayerInteract : MonoBehaviour
             Debug.Log("게임 종료");
             Application.Quit();
         }
+        */
     }
 
     void FixedUpdate()
     {
+        /*
         if (_startEnter)
         {
             _timer += Time.fixedDeltaTime;
@@ -114,11 +117,13 @@ public class PlayerInteract : MonoBehaviour
                 }
             }
         }
+        */
     }
 
 
     private void OnTriggerEnter(Collider other)
     {
+        /*
         if(other.CompareTag("InvestigateObj"))
         {
             _uiManager._showPressBtnUI.GetComponent<TextMeshProUGUI>().text = "E를 눌러 확인";
@@ -134,6 +139,14 @@ public class PlayerInteract : MonoBehaviour
             _uiManager._showPressBtnUI.SetActive(true);
             _canEnter = true;
             _curEnterNPC = other.gameObject;
+        }
+        */
+
+        //진입 시 바로 이벤트 실행되는 트리거에 진행하면
+        if (other.CompareTag("EventTrigger"))
+        {
+            string eventID = other.GetComponent<EventTrigger>().eventID;
+            EventManagerYKM.Instance.ExecuteEvent(eventID);
         }
     }
     
