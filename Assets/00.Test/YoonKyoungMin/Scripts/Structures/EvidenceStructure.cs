@@ -21,7 +21,7 @@ public class EvidenceStructure
         //언락 조건이 있다면 언락 조건을 만족했는지 체크
         if (!IsUnLockConditionMet())
         {
-            //Debug.Log(unlock_Condition + " 언락 조건을 만족하지 못하여, 획득 불가능");
+            Debug.Log(unlock_Condition + " 언락 조건을 만족하지 못하여, 획득 불가능");
             return;
         }
         //언락 조건을 만족하여 획득할 수 있다면
@@ -49,9 +49,9 @@ public class EvidenceStructure
     bool IsUnLockConditionMet()
     {
         //이벤트 매니저 내에서 해당 unlock 조건의 이벤트가 실행되었는지 확인
-        if (EventManagerYKM.Instance._events.ContainsKey(unlock_Condition) && EventManagerYKM.Instance._events[unlock_Condition].isExecuted)
+        if (unlock_Condition == "" ||EventManagerYKM.Instance._events.ContainsKey(unlock_Condition) && EventManagerYKM.Instance._events[unlock_Condition].isExecuted)
         {
-            //Debug.Log("unlock 조건 만족한 것을 확인");
+            Debug.Log("unlock 조건 만족한 것을 확인");
             return true;
         }
         return false;

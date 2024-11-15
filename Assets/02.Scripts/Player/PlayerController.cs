@@ -40,6 +40,7 @@ public class PlayerController : Singleton<PlayerController>
     private void OnEKey()
     {
         if (_currentNPC == null) return;
+        
         if (!isDialogueOn && isPlayerNearNPC)
         {
             StartDialogue();
@@ -61,6 +62,17 @@ public class PlayerController : Singleton<PlayerController>
                 }
             }
         }
+        
+        /*
+        if (isDialogueOn && !UIManager.Instance.isPopUpOpen)
+        {
+            ContinueDialogue();
+        }
+        else if (!isDialogueOn && isPlayerNearNPC)
+        {
+            StartDialogue();
+        }
+        */
     }
 
     private void StartDialogue()

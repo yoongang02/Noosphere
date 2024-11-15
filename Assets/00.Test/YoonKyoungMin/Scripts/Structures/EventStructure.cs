@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class EventStructure
 {
     //csv 필드
@@ -19,7 +21,11 @@ public class EventStructure
     public bool CheckCondition()
     {
         //반복 불가능인데 실행 횟수가 0 초과라면 실행 불가능
-        if (!repeat_Type && isExecuted) return false;
+        if (!repeat_Type && isExecuted)
+        {
+            Debug.Log("이미 실행된 이벤트이며, 반복 불가능한 이벤트입니다.");
+            return false;
+        }
         //조건 타입 and 인데, 조건을 만족하지 못했다면
         if (condition_Type == "and")
         {
@@ -31,7 +37,7 @@ public class EventStructure
                 }
             }   
         }
-        
+        Debug.Log(this.event_id + " 이벤트 실행 조건을 만족함.");
         return true;
     }
     
