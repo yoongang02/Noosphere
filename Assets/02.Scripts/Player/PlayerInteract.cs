@@ -6,23 +6,39 @@ using UnityEngine;
 
 public class PlayerInteract : MonoBehaviour
 {
-    [SerializeField] private GameObject _curInteractableObj;
     [SerializeField] private GameObject _curEnterNPC;
-    private bool _canInteract = false;
-    private bool _canEnter = false;
-    private bool _startEnter = false;
-    public bool _isComplete = false;
-    private float _timer = 0f;
     public bool isInteracting = false;
+    
+    //정신세계 진입 관련 변수
     [SerializeField] private UIManager _uiManager;
     [SerializeField] private GameObject _progressBar;
     [SerializeField] private EnterProgressBar _progressBarFill;
     [SerializeField] private float _enterTime = 5.0f;
+    private bool _canEnter = false;
+    private bool _startEnter = false;
+    public bool _isComplete = false;
+    private float _timer = 0f;
 
     public bool isEnd = false;
 
+    //찐 사용 변수 우선 아래에 옮기기
+    [SerializeField] private GameObject _curInteractableEventID;
+    public bool canInteract = true; //상호작용을 할 수 있는지(lock 조건에 이용)
+    
+    
     void Update()
     {
+
+        if (canInteract && _curInteractableEventID != null && Input.GetKeyUp(KeyCode.E))
+        { 
+            //이벤트 실행
+            string eventID = _curInteractableEventID.GetComponent<EventTrigger>().eventID;
+            EventManagerYKM.Instance.ExecuteEvent(eventID);
+            
+            //상호작용 물체 초기화
+            _curInteractableEventID = null;
+        }
+        
         /*
         //상호작용 가능한데, E 버튼 클릭하면
         if (_canInteract && Input.GetKeyUp(KeyCode.E))
@@ -148,10 +164,20 @@ public class PlayerInteract : MonoBehaviour
             string eventID = other.GetComponent<EventTrigger>().eventID;
             EventManagerYKM.Instance.ExecuteEvent(eventID);
         }
+
+        if (other.CompareTag("EventInteractionTrigger"))
+        {
+            _curInteractableEventID = other.gameObject;
+        }
     }
     
     private void OnTriggerExit(Collider other)
     {
+        if (other.CompareTag("EventInteractionTrigger"))
+        {
+            _curInteractableEventID = null;
+        }
+        /*
         if(other.CompareTag("InvestigateObj"))
         {
             _canInteract = false;
@@ -166,6 +192,7 @@ public class PlayerInteract : MonoBehaviour
             _curEnterNPC = null;
             _uiManager._showPressBtnUI.SetActive(false);
         }
+        */
     }
 
     void InitProgressBar()
