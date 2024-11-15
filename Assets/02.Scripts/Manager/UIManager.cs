@@ -36,17 +36,13 @@ public class UIManager : Singleton<UIManager>
             //왼쪽 화살표 - YES 버튼
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                SetButtonSelected(_investigateUIYesBtn, UnityExtension.HexColor(GreenColor));
-                SetButtonSelected(_investigateUINoBtn, UnityExtension.HexColor(WhiteColor));
-                _curSelectedBtn = _investigateUIYesBtn;
+                SelectYesBtn();
             }
 
             //오른쪽 화살표 - NO 버튼
             if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                SetButtonSelected(_investigateUINoBtn,UnityExtension.HexColor(GreenColor));
-                SetButtonSelected(_investigateUIYesBtn,UnityExtension.HexColor(WhiteColor));
-                _curSelectedBtn = _investigateUINoBtn;
+            { 
+                SelectNoBtn();
             }
 
             //스페이스 - 버튼 선택
@@ -64,9 +60,7 @@ public class UIManager : Singleton<UIManager>
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 //NO 버튼 선택
-                SetButtonSelected(_investigateUINoBtn,UnityExtension.HexColor(GreenColor));
-                SetButtonSelected(_investigateUIYesBtn,UnityExtension.HexColor(WhiteColor));
-                _curSelectedBtn = _investigateUINoBtn;
+                SelectNoBtn();
                 
                 //해당 버튼의 이벤트 트리거 호출
                 ExecuteEvents.Execute<ISelectHandler>(
@@ -116,8 +110,7 @@ public class UIManager : Singleton<UIManager>
         }
 
         //디폴트로 YES 선택되어 있음.
-        SetButtonSelected(_investigateUIYesBtn,UnityExtension.HexColor(GreenColor));
-        _curSelectedBtn = _investigateUIYesBtn;
+        SelectYesBtn();
     }
 
 
@@ -143,6 +136,20 @@ public class UIManager : Singleton<UIManager>
     {
         TextMeshProUGUI tmp = btn.GetComponent<TextMeshProUGUI>();
         tmp.color = color;
+    }
+
+    void SelectYesBtn()
+    {
+        SetButtonSelected(_investigateUIYesBtn, UnityExtension.HexColor(GreenColor));
+        SetButtonSelected(_investigateUINoBtn, UnityExtension.HexColor(WhiteColor));
+        _curSelectedBtn = _investigateUIYesBtn;
+    }
+
+    void SelectNoBtn()
+    {
+        SetButtonSelected(_investigateUINoBtn,UnityExtension.HexColor(GreenColor));
+        SetButtonSelected(_investigateUIYesBtn,UnityExtension.HexColor(WhiteColor));
+        _curSelectedBtn = _investigateUINoBtn;
     }
 
     public void ShowDetailEvidence()

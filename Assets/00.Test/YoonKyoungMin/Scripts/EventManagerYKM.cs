@@ -73,40 +73,51 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         //실행 조건 만족하는지 체크
         if (eventStructure.CheckCondition())
         {
-            //락 조건이 있다면, 락 걸기
-            if (_lockConditions.ContainsKey(eventStructure.lock_condition_id))
+            StartCoroutine(HandleEventWithEvidence(eventStructure));
+        }
+    }
+    
+    IEnumerator HandleEventWithEvidence(EventStructure eventStructure){
+        
+        //락 조건이 있다면, 락 걸기
+        if (_lockConditions.ContainsKey(eventStructure.lock_condition_id))
+        {
+            _lockConditions[eventStructure.lock_condition_id].Lock();
+        }
+        //결과 실행하기
+        foreach (var resultID in eventStructure.resultIDs)
+        {
+            if (resultID != "")
             {
-                _lockConditions[eventStructure.lock_condition_id].Lock();
-            }
-            //결과 실행하기
-            foreach (var resultID in eventStructure.resultIDs)
-            {
-                if (resultID != "")
+                string resultType = resultID.Substring(0, resultID.IndexOf('_'));
+                if (resultType == "dialogue")
                 {
-                    string resultType = resultID.Substring(0, resultID.IndexOf('_'));
-                    if (resultType == "dialogue")
-                    {
-                        StartDialogue(resultID);
-                    }
-                    else if (resultType == "effect")
-                    {
-                        StartEffect(resultID);
-                    }
+                    StartDialogue(resultID);
+                }
+                else if (resultType == "effect")
+                {
+                    StartEffect(resultID);
                 }
             }
-            
-            //evidence 정보에 해당 id 값이 존재한다면
-            if (_evidences.ContainsKey(eventStructure.evidence_id))
-            {
-                EvidenceStructure evidence = _evidences[eventStructure.evidence_id];
-                //증거물 조사 UI 띄우기
-                UIManager.Instance.OpenInvestigateUI(evidence);
+        }
+        
+        // 증거물 조사 UI 띄우기
+        if (_evidences.ContainsKey(eventStructure.evidence_id))
+        {
+            EvidenceStructure evidence = _evidences[eventStructure.evidence_id];
+            UIManager.Instance.OpenInvestigateUI(evidence);
 
-                while (UIManager.Instance.isSelecting){}
+            // UI에서 입력을 기다림
+            yield return new WaitUntil(() => !UIManager.Instance.isSelecting);
+
+            if (UIManager.Instance.isEvidenceAcquired)
+            {
+                eventStructure.isExecuted = true;
             }
-            
-            //이벤트가 다 실행되었다면 이벤트 실행되었음을 표시.
-            if(UIManager.Instance.isEvidenceAcquired) eventStructure.isExecuted = true;
+        }
+        else
+        {
+            eventStructure.isExecuted = true;
         }
     }
 
