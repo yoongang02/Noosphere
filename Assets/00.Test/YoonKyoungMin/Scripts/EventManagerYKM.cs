@@ -125,6 +125,14 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     void StartDialogue(string dialogueID)
     {
         Debug.Log(dialogueID + " 대화 시작");
+        StartCoroutine(HandleEventWithDialogue(dialogueID));
+    }
+
+    //대화 끝날 때까지 기다리기
+    IEnumerator HandleEventWithDialogue(string dialogueID)
+    {
+        DialogueManager.Instance.SetDialogue(dialogueID);
+        yield return new WaitUntil(() => !DialogueManager.Instance.isDialogeEnd);
     }
 
     //effect 시작
