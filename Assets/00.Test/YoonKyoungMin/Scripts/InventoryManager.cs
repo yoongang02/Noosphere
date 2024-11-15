@@ -5,6 +5,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using VFolders.Libs;
 
 public class InventorySlot
 {
@@ -41,6 +42,14 @@ public class InventoryManager : Singleton<InventoryManager>
     [SerializeField] private GameObject _mentalWorldInventory;
     [SerializeField] private GameObject _inventorySlotPrefab;
     private int _currentViewChapter = 0;
+    private int _inventoryMoveSpacingLR = 1;
+    private int _inventoryMoveSpacingUD = 1;
+    private int _inventoryMoveCurIndex = 0;
+    [SerializeField] List<GameObject> _inventorySlots = new List<GameObject>(); //인벤토리 슬롯 커서를 위해, 한 페이지 내의 슬롯을 모두 관리하는 리스트
+    [SerializeField] private GameObject _curSelectedSlot;
+    [SerializeField] private Sprite _deselectedSlotBg;
+    [SerializeField] private Sprite _selectedSlotBg;
+    [SerializeField] private int _curSlotIndex = 0;
 
     void Start()
     {
@@ -62,6 +71,33 @@ public class InventoryManager : Singleton<InventoryManager>
         {
             isInventoryOpen = !isInventoryOpen;
             ControlWindow();
+        }
+        
+        //인벤토리 UI 조작
+        if (isInventoryOpen)
+        {
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                SetSlotSelected(CalculateSlotIndex(-_inventoryMoveSpacingUD));
+            }
+            else if (Input.GetKeyDown(KeyCode.A))
+            {
+                SetSlotSelected(CalculateSlotIndex(-_inventoryMoveSpacingLR));
+            }
+            else if (Input.GetKeyDown(KeyCode.S))
+            {
+                SetSlotSelected(CalculateSlotIndex(+_inventoryMoveSpacingUD));
+            }
+            else if (Input.GetKeyDown(KeyCode.D))
+            {
+                SetSlotSelected(CalculateSlotIndex(+_inventoryMoveSpacingLR));
+            }
+
+            //숫자 키 누르면
+
+            //왼쪽 화살표 (왼쪽 페이지)
+
+            //오른쪽 화살표 (오른쪽 페이지)
         }
     }
 
@@ -167,6 +203,7 @@ public class InventoryManager : Singleton<InventoryManager>
     //인벤토리 내에 해당 증거물이 존재하는지 확인
     public bool IsAcquiredEvidence(string evidence_id)
     {
+        Debug.Log(evidence_id + "획득검사");
         foreach (var chapter in chapterInventories)
         {
             foreach (var slot in chapter.Value.realWorldEvidences)
@@ -190,8 +227,130 @@ public class InventoryManager : Singleton<InventoryManager>
     void ControlWindow()
     {
         _inventoryWindow.SetActive(isInventoryOpen);
+        if(isInventoryOpen) InitInventorySlotCursor();
     }
     
     //인벤토리 슬롯 UI
-    //현실세계 것
+    void InitInventorySlotCursor()
+    {
+        //초기화
+        _curSelectedSlot = null;
+        _inventorySlots.Clear();
+        _inventoryMoveSpacingLR = 1;
+        _inventoryMoveSpacingUD = 3;
+        //현실세계 슬롯
+        List<GameObject> realWorldSlots = GetChildSlots(_realWorldInventory.transform);
+        //가상세계 슬롯
+        List<GameObject> mentalWorldSlots = GetChildSlots(_mentalWorldInventory.transform);
+        
+        //현실세계 증거물와 정신세계 증거물이 둘 다 있는 경우
+        if (realWorldSlots.Count > 0 && mentalWorldSlots.Count > 0)
+        {
+            _inventoryMoveSpacingUD = 6;
+            //현실 세계 증거물과 정신세계 증거물 중에 더 많은 행이 무엇인지 파악
+            int maxRow = (int)Mathf.Max(realWorldSlots.Count,
+                mentalWorldSlots.Count) / 3;
+            
+            for (int row = 0; row < maxRow; row++)
+            {
+                int index = row * 3;
+                AddRowToList(realWorldSlots,index);
+                AddRowToList(mentalWorldSlots,index);
+            }
+        }
+        else if(realWorldSlots.Count > 0)
+        {
+            foreach (var slot in realWorldSlots)
+            {
+                _inventorySlots.Add(slot);
+            }
+        }
+        else if (mentalWorldSlots.Count > 0)
+        {
+            foreach (var slot in mentalWorldSlots)
+            {
+                _inventorySlots.Add(slot);
+            }
+        }
+        
+        //슬롯이 비어있지 않으면 슬롯 리스트의 첫번째 인덱스가 기본 디폴트 선택
+        if (_inventorySlots.Count != 0) SetSlotSelected(0);
+    }
+    
+    List<GameObject> GetChildSlots(Transform parent)
+    {
+        List<GameObject> childSlots = new List<GameObject>();
+        foreach (Transform child in parent)
+        {
+            childSlots.Add(child.gameObject);
+            Debug.Log(child.name + "getChildSlot");
+        }
+        return childSlots;
+    }
+    
+    void AddRowToList(List<GameObject> slotList, int row)
+    {
+        int startIndex = row * 3; // 해당 행의 시작 인덱스
+        int endIndex = Mathf.Min(startIndex + 3, slotList.Count); // 해당 행의 끝 인덱스
+
+        for (int i = startIndex; i < endIndex; i++)
+        {
+            _inventorySlots.Add(slotList[i]);
+        }
+    }
+
+    void SetSlotSelected(int index)
+    {
+        GameObject slot = _inventorySlots[index];
+        _curSelectedSlot = slot;
+        Image slotBackground = slot.GetComponent<Image>();
+        slotBackground.sprite = _selectedSlotBg;
+        foreach (var _slot in _inventorySlots)
+        {
+            if (_slot != slot)
+            {
+                slot.GetComponent<Image>().sprite = _deselectedSlotBg;
+            }
+        }
+    }
+
+    int CalculateSlotIndex(int value)
+    {
+        _curSlotIndex += value;
+        //1번 슬롯에서 왼쪽으로 이동하는 경우 가장 마지막 슬롯으로 이동
+        if (_curSlotIndex == -1)
+        {
+            _curSlotIndex = _inventorySlots.Count - 1;
+        }
+        else if (_curSlotIndex == _inventorySlots.Count) //가장 마지막 슬롯에서 오른쪽으로 이동하는 경우, 가장 첫 슬롯으로 이동
+        {
+            _curSlotIndex = 0;
+        }
+
+        if (_curSlotIndex < -1) //위로 이동했는데 슬롯이 없다면, 가장 마지막 행의 젤 왼쪽 슬롯으로 이동
+        {
+            //마지막행의 가장 왼쪽 인덱스 값 구하기
+            _curSlotIndex = ((int)_inventorySlots.Count / _inventoryMoveSpacingUD) * _inventoryMoveSpacingUD;
+        }
+        else if (_curSlotIndex > _inventorySlots.Count) //아래로 이동했는데, 슬롯이 없다면
+        {
+            //마지막 행에 위치한다면, 가장 첫번째 행의 젤 왼쪽 슬롯으로 이동
+            //마지막 행이 아니라면, 가장 마지막 행의 젤 왼쪽 슬롯으로 이동
+            int curRow = _curSlotIndex / _inventoryMoveSpacingUD;
+            int endRow = _inventorySlots.Count / _inventoryMoveSpacingUD;
+
+            if (curRow == endRow)
+            {
+                //마지막 행에 위치
+                _curSlotIndex = 0;
+            }
+            else
+            {
+                //마지막 행이 위치
+                _curSlotIndex *= _inventoryMoveSpacingUD;
+            }
+        }
+
+        return _curSlotIndex;
+    }
 }

@@ -104,6 +104,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         // 증거물 조사 UI 띄우기
         if (_evidences.ContainsKey(eventStructure.evidence_id))
         {
+            Debug.Log("증거물 조사 띄우기 : " + eventStructure.evidence_id);
             EvidenceStructure evidence = _evidences[eventStructure.evidence_id];
             UIManager.Instance.OpenInvestigateUI(evidence);
 
