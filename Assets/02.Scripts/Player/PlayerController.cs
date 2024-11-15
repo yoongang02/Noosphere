@@ -149,14 +149,20 @@ public class PlayerController : Singleton<PlayerController>
     
     private void Move(Vector3 direction)
     {
+        // if (direction != Vector3.zero)
+        // {
+        //     // 부드러운 회전 구현
+        //     transform.rotation = Quaternion.Lerp(transform.rotation, 
+        //                                       Quaternion.LookRotation(direction), 
+        //                                       Time.deltaTime * 10f);
+        //     
+        //     // 로컬 좌표계 기준으로 전방 이동
+        //     transform.Translate(Vector3.forward * Time.deltaTime * _moveSpeed, Space.Self);
+        // }
         if (direction != Vector3.zero)
         {
-            // 부드러운 회전 구현
-            transform.rotation = Quaternion.Lerp(transform.rotation, 
-                                              Quaternion.LookRotation(direction), 
-                                              Time.deltaTime * 10f);
+            transform.rotation = Quaternion.LookRotation(direction);
             
-            // 로컬 좌표계 기준으로 전방 이동
             transform.Translate(Vector3.forward * Time.deltaTime * _moveSpeed, Space.Self);
         }
     }
