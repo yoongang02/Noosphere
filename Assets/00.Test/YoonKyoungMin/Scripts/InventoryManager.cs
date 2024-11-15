@@ -191,4 +191,7 @@ public class InventoryManager : Singleton<InventoryManager>
     {
         _inventoryWindow.SetActive(isInventoryOpen);
     }
+    
+    //인벤토리 슬롯 UI
+    //현실세계 것
 }
