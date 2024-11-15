@@ -42,4 +42,5 @@ public class UIManager : Singleton<UIManager>
         popUI.gameObject.SetActive(isActive);
         popUI.text = text;
     }
+    
 }

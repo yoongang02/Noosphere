@@ -23,7 +23,10 @@ public class DialogueManager : Singleton<DialogueManager>
         InitializeDialogue().Forget();
         InputManager.Instance.exitBtnAction += OnEscapePressed;
     }
-   
+    private void OnDestroy()
+    {
+        InputManager.Instance.exitBtnAction -= OnEscapePressed;
+    }
     private async UniTaskVoid InitializeDialogue()
     {
         await LoadDialogue("Dialogue");
