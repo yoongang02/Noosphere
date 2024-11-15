@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -68,6 +70,12 @@ public class InventoryManager : Singleton<InventoryManager>
         isInventoryOpen = false;
         _currentViewChapter = 0;
         chapterInventories.Clear();
+        
+        int chapterCnt = Enum.GetValues(typeof(EventManagerYKM.ChapterInfo)).Length;
+        for (int i = 0; i < chapterCnt; i++)
+        {
+            chapterInventories.Add(i,new ChapterInventory());
+        }
     }
 
     public void AddEvidence(EvidenceStructure evidence)
@@ -126,13 +134,27 @@ public class InventoryManager : Singleton<InventoryManager>
     //slot UI 업데이트 함수
     void UpdateSlotUI(GameObject slot, InventorySlot evidence)
     {
-        TextMeshPro nameText = slot.transform.Find("EvidenceName").GetComponent<TextMeshPro>();
+        TextMeshProUGUI nameText = slot.GetComponentInChildren<TextMeshProUGUI>(true);
         nameText.text = evidence.evidence_name;
         
-        Image iconImage = slot.transform.Find("EvidenceImg").GetComponent<Image>();
-        //아트 리소스 불러오기
+        Image[] images = slot.GetComponentsInChildren<Image>(true);
+        foreach (Image img in images)
+        {
+            if (img.gameObject.name == "EvidenceImg")
+            {
+                //아트 리소스 불러오기
+                if (EventManagerYKM.Instance._artResources.ContainsKey(evidence.artresource_id))
+                {
+                    img.sprite = EventManagerYKM.Instance._artResources[evidence.artresource_id].GetSpriteFromFilePath();
+                }
+                else
+                {
+                    Debug.Log(evidence.artresource_id +"가 리소스 내에 존재하지 않습니다.");
+                }
+                break;
+            }
+        }
     }
-
     
     //인벤토리 내에 해당 증거물이 존재하는지 확인
     public bool IsAcquiredEvidence(string evidence_id)

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class LockConditionStructure : MonoBehaviour
+public class LockConditionStructure
 {
     public string lock_condition_id;
 

@@ -12,18 +12,18 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     public Dictionary<string, EventStructure> _events = new Dictionary<string, EventStructure>();
     public Dictionary<string, LockConditionStructure> _lockConditions = new Dictionary<string, LockConditionStructure>();
     public Dictionary<string, EvidenceStructure> _evidences = new Dictionary<string, EvidenceStructure>();
-    
+    public Dictionary<string, ArtResourceStructure> _artResources = new Dictionary<string, ArtResourceStructure>();
     
     //추가 변수
     
     //스테이지 번호
-    public enum StageInfo
+    public enum ChapterInfo
     {
         Tutorial,
         Stage1,
         Stage2
     }
-    public StageInfo curStageInfo;
+    public ChapterInfo curStageInfo;
     
     //다음 이벤트 정보
     public string nextEventID = "";
@@ -31,22 +31,20 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     void Awake()
     {
         //게임 시작 시, 스테이지 정보 초기화
-        curStageInfo = StageInfo.Tutorial;
-    }
-    
-    void Start()
-    {
+        curStageInfo = ChapterInfo.Tutorial;
         InitializeData().Forget();
     }
-
+    
     private async UniTaskVoid InitializeData()
     {
         _events = await LoadData<EventStructure>("Event");
         _lockConditions = await LoadData<LockConditionStructure>("Lock_condition");
         _evidences = await LoadData<EvidenceStructure>("Evidence");
+        _artResources = await LoadData<ArtResourceStructure>("ArtResource");
         Debug.Log("Event 데이터 로드 완료");
         Debug.Log("Lock_Condition 데이터 로드 완료");
         Debug.Log("Evidence 데이터 로드 완료");
+        Debug.Log("ArtResource 데이터 로드 완료");
     }
 
     public async UniTask<Dictionary<string, T>> LoadData<T>(string fileName) where T : new()
