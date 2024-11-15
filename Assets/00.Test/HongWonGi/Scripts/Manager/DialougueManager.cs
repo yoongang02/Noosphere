@@ -8,6 +8,7 @@ using TMPro;
 public class DialogueManager : Singleton<DialogueManager>
 {
     public Dictionary<string, DialogueStructure> _dialogue = new Dictionary<string, DialogueStructure>();
+    [SerializeField] private GameObject _toggleIcon;
     private string _currentDialogueId = "";
     private int _currentLineIndex = 0;
     private string _initialDialogueId = "";
@@ -130,6 +131,7 @@ public class DialogueManager : Singleton<DialogueManager>
 
     public async UniTaskVoid ShowNextLine()
     {
+        _toggleIcon.SetActive(false);
         if (string.IsNullOrEmpty(_currentDialogueId))
         {
             Debug.LogWarning("현재 대화 ID가 설정되지 않았습니다.");
@@ -196,6 +198,7 @@ public class DialogueManager : Singleton<DialogueManager>
 
         UIManager.Instance.dialogueUI.text = text;
         isTyping = false;
+        _toggleIcon.SetActive(true);
     }
     private void OnEscapePressed()
     {
