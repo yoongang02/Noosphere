@@ -25,6 +25,9 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private GameObject _investigateUIYesBtn;
     [SerializeField] private GameObject _investigateUINoBtn;
     [SerializeField] private GameObject _curSelectedBtn;
+    private EvidenceStructure _curInvestigateEvidence;
+    public bool isSelecting = false;
+    public bool isEvidenceAcquired = false;
 
     void Update()
     {
@@ -54,6 +57,23 @@ public class UIManager : Singleton<UIManager>
                     _curSelectedBtn, 
                     new BaseEventData(EventSystem.current), (x, y) => x.OnSelect(y)
                 );
+                isSelecting = false;
+            }
+            
+            //ESC - NO 선택
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                //NO 버튼 선택
+                SetButtonSelected(_investigateUINoBtn,UnityExtension.HexColor(GreenColor));
+                SetButtonSelected(_investigateUIYesBtn,UnityExtension.HexColor(WhiteColor));
+                _curSelectedBtn = _investigateUINoBtn;
+                
+                //해당 버튼의 이벤트 트리거 호출
+                ExecuteEvents.Execute<ISelectHandler>(
+                    _curSelectedBtn, 
+                    new BaseEventData(EventSystem.current), (x, y) => x.OnSelect(y)
+                );
+                isSelecting = false;
             }
         }
 
@@ -105,13 +125,17 @@ public class UIManager : Singleton<UIManager>
     public void OpenInvestigateUI(EvidenceStructure evidence)
     {
         SetInvestigateUI(evidence);
+        _curInvestigateEvidence = evidence;
         _isInvestigateUIOpened = true;
+        isEvidenceAcquired = false;
         _investigateUI.SetActive(true);
+        isSelecting = true;
     }
 
     public void CloseInvestigateUI()
     {
         _isInvestigateUIOpened = false;
+        _curInvestigateEvidence = null;
         _investigateUI.SetActive(false);
     }
     //증거물 조사 UI - 버튼 선택
@@ -119,43 +143,13 @@ public class UIManager : Singleton<UIManager>
     {
         TextMeshProUGUI tmp = btn.GetComponent<TextMeshProUGUI>();
         tmp.color = color;
-        
     }
 
     public void ShowDetailEvidence()
     {
         Debug.Log("자세히 보기 실행");
+        isEvidenceAcquired = true;
+        _curInvestigateEvidence.AcquireEvidence();
         CloseInvestigateUI();
     }
-
-
-public void CancelInvestigate()
-    {
-        /*
-        Debug.Log("no 클릭");
-        _bookInfo.SetActive(false);
-        FindObjectOfType<PlayerController>().isDialogueOn = false;
-        FindObjectOfType<PlayerInteract>().isInteracting = false;
-        */
-    }
-
-    public void InvestigateBook()
-    {
-        /*
-        Debug.Log("yes 클릭");
-        _bookInfo.SetActive(false);
-        _bookPopUp.SetActive(true);
-        isPopUpOpen = true;
-        */
-    }
-
-    /*
-    public IEnumerator ActiveEndingMessage()
-    {
-        
-        yield return new WaitForSeconds(1.5f);
-        _endingMessage.SetActive(true);
-        FindObjectOfType<PlayerInteract>().isEnd = true;
-    }
-    */
 }

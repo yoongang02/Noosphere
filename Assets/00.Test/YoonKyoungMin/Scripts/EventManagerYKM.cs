@@ -101,13 +101,12 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 EvidenceStructure evidence = _evidences[eventStructure.evidence_id];
                 //증거물 조사 UI 띄우기
                 UIManager.Instance.OpenInvestigateUI(evidence);
-                
-                //증거물 조사 끝내면 인벤토리에 저장하기
-                evidence.AcquireEvidence();
+
+                while (UIManager.Instance.isSelecting){}
             }
             
             //이벤트가 다 실행되었다면 이벤트 실행되었음을 표시.
-            eventStructure.isExecuted = true;
+            if(UIManager.Instance.isEvidenceAcquired) eventStructure.isExecuted = true;
         }
     }
 
