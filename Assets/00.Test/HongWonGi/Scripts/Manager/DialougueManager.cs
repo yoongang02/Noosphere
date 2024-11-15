@@ -26,7 +26,10 @@ public class DialogueManager : Singleton<DialogueManager>
     }
     private void OnDestroy()
     {
-        InputManager.Instance.exitBtnAction -= OnEscapePressed;
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.exitBtnAction -= OnEscapePressed;
+        }
     }
     private async UniTaskVoid InitializeDialogue()
     {

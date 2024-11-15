@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -196,6 +197,15 @@ public class PlayerController : Singleton<PlayerController>
             isPlayerNearNPC = false;
             _currentNPC = null;
             UIManager.Instance.PopUp(false);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.moveAction -= HandleInput;
+            InputManager.Instance.selectBtnAction -= OnEKey;
         }
     }
 }

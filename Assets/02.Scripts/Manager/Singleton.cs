@@ -8,12 +8,18 @@ using UnityEngine;
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T instance;
-    [SerializeField] bool dontDestroy = true;
+    [SerializeField] bool dontDestroy = false;
+    private static bool isQuitting = false;
 
     public static T Instance
     {
         get
         {
+            if (isQuitting)
+            {
+                return null;
+            }
+
             if (instance == null)
             {
                 instance = (T)FindObjectOfType(typeof(T));
@@ -42,5 +48,10 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        isQuitting = true;
     }
 }

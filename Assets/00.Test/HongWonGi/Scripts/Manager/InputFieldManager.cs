@@ -83,6 +83,9 @@ public class InputFieldManager : Singleton<InputFieldManager>
 
     private void OnDestroy()
     {
-        InputManager.Instance.exitBtnAction -= CloseInputField;
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.exitBtnAction -= CloseInputField;
+        }
     }
 }
