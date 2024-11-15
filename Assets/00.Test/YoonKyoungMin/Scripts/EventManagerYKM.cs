@@ -98,7 +98,12 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             //evidence 정보에 해당 id 값이 존재한다면
             if (_evidences.ContainsKey(eventStructure.evidence_id))
             {
-                _evidences[eventStructure.evidence_id].AcquireEvidence();
+                EvidenceStructure evidence = _evidences[eventStructure.evidence_id];
+                //증거물 조사 UI 띄우기
+                UIManager.Instance.OpenInvestigateUI(evidence);
+                
+                //증거물 조사 끝내면 인벤토리에 저장하기
+                evidence.AcquireEvidence();
             }
             
             //이벤트가 다 실행되었다면 이벤트 실행되었음을 표시.

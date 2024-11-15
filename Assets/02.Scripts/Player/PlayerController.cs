@@ -42,6 +42,7 @@ public class PlayerController : Singleton<PlayerController>
     private void OnEKey()
     {
         if (_currentNPC == null) return;
+        /*
         if (isDialogueOn && !UIManager.Instance.isPopUpOpen)
         {
             ContinueDialogue();
@@ -50,6 +51,7 @@ public class PlayerController : Singleton<PlayerController>
         {
             StartDialogue();
         }
+        */
     }
 
     private void StartDialogue()

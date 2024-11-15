@@ -105,14 +105,8 @@ public class InventoryManager : Singleton<InventoryManager>
     //현재 보이는 인벤토리 UI 업데이트
     void UpdateInventoryUI()
     {
-        foreach (Transform child in _realWorldInventory.transform)
-        {
-            Destroy(child.gameObject);
-        }
-        foreach (Transform child in _mentalWorldInventory.transform)
-        {
-            Destroy(child.gameObject);
-        }
+        ClearInventoryUI(_realWorldInventory);
+        ClearInventoryUI(_mentalWorldInventory);
         
         ChapterInventory currentInventory = chapterInventories[_currentViewChapter];
 
@@ -128,6 +122,20 @@ public class InventoryManager : Singleton<InventoryManager>
         {
             GameObject slot = Instantiate(_inventorySlotPrefab, _mentalWorldInventory.transform);
             UpdateSlotUI(slot, evidence);
+        }
+    }
+    
+    void ClearInventoryUI(GameObject inventoryParent)
+    {
+        int childCount = inventoryParent.transform.childCount;
+        
+        for (int i = childCount - 1; i >= 0; i--)
+        {
+            Transform child = inventoryParent.transform.GetChild(i);
+            if (child != null)
+            {
+                Destroy(child.gameObject);
+            }
         }
     }
     

@@ -197,10 +197,12 @@ public class PlayerInteract : MonoBehaviour
 
     void InitProgressBar()
     {
+        /*
         _progressBarFill.InitFillAmount();
         _timer = 0f;
         _progressBar.SetActive(false);
         if(!_isComplete) _uiManager.transitionAnimator.Play("TS_4_Normal_Reveal", 0, 0);
         _startEnter = false;
+        */
     }
 }
