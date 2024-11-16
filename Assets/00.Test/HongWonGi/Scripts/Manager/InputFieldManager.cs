@@ -47,7 +47,10 @@ public class InputFieldManager : Singleton<InputFieldManager>
     {
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            if (value == _currentAnswer)
+            string formattedValue = value.Replace(" ", "");
+            string formattedAnswer = _currentAnswer.Replace(" ", "");
+
+            if (formattedValue == formattedAnswer)
             {
                 DialogueManager.Instance.SetDialogue(_input[_currentID].input_correct);
                 isAnswer = true;
@@ -76,7 +79,6 @@ public class InputFieldManager : Singleton<InputFieldManager>
         if (_questionText.transform.parent.gameObject.activeSelf)
         {
             _questionText.transform.parent.gameObject.SetActive(false);
-            PlayerController.Instance.isDialogueOn = false;
             _inputText.text = ""; 
         }
     }
