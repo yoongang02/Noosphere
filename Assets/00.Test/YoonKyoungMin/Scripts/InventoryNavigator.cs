@@ -9,6 +9,9 @@ public class InventoryNavigator : MonoBehaviour
     [SerializeField] private GameObject _curSelectedSlot;
     [SerializeField] private Sprite _selectedSprite;
     [SerializeField] private Sprite _deselectedSprite;
+    [SerializeField] private Sprite _selectedChapterSprite;
+    [SerializeField] private Sprite _deselectedChapterSprite;
+    
     public List<GameObject> inventorySlots = new List<GameObject>();
     private List<GameObject> realWorldSlots = new List<GameObject>();
     private List<GameObject> mentalWorldSlots = new List<GameObject>();
@@ -41,7 +44,19 @@ public class InventoryNavigator : MonoBehaviour
             //좌우 화살표 클릭 시, 페이지 넘김
             
             //숫자 키 클릭 시, 챕터 넘김
-            
+            for (int i = 0; i <= 9; i++)
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+                {
+                    int inputIndex = i - 1;
+                    if (inputIndex >= 0 && inputIndex < InventoryManager.Instance.chapterUIList.Count)
+                    {
+                        InventoryManager.Instance.currentViewChapter = inputIndex;
+                        SetChapterSelected(inputIndex);
+                        InventoryManager.Instance.UpdateInventoryUI();
+                    }
+                }
+            }
         }
     }
 
@@ -76,6 +91,9 @@ public class InventoryNavigator : MonoBehaviour
             return;
         }
 
+        int chapterIndex = InventoryManager.Instance.currentViewChapter;
+        SetChapterSelected(chapterIndex);
+        
         _curSelectedSlot = inventorySlots[0];
         SetSlotSelected(_curSelectedSlot);
     }
@@ -217,6 +235,17 @@ public class InventoryNavigator : MonoBehaviour
         foreach (var _slot in inventorySlots)
         {
             if (_slot != slot) _slot.GetComponent<Image>().sprite = _deselectedSprite;
+        }
+    }
+
+    private void SetChapterSelected(int index)
+    {
+        GameObject chapter = InventoryManager.Instance.chapterUIList[index];
+        Image chapterImg = chapter.GetComponent<Image>();
+        chapterImg.sprite = _selectedChapterSprite;
+        foreach (var _chapter in InventoryManager.Instance.chapterUIList)
+        {
+            if (_chapter != chapter) _chapter.GetComponent<Image>().sprite = _deselectedChapterSprite;
         }
     }
 
