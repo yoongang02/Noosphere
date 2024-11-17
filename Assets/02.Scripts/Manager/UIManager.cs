@@ -99,9 +99,9 @@ public class UIManager : Singleton<UIManager>
             {
                 Debug.Log("art resource id : " + evidence.artresource_id);
                 //아트 리소스 불러오기
-                if (EventManagerYKM.Instance._artResources.ContainsKey(evidence.artresource_id))
+                if (DataManager.Instance._artResources.ContainsKey(evidence.artresource_id))
                 {
-                    image.sprite = EventManagerYKM.Instance._artResources[evidence.artresource_id]
+                    image.sprite = DataManager.Instance._artResources[evidence.artresource_id]
                         .GetSpriteFromFilePath();
                 }
                 else

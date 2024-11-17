@@ -7,15 +7,6 @@ using Cysharp.Threading.Tasks;
 
 public class EventManagerYKM : Singleton<EventManagerYKM>
 {
-    
-    //csv 파일 데이터들
-    public Dictionary<string, EventStructure> _events = new Dictionary<string, EventStructure>();
-    public Dictionary<string, LockConditionStructure> _lockConditions = new Dictionary<string, LockConditionStructure>();
-    public Dictionary<string, EvidenceStructure> _evidences = new Dictionary<string, EvidenceStructure>();
-    public Dictionary<string, ArtResourceStructure> _artResources = new Dictionary<string, ArtResourceStructure>();
-    
-    //추가 변수
-    
     //스테이지 번호
     public enum ChapterInfo
     {
@@ -32,31 +23,12 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     {
         //게임 시작 시, 스테이지 정보 초기화
         curStageInfo = ChapterInfo.Prologue;
-        InitializeData().Forget();
-    }
-    
-    private async UniTaskVoid InitializeData()
-    {
-        _events = await LoadData<EventStructure>("Event");
-        _lockConditions = await LoadData<LockConditionStructure>("Lock_condition");
-        _evidences = await LoadData<EvidenceStructure>("Evidence");
-        _artResources = await LoadData<ArtResourceStructure>("ArtResource");
-        Debug.Log("Event 데이터 로드 완료");
-        Debug.Log("Lock_Condition 데이터 로드 완료");
-        Debug.Log("Evidence 데이터 로드 완료");
-        Debug.Log("ArtResource 데이터 로드 완료");
-    }
-
-    public async UniTask<Dictionary<string, T>> LoadData<T>(string fileName) where T : new()
-    {
-        CSVParserYKM parser = new CSVParserYKM();
-        return await parser.Parse<T>(fileName);
     }
 
     //이벤트 실행
     public void ExecuteEvent(string eventID)
     {
-        if (!_events.ContainsKey(eventID))
+        if (!DataManager.Instance._events.ContainsKey(eventID))
         {
             Debug.Log(eventID + " 이벤트가 존재하지 않음.");
             return;
@@ -68,7 +40,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             return;
         }
 
-        EventStructure eventStructure = _events[eventID];
+        EventStructure eventStructure = DataManager.Instance._events[eventID];
 
         //실행 조건 만족하는지 체크
         if (eventStructure.CheckCondition())
@@ -80,9 +52,9 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     IEnumerator HandleEventWithEvidence(EventStructure eventStructure){
         
         //락 조건이 있다면, 락 걸기
-        if (_lockConditions.ContainsKey(eventStructure.lock_condition_id))
+        if (DataManager.Instance._lockConditions.ContainsKey(eventStructure.lock_condition_id))
         {
-            _lockConditions[eventStructure.lock_condition_id].Lock();
+            DataManager.Instance._lockConditions[eventStructure.lock_condition_id].Lock();
         }
         //결과 실행하기
         foreach (var resultID in eventStructure.resultIDs)
@@ -102,10 +74,10 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         }
         
         // 증거물 조사 UI 띄우기
-        if (_evidences.ContainsKey(eventStructure.evidence_id))
+        if (DataManager.Instance._evidences.ContainsKey(eventStructure.evidence_id))
         {
             Debug.Log("증거물 조사 띄우기 : " + eventStructure.evidence_id);
-            EvidenceStructure evidence = _evidences[eventStructure.evidence_id];
+            EvidenceStructure evidence = DataManager.Instance._evidences[eventStructure.evidence_id];
             UIManager.Instance.OpenInvestigateUI(evidence);
 
             // UI에서 입력을 기다림

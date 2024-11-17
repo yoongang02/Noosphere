@@ -172,9 +172,9 @@ public class InventoryManager : Singleton<InventoryManager>
             if (img.gameObject.name == "EvidenceImg")
             {
                 //아트 리소스 불러오기
-                if (EventManagerYKM.Instance._artResources.ContainsKey(evidence.artresource_id))
+                if (DataManager.Instance._artResources.ContainsKey(evidence.artresource_id))
                 {
-                    img.sprite = EventManagerYKM.Instance._artResources[evidence.artresource_id].GetSpriteFromFilePath();
+                    img.sprite = DataManager.Instance._artResources[evidence.artresource_id].GetSpriteFromFilePath();
                 }
                 else
                 {
