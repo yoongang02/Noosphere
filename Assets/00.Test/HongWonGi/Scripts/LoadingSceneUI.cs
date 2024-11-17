@@ -31,7 +31,7 @@ public class LoadingSceneUI : MonoBehaviour
     private void UpdateLoadingProgress(float progress)
     {
         _loadingSlider.value = progress;
-        _loadingText.text = $"로딩중 : {progress * 100f}%";
+        _loadingText.text = $"로딩중 : {Mathf.RoundToInt(progress * 100)}%";
     }
 
    
