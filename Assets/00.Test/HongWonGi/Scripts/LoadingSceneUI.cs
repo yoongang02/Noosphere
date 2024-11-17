@@ -20,7 +20,7 @@ public class LoadingSceneUI : MonoBehaviour
     {
         await LoadData();
         await FadeOut();
-        SceneManager.LoadScene("map1");
+        SceneManager.LoadScene("PrologueMap_real");
     }
 
     private async UniTask LoadData()

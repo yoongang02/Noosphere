@@ -7,8 +7,9 @@ using UnityEngine.EventSystems;
 
 public class UIManager : Singleton<UIManager>
 {
-    const string GreenColor = "#01EE00";
-    const string WhiteColor = "#FFFFFF";
+    public static string GreenColor = "#01EE00";
+    public static string WhiteColor = "#FFFFFF";
+    public static string BlackColor = "#000000";
     /*
     public GameObject _showPressBtnUI;
     public GameObject _bookInfo;
