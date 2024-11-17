@@ -51,7 +51,7 @@ public class PlayerController : Singleton<PlayerController>
             // interact 타입일 때만 처리
             NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
             if (npcDialogue != null && 
-                DialogueManager.Instance._dialogue[npcDialogue.dialogueId].trigger_type == "interact")
+                DataManager.Instance._dialogue[npcDialogue.dialogueId].trigger_type == "interact")
             {
                 if (DialogueManager.Instance.isTyping)
                 {

@@ -7,7 +7,6 @@ using TMPro;
 
 public class DialogueManager : Singleton<DialogueManager>
 {
-    public Dictionary<string, DialogueStructure> _dialogue = new Dictionary<string, DialogueStructure>();
     [SerializeField] private GameObject _toggleIcon;
     private string _currentDialogueId = "";
     private int _currentLineIndex = 0;
@@ -21,7 +20,6 @@ public class DialogueManager : Singleton<DialogueManager>
 
     private void Start()
     {
-        InitializeDialogue().Forget();
         InputManager.Instance.exitBtnAction += OnEscapePressed;
     }
     private void OnDestroy()
@@ -31,23 +29,11 @@ public class DialogueManager : Singleton<DialogueManager>
             InputManager.Instance.exitBtnAction -= OnEscapePressed;
         }
     }
-    private async UniTaskVoid InitializeDialogue()
-    {
-        await LoadDialogue("Dialogue");
-    }
-
-    private async UniTask LoadDialogue(string sheetName)
-    {
-        CSVParserYKM parser = new CSVParserYKM();
-        _dialogue = await parser.Parse<DialogueStructure>(sheetName);
-        Debug.Log("대화 로드 완료");
-    }
-
     public void SetDialogue(string id)
     {
         _currentDialogueId = id;
         isDialogeEnd = false;
-        if (_dialogue.TryGetValue(_currentDialogueId, out DialogueStructure dialogue))
+        if (DataManager.Instance._dialogue.TryGetValue(_currentDialogueId, out DialogueStructure dialogue))
         {
             if (dialogue.trigger_type == "auto") //대화창 바로 뜨기
             {
@@ -71,7 +57,7 @@ public class DialogueManager : Singleton<DialogueManager>
     {
         if (interactionType == "npc")
         {
-            GameObject npcObject = GameObject.Find(_dialogue[_currentDialogueId].character_id);
+            GameObject npcObject = GameObject.Find(DataManager.Instance._dialogue[_currentDialogueId].character_id);
             if (npcObject != null)
             {
                 NpcDialogue npcDialogue = npcObject.GetComponent<NpcDialogue>();
@@ -80,7 +66,7 @@ public class DialogueManager : Singleton<DialogueManager>
             }
             else
             {
-                Debug.LogWarning($"{_dialogue[_currentDialogueId].character_id} npc가 없습니다");
+                Debug.LogWarning($"{DataManager.Instance._dialogue[_currentDialogueId].character_id} npc가 없습니다");
             }
         }
         else if (interactionType == "object")
@@ -94,7 +80,7 @@ public class DialogueManager : Singleton<DialogueManager>
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (!string.IsNullOrEmpty(_currentDialogueId) && 
-                _dialogue[_currentDialogueId].trigger_type == "auto") // auto 타입 체크
+                DataManager.Instance._dialogue[_currentDialogueId].trigger_type == "auto") // auto 타입 체크
             {
                 if (isTyping)
                 {
@@ -120,7 +106,7 @@ public class DialogueManager : Singleton<DialogueManager>
     public void StartDialogue(string dialogueId)
     {
         UIManager.Instance.popUI.gameObject.SetActive(false);
-        if (_dialogue.ContainsKey(dialogueId))
+        if (DataManager.Instance._dialogue.ContainsKey(dialogueId))
         {
             _currentDialogueId = dialogueId;
             _currentLineIndex = 0;
@@ -141,7 +127,7 @@ public class DialogueManager : Singleton<DialogueManager>
             return;
         }
 
-        if (!_dialogue.TryGetValue(_currentDialogueId, out DialogueStructure dialogue))
+        if (!DataManager.Instance._dialogue.TryGetValue(_currentDialogueId, out DialogueStructure dialogue))
         {
             Debug.LogWarning($"Dialogue ID {_currentDialogueId} not found.");
             return;
@@ -158,7 +144,7 @@ public class DialogueManager : Singleton<DialogueManager>
         {
             if (!string.IsNullOrEmpty(dialogue.next_dialouge_id))
             {
-                if (_dialogue.ContainsKey(dialogue.next_dialouge_id))
+                if (DataManager.Instance._dialogue.ContainsKey(dialogue.next_dialouge_id))
                 {
                     _currentDialogueId = dialogue.next_dialouge_id;
                     _currentLineIndex = 0;
@@ -206,7 +192,7 @@ public class DialogueManager : Singleton<DialogueManager>
     private void OnEscapePressed()
     {
         if (!string.IsNullOrEmpty(_currentDialogueId) && 
-            _dialogue[_currentDialogueId].trigger_type == "interact"&&PlayerController.Instance.isDialogueOn)
+            DataManager.Instance._dialogue[_currentDialogueId].trigger_type == "interact"&&PlayerController.Instance.isDialogueOn)
         {
             PlayerController.Instance.isDialogueOn = false;
             isDialogeEnd = true;
