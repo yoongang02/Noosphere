@@ -7,8 +7,9 @@ using UnityEngine.EventSystems;
 
 public class UIManager : Singleton<UIManager>
 {
-    const string GreenColor = "#01EE00";
-    const string WhiteColor = "#FFFFFF";
+    public static string GreenColor = "#01EE00";
+    public static string WhiteColor = "#FFFFFF";
+    public static string BlackColor = "#000000";
     /*
     public GameObject _showPressBtnUI;
     public GameObject _bookInfo;
@@ -98,9 +99,9 @@ public class UIManager : Singleton<UIManager>
             {
                 Debug.Log("art resource id : " + evidence.artresource_id);
                 //아트 리소스 불러오기
-                if (EventManagerYKM.Instance._artResources.ContainsKey(evidence.artresource_id))
+                if (DataManager.Instance._artResources.ContainsKey(evidence.artresource_id))
                 {
-                    image.sprite = EventManagerYKM.Instance._artResources[evidence.artresource_id]
+                    image.sprite = DataManager.Instance._artResources[evidence.artresource_id]
                         .GetSpriteFromFilePath();
                 }
                 else
