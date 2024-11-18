@@ -9,8 +9,6 @@ public class InventoryNavigator : MonoBehaviour
     [SerializeField] private GameObject _curSelectedSlot;
     [SerializeField] private Sprite _selectedSprite;
     [SerializeField] private Sprite _deselectedSprite;
-    [SerializeField] private Sprite _selectedChapterSprite;
-    [SerializeField] private Sprite _deselectedChapterSprite;
     
     public List<GameObject> inventorySlots = new List<GameObject>();
     private List<GameObject> realWorldSlots = new List<GameObject>();
@@ -49,7 +47,7 @@ public class InventoryNavigator : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Alpha0 + i))
                 {
                     int inputIndex = i - 1;
-                    if (inputIndex >= 0 && inputIndex < InventoryManager.Instance.chapterUIList.Count)
+                    if (inputIndex >= 0 && inputIndex < InventoryManager.Instance.selectedChapterUIList.Count)
                     {
                         InventoryManager.Instance.currentViewChapter = inputIndex;
                         SetChapterSelected(inputIndex);
@@ -240,12 +238,18 @@ public class InventoryNavigator : MonoBehaviour
 
     private void SetChapterSelected(int index)
     {
-        GameObject chapter = InventoryManager.Instance.chapterUIList[index];
-        Image chapterImg = chapter.GetComponent<Image>();
-        chapterImg.sprite = _selectedChapterSprite;
-        foreach (var _chapter in InventoryManager.Instance.chapterUIList)
+        GameObject selectedChapter = InventoryManager.Instance.selectedChapterUIList[index];
+        GameObject deselectedChapter = InventoryManager.Instance.deselectedChapterUIList[index];
+        selectedChapter.SetActive(true);
+        deselectedChapter.SetActive(false);
+
+        foreach (var _chapter in InventoryManager.Instance.selectedChapterUIList)
         {
-            if (_chapter != chapter) _chapter.GetComponent<Image>().sprite = _deselectedChapterSprite;
+            if(_chapter != selectedChapter) _chapter.SetActive(false);
+        }
+        foreach (var _chapter in InventoryManager.Instance.deselectedChapterUIList)
+        {
+            if(_chapter != deselectedChapter) _chapter.SetActive(true);
         }
     }
 

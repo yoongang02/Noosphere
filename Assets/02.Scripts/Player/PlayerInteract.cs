@@ -162,7 +162,7 @@ public class PlayerInteract : MonoBehaviour
         if (other.CompareTag("EventTrigger"))
         {
             string eventID = other.GetComponent<EventTrigger>().eventID;
-            EventManagerYKM.Instance.ExecuteEvent(eventID);
+            StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
         }
 
         if (other.CompareTag("EventInteractionTrigger"))
