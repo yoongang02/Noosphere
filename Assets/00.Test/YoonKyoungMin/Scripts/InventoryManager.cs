@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using VFolders.Libs;
 
+[System.Serializable]
 public class InventorySlot
 {
     public string evidence_id;
@@ -23,6 +24,7 @@ public class InventorySlot
         artresource_id = evidence.artresource_id;
     }
 }
+[System.Serializable]
 public class ChapterInventory
 {
     public List<InventorySlot> realWorldEvidences { get; set; } = new List<InventorySlot>();
@@ -31,7 +33,7 @@ public class ChapterInventory
 public class InventoryManager : Singleton<InventoryManager>
 {
     //key : 챕터 숫자
-    Dictionary<int, ChapterInventory> chapterInventories = new Dictionary<int, ChapterInventory>();
+    public Dictionary<int, ChapterInventory> chapterInventories = new Dictionary<int, ChapterInventory>();
     
     //인벤토리 창 오픈 여부
     public bool isInventoryOpen = false;
