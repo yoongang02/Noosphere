@@ -101,8 +101,9 @@ public class UIManager : Singleton<UIManager>
                 //아트 리소스 불러오기
                 if (DataManager.Instance._artResources.ContainsKey(evidence.artresource_id))
                 {
-                    image.sprite = DataManager.Instance._artResources[evidence.artresource_id]
-                        .GetSpriteFromFilePath();
+                    //아트 리소스 내 증거물 인벤토리 이미지 가져오기
+                    ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresource_id];
+                    image.sprite = artResource.GetSpriteFromFilePath(artResource.inventoryFilePath);
                 }
                 else
                 {
