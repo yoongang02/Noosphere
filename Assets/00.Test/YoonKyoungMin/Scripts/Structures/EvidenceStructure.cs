@@ -6,6 +6,7 @@ public class EvidenceStructure
     public string evidence_id;
     public string evidence_name;
     public char evidence_Type;
+    public char shape_Type; //증거물 타입 종류. T : text, P : Prefab
     public char acquisition_Type;
     public string can_Use;
     public string unlock_Condition;

@@ -24,6 +24,7 @@ public class UIManager : Singleton<UIManager>
 
     //증거물 조사 UI
     private bool _isInvestigateUIOpened = false;
+    [Header("증거물 조사 UI")]
     [SerializeField] private GameObject _investigateUI;
     [SerializeField] private GameObject _investigateUIYesBtn;
     [SerializeField] private GameObject _investigateUINoBtn;
@@ -32,6 +33,11 @@ public class UIManager : Singleton<UIManager>
     public bool isSelecting = false;
     public bool isEvidenceAcquired = false;
 
+    [Space(5)] [Header("증거물 상세 내용 UI")] [SerializeField]
+    private GameObject _evidenceDetailUI;
+    [SerializeField] private GameObject _evidenceDetailBackground;
+    [SerializeField] private GameObject _evidenceDetailPrefabParent;
+    [SerializeField] private bool _isDetailOpen = false;
     void Update()
     {
         if (_isInvestigateUIOpened)
@@ -160,9 +166,40 @@ public class UIManager : Singleton<UIManager>
     public void ShowDetailEvidence()
     {
         Debug.Log("자세히 보기 실행");
+        
+        //인벤토리에 해당 증거물 획득
         isEvidenceAcquired = true;
         _curInvestigateEvidence.AcquireEvidence();
         CloseInvestigateUI();
+        
+        //상세보기 창 열기
+        _isDetailOpen = true;
+    }
+
+    void SetDetailEvidenceInMap(EvidenceStructure evidence)
+    {
+        ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresource_id];
+        //배경 이미지 변경하기
+        Image backgroundImg = _evidenceDetailBackground.GetComponent<Image>();
+        backgroundImg.sprite = artResource.GetSpriteFromFilePath(artResource.map_background_img);
+        
+        //evidence 성질에 따라 프리팹인지 UI인지 결정
+        if (evidence.shape_Type == 'P')
+        {
+            
+        }
+        else if (evidence.shape_Type == 'T')
+        {
+            
+        }
+    }
+    
+    void SetDetailEvidenceInInventory(EvidenceStructure evidence)
+    {
+        ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresource_id];
+        //배경 이미지 변경하기
+        Image backgroundImg = _evidenceDetailBackground.GetComponent<Image>();
+        backgroundImg.sprite = artResource.GetSpriteFromFilePath(artResource.map_background_img);
     }
 
     public void PopUp(bool isActive,string text="")
