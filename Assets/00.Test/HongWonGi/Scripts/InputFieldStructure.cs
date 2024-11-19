@@ -9,4 +9,6 @@ public class InputFieldStructure
    public string correct_answer;
    public string input_wrong;
    public string input_correct;
+
+   public bool isSolved = false;
 }

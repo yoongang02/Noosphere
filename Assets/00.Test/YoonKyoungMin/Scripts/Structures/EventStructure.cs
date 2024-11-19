@@ -9,6 +9,10 @@ public class EventStructure
     public string condition_Type; //조건 타입 or,and
     public string[] conditions;
     public string[] resultIDs;
+    public bool branch_Type;
+    public string branch_Element;
+    public string branch_True;
+    public string branch_False;
     public string evidence_id;
     public string lock_condition_id; //이벤트 실행 시 락되는 조건
     public string location_id;

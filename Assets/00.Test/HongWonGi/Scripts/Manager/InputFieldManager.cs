@@ -13,6 +13,7 @@ public class InputFieldManager : Singleton<InputFieldManager>
     [SerializeField] private TMP_InputField _inputText;
     private string _currentAnswer;
     private string _currentID;
+    public bool isSubmitAnswer = false;
 
     private void Start()
     {
@@ -30,6 +31,7 @@ public class InputFieldManager : Singleton<InputFieldManager>
         PlayerController.Instance.isDialogueOn = true;
         _currentID = id;
         isAnswer = false;
+        isSubmitAnswer = false;
         if (!_input.TryGetValue(id, out InputFieldStructure structure))
         {
             Debug.LogWarning($"ID {id}에 해당하는 InputFieldStructure를 찾을 수 없습니다.");
@@ -47,6 +49,8 @@ public class InputFieldManager : Singleton<InputFieldManager>
     {
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
+            isSubmitAnswer = true;
+            
             string formattedValue = value.Replace(" ", "");
             string formattedAnswer = _currentAnswer.Replace(" ", "");
 
@@ -54,6 +58,7 @@ public class InputFieldManager : Singleton<InputFieldManager>
             {
                 DialogueManager.Instance.SetDialogue(_input[_currentID].input_correct);
                 isAnswer = true;
+                _input[_currentID].isSolved = true;
             }
             else
             {
