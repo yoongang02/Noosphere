@@ -20,7 +20,7 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private AudioSource footstepSource;
     [SerializeField] private float stepInterval = 0.5f;
     [SerializeField] private float runInterval = 0.2f;
-    
+
     private Vector3 _moveDirection;
     private Animator _animator;
     private float _defaultSpeed;
@@ -43,6 +43,12 @@ public class PlayerController : Singleton<PlayerController>
     {
         _animator.SetFloat("MoveSpeed", 0);
         InputManager.Instance.OnUpdate();
+    }
+
+    public void SetInteract(bool state)
+    {
+        isDialogueOn = state;
+        _animator.SetBool("Interact", state);
     }
 
     private void OnEKey()
