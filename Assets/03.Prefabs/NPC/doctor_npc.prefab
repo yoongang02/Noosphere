@@ -1300,9 +1300,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8475008555714687663}
   - component: {fileID: 7192101958602092885}
+  - component: {fileID: 5927402225525613454}
+  - component: {fileID: 4490868548574643316}
   m_Layer: 0
   m_Name: doctor_npc
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1346,6 +1348,32 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5927402225525613454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4871753187777209175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dafb578f0885dd46bc015ce35adc4f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueId: 
+--- !u!114 &4490868548574643316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4871753187777209175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83aeae3c5a2ef0c43b5864a12e27cfe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 0}
 --- !u!1 &5041545182349850292
 GameObject:
   m_ObjectHideFlags: 0

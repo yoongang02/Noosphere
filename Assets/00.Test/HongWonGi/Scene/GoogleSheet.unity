@@ -926,6 +926,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: doctor_npc (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 4871753187777209175, guid: ea5561711f9a7844584e0d4539bc8999,
+        type: 3}
+      propertyPath: m_TagString
+      value: NPC
+      objectReference: {fileID: 0}
     - target: {fileID: 8475008555714687663, guid: ea5561711f9a7844584e0d4539bc8999,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1828,12 +1833,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 1149339258207356573, guid: 0063890c6989d4237b438a40b27ff6e0, type: 3}
---- !u!4 &936016852 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5566273137469695926, guid: a9f2309f9be5e9240ab5d241af000d41,
-    type: 3}
-  m_PrefabInstance: {fileID: 1858245321}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &976422912
 GameObject:
   m_ObjectHideFlags: 0
@@ -2150,8 +2149,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cb0f4819a2a6114c9b76023bf1e7a77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lookTarget: {fileID: 936016852}
-  rotateSpeed: 5
 --- !u!1 &1420189978
 GameObject:
   m_ObjectHideFlags: 0
