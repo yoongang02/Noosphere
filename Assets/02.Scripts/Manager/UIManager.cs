@@ -34,7 +34,8 @@ public class UIManager : Singleton<UIManager>
     public bool isEvidenceAcquired = false;
 
     [Space(5)] [Header("증거물 상세 내용 UI")] [SerializeField]
-    private GameObject _evidenceDetailUI;
+    private bool _isInMap = true;
+    [SerializeField] private GameObject _evidenceDetailUI;
     [SerializeField] private GameObject _evidenceDetailBackground;
     [SerializeField] private Sprite _evidenceDetailInventoryBackground;
     [SerializeField] private List<Sprite> _evidenceTextDetailImgs;
@@ -143,6 +144,7 @@ public class UIManager : Singleton<UIManager>
                 {
                     //아트 리소스 내 증거물 인벤토리 이미지 가져오기
                     ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresource_id];
+                    Debug.Log("artResource debug : " + artResource + ", filePath : " + artResource.inventoryFilePath);
                     image.sprite = artResource.GetSpriteFromFilePath(artResource.inventoryFilePath);
                 }
                 else
@@ -162,6 +164,7 @@ public class UIManager : Singleton<UIManager>
     //증거물 조사 UI 띄우기
     public void OpenInvestigateUI(EvidenceStructure evidence)
     {
+        _isInMap = true;
         SetInvestigateUI(evidence);
         _curInvestigateEvidence = evidence;
         _isInvestigateUIOpened = true;
@@ -197,9 +200,9 @@ public class UIManager : Singleton<UIManager>
         _curSelectedBtn = _investigateUINoBtn;
     }
 
-    public void ShowDetailEvidence(string type)
+    public void ShowDetailEvidence()
     {
-        SetDetailEvidence(_curInvestigateEvidence,type);
+        SetDetailEvidence(_curInvestigateEvidence);
         Debug.Log("자세히 보기 실행");
         
         //인벤토리에 해당 증거물 획득
@@ -217,17 +220,17 @@ public class UIManager : Singleton<UIManager>
         _evidenceDetailUI.SetActive(false);
     }
 
-    void SetDetailEvidence(EvidenceStructure evidence, string type)
+    void SetDetailEvidence(EvidenceStructure evidence)
     {
         ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresource_id];
         //배경 이미지 변경하기
         Image backgroundImg = _evidenceDetailBackground.GetComponent<Image>();
 
-        if (type == "inventory")
+        if (!_isInMap)
         {
             backgroundImg.sprite = _evidenceDetailInventoryBackground;
         }
-        else if(type == "map")
+        else
         {
             backgroundImg.sprite = artResource.GetSpriteFromFilePath(artResource.map_background_img);
         }
@@ -269,21 +272,29 @@ public class UIManager : Singleton<UIManager>
         _evidenceTextDetailImgs.Clear();
         //페이지가 여러개 일수도 있으니까 페이지 불러오기
         int totalPageCnt = artResource.text_detail_img_cnt;
-        for (int page = 0; page < totalPageCnt; page++)
-        {
-            //파일 시작 경로에서 이미지 숫자만큼 불러오기
-            string imgPath = artResource.text_detail_start_img;
-            int lastUnderscoreIndex = imgPath.LastIndexOf('_'); 
-            string prefix = imgPath.Substring(0, lastUnderscoreIndex + 1);
-            string modifiedString = $"{prefix}{page:D2}";
-            
-            Sprite pageImg = artResource.GetSpriteFromFilePath(modifiedString);
-            _evidenceTextDetailImgs.Add(pageImg);
-        }
 
-        _evidenceDetailTextImg.sprite = _evidenceTextDetailImgs[0];
-        //페이지 개수에 따른 버튼 업데이트
-        UpdateTextDetailBtns(totalPageCnt);
+        if (totalPageCnt > 0)
+        {
+            for (int page = 0; page < totalPageCnt; page++)
+            {
+                //파일 시작 경로에서 이미지 숫자만큼 불러오기
+                string imgPath = artResource.text_detail_start_img;
+                int lastUnderscoreIndex = imgPath.LastIndexOf('_'); 
+                string prefix = imgPath.Substring(0, lastUnderscoreIndex + 1);
+                string modifiedString = $"{prefix}{page:D2}";
+            
+                Sprite pageImg = artResource.GetSpriteFromFilePath(modifiedString);
+                _evidenceTextDetailImgs.Add(pageImg);
+            }
+
+            _evidenceDetailTextImg.sprite = _evidenceTextDetailImgs[0];
+            //페이지 개수에 따른 버튼 업데이트
+            UpdateTextDetailBtns(totalPageCnt);
+        }
+        else
+        {
+            Debug.Log("text detail img가 존재하지 않습니다.");
+        }
     }
 
     void UpdateTextDetail(int index)

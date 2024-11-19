@@ -47,7 +47,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         }
 
         EventStructure eventStructure = DataManager.Instance._events[eventID];
-
+        Debug.Log(eventID + "이벤트 실행 시도");
         //실행 조건 만족하는지 체크
         if (eventStructure.CheckCondition())
         {

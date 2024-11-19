@@ -21,22 +21,25 @@ public class InventoryNavigator : MonoBehaviour
     {
         if (InventoryManager.Instance.isInventoryOpen)
         {
-            //wasd 키를 통해 슬롯 상하좌우 이동
-            if (Input.GetKeyDown(KeyCode.W))
+            if (_curSelectedSlot != null)
             {
-                MoveUp();
-            }
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                MoveLeft();
-            }
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                MoveDown();
-            }
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                MoveRight();
+                //wasd 키를 통해 슬롯 상하좌우 이동
+                if (Input.GetKeyDown(KeyCode.W))
+                {
+                    MoveUp();
+                }
+                if (Input.GetKeyDown(KeyCode.A))
+                {
+                    MoveLeft();
+                }
+                if (Input.GetKeyDown(KeyCode.S))
+                {
+                    MoveDown();
+                }
+                if (Input.GetKeyDown(KeyCode.D))
+                {
+                    MoveRight();
+                }
             }
             
             //좌우 화살표 클릭 시, 페이지 넘김
