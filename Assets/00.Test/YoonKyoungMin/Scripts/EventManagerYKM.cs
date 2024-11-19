@@ -83,8 +83,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 if (input.isSolved)
                 {
                     //input이 해결되었다면
-                    inputResultType =
-                        eventStructure.branch_True.Substring(0, eventStructure.branch_True.IndexOf('_'));
+                    inputResultType = eventStructure.branch_True;
                     //이벤트 타입이 실행 완료로 변경.
                     eventStructure.isExecuted = true;
                     Debug.Log("input 해결 완료");
@@ -92,8 +91,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 else
                 {
                     //input이 해결되지 않았다면
-                    inputResultType =
-                        eventStructure.branch_True.Substring(0, eventStructure.branch_False.IndexOf('_'));
+                    inputResultType = eventStructure.branch_False;
                     Debug.Log("input 해결 미완료");
                 }
                 //결과 실행
@@ -106,8 +104,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 if (InventoryManager.Instance.IsAcquiredEvidence(eventStructure.branch_Element))
                 {
                     //input이 해결되었다면
-                    inputResultType =
-                        eventStructure.branch_True.Substring(0, eventStructure.branch_True.IndexOf('_'));
+                    inputResultType = eventStructure.branch_True;
                     //이벤트 타입이 실행 완료로 변경.
                     eventStructure.isExecuted = true;
                     Debug.Log("evidence 해결 완료");
@@ -115,8 +112,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 else
                 {
                     //input이 해결되지 않았다면
-                    inputResultType =
-                        eventStructure.branch_True.Substring(0, eventStructure.branch_False.IndexOf('_'));
+                    inputResultType = eventStructure.branch_False;
                     Debug.Log("evidence 해결 미완료");
                 }
                 //결과 실행

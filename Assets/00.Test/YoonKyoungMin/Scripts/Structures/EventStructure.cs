@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EventStructure
@@ -48,18 +49,55 @@ public class EventStructure
     //조건 충족하는지
     private bool IsConditionMet(string conditionID)
     {
+        if (string.IsNullOrEmpty(conditionID)) return true;
+        
         bool isMet = false;
         //Condition Manager
-        string conditionType = conditionID.Substring(0, conditionID.IndexOf('_'));
+        char boolType = conditionID[0];
+        string conditionType;
+        string id;
+        if (boolType == '!')
+        {
+            conditionType = conditionID.Substring(1, conditionID.IndexOf('_')-1);
+            id = conditionID.Substring(1, conditionID.Length-1);
+        }
+        else
+        {
+            conditionType = conditionID.Substring(0, conditionID.IndexOf('_'));
+            id = conditionID;
+        }
+        Debug.Log($"boolType : {boolType} , conditonType : {conditionType} , id : {id}");
         if (conditionType == "evidence")
         {
-            //증거 인벤토리에 있는지 확인, 혹은 
-            isMet = true;
+            //증거 인벤토리에 있는지 확인, 혹은 사용했는지 구분
+            //우선은 획득한 상태만 체크하기.
+            if (InventoryManager.Instance.IsAcquiredEvidence(id))
+            {
+                isMet = true;
+            }
         }
         else if (conditionType == "dialogue")
         {
             
         }
+        else if (conditionType == "Event")
+        {
+            if (DataManager.Instance._events.ContainsKey(id) && DataManager.Instance._events[id].isExecuted)
+            {
+                isMet = true;
+            }
+        }
+        else if (conditionType == "input")
+        {
+            if (DataManager.Instance._input.ContainsKey(id) && DataManager.Instance._input[id].isSolved)
+            {
+                isMet = true;
+            }
+        }
+        
+        //혹시 not 조건이 있다면 반대로 값을 출력
+        if (boolType == '!') return !isMet;
+        
         return isMet;
     }
 }
