@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,23 +8,46 @@ public class ClueObjectController : MonoBehaviour
      [SerializeField] private float _scaleSpeed = 0.1f; 
      [SerializeField] private float _minScale = 0.1f;   
      [SerializeField] private float _maxScale = 3f;    
-     [SerializeField] private float _rotationSpeed = 100f;  
+     [SerializeField] private float _rotationSpeed = 100f;
      private Vector3 _previousMousePosition;
+     [SerializeField] private RectTransform parentPanel;
+     [SerializeField] private Canvas parentCanvas;
+
+     private void Start()
+     {
+          parentPanel = GetComponentInParent<RectTransform>();
+          parentCanvas = GetComponentInParent<Canvas>();
+     }
 
      void Update()
      {
           HandleScaling();
           HandleRotation();
      }
-     
      private void HandleScaling()
      {
           float scrollInput = Input.GetAxis("Mouse ScrollWheel");
           if (scrollInput != 0)
           {
-               Vector3 newScale = transform.localScale + Vector3.one * scrollInput * _scaleSpeed;
-               newScale = ClampScale(newScale, _minScale, _maxScale);
-               transform.localScale = newScale;
+               Vector2 localPoint;
+               if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                        parentPanel,
+                        Input.mousePosition,
+                        parentCanvas.worldCamera,
+                        out localPoint))
+               {
+                    Vector3 originalScale = transform.localScale;
+                    Vector3 newScale = originalScale + Vector3.one * scrollInput * _scaleSpeed;
+                    newScale = ClampScale(newScale, _minScale, _maxScale);
+
+                    float scaleFactor = newScale.x / originalScale.x;
+                    Vector3 pivotPosition = parentPanel.TransformPoint(localPoint);
+                    Vector3 direction = transform.position - pivotPosition;
+                    Vector3 newPosition = pivotPosition + direction * scaleFactor;
+
+                    transform.localScale = newScale;
+                    transform.position = newPosition;
+               }
           }
      }
 
