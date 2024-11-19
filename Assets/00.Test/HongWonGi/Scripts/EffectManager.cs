@@ -35,11 +35,12 @@ public class EffectManager : Singleton<EffectManager>
     public void SetEffect(string id)
     {
         _currentEffectID = id;
-        isEffectEnd = false;
+        // isEffectEnd = false;
         if (_effect.TryGetValue(_currentEffectID, out EffectStructure effect))
         {
             if (!string.IsNullOrEmpty(effect.artresource_id))
             {
+                isEffectEnd = true;
                 DoEffect(effect.artresource_id);
             }
             if (!string.IsNullOrEmpty(effect.soundresource_id))
