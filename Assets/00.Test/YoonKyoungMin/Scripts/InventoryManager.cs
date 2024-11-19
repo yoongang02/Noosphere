@@ -164,7 +164,8 @@ public class InventoryManager : Singleton<InventoryManager>
                 //아트 리소스 불러오기
                 if (DataManager.Instance._artResources.ContainsKey(evidence.artresource_id))
                 {
-                    img.sprite = DataManager.Instance._artResources[evidence.artresource_id].GetSpriteFromFilePath();
+                    ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresource_id];
+                    img.sprite = artResource.GetSpriteFromFilePath(artResource.inventoryFilePath);
                 }
                 else
                 {

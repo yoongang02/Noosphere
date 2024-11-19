@@ -33,7 +33,7 @@ public class PlayerInteract : MonoBehaviour
         { 
             //이벤트 실행
             string eventID = _curInteractableEventID.GetComponent<EventTrigger>().eventID;
-            EventManagerYKM.Instance.ExecuteEvent(eventID);
+            StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
             
             //상호작용 물체 초기화
             _curInteractableEventID = null;
