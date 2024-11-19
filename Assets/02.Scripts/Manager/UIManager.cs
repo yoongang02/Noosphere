@@ -212,6 +212,7 @@ public class UIManager : Singleton<UIManager>
         
         //상세보기 창 열기
         _isDetailOpen = true;
+        _evidenceDetailUI.SetActive(true);
     }
 
     void CloseDetailEvidence()

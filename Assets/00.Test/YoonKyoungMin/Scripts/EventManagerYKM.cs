@@ -118,5 +118,6 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     void StartEffect(string effectID)
     {
         Debug.Log(effectID + " 효과 시작");
+        EffectManager.Instance.SetEffect(effectID);
     }
 }
