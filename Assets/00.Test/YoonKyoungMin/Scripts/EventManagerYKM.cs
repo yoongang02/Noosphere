@@ -82,6 +82,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 else if (resultType == "effect")
                 {
                     StartEffect(resultID);
+                    yield return new WaitUntil(() => EffectManager.Instance.isEffectEnd);
                 }
             }
         }
