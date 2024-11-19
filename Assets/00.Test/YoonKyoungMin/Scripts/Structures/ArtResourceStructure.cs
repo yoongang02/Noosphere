@@ -9,6 +9,8 @@ public class ArtResourceStructure
     public string inventoryFilePath;
     public string evidence_detail_prefab;
     public string map_background_img;
+    public string text_detail_start_img;
+    public int text_detail_img_cnt;
 
     public Sprite GetSpriteFromFilePath(string path)
     {
