@@ -92,15 +92,6 @@ public class DialogueManager : Singleton<DialogueManager>
                 }
             }
         }
-        
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            SetDialogue("dialogue_0001");
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            SetDialogue("dialogue_0012");
-        }
     }
 
     public void StartDialogue(string dialogueId)
