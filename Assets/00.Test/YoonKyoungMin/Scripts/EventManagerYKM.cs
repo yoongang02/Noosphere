@@ -24,6 +24,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     {
         //게임 시작 시, 스테이지 정보 초기화
         curStageInfo = ChapterInfo.Prologue;
+        nextEventID = startEventID;
     }
 
     void Start()
@@ -46,6 +47,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             yield return null;
         }
 
+        
         EventStructure eventStructure = DataManager.Instance._events[eventID];
         Debug.Log(eventID + "이벤트 실행 시도");
         //실행 조건 만족하는지 체크
@@ -58,7 +60,6 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         yield return new WaitUntil(() => eventStructure.isExecuted);
         Debug.Log(eventID + "이벤트 실행 완료. nextEventID 갱신");
         nextEventID = eventStructure.next_Event_id;
-       
     }
     
     IEnumerator HandleEventWithEvidence(EventStructure eventStructure){
@@ -68,23 +69,61 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         {
             DataManager.Instance._lockConditions[eventStructure.lock_condition_id].Lock();
         }
+        
+        //분기 조건 체크 후, 분기에 따라 진행
+        if (eventStructure.branch_Type)
+        {
+            //분기 조건이 input인지
+            //분기 조건이 evidence인지
+            string branchType = eventStructure.branch_Element.Substring(0, eventStructure.branch_Element.IndexOf('_'));
+            string inputResultType;
+            if (branchType == "input")
+            {
+                InputFieldStructure input = DataManager.Instance._input[eventStructure.branch_Element];
+                Debug.Log(eventStructure.branch_Element + "에 대해서 분기 체크 시작");
+                if (input.isSolved)
+                {
+                    //input이 해결되었다면
+                    inputResultType = eventStructure.branch_True;
+                    //이벤트 타입이 실행 완료로 변경.
+                    eventStructure.isExecuted = true;
+                    Debug.Log("input 해결 완료");
+                }
+                else
+                {
+                    //input이 해결되지 않았다면
+                    inputResultType = eventStructure.branch_False;
+                    Debug.Log("input 해결 미완료");
+                }
+                //결과 실행
+                StartCoroutine(ExecuteResult(inputResultType));
+            }
+            else if (branchType == "evidence")
+            {
+                Debug.Log(eventStructure.branch_Element + "에 대해서 분기 체크 시작");
+                //해당 증거물을 보유하고 있다면
+                if (InventoryManager.Instance.IsAcquiredEvidence(eventStructure.branch_Element))
+                {
+                    //input이 해결되었다면
+                    inputResultType = eventStructure.branch_True;
+                    //이벤트 타입이 실행 완료로 변경.
+                    eventStructure.isExecuted = true;
+                    Debug.Log("evidence 해결 완료");
+                }
+                else
+                {
+                    //input이 해결되지 않았다면
+                    inputResultType = eventStructure.branch_False;
+                    Debug.Log("evidence 해결 미완료");
+                }
+                //결과 실행
+                StartCoroutine(ExecuteResult(inputResultType));
+            }
+        }
         //결과 실행하기
         foreach (var resultID in eventStructure.resultIDs)
         {
-            if (!string.IsNullOrEmpty(resultID))
-            {
-                string resultType = resultID.Substring(0, resultID.IndexOf('_'));
-                if (resultType == "dialogue")
-                {
-                    StartDialogue(resultID);
-                    yield return new WaitUntil(() => DialogueManager.Instance.isDialogeEnd);
-                }
-                else if (resultType == "effect")
-                {
-                    StartEffect(resultID);
-                    yield return new WaitUntil(() => EffectManager.Instance.isEffectEnd);
-                }
-            }
+            StartCoroutine(ExecuteResult(resultID));
         }
         
         // 증거물 조사 UI 띄우기
@@ -120,5 +159,33 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     {
         Debug.Log(effectID + " 효과 시작");
         EffectManager.Instance.SetEffect(effectID);
+    }
+    
+    //결과 수행
+    IEnumerator ExecuteResult(string id)
+    {
+        if (!string.IsNullOrEmpty(id))
+        {
+            string resultType = id.Substring(0, id.IndexOf('_'));
+            if (resultType == "dialogue")
+            {
+                StartDialogue(id);
+                yield return new WaitUntil(() => DialogueManager.Instance.isDialogeEnd);
+            }
+            else if (resultType == "effect")
+            {
+                StartEffect(id);
+                yield return new WaitUntil(() => EffectManager.Instance.isEffectEnd);
+            }
+            else if (resultType == "input")
+            {
+                InputFieldManager.Instance.SetQuestionField(id);
+                yield return new WaitUntil(() => InputFieldManager.Instance.isSubmitAnswer);
+            }
+            else if (resultType == "Event")
+            {
+                StartCoroutine(ExecuteEvent(id));
+            }
+        }
     }
 }

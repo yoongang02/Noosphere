@@ -24,7 +24,8 @@ public class PlayerInteract : Singleton<PlayerInteract>
     //찐 사용 변수 우선 아래에 옮기기
     [SerializeField] private GameObject _curInteractableEventID;
     public bool canInteract = true; //상호작용을 할 수 있는지(lock 조건에 이용)
-    
+
+    [Header("상호작용 표식")] [SerializeField] private GameObject _interactionMark;
     
     void Update()
     {
@@ -32,11 +33,16 @@ public class PlayerInteract : Singleton<PlayerInteract>
         if (canInteract && _curInteractableEventID != null && Input.GetKeyUp(KeyCode.E))
         { 
             //이벤트 실행
+            canInteract = false;
             string eventID = _curInteractableEventID.GetComponent<EventTrigger>().eventID;
-            StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
+            if (CheckInteractionAvail(eventID))
+            {
+                StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
+                _interactionMark.SetActive(false);
+            }
             
             //상호작용 물체 초기화
-            _curInteractableEventID = null;
+            //_curInteractableEventID = null;
         }
         
         /*
@@ -157,7 +163,6 @@ public class PlayerInteract : Singleton<PlayerInteract>
             _curEnterNPC = other.gameObject;
         }
         */
-
         //진입 시 바로 이벤트 실행되는 트리거에 진행하면
         if (other.CompareTag("EventTrigger"))
         {
@@ -168,6 +173,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
         if (other.CompareTag("EventInteractionTrigger"))
         {
             _curInteractableEventID = other.gameObject;
+            ShowInteractionMark();
         }
     }
     
@@ -175,7 +181,8 @@ public class PlayerInteract : Singleton<PlayerInteract>
     {
         if (other.CompareTag("EventInteractionTrigger"))
         {
-            _curInteractableEventID = null;
+            _curInteractableEventID = null; 
+            _interactionMark.SetActive(false);
         }
         /*
         if(other.CompareTag("InvestigateObj"))
@@ -204,5 +211,26 @@ public class PlayerInteract : Singleton<PlayerInteract>
         if(!_isComplete) _uiManager.transitionAnimator.Play("TS_4_Normal_Reveal", 0, 0);
         _startEnter = false;
         */
+    }
+
+    void ShowInteractionMark()
+    {
+        _interactionMark.SetActive(true);
+    }
+
+    bool CheckInteractionAvail(string id)
+    {
+        if (DataManager.Instance._events.ContainsKey(id))
+        {
+            EventStructure _event = DataManager.Instance._events[id];
+            if ( (_event.next_Event_id == ""
+                  || EventManagerYKM.Instance.nextEventID == _event.next_Event_id)
+                 && _event.CheckCondition())
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

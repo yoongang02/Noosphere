@@ -7,8 +7,8 @@ using TMPro;
 
 public class InputFieldManager : Singleton<InputFieldManager>
 {
-    private Dictionary<string, InputFieldStructure> _input = new Dictionary<string, InputFieldStructure>();
     public bool isAnswer = false;
+    public bool isSubmitAnswer = false;
     [SerializeField] private TextMeshProUGUI _questionText;
     [SerializeField] private TMP_InputField _inputText;
     private string _currentAnswer;
@@ -16,7 +16,6 @@ public class InputFieldManager : Singleton<InputFieldManager>
 
     private void Start()
     {
-        InitializeDialogue().Forget();
         _inputText.onEndEdit.AddListener(OnInputFieldEndEdit);
         InputManager.Instance.exitBtnAction += CloseInputField;
     }
@@ -30,7 +29,9 @@ public class InputFieldManager : Singleton<InputFieldManager>
         PlayerController.Instance.isDialogueOn = true;
         _currentID = id;
         isAnswer = false;
-        if (!_input.TryGetValue(id, out InputFieldStructure structure))
+        isSubmitAnswer = false;
+        
+        if (!DataManager.Instance._input.TryGetValue(id, out InputFieldStructure structure))
         {
             Debug.LogWarning($"ID {id}에 해당하는 InputFieldStructure를 찾을 수 없습니다.");
             return;
@@ -47,33 +48,27 @@ public class InputFieldManager : Singleton<InputFieldManager>
     {
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
+            isSubmitAnswer = true;
+            
             string formattedValue = value.Replace(" ", "");
             string formattedAnswer = _currentAnswer.Replace(" ", "");
 
             if (formattedValue == formattedAnswer)
             {
-                DialogueManager.Instance.SetDialogue(_input[_currentID].input_correct);
+                DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].input_correct);
                 isAnswer = true;
+                DataManager.Instance._input[_currentID].isSolved = true;
             }
             else
             {
-                DialogueManager.Instance.SetDialogue(_input[_currentID].input_wrong);
+                DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].input_wrong);
                 isAnswer = false;
             }
 
             CloseInputField();
         }
     }
-    private async UniTaskVoid InitializeDialogue()
-    {
-        await LoadDialogue("Input");
-    }
-    private async UniTask LoadDialogue(string sheetName)
-    {
-        CSVParserYKM parser = new CSVParserYKM();
-        _input = await parser.Parse<InputFieldStructure>(sheetName);
-        Debug.Log("Input 로드 완료");
-    }
+    
     private void CloseInputField()
     {
         if (_questionText.transform.parent.gameObject.activeSelf)
