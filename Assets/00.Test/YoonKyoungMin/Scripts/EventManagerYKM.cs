@@ -24,6 +24,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     {
         //게임 시작 시, 스테이지 정보 초기화
         curStageInfo = ChapterInfo.Prologue;
+        nextEventID = startEventID;
     }
 
     void Start()
@@ -46,6 +47,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             yield return null;
         }
 
+        
         EventStructure eventStructure = DataManager.Instance._events[eventID];
         Debug.Log(eventID + "이벤트 실행 시도");
         //실행 조건 만족하는지 체크
@@ -58,7 +60,6 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         yield return new WaitUntil(() => eventStructure.isExecuted);
         Debug.Log(eventID + "이벤트 실행 완료. nextEventID 갱신");
         nextEventID = eventStructure.next_Event_id;
-       
     }
     
     IEnumerator HandleEventWithEvidence(EventStructure eventStructure){
