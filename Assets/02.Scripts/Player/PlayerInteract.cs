@@ -24,6 +24,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
 
     //찐 사용 변수 우선 아래에 옮기기
     [SerializeField] private GameObject _curInteractableEventID;
+    public GameObject _evidenceGameObject;
     public bool canInteract = true; //상호작용을 할 수 있는지(lock 조건에 이용)
 
     [Header("상호작용 표식")] [SerializeField] private GameObject _interactionMark;
@@ -35,7 +36,17 @@ public class PlayerInteract : Singleton<PlayerInteract>
         { 
             Debug.Log("이벤트 실행되나???");
             //이벤트 실행
-            string eventID = _curInteractableEventID.GetComponent<EventTrigger>().eventID;
+            _evidenceGameObject = null;
+            EventTrigger trigger = _curInteractableEventID.GetComponent<EventTrigger>();
+            string eventID = trigger.eventID;
+            if (trigger.canDestroy)
+            {
+                _evidenceGameObject = _curInteractableEventID.transform.parent.gameObject;
+            }
+            else
+            {
+                _evidenceGameObject = null;
+            }
             if (CheckInteractionAvail(eventID))
             {
                 Debug.Log("상호작용 가능 조건 체크를 올바르게 만족하나???? 여기 실행???");
