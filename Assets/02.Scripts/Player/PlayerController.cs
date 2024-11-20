@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+
 // 플레이어 이동관련 함수
 //플레이어 이동방식 변경
 // 최초 작성자: 홍원기
@@ -10,18 +11,31 @@ using Cinemachine;
 // 최종 수정일: 2024-11-01
 public class PlayerController : Singleton<PlayerController>
 {
-    [SerializeField] private float _moveSpeed;       
+    [Header("플레이어 설정")] [SerializeField] private float _moveSpeed;
     [SerializeField] private float _sprintMultiplier = 2f;
     [SerializeField] private Camera _mainCamera;
     [SerializeField] private CinemachineVirtualCamera _dialogueCamera;
-    
+    [Header("플레이어 사운드")] [SerializeField] private List<AudioClip> _walkSounds;
+    [SerializeField] private List<AudioClip> runSounds;
+    [SerializeField] private AudioSource footstepSource;
+    [SerializeField] private float stepInterval = 0.5f;
+    [SerializeField] private float runInterval = 0.2f;
+
     private Vector3 _moveDirection;
-    private Animator _animator; 
+    private Animator _animator;
     private float _defaultSpeed;
     public bool isDialogueOn = false; //대화시작
-    private bool isPlayerNearNPC = false;//플레이어 NPC가까이있나? 
+    private bool isPlayerNearNPC = false; //플레이어 NPC가까이있나? 
     private GameObject _currentNPC;
-
+    private float lastStepTime = 0f;
+    [Header("Ray Settings")]
+    private float rayDistance = 1f;
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Vector3 direction = transform.forward * rayDistance;
+        Gizmos.DrawRay(transform.position, direction);
+    }
     private void Start()
     {
         _animator = GetComponent<Animator>();
@@ -31,27 +45,33 @@ public class PlayerController : Singleton<PlayerController>
         if (_mainCamera == null)
             _mainCamera = Camera.main;
     }
-    
+
     private void Update()
     {
         _animator.SetFloat("MoveSpeed", 0);
         InputManager.Instance.OnUpdate();
     }
 
+    public void SetInteract(bool state)
+    {
+        isDialogueOn = state;
+        _animator.SetBool("Interact", state);
+    }
+
     private void OnEKey()
     {
         if (_currentNPC == null) return;
-        
+
         if (!isDialogueOn && isPlayerNearNPC)
         {
             StartDialogue();
         }
-        else if (isDialogueOn) 
+        else if (isDialogueOn)
         {
             // interact 타입일 때만 처리
             NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
-            if (npcDialogue != null && 
-                DialogueManager.Instance._dialogue[npcDialogue.dialogueId].trigger_type == "interact")
+            if (npcDialogue != null &&
+                DataManager.Instance._dialogue[npcDialogue.dialogueId].trigger_type == "interact")
             {
                 if (DialogueManager.Instance.isTyping)
                 {
@@ -63,7 +83,7 @@ public class PlayerController : Singleton<PlayerController>
                 }
             }
         }
-        
+
         /*
         if (isDialogueOn && !UIManager.Instance.isPopUpOpen)
         {
@@ -93,8 +113,8 @@ public class PlayerController : Singleton<PlayerController>
         // }
         // _dialogueCamera.LookAt = _currentNPC.transform;
         // _dialogueCamera.Priority = 20;
-        
-        isDialogueOn = true;
+
+        /*isDialogueOn = true;*/ 
         NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
         if (npcDialogue != null && !string.IsNullOrEmpty(npcDialogue.dialogueId))
         {
@@ -108,6 +128,7 @@ public class PlayerController : Singleton<PlayerController>
         _dialogueCamera.LookAt = null;
         _dialogueCamera.Priority = 0;
     }
+
     private void HandleInput()
     {
         if (isDialogueOn)
@@ -115,30 +136,48 @@ public class PlayerController : Singleton<PlayerController>
             _animator.SetFloat("MoveSpeed", 0f);
             return;
         }
-
+        Ray ray = new Ray(transform.position, transform.forward);
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit, rayDistance))
+        {
+            Debug.DrawRay(transform.position, transform.forward * rayDistance, Color.green);
+       
+            if(hit.collider.CompareTag("NPC"))
+            {
+                Debug.Log("NPC를 바라보고 있습니다.");
+            }
+            // else if(hit.collider.CompareTag("Object"))
+            // {
+            //     Debug.Log("상호작용 가능한 오브젝트를 바라보고 있습니다.");
+            // }
+        }
+        else
+        {
+            Debug.DrawRay(transform.position, transform.forward * rayDistance, Color.red);
+        }
         float moveX = 0f;
         float moveY = 0f;
-        
+
         // WASD 키 입력 처리
         if (Input.GetKey(KeyCode.W)) moveY = 1f;
         if (Input.GetKey(KeyCode.S)) moveY = -1f;
         if (Input.GetKey(KeyCode.A)) moveX = -1f;
         if (Input.GetKey(KeyCode.D)) moveX = 1f;
-    
+
         Vector3 inputDirection = new Vector3(moveX, 0f, moveY).normalized;
-        
+
         if (inputDirection != Vector3.zero)
         {
             Vector3 cameraForward = _mainCamera.transform.forward;
             cameraForward.y = 0;
             cameraForward.Normalize();
-            
+
             Vector3 cameraRight = _mainCamera.transform.right;
             cameraRight.y = 0;
             cameraRight.Normalize();
-            
+
             _moveDirection = (cameraForward * inputDirection.z + cameraRight * inputDirection.x).normalized;
-            
+
             // 이동 속도 설정
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
             {
@@ -146,7 +185,7 @@ public class PlayerController : Singleton<PlayerController>
             }
             else
             {
-                _moveSpeed = _defaultSpeed; 
+                _moveSpeed = _defaultSpeed;
             }
 
             Move(_moveDirection);
@@ -159,7 +198,7 @@ public class PlayerController : Singleton<PlayerController>
         float currentSpeed = _moveDirection.magnitude * _moveSpeed;
         _animator.SetFloat("MoveSpeed", currentSpeed);
     }
-    
+
     private void Move(Vector3 direction)
     {
         // if (direction != Vector3.zero)
@@ -175,8 +214,19 @@ public class PlayerController : Singleton<PlayerController>
         if (direction != Vector3.zero)
         {
             transform.rotation = Quaternion.LookRotation(direction);
-            
+
             transform.Translate(Vector3.forward * Time.deltaTime * _moveSpeed, Space.Self);
+            bool isRunning = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+            float currentInterval = isRunning ? runInterval : stepInterval;
+            List<AudioClip> currentSounds = isRunning ? runSounds : _walkSounds;
+
+            if (Time.time >= lastStepTime + currentInterval)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, currentSounds.Count);
+                footstepSource.clip = currentSounds[randomIndex];
+                footstepSource.Play();
+                lastStepTime = Time.time;
+            }
         }
     }
 
@@ -185,8 +235,8 @@ public class PlayerController : Singleton<PlayerController>
         if (other.CompareTag("NPC"))
         {
             isPlayerNearNPC = true;
-            _currentNPC = other.gameObject; 
-            UIManager.Instance.PopUp(true,"E를 눌러 대화시작");
+            _currentNPC = other.gameObject;
+            UIManager.Instance.PopUp(true, "E를 눌러 대화시작");
         }
     }
 

@@ -6,6 +6,7 @@ public class EvidenceStructure
     public string evidence_id;
     public string evidence_name;
     public char evidence_Type;
+    public char shape_Type; //증거물 타입 종류. T : text, P : Prefab
     public char acquisition_Type;
     public string can_Use;
     public string unlock_Condition;
@@ -49,7 +50,7 @@ public class EvidenceStructure
     bool IsUnLockConditionMet()
     {
         //이벤트 매니저 내에서 해당 unlock 조건의 이벤트가 실행되었는지 확인
-        if (unlock_Condition == "" ||EventManagerYKM.Instance._events.ContainsKey(unlock_Condition) && EventManagerYKM.Instance._events[unlock_Condition].isExecuted)
+        if (unlock_Condition == "" ||DataManager.Instance._events.ContainsKey(unlock_Condition) && DataManager.Instance._events[unlock_Condition].isExecuted)
         {
             Debug.Log("unlock 조건 만족한 것을 확인");
             return true;

@@ -9,7 +9,7 @@ public class PointEffect : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            EffectManager.Instance.isEffectEnd = true;
+            // EffectManager.Instance.isEffectEnd = true;
             gameObject.SetActive(false);
         }
     }

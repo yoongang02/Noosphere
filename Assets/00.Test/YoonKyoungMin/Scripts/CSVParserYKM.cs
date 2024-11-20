@@ -50,7 +50,7 @@ public class CSVParserYKM
             List<string> conditionsList = new List<string>(); 
             List<string> resultIDsList = new List<string>();
     
-            for (int j = 1; j < headers.Length && j < values.Length; j++)
+            for (int j = 0; j < headers.Length && j < values.Length; j++)
             {
                 string header = headers[j].Trim().Replace("\"", "");
                 if(string.IsNullOrEmpty(header))
@@ -59,6 +59,7 @@ public class CSVParserYKM
                     continue;
                 }
                 string value = values[j].Trim().Replace("\"", "");
+                //Debug.Log(header + " : " + value);
                 FieldInfo field = typeof(T).GetField(header, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
 
                 if (field != null)

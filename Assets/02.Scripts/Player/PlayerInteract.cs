@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using VHierarchy.Libs;
 
-public class PlayerInteract : MonoBehaviour
+public class PlayerInteract : Singleton<PlayerInteract>
 {
     [SerializeField] private GameObject _curEnterNPC;
     public bool isInteracting = false;
@@ -24,19 +25,26 @@ public class PlayerInteract : MonoBehaviour
     //찐 사용 변수 우선 아래에 옮기기
     [SerializeField] private GameObject _curInteractableEventID;
     public bool canInteract = true; //상호작용을 할 수 있는지(lock 조건에 이용)
-    
+
+    [Header("상호작용 표식")] [SerializeField] private GameObject _interactionMark;
     
     void Update()
     {
 
         if (canInteract && _curInteractableEventID != null && Input.GetKeyUp(KeyCode.E))
         { 
+            Debug.Log("이벤트 실행되나???");
             //이벤트 실행
             string eventID = _curInteractableEventID.GetComponent<EventTrigger>().eventID;
-            EventManagerYKM.Instance.ExecuteEvent(eventID);
+            if (CheckInteractionAvail(eventID))
+            {
+                Debug.Log("상호작용 가능 조건 체크를 올바르게 만족하나???? 여기 실행???");
+                StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
+                _interactionMark.SetActive(false);
+            }
             
             //상호작용 물체 초기화
-            _curInteractableEventID = null;
+            //_curInteractableEventID = null;
         }
         
         /*
@@ -157,17 +165,17 @@ public class PlayerInteract : MonoBehaviour
             _curEnterNPC = other.gameObject;
         }
         */
-
         //진입 시 바로 이벤트 실행되는 트리거에 진행하면
         if (other.CompareTag("EventTrigger"))
         {
             string eventID = other.GetComponent<EventTrigger>().eventID;
-            EventManagerYKM.Instance.ExecuteEvent(eventID);
+            StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
         }
 
         if (other.CompareTag("EventInteractionTrigger"))
         {
             _curInteractableEventID = other.gameObject;
+            if(CheckInteractionAvail(other.GetComponent<EventTrigger>().eventID)) ShowInteractionMark();
         }
     }
     
@@ -175,7 +183,8 @@ public class PlayerInteract : MonoBehaviour
     {
         if (other.CompareTag("EventInteractionTrigger"))
         {
-            _curInteractableEventID = null;
+            _curInteractableEventID = null; 
+            _interactionMark.SetActive(false);
         }
         /*
         if(other.CompareTag("InvestigateObj"))
@@ -204,5 +213,30 @@ public class PlayerInteract : MonoBehaviour
         if(!_isComplete) _uiManager.transitionAnimator.Play("TS_4_Normal_Reveal", 0, 0);
         _startEnter = false;
         */
+    }
+
+    void ShowInteractionMark()
+    {
+        _interactionMark.SetActive(true);
+    }
+
+    bool CheckInteractionAvail(string id)
+    {
+        if (DataManager.Instance._events.ContainsKey(id))
+        {
+            EventStructure _event = DataManager.Instance._events[id];
+            Debug.Log("nextEventID : " + EventManagerYKM.Instance.nextEventID + ", thisID : " + id +" , eventCondition? : " + _event.CheckCondition());
+            if ( EventManagerYKM.Instance.nextEventID.IsNullOrEmpty() || EventManagerYKM.Instance.nextEventID == id)
+            {
+                Debug.Log("nextEventID 관련해서는 만족함.");
+                if (_event.CheckCondition())
+                {
+                    Debug.Log("checkInteractionAvail이 true로 리턴됨.");
+                    return true;
+                }
+            }
+        }
+        Debug.Log("checkInteractionAvail이 false로 리턴됨.");
+        return false;
     }
 }

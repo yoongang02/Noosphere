@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,8 +10,7 @@ public class InventoryNavigator : MonoBehaviour
     [SerializeField] private GameObject _curSelectedSlot;
     [SerializeField] private Sprite _selectedSprite;
     [SerializeField] private Sprite _deselectedSprite;
-    [SerializeField] private Sprite _selectedChapterSprite;
-    [SerializeField] private Sprite _deselectedChapterSprite;
+    [SerializeField] private TextMeshProUGUI _slotUseBtn;
     
     public List<GameObject> inventorySlots = new List<GameObject>();
     private List<GameObject> realWorldSlots = new List<GameObject>();
@@ -21,24 +21,42 @@ public class InventoryNavigator : MonoBehaviour
 
     void Update()
     {
-        if (InventoryManager.Instance.isInventoryOpen)
+        if (InventoryManager.Instance.isInventoryOpen && !UIManager.Instance._isDetailOpen)
         {
-            //wasd 키를 통해 슬롯 상하좌우 이동
-            if (Input.GetKeyDown(KeyCode.W))
+            if (_curSelectedSlot != null)
             {
-                MoveUp();
-            }
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                MoveLeft();
-            }
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                MoveDown();
-            }
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                MoveRight();
+                //wasd 키를 통해 슬롯 상하좌우 이동
+                if (Input.GetKeyDown(KeyCode.W))
+                {
+                    MoveUp();
+                }
+                if (Input.GetKeyDown(KeyCode.A))
+                {
+                    MoveLeft();
+                }
+                if (Input.GetKeyDown(KeyCode.S))
+                {
+                    MoveDown();
+                }
+                if (Input.GetKeyDown(KeyCode.D))
+                {
+                    MoveRight();
+                }
+                //E 버튼을 누르면 상세 정보 열기
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    string id = _curSelectedSlot.GetComponent<InventorySlotInfo>().evidence_id;
+                    EvidenceStructure evidence = DataManager.Instance._evidences[id];
+                    UIManager.Instance.ShowDetailEvidenceInInventory(evidence);
+                }
+                //Space 버튼을 누르면 증거물 사용하기
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    Debug.Log("아이템 사용하기");
+                    //인벤토리 창 자동으로 닫기
+                    InventoryManager.Instance.isInventoryOpen = !InventoryManager.Instance.isInventoryOpen;
+                    InventoryManager.Instance.ControlWindow();
+                }
             }
             
             //좌우 화살표 클릭 시, 페이지 넘김
@@ -49,7 +67,7 @@ public class InventoryNavigator : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Alpha0 + i))
                 {
                     int inputIndex = i - 1;
-                    if (inputIndex >= 0 && inputIndex < InventoryManager.Instance.chapterUIList.Count)
+                    if (inputIndex >= 0 && inputIndex < InventoryManager.Instance.selectedChapterUIList.Count)
                     {
                         InventoryManager.Instance.currentViewChapter = inputIndex;
                         SetChapterSelected(inputIndex);
@@ -57,6 +75,11 @@ public class InventoryNavigator : MonoBehaviour
                     }
                 }
             }
+        }
+
+        if (UIManager.Instance._isDetailOpen && Input.GetKeyDown(KeyCode.Escape))
+        {
+            UIManager.Instance.CloseDetailEvidence();
         }
     }
 
@@ -96,6 +119,7 @@ public class InventoryNavigator : MonoBehaviour
         
         _curSelectedSlot = inventorySlots[0];
         SetSlotSelected(_curSelectedSlot);
+        SetSlotUseBtn(_curSelectedSlot);
     }
 
     void AddSlotsPerRow()
@@ -226,6 +250,7 @@ public class InventoryNavigator : MonoBehaviour
     {
         _curSelectedSlot = inventorySlots[currentIndex];
         SetSlotSelected(_curSelectedSlot);
+        SetSlotUseBtn(_curSelectedSlot);
     }
 
     private void SetSlotSelected(GameObject slot)
@@ -240,12 +265,18 @@ public class InventoryNavigator : MonoBehaviour
 
     private void SetChapterSelected(int index)
     {
-        GameObject chapter = InventoryManager.Instance.chapterUIList[index];
-        Image chapterImg = chapter.GetComponent<Image>();
-        chapterImg.sprite = _selectedChapterSprite;
-        foreach (var _chapter in InventoryManager.Instance.chapterUIList)
+        GameObject selectedChapter = InventoryManager.Instance.selectedChapterUIList[index];
+        GameObject deselectedChapter = InventoryManager.Instance.deselectedChapterUIList[index];
+        selectedChapter.SetActive(true);
+        deselectedChapter.SetActive(false);
+
+        foreach (var _chapter in InventoryManager.Instance.selectedChapterUIList)
         {
-            if (_chapter != chapter) _chapter.GetComponent<Image>().sprite = _deselectedChapterSprite;
+            if(_chapter != selectedChapter) _chapter.SetActive(false);
+        }
+        foreach (var _chapter in InventoryManager.Instance.deselectedChapterUIList)
+        {
+            if(_chapter != deselectedChapter) _chapter.SetActive(true);
         }
     }
 
@@ -257,5 +288,20 @@ public class InventoryNavigator : MonoBehaviour
         }
 
         return false;
+    }
+
+    void SetSlotUseBtn(GameObject slot)
+    {
+        string evidenceId = slot.GetComponent<InventorySlotInfo>().evidence_id;
+        string canUse = DataManager.Instance._evidences[evidenceId].can_Use;
+        
+        if (canUse == "Y")
+        {
+            _slotUseBtn.color = UnityExtension.HexColor(UIManager.BlackColor);
+        }
+        else if (canUse == "N")
+        {
+            _slotUseBtn.color = UnityExtension.HexColor("#B3B3B3");
+        }
     }
 }

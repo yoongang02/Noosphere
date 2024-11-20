@@ -43,9 +43,8 @@ public class InventoryManager : Singleton<InventoryManager>
     [SerializeField] private GameObject _inventorySlotPrefab;
     
     //챕터 관련
-    [SerializeField] private GameObject _chapterParent;
-    [SerializeField] private GameObject _chapterPrefab;
-    public List<GameObject> chapterUIList;
+    public List<GameObject> deselectedChapterUIList;
+    public List<GameObject> selectedChapterUIList;
     public int currentViewChapter = 0;
 
     void Start()
@@ -64,8 +63,9 @@ public class InventoryManager : Singleton<InventoryManager>
         }
         
         //인벤토리 닫기
-        if (isInventoryOpen && Input.GetKeyDown(KeyCode.Escape))
+        if (isInventoryOpen && Input.GetKeyDown(KeyCode.Escape) && !UIManager.Instance._isDetailOpen)
         {
+            Debug.Log("인벤토리 창만 닫기");
             isInventoryOpen = !isInventoryOpen;
             ControlWindow();
         }
@@ -75,9 +75,8 @@ public class InventoryManager : Singleton<InventoryManager>
     {
         //챕터 정보 저장하기
         int chapterCount = Enum.GetValues(typeof(EventManagerYKM.ChapterInfo)).Length;
-        InitChapter(chapterCount);
+        InitChapter();
         isInventoryOpen = false;
-        currentViewChapter = 0;
         chapterInventories.Clear();
         
         for (int i = 0; i < chapterCount; i++)
@@ -86,16 +85,8 @@ public class InventoryManager : Singleton<InventoryManager>
         }
     }
 
-    void InitChapter(int chapterCount)
+    void InitChapter()
     {
-        for (int chapter = 0; chapter < chapterCount; chapter++)
-        {
-            GameObject chapterUI = Instantiate(_chapterPrefab, _chapterParent.transform);
-            TextMeshProUGUI chapterName = chapterUI.GetComponentInChildren<TextMeshProUGUI>();
-            chapterName.text = Enum.GetName(typeof(EventManagerYKM.ChapterInfo), chapter);
-            chapterUIList.Add(chapterUI);
-        }
-
         currentViewChapter = 0;
     }
 
@@ -135,6 +126,7 @@ public class InventoryManager : Singleton<InventoryManager>
         foreach (var evidence in currentInventory.realWorldEvidences)
         {
             GameObject slot = Instantiate(_inventorySlotPrefab, _realWorldInventory.transform);
+            slot.GetComponent<InventorySlotInfo>().evidence_id = evidence.evidence_id;
             UpdateSlotUI(slot, evidence);
         }
 
@@ -142,6 +134,7 @@ public class InventoryManager : Singleton<InventoryManager>
         foreach (var evidence in currentInventory.mentalWorldEvidences)
         {
             GameObject slot = Instantiate(_inventorySlotPrefab, _mentalWorldInventory.transform);
+            slot.GetComponent<InventorySlotInfo>().evidence_id = evidence.evidence_id;
             UpdateSlotUI(slot, evidence);
         }
     }
@@ -172,9 +165,10 @@ public class InventoryManager : Singleton<InventoryManager>
             if (img.gameObject.name == "EvidenceImg")
             {
                 //아트 리소스 불러오기
-                if (EventManagerYKM.Instance._artResources.ContainsKey(evidence.artresource_id))
+                if (DataManager.Instance._artResources.ContainsKey(evidence.artresource_id))
                 {
-                    img.sprite = EventManagerYKM.Instance._artResources[evidence.artresource_id].GetSpriteFromFilePath();
+                    ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresource_id];
+                    img.sprite = artResource.GetSpriteFromFilePath(artResource.inventoryFilePath);
                 }
                 else
                 {
@@ -209,7 +203,7 @@ public class InventoryManager : Singleton<InventoryManager>
         return false;
     }
 
-    void ControlWindow()
+    public void ControlWindow()
     {
         _inventoryWindow.SetActive(isInventoryOpen);
         if(isInventoryOpen) GetComponent<InventoryNavigator>().InitNavigator(_realWorldInventory.transform,_mentalWorldInventory.transform);
