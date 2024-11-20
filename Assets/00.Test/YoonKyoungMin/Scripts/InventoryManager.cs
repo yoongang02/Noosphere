@@ -65,6 +65,7 @@ public class InventoryManager : Singleton<InventoryManager>
         //인벤토리 닫기
         if (isInventoryOpen && Input.GetKeyDown(KeyCode.Escape) && !UIManager.Instance._isDetailOpen)
         {
+            Debug.Log("인벤토리 창만 닫기");
             isInventoryOpen = !isInventoryOpen;
             ControlWindow();
         }

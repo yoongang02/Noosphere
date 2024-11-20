@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using VHierarchy.Libs;
 
 public class PlayerInteract : Singleton<PlayerInteract>
 {
@@ -32,10 +33,12 @@ public class PlayerInteract : Singleton<PlayerInteract>
 
         if (canInteract && _curInteractableEventID != null && Input.GetKeyUp(KeyCode.E))
         { 
+            Debug.Log("이벤트 실행되나???");
             //이벤트 실행
             string eventID = _curInteractableEventID.GetComponent<EventTrigger>().eventID;
             if (CheckInteractionAvail(eventID))
             {
+                Debug.Log("상호작용 가능 조건 체크를 올바르게 만족하나???? 여기 실행???");
                 StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
                 _interactionMark.SetActive(false);
             }
@@ -223,12 +226,17 @@ public class PlayerInteract : Singleton<PlayerInteract>
         {
             EventStructure _event = DataManager.Instance._events[id];
             Debug.Log("nextEventID : " + EventManagerYKM.Instance.nextEventID + ", thisID : " + id +" , eventCondition? : " + _event.CheckCondition());
-            if ( EventManagerYKM.Instance.nextEventID == "" || EventManagerYKM.Instance.nextEventID == id)
+            if ( EventManagerYKM.Instance.nextEventID.IsNullOrEmpty() || EventManagerYKM.Instance.nextEventID == id)
             {
-                if(_event.CheckCondition()) return true;
+                Debug.Log("nextEventID 관련해서는 만족함.");
+                if (_event.CheckCondition())
+                {
+                    Debug.Log("checkInteractionAvail이 true로 리턴됨.");
+                    return true;
+                }
             }
         }
-
+        Debug.Log("checkInteractionAvail이 false로 리턴됨.");
         return false;
     }
 }
