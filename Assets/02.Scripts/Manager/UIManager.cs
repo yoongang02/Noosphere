@@ -111,6 +111,7 @@ public class UIManager : Singleton<UIManager>
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
+                Debug.Log("상세 내용 창만 닫기");
                 CloseDetailEvidence();
             }
         }
