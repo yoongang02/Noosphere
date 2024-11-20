@@ -100,29 +100,7 @@ public class PlayerController : Singleton<PlayerController>
 
     private void StartDialogue()
     {
-        //Dialogue Camera On
-        // var transposer = _dialogueCamera.GetCinemachineComponent<CinemachineTransposer>();
-        // if (transposer != null)
-        // {
-        //     if (transform.position.x > _currentNPC.transform.position.x)
-        //     {
-        //         transposer.m_FollowOffset = new Vector3(-2,transposer.m_FollowOffset.y, transposer.m_FollowOffset.z);
-        //     }
-        //     else
-        //     {
-        //         transposer.m_FollowOffset = new Vector3(2,transposer.m_FollowOffset.y, transposer.m_FollowOffset.z);
-        //     }
-        // }
-        // _dialogueCamera.LookAt = _currentNPC.transform;
-        // _dialogueCamera.Priority = 20;
-        
-        /*isDialogueOn = true;*/
-
-
-
-        NpcCameraOn();
-        // _dialogueCamera.GetCinemachineComponent<CinemachineVirtualCamera>().Follow;
-        
+        // NpcCameraOn();
         NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
         if (npcDialogue != null && !string.IsNullOrEmpty(npcDialogue.dialogueId))
         {
@@ -133,12 +111,15 @@ public class PlayerController : Singleton<PlayerController>
 
     private void NpcCameraOn()
     {
+        _currentNPC.GetComponent<NpcState>().SetState(NPCState.IsTalking);
         _dialogueCamera.transform.gameObject.SetActive(true);
         _dialogueCamera.Follow = _currentNPC.transform.GetChild(0).transform;
+        
     }
 
     public void ResetCamera()
     {
+        // _currentNPC.GetComponent<NpcState>().SetState(NPCState.Idle);
         _dialogueCamera.Follow = null;
         _dialogueCamera.transform.gameObject.SetActive(false);
     } 
