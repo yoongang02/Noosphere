@@ -33,7 +33,6 @@ public class PlayerInteract : Singleton<PlayerInteract>
         if (canInteract && _curInteractableEventID != null && Input.GetKeyUp(KeyCode.E))
         { 
             //이벤트 실행
-            canInteract = false;
             string eventID = _curInteractableEventID.GetComponent<EventTrigger>().eventID;
             if (CheckInteractionAvail(eventID))
             {
@@ -173,7 +172,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
         if (other.CompareTag("EventInteractionTrigger"))
         {
             _curInteractableEventID = other.gameObject;
-            ShowInteractionMark();
+            if(CheckInteractionAvail(other.GetComponent<EventTrigger>().eventID)) ShowInteractionMark();
         }
     }
     
@@ -223,11 +222,10 @@ public class PlayerInteract : Singleton<PlayerInteract>
         if (DataManager.Instance._events.ContainsKey(id))
         {
             EventStructure _event = DataManager.Instance._events[id];
-            if ( (_event.next_Event_id == ""
-                  || EventManagerYKM.Instance.nextEventID == _event.next_Event_id)
-                 && _event.CheckCondition())
+            Debug.Log("nextEventID : " + EventManagerYKM.Instance.nextEventID + ", thisID : " + id +" , eventCondition? : " + _event.CheckCondition());
+            if ( EventManagerYKM.Instance.nextEventID == "" || EventManagerYKM.Instance.nextEventID == id)
             {
-                return true;
+                if(_event.CheckCondition()) return true;
             }
         }
 
