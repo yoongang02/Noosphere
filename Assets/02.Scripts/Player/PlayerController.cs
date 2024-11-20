@@ -28,7 +28,14 @@ public class PlayerController : Singleton<PlayerController>
     private bool isPlayerNearNPC = false; //플레이어 NPC가까이있나? 
     private GameObject _currentNPC;
     private float lastStepTime = 0f;
-
+    [Header("Ray Settings")]
+    private float rayDistance = 1f;
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Vector3 direction = transform.forward * rayDistance;
+        Gizmos.DrawRay(transform.position, direction);
+    }
     private void Start()
     {
         _animator = GetComponent<Animator>();
@@ -129,7 +136,25 @@ public class PlayerController : Singleton<PlayerController>
             _animator.SetFloat("MoveSpeed", 0f);
             return;
         }
-
+        Ray ray = new Ray(transform.position, transform.forward);
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit, rayDistance))
+        {
+            Debug.DrawRay(transform.position, transform.forward * rayDistance, Color.green);
+       
+            if(hit.collider.CompareTag("NPC"))
+            {
+                Debug.Log("NPC를 바라보고 있습니다.");
+            }
+            // else if(hit.collider.CompareTag("Object"))
+            // {
+            //     Debug.Log("상호작용 가능한 오브젝트를 바라보고 있습니다.");
+            // }
+        }
+        else
+        {
+            Debug.DrawRay(transform.position, transform.forward * rayDistance, Color.red);
+        }
         float moveX = 0f;
         float moveY = 0f;
 
