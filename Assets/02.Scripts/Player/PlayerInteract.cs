@@ -28,6 +28,9 @@ public class PlayerInteract : Singleton<PlayerInteract>
     public bool canInteract = true; //상호작용을 할 수 있는지(lock 조건에 이용)
 
     [Header("상호작용 표식")] [SerializeField] private GameObject _interactionMark;
+
+    [Header("증거물 사용하기")] 
+    [SerializeField] string curGrabEvidenceID;
     
     void Update()
     {
@@ -249,5 +252,24 @@ public class PlayerInteract : Singleton<PlayerInteract>
         }
         Debug.Log("checkInteractionAvail이 false로 리턴됨.");
         return false;
+    }
+
+    public void SetGrabObject(GameObject prefab,string evidenceID)
+    {
+        //프리팹 생성해서 플레이어 손에 부착하기
+        //현재 들고 있는 상태 변경
+        //들고 있는 물건 할당
+        curGrabEvidenceID = evidenceID;
+    }
+
+    public bool IsPlayerGrabEvidence(string id)
+    {
+        if (curGrabEvidenceID == id) return true;
+        return false;
+    }
+
+    public void InitPlayerGrabEvidence()
+    {
+        curGrabEvidenceID = null;
     }
 }

@@ -70,10 +70,29 @@ public class EventStructure
         if (conditionType == "evidence")
         {
             //증거 인벤토리에 있는지 확인, 혹은 사용했는지 구분
-            //우선은 획득한 상태만 체크하기.
-            if (InventoryManager.Instance.IsAcquiredEvidence(id))
+            string useType = DataManager.Instance._evidences[id].can_Use;
+
+            if (useType == "Y")
             {
-                isMet = true;
+                PlayerInteract player = PlayerController.Instance.GetComponent<PlayerInteract>();
+                if (player.IsPlayerGrabEvidence(id))
+                {
+                    Debug.Log(id + "아이템 사용 완료");
+                    player.InitPlayerGrabEvidence();
+                    isMet = true;
+                }
+                else
+                {
+                    isMet = false;
+                }
+            }
+            else if(useType == "N")
+            {
+                //우선은 획득한 상태만 체크하기.
+                if (InventoryManager.Instance.IsAcquiredEvidence(id))
+                {
+                    isMet = true;
+                }
             }
         }
         else if (conditionType == "dialogue")
