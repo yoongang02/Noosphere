@@ -31,7 +31,7 @@ public class NpcState : MonoBehaviour
         {
             case NPCState.Idle:
                 _animator.SetBool("IsTalking", false);
-                transform.rotation = _originalRotation; 
+                // transform.rotation = _originalRotation; 
                 break;
               
             case NPCState.IsTalking:
