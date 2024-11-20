@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using VHierarchy.Libs;
 
 public class EventManagerYKM : Singleton<EventManagerYKM>
 {
@@ -41,7 +42,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             yield return null;
         }
 
-        if (nextEventID != "" && nextEventID != eventID)
+        if (!nextEventID.IsNullOrEmpty() && nextEventID != eventID)
         {
             Debug.Log("현재 실행되어야 하는 이벤트는 " + nextEventID + "입니다.");
             yield return null;
@@ -49,6 +50,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
 
         
         EventStructure eventStructure = DataManager.Instance._events[eventID];
+        string lockConditionId = eventStructure.lock_condition_id;
         Debug.Log(eventID + "이벤트 실행 시도");
         //실행 조건 만족하는지 체크
         if (eventStructure.CheckCondition())
@@ -60,6 +62,12 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         yield return new WaitUntil(() => eventStructure.isExecuted);
         Debug.Log(eventID + "이벤트 실행 완료. nextEventID 갱신");
         nextEventID = eventStructure.next_Event_id;
+        //락 조건 해제
+        if (DataManager.Instance._lockConditions.ContainsKey(lockConditionId))
+        {
+            DataManager.Instance._lockConditions[lockConditionId].UnLock();
+        }
+        
     }
     
     IEnumerator HandleEventWithEvidence(EventStructure eventStructure){

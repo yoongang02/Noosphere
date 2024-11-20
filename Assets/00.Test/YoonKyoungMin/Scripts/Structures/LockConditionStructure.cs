@@ -30,6 +30,13 @@ public class LockConditionStructure
         }
     }
 
+    public void UnLock()
+    {
+        Debug.Log("lock condition 해제");
+        PlayerController.Instance.isDialogueOn = false;
+        PlayerInteract.Instance.canInteract = true;
+    }
+
     void LockPlayerMove()
     {
         PlayerController.Instance.isDialogueOn = true;
