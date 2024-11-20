@@ -2100,6 +2100,7 @@ GameObject:
   - component: {fileID: 2581699184839696138}
   - component: {fileID: 1595424298305726441}
   - component: {fileID: 4976600028635503036}
+  - component: {fileID: 1660608302541604103}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2214,6 +2215,28 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1660608302541604103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8341317888320881548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 600829e7886d9498a9a45db8923be313, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _curEnterNPC: {fileID: 0}
+  isInteracting: 0
+  _uiManager: {fileID: 0}
+  _progressBar: {fileID: 0}
+  _progressBarFill: {fileID: 0}
+  _enterTime: 5
+  _isComplete: 0
+  isEnd: 0
+  _curInteractableEventID: {fileID: 0}
+  canInteract: 1
 --- !u!1 &8406359327082558372
 GameObject:
   m_ObjectHideFlags: 0

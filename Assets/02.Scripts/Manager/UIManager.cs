@@ -96,6 +96,7 @@ public class UIManager : Singleton<UIManager>
         {
             if (image.gameObject.name == "Evidence Img")
             {
+                Debug.Log("art resource id : " + evidence.artresource_id);
                 //아트 리소스 불러오기
                 if (EventManagerYKM.Instance._artResources.ContainsKey(evidence.artresource_id))
                 {

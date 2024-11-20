@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
-public class SoundManager : MonoBehaviour
+public class SoundManager : Singleton<SoundManager>
 {
     [SerializeField]
     private AudioSource _bgmSource = null;
@@ -45,12 +46,32 @@ public class SoundManager : MonoBehaviour
 
     public void LoadSound(string path) => LoadAudioClip(GetSoundFullPath(path));
 
-    public void PlaySound(string path)
+    // public void PlaySound(string path)
+    // {
+    //     AudioClip clip = LoadAudioClip(GetSoundFullPath(path));
+    //     if (clip == null)
+    //         return;
+    //     _soundSource.PlayOneShot(clip);
+    // }
+
+    public void PlaySound(string path,int loopCount)
     {
         AudioClip clip = LoadAudioClip(GetSoundFullPath(path));
         if (clip == null)
             return;
-        _soundSource.PlayOneShot(clip);
+   
+        StartCoroutine(PlaySoundRepeatedly(clip, loopCount));
     }
+    private IEnumerator PlaySoundRepeatedly(AudioClip clip, int repeatCount)
+    {
+        for(int i = 0; i < repeatCount; i++)
+        {
+            _soundSource.PlayOneShot(clip);
+            yield return new WaitForSeconds(clip.length);
+        }
+
+        EffectManager.Instance.isEffectEnd = true;
+    }
+
     public void ClearLoadedAudioClip() => _loadedClip.Clear();
 }

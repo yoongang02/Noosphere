@@ -5,6 +5,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using VFolders.Libs;
 
 public class InventorySlot
 {
@@ -33,14 +34,19 @@ public class InventoryManager : Singleton<InventoryManager>
     Dictionary<int, ChapterInventory> chapterInventories = new Dictionary<int, ChapterInventory>();
     
     //인벤토리 창 오픈 여부
-    private bool isInventoryOpen = false;
+    public bool isInventoryOpen = false;
     
     //인벤토리 UI
     [SerializeField] private GameObject _inventoryWindow;
     [SerializeField] private GameObject _realWorldInventory;
     [SerializeField] private GameObject _mentalWorldInventory;
     [SerializeField] private GameObject _inventorySlotPrefab;
-    private int _currentViewChapter = 0;
+    
+    //챕터 관련
+    [SerializeField] private GameObject _chapterParent;
+    [SerializeField] private GameObject _chapterPrefab;
+    public List<GameObject> chapterUIList;
+    public int currentViewChapter = 0;
 
     void Start()
     {
@@ -67,15 +73,30 @@ public class InventoryManager : Singleton<InventoryManager>
 
     void InitInventory()
     {
+        //챕터 정보 저장하기
+        int chapterCount = Enum.GetValues(typeof(EventManagerYKM.ChapterInfo)).Length;
+        InitChapter(chapterCount);
         isInventoryOpen = false;
-        _currentViewChapter = 0;
+        currentViewChapter = 0;
         chapterInventories.Clear();
         
-        int chapterCnt = Enum.GetValues(typeof(EventManagerYKM.ChapterInfo)).Length;
-        for (int i = 0; i < chapterCnt; i++)
+        for (int i = 0; i < chapterCount; i++)
         {
             chapterInventories.Add(i,new ChapterInventory());
         }
+    }
+
+    void InitChapter(int chapterCount)
+    {
+        for (int chapter = 0; chapter < chapterCount; chapter++)
+        {
+            GameObject chapterUI = Instantiate(_chapterPrefab, _chapterParent.transform);
+            TextMeshProUGUI chapterName = chapterUI.GetComponentInChildren<TextMeshProUGUI>();
+            chapterName.text = Enum.GetName(typeof(EventManagerYKM.ChapterInfo), chapter);
+            chapterUIList.Add(chapterUI);
+        }
+
+        currentViewChapter = 0;
     }
 
     public void AddEvidence(EvidenceStructure evidence)
@@ -103,12 +124,12 @@ public class InventoryManager : Singleton<InventoryManager>
     }
 
     //현재 보이는 인벤토리 UI 업데이트
-    void UpdateInventoryUI()
+    public void UpdateInventoryUI()
     {
         ClearInventoryUI(_realWorldInventory);
         ClearInventoryUI(_mentalWorldInventory);
         
-        ChapterInventory currentInventory = chapterInventories[_currentViewChapter];
+        ChapterInventory currentInventory = chapterInventories[currentViewChapter];
 
         // 현실 세계 증거물 추가
         foreach (var evidence in currentInventory.realWorldEvidences)
@@ -167,6 +188,7 @@ public class InventoryManager : Singleton<InventoryManager>
     //인벤토리 내에 해당 증거물이 존재하는지 확인
     public bool IsAcquiredEvidence(string evidence_id)
     {
+        Debug.Log(evidence_id + "획득검사");
         foreach (var chapter in chapterInventories)
         {
             foreach (var slot in chapter.Value.realWorldEvidences)
@@ -190,5 +212,6 @@ public class InventoryManager : Singleton<InventoryManager>
     void ControlWindow()
     {
         _inventoryWindow.SetActive(isInventoryOpen);
+        if(isInventoryOpen) GetComponent<InventoryNavigator>().InitNavigator(_realWorldInventory.transform,_mentalWorldInventory.transform);
     }
 }
