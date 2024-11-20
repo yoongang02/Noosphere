@@ -8,27 +8,8 @@ using UnityEngine.SceneManagement;
 
 public class EffectManager : Singleton<EffectManager>
 {
-    public Dictionary<string, EffectStructure> _effect = new Dictionary<string, EffectStructure>();
-    public Dictionary<string, SoundResourceStructure> _sound = new Dictionary<string, SoundResourceStructure>();
     private string _currentEffectID;
     public bool isEffectEnd = false;
-    private void Start()
-    {
-        Initialize().Forget();
-    }
-    private async UniTaskVoid Initialize()
-    {
-        _effect = await LoadData<EffectStructure>("Effect");
-        _sound = await LoadData<SoundResourceStructure>("SoundResource");
-        Debug.Log("이펙트 완료");
-        Debug.Log("사운드 완료");
-    }
-
-    public async UniTask<Dictionary<string, T>> LoadData<T>(string fileName) where T : new()
-    {
-        CSVParserYKM parser = new CSVParserYKM();
-        return await parser.Parse<T>(fileName);
-    }
     //
     //SetEffect불러오기
     //
@@ -36,7 +17,7 @@ public class EffectManager : Singleton<EffectManager>
     {
         _currentEffectID = id;
         // isEffectEnd = false;
-        if (_effect.TryGetValue(_currentEffectID, out EffectStructure effect))
+        if (DataManager.Instance._effect.TryGetValue(_currentEffectID, out EffectStructure effect))
         {
             if (!string.IsNullOrEmpty(effect.artresource_id))
             {
@@ -45,7 +26,7 @@ public class EffectManager : Singleton<EffectManager>
             }
             if (!string.IsNullOrEmpty(effect.soundresource_id))
             {
-                SoundResourceStructure sound = _sound[effect.soundresource_id];
+                SoundResourceStructure sound = DataManager.Instance._sound[effect.soundresource_id];
                 if (sound.soundresource_Type=="Sound")
                 {
                     SoundManager.Instance.PlaySound(effect.soundresource_id,sound.loop_count);
