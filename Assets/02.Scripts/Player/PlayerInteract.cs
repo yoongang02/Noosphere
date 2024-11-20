@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class PlayerInteract : MonoBehaviour
+public class PlayerInteract : Singleton<PlayerInteract>
 {
     [SerializeField] private GameObject _curEnterNPC;
     public bool isInteracting = false;

@@ -32,11 +32,13 @@ public class LockConditionStructure
 
     void LockPlayerMove()
     {
+        PlayerController.Instance.isDialogueOn = true;
         Debug.Log("플레이어 움직임 Lock");
     }
 
     void LockAllInteraction()
     {
+        PlayerInteract.Instance.canInteract = false;
         Debug.Log("모든 물체 및 캐릭터 상호작용 Lock");
     }
 

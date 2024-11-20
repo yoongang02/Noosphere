@@ -37,7 +37,7 @@ public class DialogueManager : Singleton<DialogueManager>
         {
             if (dialogue.trigger_type == "auto") //대화창 바로 뜨기
             {
-                PlayerController.Instance.isDialogueOn = true;
+                // PlayerController.Instance.isDialogueOn = true;
                 UIManager.Instance.dialogueUI.gameObject.SetActive(true);
                 ShowNextLine().Forget();
             }

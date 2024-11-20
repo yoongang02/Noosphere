@@ -107,7 +107,7 @@ public class PlayerController : Singleton<PlayerController>
         // _dialogueCamera.LookAt = _currentNPC.transform;
         // _dialogueCamera.Priority = 20;
 
-        isDialogueOn = true;
+        /*isDialogueOn = true;*/ 
         NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
         if (npcDialogue != null && !string.IsNullOrEmpty(npcDialogue.dialogueId))
         {
