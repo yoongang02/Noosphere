@@ -63,7 +63,7 @@ public class InventoryManager : Singleton<InventoryManager>
         }
         
         //인벤토리 닫기
-        if (isInventoryOpen && Input.GetKeyDown(KeyCode.Escape))
+        if (isInventoryOpen && Input.GetKeyDown(KeyCode.Escape) && !UIManager.Instance._isDetailOpen)
         {
             isInventoryOpen = !isInventoryOpen;
             ControlWindow();
@@ -125,6 +125,7 @@ public class InventoryManager : Singleton<InventoryManager>
         foreach (var evidence in currentInventory.realWorldEvidences)
         {
             GameObject slot = Instantiate(_inventorySlotPrefab, _realWorldInventory.transform);
+            slot.GetComponent<InventorySlotInfo>().evidence_id = evidence.evidence_id;
             UpdateSlotUI(slot, evidence);
         }
 
@@ -132,6 +133,7 @@ public class InventoryManager : Singleton<InventoryManager>
         foreach (var evidence in currentInventory.mentalWorldEvidences)
         {
             GameObject slot = Instantiate(_inventorySlotPrefab, _mentalWorldInventory.transform);
+            slot.GetComponent<InventorySlotInfo>().evidence_id = evidence.evidence_id;
             UpdateSlotUI(slot, evidence);
         }
     }
@@ -200,7 +202,7 @@ public class InventoryManager : Singleton<InventoryManager>
         return false;
     }
 
-    void ControlWindow()
+    public void ControlWindow()
     {
         _inventoryWindow.SetActive(isInventoryOpen);
         if(isInventoryOpen) GetComponent<InventoryNavigator>().InitNavigator(_realWorldInventory.transform,_mentalWorldInventory.transform);

@@ -46,7 +46,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private GameObject _evidenceDetailTextRightBtn;
     [SerializeField] private Image _evidenceDetailTextImg;
     [SerializeField] private int _evidenceDetailTextCurPageIndex = 0;
-    [SerializeField] private bool _isDetailOpen = false;
+    public bool _isDetailOpen = false;
     [SerializeField] private bool _isDetailText = false;
     
     void Update()
@@ -214,8 +214,17 @@ public class UIManager : Singleton<UIManager>
         _isDetailOpen = true;
         _evidenceDetailUI.SetActive(true);
     }
+    
+    public void ShowDetailEvidenceInInventory(EvidenceStructure evidence)
+    {
+        SetDetailEvidence(evidence);
+        Debug.Log("자세히 보기 실행");
+        //상세보기 창 열기
+        _isDetailOpen = true;
+        _evidenceDetailUI.SetActive(true);
+    }
 
-    void CloseDetailEvidence()
+    public void CloseDetailEvidence()
     {
         _isDetailOpen = false;
         _evidenceDetailUI.SetActive(false);
