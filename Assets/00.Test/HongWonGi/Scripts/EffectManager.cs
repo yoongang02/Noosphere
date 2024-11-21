@@ -7,6 +7,7 @@ using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
 using UnityEngine.UI;
+using DG.Tweening;
 
 
 public class EffectManager : Singleton<EffectManager>
@@ -18,6 +19,7 @@ public class EffectManager : Singleton<EffectManager>
     public GameObject vhsObj;
     private Camera _mainCamera;
     private UnityEngine.Rendering.Universal.UniversalAdditionalCameraData _cameraData;
+
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -88,10 +90,14 @@ public class EffectManager : Singleton<EffectManager>
         _vhsVolume.weight = value;
         if (value >= 1f)
         {
-            ResetMetalEffect();
+            DOTween.To(() => _vhsImage.color.a, x => {
+                Color newColor = _vhsImage.color;
+                newColor.a = x;
+                _vhsImage.color = newColor;
+                _vhsVolume.weight = x;
+            }, 0f, 3f).SetDelay(0.5f).OnComplete(() => ResetMetalEffect());
         }
     }
-
     public void ResetMetalEffect()
     {
         vhsObj.SetActive(false);
