@@ -143,15 +143,12 @@ public class PlayerInteract : Singleton<PlayerInteract>
             string eventID = other.GetComponent<EventTrigger>().eventID;
             StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
         }
-
-        if (other.CompareTag("EventInteractionTrigger"))
+        else if (other.CompareTag("EventInteractionTrigger"))
         {
             curInteractableTrigger = other.gameObject;
             if(CheckInteractionAvail(other.GetComponent<EventTrigger>().eventID)) ShowInteractionMark();
-        }
-        
-        //정신세계 진입 트리거에 들어가면
-        if (other.CompareTag("EventMentalEnterTrigger"))
+        } //정신세계 진입 트리거에 들어가면
+        else if (other.CompareTag("EventMentalEnterTrigger"))
         {
             curEnterNPCTrigger = other.gameObject;
             _canEnter = true;
