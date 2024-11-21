@@ -33,7 +33,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
     void Update()
     {
 
-        if (canInteract && _curInteractableEventID != null && Input.GetKeyUp(KeyCode.E))
+        if (!InventoryManager.Instance.isInventoryOpen && canInteract && _curInteractableEventID != null && Input.GetKeyUp(KeyCode.E))
         { 
             Debug.Log("이벤트 실행되나???");
             //이벤트 실행
@@ -216,5 +216,28 @@ public class PlayerInteract : Singleton<PlayerInteract>
         }
         Debug.Log("checkInteractionAvail이 false로 리턴됨.");
         return false;
+    }
+
+    public Dictionary<string,string> GetPlayeCanUseEvidenceID()
+    {
+        Dictionary<string, string> data = new Dictionary<string, string>();
+        data.Add("eventID","");
+        //플레이어가 현재 상호작용 중인 트리거가 있어야 함.
+        if (_curInteractableEventID != null)
+        {
+            //해당 트리거에서 이벤트 아이디 가져오기
+            string eventID = _curInteractableEventID.GetComponent<EventTrigger>().eventID;
+            data["eventID"] = eventID;
+            EventStructure eventStructure = DataManager.Instance._events[eventID];
+            
+            //해당 이벤트가 분기점이 있는지 체크
+            if (eventStructure.branch_Type)
+            {
+                data.Add("evidenceID",eventStructure.branch_Element);
+                return data;
+            }
+        }
+        data.Add("evidenceID","");
+        return data;
     }
 }
