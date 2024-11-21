@@ -74,17 +74,7 @@ public class EventStructure
 
             if (useType == "Y")
             {
-                PlayerInteract player = PlayerController.Instance.GetComponent<PlayerInteract>();
-                if (player.IsPlayerGrabEvidence(id))
-                {
-                    Debug.Log(id + "아이템 사용 완료");
-                    player.InitPlayerGrabEvidence();
-                    isMet = true;
-                }
-                else
-                {
-                    isMet = false;
-                }
+                
             }
             else if(useType == "N")
             {

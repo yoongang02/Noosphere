@@ -29,8 +29,6 @@ public class PlayerInteract : Singleton<PlayerInteract>
 
     [Header("상호작용 표식")] [SerializeField] private GameObject _interactionMark;
 
-    [Header("증거물 사용하기")] 
-    [SerializeField] string curGrabEvidenceID;
     
     void Update()
     {
@@ -161,24 +159,6 @@ public class PlayerInteract : Singleton<PlayerInteract>
 
     private void OnTriggerEnter(Collider other)
     {
-        /*
-        if(other.CompareTag("InvestigateObj"))
-        {
-            _uiManager._showPressBtnUI.GetComponent<TextMeshProUGUI>().text = "E를 눌러 확인";
-            _canInteract = true;
-            _curInteractableObj = other.gameObject;
-            //ui에 텍스트 띄우기
-            _uiManager._showPressBtnUI.SetActive(true);
-        }
-
-        if (other.CompareTag("ProgressNPC"))
-        {
-            _uiManager._showPressBtnUI.GetComponent<TextMeshProUGUI>().text = "SPACE를 눌러 정신 세계 진입";
-            _uiManager._showPressBtnUI.SetActive(true);
-            _canEnter = true;
-            _curEnterNPC = other.gameObject;
-        }
-        */
         //진입 시 바로 이벤트 실행되는 트리거에 진행하면
         if (other.CompareTag("EventTrigger"))
         {
@@ -200,22 +180,6 @@ public class PlayerInteract : Singleton<PlayerInteract>
             _curInteractableEventID = null; 
             _interactionMark.SetActive(false);
         }
-        /*
-        if(other.CompareTag("InvestigateObj"))
-        {
-            _canInteract = false;
-            _curInteractableObj = null;
-            //ui 텍스트 없애기
-            _uiManager._showPressBtnUI.SetActive(false);
-        }
-        
-        if (other.CompareTag("ProgressNPC"))
-        {
-            _canEnter = false;
-            _curEnterNPC = null;
-            _uiManager._showPressBtnUI.SetActive(false);
-        }
-        */
     }
 
     void InitProgressBar()
@@ -252,24 +216,5 @@ public class PlayerInteract : Singleton<PlayerInteract>
         }
         Debug.Log("checkInteractionAvail이 false로 리턴됨.");
         return false;
-    }
-
-    public void SetGrabObject(GameObject prefab,string evidenceID)
-    {
-        //프리팹 생성해서 플레이어 손에 부착하기
-        //현재 들고 있는 상태 변경
-        //들고 있는 물건 할당
-        curGrabEvidenceID = evidenceID;
-    }
-
-    public bool IsPlayerGrabEvidence(string id)
-    {
-        if (curGrabEvidenceID == id) return true;
-        return false;
-    }
-
-    public void InitPlayerGrabEvidence()
-    {
-        curGrabEvidenceID = null;
     }
 }

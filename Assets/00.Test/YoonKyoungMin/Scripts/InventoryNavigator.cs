@@ -54,7 +54,7 @@ public class InventoryNavigator : MonoBehaviour
                 if (canEvidenceUse && Input.GetKeyDown(KeyCode.Space))
                 {
                     Debug.Log("아이템 사용하기");
-                    GrabEvidence();
+                    
                     //인벤토리 창 자동으로 닫기
                     InventoryManager.Instance.isInventoryOpen = !InventoryManager.Instance.isInventoryOpen;
                     InventoryManager.Instance.ControlWindow();
@@ -307,15 +307,5 @@ public class InventoryNavigator : MonoBehaviour
             _slotUseBtn.color = UnityExtension.HexColor("#B3B3B3");
             canEvidenceUse = false;
         }
-    }
-    
-    //아이템 들기 함수
-    void GrabEvidence()
-    {
-        string id = _curSelectedSlot.GetComponent<InventorySlotInfo>().evidence_id;
-        EvidenceStructure evidence = DataManager.Instance._evidences[id];
-        ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresource_id];
-        //플레이어의 손에 물체 들리게 하기
-        PlayerController.Instance.GetComponent<PlayerInteract>().SetGrabObject(artResource.GetPrefabForGrab(),id);
     }
 }
