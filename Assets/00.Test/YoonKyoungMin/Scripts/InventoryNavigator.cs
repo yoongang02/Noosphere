@@ -305,8 +305,7 @@ public class InventoryNavigator : MonoBehaviour
             PlayerInteract playerInteract = PlayerController.Instance.GetComponent<PlayerInteract>();
             //현재 선택한 슬롯의 증거물 아이디 가져오기
             string slotId = _curSelectedSlot.GetComponent<InventorySlotInfo>().evidence_id;
-
-            List<string> useEventIdList = new List<string>();
+            
             foreach (var key in playerInteract.GetPlayeCanUseEvidenceID().Keys)
             {
                 //두 증거물 아이디 값 비교하기, 같으면 사용할 수 있음.

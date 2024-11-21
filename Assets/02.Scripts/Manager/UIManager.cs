@@ -73,6 +73,7 @@ public class UIManager : Singleton<UIManager>
                     _curSelectedBtn, 
                     new BaseEventData(EventSystem.current), (x, y) => x.OnSelect(y)
                 );
+                Debug.Log("상세 내용 조사 YES BTN 클릭");
                 isSelecting = false;
             }
             
@@ -81,7 +82,7 @@ public class UIManager : Singleton<UIManager>
             {
                 //NO 버튼 선택
                 SelectNoBtn();
-                
+                Debug.Log("상세 내용 조사 NO BTN 클릭");
                 //해당 버튼의 이벤트 트리거 호출
                 ExecuteEvents.Execute<ISelectHandler>(
                     _curSelectedBtn, 

@@ -117,6 +117,7 @@ public class InventoryManager : Singleton<InventoryManager>
         if (PlayerInteract.Instance._evidenceGameObject != null)
         {
             Debug.Log("맵에서 습득한 오브젝트 파괴");
+            PlayerInteract.Instance._interactionMark.SetActive(false);
             Destroy(PlayerInteract.Instance._evidenceGameObject);
         }
     }
