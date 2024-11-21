@@ -153,6 +153,7 @@ public class DialogueManager : Singleton<DialogueManager>
                 isDialogeEnd = true;
                 _currentDialogueId = "";
                 _currentLineIndex = 0;
+                // PlayerController.Instance.ResetCamera();
                 UIManager.Instance.dialogueUI.gameObject.SetActive(false);
             }
         }

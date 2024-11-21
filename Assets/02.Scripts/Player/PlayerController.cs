@@ -29,12 +29,14 @@ public class PlayerController : Singleton<PlayerController>
     private GameObject _currentNPC;
     private float lastStepTime = 0f;
     [Header("Ray Settings")]
-    private float rayDistance = 1f;
+    [SerializeField] private float _rayDistance;
+    [SerializeField] private float _rayHeight;
     private void OnDrawGizmos()
     {
+        Vector3 rayStart = transform.position + Vector3.up * _rayHeight; // Ray 시작점을 위로 올림
         Gizmos.color = Color.red;
-        Vector3 direction = transform.forward * rayDistance;
-        Gizmos.DrawRay(transform.position, direction);
+        Vector3 direction = transform.forward * _rayDistance;
+        Gizmos.DrawRay(rayStart, direction);
     }
     private void Start()
     {
@@ -98,23 +100,7 @@ public class PlayerController : Singleton<PlayerController>
 
     private void StartDialogue()
     {
-        //Dialogue Camera On
-        // var transposer = _dialogueCamera.GetCinemachineComponent<CinemachineTransposer>();
-        // if (transposer != null)
-        // {
-        //     if (transform.position.x > _currentNPC.transform.position.x)
-        //     {
-        //         transposer.m_FollowOffset = new Vector3(-2,transposer.m_FollowOffset.y, transposer.m_FollowOffset.z);
-        //     }
-        //     else
-        //     {
-        //         transposer.m_FollowOffset = new Vector3(2,transposer.m_FollowOffset.y, transposer.m_FollowOffset.z);
-        //     }
-        // }
-        // _dialogueCamera.LookAt = _currentNPC.transform;
-        // _dialogueCamera.Priority = 20;
-
-        /*isDialogueOn = true;*/ 
+        // NpcCameraOn();
         NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
         if (npcDialogue != null && !string.IsNullOrEmpty(npcDialogue.dialogueId))
         {
@@ -123,12 +109,20 @@ public class PlayerController : Singleton<PlayerController>
         }
     }
 
-    public void ResetCamera()
+    private void NpcCameraOn()
     {
-        _dialogueCamera.LookAt = null;
-        _dialogueCamera.Priority = 0;
+        _currentNPC.GetComponent<NpcState>().SetState(NPCState.IsTalking);
+        _dialogueCamera.transform.gameObject.SetActive(true);
+        _dialogueCamera.Follow = _currentNPC.transform.GetChild(0).transform;
+        
     }
 
+    public void ResetCamera()
+    {
+        // _currentNPC.GetComponent<NpcState>().SetState(NPCState.Idle);
+        _dialogueCamera.Follow = null;
+        _dialogueCamera.transform.gameObject.SetActive(false);
+    } 
     private void HandleInput()
     {
         if (isDialogueOn)
@@ -136,24 +130,23 @@ public class PlayerController : Singleton<PlayerController>
             _animator.SetFloat("MoveSpeed", 0f);
             return;
         }
-        Ray ray = new Ray(transform.position, transform.forward);
+        Vector3 rayStart = transform.position + Vector3.up * _rayHeight; // Ray 시작점을 위로 올림
+        Ray ray = new Ray(rayStart, transform.forward);
         RaycastHit hit;
-        if(Physics.Raycast(ray, out hit, rayDistance))
+        if(Physics.Raycast(ray, out hit, _rayDistance))
         {
-            Debug.DrawRay(transform.position, transform.forward * rayDistance, Color.green);
-       
+            Debug.DrawRay(rayStart, transform.forward * _rayDistance, Color.green);
             if(hit.collider.CompareTag("NPC"))
             {
+                isPlayerNearNPC = true;
+                _currentNPC = hit.collider.gameObject;
                 Debug.Log("NPC를 바라보고 있습니다.");
             }
-            // else if(hit.collider.CompareTag("Object"))
-            // {
-            //     Debug.Log("상호작용 가능한 오브젝트를 바라보고 있습니다.");
-            // }
         }
         else
         {
-            Debug.DrawRay(transform.position, transform.forward * rayDistance, Color.red);
+            isPlayerNearNPC = false;
+            Debug.DrawRay(rayStart, transform.forward * _rayDistance, Color.red);
         }
         float moveX = 0f;
         float moveY = 0f;
