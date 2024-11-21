@@ -42,42 +42,44 @@ public class PlayerInteract : Singleton<PlayerInteract>
                 //이벤트 실행
                 _evidenceGameObject = null;
                 EventTrigger trigger = curInteractableTrigger.GetComponent<EventTrigger>();
-                string eventID = trigger.eventID;
-                if (trigger.canDestroyEvidence)
+                foreach (string eventID in trigger.eventIdList)
                 {
-                    _evidenceGameObject = curInteractableTrigger.transform.parent.gameObject;
+                    if (trigger.canDestroyEvidence)
+                    {
+                        _evidenceGameObject = curInteractableTrigger.transform.parent.gameObject;
+                    }
+                    else
+                    {
+                        _evidenceGameObject = null;
+                    }
+                    
+                    if (CheckInteractionAvail(eventID))
+                    {
+                        Debug.Log("상호작용 가능 조건 체크를 올바르게 만족하나???? 여기 실행???");
+                        StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
+                        _interactionMark.SetActive(false);
+                    }
                 }
-                else
-                {
-                    _evidenceGameObject = null;
-                }
-                if (CheckInteractionAvail(eventID))
-                {
-                    Debug.Log("상호작용 가능 조건 체크를 올바르게 만족하나???? 여기 실행???");
-                    StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
-                    _interactionMark.SetActive(false);
-                }
-            
-                //상호작용 물체 초기화
-                //_curInteractableEventID = null;
             }
             
             //Space 키를 이용한 정신세계 진입 상호작용
             if (_canEnter && curEnterNPCTrigger != null && Input.GetKeyDown(KeyCode.Space))
             {
                 //현재 진입 가능한지 체크
-                string eventID = curEnterNPCTrigger.GetComponent<EventTrigger>().eventID;
-                if (CheckInteractionAvail(eventID))
+                foreach (string eventID in curEnterNPCTrigger.GetComponent<EventTrigger>().eventIdList)
                 {
-                    Debug.Log("현재 정신세계 진입 가능한 이벤트임.");
-                    //이벤트 실행 가능하다면 실행
-                    StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
-                    _progressBarUI.SetActive(true);
-                    _startEnter = true;
-                }
-                else
-                {
-                    Debug.Log("현재 정신세계 진입이 불가능함.");
+                    if (CheckInteractionAvail(eventID))
+                    {
+                        Debug.Log("현재 정신세계 진입 가능한 이벤트임.");
+                        //이벤트 실행 가능하다면 실행
+                        StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
+                        _progressBarUI.SetActive(true);
+                        _startEnter = true;
+                    }
+                    else
+                    {
+                        Debug.Log("현재 정신세계 진입이 불가능함.");
+                    }
                 }
             }
             
@@ -139,19 +141,27 @@ public class PlayerInteract : Singleton<PlayerInteract>
         //진입 시 바로 이벤트 실행되는 트리거에 진행하면
         if (other.CompareTag("EventTrigger"))
         {
-            string eventID = other.GetComponent<EventTrigger>().eventID;
-            StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
+            foreach (string eventID in other.GetComponent<EventTrigger>().eventIdList)
+            {
+                StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
+            }
         }
         else if (other.CompareTag("EventInteractionTrigger"))
         {
             curInteractableTrigger = other.gameObject;
-            if(CheckInteractionAvail(other.GetComponent<EventTrigger>().eventID)) ShowInteractionMark();
+            foreach (string eventID in other.GetComponent<EventTrigger>().eventIdList)
+            {
+                if(CheckInteractionAvail(eventID)) ShowInteractionMark();
+            }
         } //정신세계 진입 트리거에 들어가면
         else if (other.CompareTag("EventMentalEnterTrigger"))
         {
             curEnterNPCTrigger = other.gameObject;
             _canEnter = true;
-            if(CheckInteractionAvail(other.GetComponent<EventTrigger>().eventID)) ShowInteractionMark();
+            foreach (string eventID in other.GetComponent<EventTrigger>().eventIdList)
+            {
+                if(CheckInteractionAvail(eventID)) ShowInteractionMark();
+            }
         }
     }
     
@@ -214,23 +224,24 @@ public class PlayerInteract : Singleton<PlayerInteract>
     public Dictionary<string,string> GetPlayeCanUseEvidenceID()
     {
         Dictionary<string, string> data = new Dictionary<string, string>();
-        data.Add("eventID","");
+       
         //플레이어가 현재 상호작용 중인 트리거가 있어야 함.
         if (curInteractableTrigger != null)
         {
             //해당 트리거에서 이벤트 아이디 가져오기
-            string eventID = curInteractableTrigger.GetComponent<EventTrigger>().eventID;
-            data["eventID"] = eventID;
-            EventStructure eventStructure = DataManager.Instance._events[eventID];
-            
-            //해당 이벤트가 분기점이 있는지 체크
-            if (eventStructure.branch_Type)
+            foreach (string eventID in curInteractableTrigger.GetComponent<EventTrigger>().eventIdList)
             {
-                data.Add("evidenceID",eventStructure.branch_Element);
-                return data;
+                data.Add("eventID",eventID);
+                EventStructure eventStructure = DataManager.Instance._events[eventID];
+            
+                //해당 이벤트가 분기점이 있는지 체크
+                if (eventStructure.branch_Type)
+                {
+                    data[eventID] = eventStructure.branch_Element;
+                }
             }
+            return data;
         }
-        data.Add("evidenceID","");
         return data;
     }
 }

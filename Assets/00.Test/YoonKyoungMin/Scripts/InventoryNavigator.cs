@@ -306,13 +306,16 @@ public class InventoryNavigator : MonoBehaviour
             //현재 선택한 슬롯의 증거물 아이디 가져오기
             string slotId = _curSelectedSlot.GetComponent<InventorySlotInfo>().evidence_id;
 
-            _curUseEventID = playerInteract.GetPlayeCanUseEvidenceID()["eventID"];
-            //두 증거물 아이디 값 비교하기, 같으면 사용할 수 있음.
-            if (slotId == playerInteract.GetPlayeCanUseEvidenceID()[evidenceId])
+            List<string> useEventIdList = new List<string>();
+            foreach (var key in playerInteract.GetPlayeCanUseEvidenceID().Keys)
             {
-                _slotUseBtn.color = UnityExtension.HexColor(UIManager.BlackColor);
-                canEvidenceUse = true;
-                return;
+                //두 증거물 아이디 값 비교하기, 같으면 사용할 수 있음.
+                if (slotId == playerInteract.GetPlayeCanUseEvidenceID()[key])
+                {
+                    _slotUseBtn.color = UnityExtension.HexColor(UIManager.BlackColor);
+                    canEvidenceUse = true;
+                    return;
+                }
             }
         }
         _slotUseBtn.color = UnityExtension.HexColor("#B3B3B3");

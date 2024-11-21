@@ -63,6 +63,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         yield return new WaitUntil(() => eventStructure.isExecuted);
         Debug.Log(eventID + "이벤트 실행 완료. nextEventID 갱신");
         nextEventID = eventStructure.next_Event_id;
+        
         //락 조건 해제
         if (DataManager.Instance._lockConditions.ContainsKey(lockConditionId))
         {
@@ -71,13 +72,21 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         //이벤트 트리거를 삭제해야하는 트리거라면 확인 후 삭제
         GameObject mentalTrigger = PlayerInteract.Instance.curEnterNPCTrigger;
         GameObject interactableTrigger = PlayerInteract.Instance.curInteractableTrigger;
-        if (mentalTrigger != null && (mentalTrigger.GetComponent<EventTrigger>().eventID == eventID) && mentalTrigger.GetComponent<EventTrigger>().canDestroyWhenExecutionComplete)
+        
+        if (mentalTrigger != null)
         {
-            Destroy(mentalTrigger);
+            foreach (string key in mentalTrigger.GetComponent<EventTrigger>().eventIdList)
+            {
+                if((key == eventID) && mentalTrigger.GetComponent<EventTrigger>().canDestroyWhenExecutionComplete) Destroy(mentalTrigger);
+            }
         }
-        if (interactableTrigger != null && (interactableTrigger.GetComponent<EventTrigger>().eventID == eventID) && interactableTrigger.GetComponent<EventTrigger>().canDestroyWhenExecutionComplete)
+
+        if (interactableTrigger != null)
         {
-            Destroy(interactableTrigger);
+            foreach (string key in interactableTrigger.GetComponent<EventTrigger>().eventIdList)
+            {
+                if ((key == eventID) && interactableTrigger.GetComponent<EventTrigger>().canDestroyWhenExecutionComplete) Destroy(interactableTrigger);
+            }
         }
     }
     

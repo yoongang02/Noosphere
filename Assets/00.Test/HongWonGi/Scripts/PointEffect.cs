@@ -10,6 +10,7 @@ public class PointEffect : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             // EffectManager.Instance.isEffectEnd = true;
+            CoroutineManager.Instance.StartManagedCoroutine(EventManagerYKM.Instance.ExecuteEvent(EventManagerYKM.Instance.nextEventID));
             gameObject.SetActive(false);
         }
     }
