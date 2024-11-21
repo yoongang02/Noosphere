@@ -10,7 +10,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
     [Header("상호작용 표식")] 
     public bool canInteract = true; //상호작용을 할 수 있는지(lock 조건에 이용)
     public GameObject curInteractableTrigger;
-    [SerializeField] private GameObject _interactionMark;
+    public GameObject _interactionMark;
     public GameObject _evidenceGameObject;
    
     

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.SceneManagement;
 
 // 플레이어 이동관련 함수
 //플레이어 이동방식 변경
@@ -13,7 +14,7 @@ public class PlayerController : Singleton<PlayerController>
 {
     [Header("플레이어 설정")] [SerializeField] private float _moveSpeed;
     [SerializeField] private float _sprintMultiplier = 2f;
-    [SerializeField] private Camera _mainCamera;
+    public Camera _mainCamera;
     [SerializeField] private CinemachineVirtualCamera _dialogueCamera;
     [Header("플레이어 사운드")] [SerializeField] private List<AudioClip> _walkSounds;
     [SerializeField] private List<AudioClip> runSounds;
@@ -255,6 +256,34 @@ public class PlayerController : Singleton<PlayerController>
         {
             InputManager.Instance.moveAction -= HandleInput;
             InputManager.Instance.selectBtnAction -= OnEKey;
+        }
+    }
+    
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        AssignMainCamera();
+    }
+
+    public void AssignMainCamera()
+    {
+        _mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+        if (_mainCamera != null)
+        {
+            Debug.Log($"Main camera assigned: {_mainCamera.name}");
+        }
+        else
+        {
+            Debug.LogWarning("No main camera found in the current scene.");
         }
     }
 }
