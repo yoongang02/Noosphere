@@ -1,4 +1,5 @@
 using UnityEngine;
+using VFolders.Libs;
 
 public class EvidenceStructure
 {
@@ -12,9 +13,13 @@ public class EvidenceStructure
     public string unlock_Condition;
     public string evidence_Text_Display;
     public string artresource_id;
+    public string sub_evidence_id;
+    public string sub_Evidence_Acquisition_Type;
+    public int acquisition_Page_Num;
+    public string acquisition_Page_Result_id;
     
     //추가적으로 필요한 필드 값
-    private int _accessCnt = 0; //증거물 접근 횟수
+    public int accessCnt = 0; //증거물 접근 횟수
 
     //획득할 수 있는지
     public void AcquireEvidence()
@@ -42,7 +47,7 @@ public class EvidenceStructure
         }
         else if (acquisition_Type == 'N') //인벤토리에 획득할 수 없다면
         {
-            _accessCnt++;
+            accessCnt++;
             Debug.Log(evidence_id + " 증거물은 획득할 수 없는 증거물입니다.");
         }
     }
@@ -55,6 +60,13 @@ public class EvidenceStructure
             Debug.Log("unlock 조건 만족한 것을 확인");
             return true;
         }
+        return false;
+    }
+    
+    //현재 상세보기하고 있는 증거물에 획득 가능한 서브 증거물이 있는지
+    public bool CheckSubEvidence()
+    {
+        if (!sub_evidence_id.IsNullOrEmpty()) return true;
         return false;
     }
 }

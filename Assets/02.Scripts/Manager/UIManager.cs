@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using VFolders.Libs;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -48,6 +49,10 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private int _evidenceDetailTextCurPageIndex = 0;
     public bool _isDetailOpen = false;
     [SerializeField] private bool _isDetailText = false;
+    
+    [Space(5)] [Header("강제 종료 관련 변수")] [SerializeField] 
+    private EvidenceStructure curDetailEvidence;
+    [SerializeField] private float _forceQuitSeconds = 0.5f;
     
     void Update()
     {
@@ -107,6 +112,24 @@ public class UIManager : Singleton<UIManager>
                 {
                     _evidenceDetailTextCurPageIndex += 1;
                     UpdateTextDetail(_evidenceDetailTextCurPageIndex);
+                }
+                
+                //현재 상세 내용을 보고 있는 증거물에 서브 증거물이 존재한다면, 그리고 그 서브 증거물의 타입이 page라면
+                if (!curDetailEvidence.sub_evidence_id.IsNullOrEmpty() &&
+                    curDetailEvidence.sub_Evidence_Acquisition_Type == "page")
+                {
+                    //page가 제한조건 이상이 되었다면
+                    if (_evidenceDetailTextCurPageIndex >= curDetailEvidence.acquisition_Page_Num-1)
+                    {
+                        if (DataManager.Instance._evidences.ContainsKey(curDetailEvidence.sub_evidence_id))
+                        {
+                            Debug.Log(curDetailEvidence.sub_evidence_id + " 숨겨져 있던 증거물 발견!!");
+                            //해당 증거물 접근 횟수 증가
+                            DataManager.Instance._evidences[curDetailEvidence.sub_evidence_id].accessCnt++;
+                            //강제 종료 코루틴 호출
+                            CoroutineManager.Instance.StartManagedCoroutine(ForceQuitInteraction());
+                        }
+                    }
                 }
             }
 
@@ -204,6 +227,7 @@ public class UIManager : Singleton<UIManager>
 
     public void ShowDetailEvidence()
     {
+        curDetailEvidence = _curInvestigateEvidence;
         SetDetailEvidence(_curInvestigateEvidence);
         Debug.Log("자세히 보기 실행");
         
@@ -219,6 +243,7 @@ public class UIManager : Singleton<UIManager>
     
     public void ShowDetailEvidenceInInventory(EvidenceStructure evidence)
     {
+        curDetailEvidence = evidence;
         SetDetailEvidence(evidence);
         Debug.Log("자세히 보기 실행");
         //상세보기 창 열기
@@ -353,5 +378,38 @@ public class UIManager : Singleton<UIManager>
         popUI.text = text;
     }
     */
-    
+    IEnumerator ForceQuitInteraction()
+    {
+        yield return new WaitForSeconds(_forceQuitSeconds);
+        Debug.Log("강제 종료!!!!");
+        if (_isDetailOpen)
+        {
+            CloseDetailEvidence();
+
+            if (!curDetailEvidence.acquisition_Page_Result_id.IsNullOrEmpty())
+            {
+                string resultID = curDetailEvidence.acquisition_Page_Result_id;
+                if (curDetailEvidence.accessCnt == 1)
+                {
+                    if (DataManager.Instance._events.ContainsKey(resultID))
+                    {
+                        CoroutineManager.Instance.StartManagedCoroutine(EventManagerYKM.Instance.ExecuteEvent(resultID));
+                    }
+                }
+                else if (curDetailEvidence.accessCnt >= 2)
+                {
+                    //첫번째 열람했을 떄 호출하는 이벤트의 다음 이벤트를 확인하고 해당 이벤트를 호출
+                    if (DataManager.Instance._events.ContainsKey(resultID))
+                    {
+                        string nextEventID = DataManager.Instance._events[resultID].next_Event_id;
+                        
+                        if (DataManager.Instance._events.ContainsKey(nextEventID))
+                        {
+                            CoroutineManager.Instance.StartManagedCoroutine(EventManagerYKM.Instance.ExecuteEvent(resultID));
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
