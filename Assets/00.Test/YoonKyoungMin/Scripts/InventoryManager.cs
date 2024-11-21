@@ -114,10 +114,10 @@ public class InventoryManager : Singleton<InventoryManager>
         UpdateInventoryUI();
         
         //맵에서 증거 오브젝트 파괴하기
-        if (PlayerController.Instance.GetComponent<PlayerInteract>()._evidenceGameObject != null)
+        if (PlayerInteract.Instance._evidenceGameObject != null)
         {
             Debug.Log("맵에서 습득한 오브젝트 파괴");
-            Destroy(PlayerController.Instance.GetComponent<PlayerInteract>()._evidenceGameObject);
+            Destroy(PlayerInteract.Instance._evidenceGameObject);
         }
     }
 

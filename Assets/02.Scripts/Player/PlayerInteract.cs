@@ -7,126 +7,105 @@ using VHierarchy.Libs;
 
 public class PlayerInteract : Singleton<PlayerInteract>
 {
-    [SerializeField] private GameObject _curEnterNPC;
-    public bool isInteracting = false;
+    [Header("상호작용 표식")] 
+    public bool canInteract = true; //상호작용을 할 수 있는지(lock 조건에 이용)
+    public GameObject curInteractableTrigger;
+    [SerializeField] private GameObject _interactionMark;
+    public GameObject _evidenceGameObject;
+   
     
     //정신세계 진입 관련 변수
-    [SerializeField] private UIManager _uiManager;
-    [SerializeField] private GameObject _progressBar;
-    [SerializeField] private EnterProgressBar _progressBarFill;
+    [Header("정신세계 진입 관련 조건 변수")]
+    public bool isPlayerInMetanlWorld = false;
     [SerializeField] private float _enterTime = 5.0f;
-    private bool _canEnter = false;
-    private bool _startEnter = false;
+    public GameObject curEnterNPCTrigger;
+    [SerializeField] bool _canEnter = false;
+    [SerializeField] bool _startEnter = false;
     public bool _isComplete = false;
-    private float _timer = 0f;
-
+    [SerializeField] float _timer = 0f;
+    
+    [Header("정신세계 진입 관련 UI 변수")]
+    [SerializeField] private GameObject _progressBarUI;
+    [SerializeField] private EnterProgressBar _progressBarFill;
+    
     public bool isEnd = false;
-
-    //찐 사용 변수 우선 아래에 옮기기
-    [SerializeField] private GameObject _curInteractableEventID;
-    public GameObject _evidenceGameObject;
-    public bool canInteract = true; //상호작용을 할 수 있는지(lock 조건에 이용)
-
-    [Header("상호작용 표식")] [SerializeField] private GameObject _interactionMark;
-
+    
     
     void Update()
     {
-
-        if (!InventoryManager.Instance.isInventoryOpen && canInteract && _curInteractableEventID != null && Input.GetKeyUp(KeyCode.E))
-        { 
-            Debug.Log("이벤트 실행되나???");
-            //이벤트 실행
-            _evidenceGameObject = null;
-            EventTrigger trigger = _curInteractableEventID.GetComponent<EventTrigger>();
-            string eventID = trigger.eventID;
-            if (trigger.canDestroy)
-            {
-                _evidenceGameObject = _curInteractableEventID.transform.parent.gameObject;
-            }
-            else
-            {
+        if (!InventoryManager.Instance.isInventoryOpen)
+        {
+            //E키를 이용한 상호작용
+            if (canInteract && curInteractableTrigger != null && Input.GetKeyDown(KeyCode.E))
+            { 
+                Debug.Log("이벤트 실행되나???");
+                //이벤트 실행
                 _evidenceGameObject = null;
-            }
-            if (CheckInteractionAvail(eventID))
-            {
-                Debug.Log("상호작용 가능 조건 체크를 올바르게 만족하나???? 여기 실행???");
-                StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
-                _interactionMark.SetActive(false);
+                EventTrigger trigger = curInteractableTrigger.GetComponent<EventTrigger>();
+                string eventID = trigger.eventID;
+                if (trigger.canDestroyEvidence)
+                {
+                    _evidenceGameObject = curInteractableTrigger.transform.parent.gameObject;
+                }
+                else
+                {
+                    _evidenceGameObject = null;
+                }
+                if (CheckInteractionAvail(eventID))
+                {
+                    Debug.Log("상호작용 가능 조건 체크를 올바르게 만족하나???? 여기 실행???");
+                    StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
+                    _interactionMark.SetActive(false);
+                }
+            
+                //상호작용 물체 초기화
+                //_curInteractableEventID = null;
             }
             
-            //상호작용 물체 초기화
-            //_curInteractableEventID = null;
-        }
-        
-        /*
-        //상호작용 가능한데, E 버튼 클릭하면
-        if (_canInteract && Input.GetKeyUp(KeyCode.E))
-        {
-            GetComponent<PlayerController>().isDialogueOn = true;
-            //현재 상호작용 오브젝트 내의 public 함수 호출
-            _uiManager._showPressBtnUI.SetActive(false);
-            _uiManager._bookInfo.SetActive(true);
-            isInteracting = true;
-        }
-        
-        //진입 가능하며, space 버튼 클릭하면
-        if (_canEnter && Input.GetKeyDown(KeyCode.Space))
-        {
-            if (_curEnterNPC.GetComponent<NPCController>()._canEnterMentalWorld)
+            //Space 키를 이용한 정신세계 진입 상호작용
+            if (_canEnter && curEnterNPCTrigger != null && Input.GetKeyDown(KeyCode.Space))
             {
-                //진입 가능 NPC
-                _uiManager._showPressBtnUI.SetActive(false);
-                _progressBar.SetActive(true);
-                _startEnter = true;
+                //현재 진입 가능한지 체크
+                string eventID = curEnterNPCTrigger.GetComponent<EventTrigger>().eventID;
+                if (CheckInteractionAvail(eventID))
+                {
+                    Debug.Log("현재 정신세계 진입 가능한 이벤트임.");
+                    //이벤트 실행 가능하다면 실행
+                    StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
+                    _progressBarUI.SetActive(true);
+                    _startEnter = true;
+                }
+                else
+                {
+                    Debug.Log("현재 정신세계 진입이 불가능함.");
+                }
+            }
+            
+            //진입시작했고, 완료되지 않았고, 스페이스를 계속 누르고 있다면
+            if (_startEnter && !_isComplete && Input.GetKey(KeyCode.Space))
+            {
+                float value = _progressBarFill.FillAmount();
+                //여기에 value에 따른 연출 진행상황 코드 추가하면 됨.
+                // 예시 : _uiManager.transitionAnimator.Play("TS_4_Normal_Reveal", 0, value);
+                
+                if (value >= 1f)
+                {
+                    _isComplete = true;
+                    //씬 이동 함수 실행하면 됨.
+                    curEnterNPCTrigger.GetComponent<EnterPath>().StartEnterToPath();
+                }
             }
             else
             {
-                //진입 불가능 NPC
-                Debug.Log("여기 실행??");
-                _uiManager._showPressBtnUI.GetComponent<TextMeshProUGUI>().text = "정신세계에 진입하기 올바른 대상이 아닙니다";
-                _uiManager._showPressBtnUI.SetActive(true);
+                //스페이스에서 손 때면, 현 상태에서 연출 멈추는 효과 구현 코드 여기에 작성되면 됨.
+                //예시 : _uiManager.transitionAnimator.speed = 0;
             }
         }
-        
-        //진입시작했고, 완료되지 않았고, 스페이스를 계속 누르고 있다면
-        if (_canEnter && !_isComplete && Input.GetKey(KeyCode.Space))
-        {
-            float value = _progressBarFill.FillAmount();
-            _uiManager.transitionAnimator.Play("TS_4_Normal_Reveal", 0, value);
-            if (value >= 1f)
-            {
-                _isComplete = true;
-                StartCoroutine(_uiManager.ActiveEndingMessage());
-            }
-        }
-        else
-        {
-            _uiManager.transitionAnimator.speed = 0;
-        }
-        
-        
-        //팝업 열려있으면 ESC버튼을 통해 팝업 끌 수 있음.
-        if (_uiManager.isPopUpOpen && Input.GetKeyUp(KeyCode.Escape))
-        {
-            GetComponent<PlayerController>().isDialogueOn = false;
-            _uiManager._bookPopUp.SetActive(false);
-            isInteracting = false;
-            _uiManager.isPopUpOpen = false;
-        }
-        
-        //게임이 완료되고, esc를 누르면 게임 종료
-        if (isEnd && Input.GetKeyUp(KeyCode.Escape))
-        {
-            Debug.Log("게임 종료");
-            Application.Quit();
-        }
-        */
     }
 
     void FixedUpdate()
     {
-        /*
+        //정신세게 진입이 시작되었다면
         if (_startEnter)
         {
             _timer += Time.fixedDeltaTime;
@@ -153,11 +132,10 @@ public class PlayerInteract : Singleton<PlayerInteract>
                 }
             }
         }
-        */
     }
 
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         //진입 시 바로 이벤트 실행되는 트리거에 진행하면
         if (other.CompareTag("EventTrigger"))
@@ -168,7 +146,15 @@ public class PlayerInteract : Singleton<PlayerInteract>
 
         if (other.CompareTag("EventInteractionTrigger"))
         {
-            _curInteractableEventID = other.gameObject;
+            curInteractableTrigger = other.gameObject;
+            if(CheckInteractionAvail(other.GetComponent<EventTrigger>().eventID)) ShowInteractionMark();
+        }
+        
+        //정신세계 진입 트리거에 들어가면
+        if (other.CompareTag("EventMentalEnterTrigger"))
+        {
+            curEnterNPCTrigger = other.gameObject;
+            _canEnter = true;
             if(CheckInteractionAvail(other.GetComponent<EventTrigger>().eventID)) ShowInteractionMark();
         }
     }
@@ -177,20 +163,30 @@ public class PlayerInteract : Singleton<PlayerInteract>
     {
         if (other.CompareTag("EventInteractionTrigger"))
         {
-            _curInteractableEventID = null; 
+            curInteractableTrigger = null; 
+            _interactionMark.SetActive(false);
+        }
+        
+        //정신세계 진입 트리거에 나가면
+        if (other.CompareTag("EventMentalEnterTrigger"))
+        {
+            curEnterNPCTrigger = null;
+            _canEnter = false;
             _interactionMark.SetActive(false);
         }
     }
 
     void InitProgressBar()
     {
-        /*
         _progressBarFill.InitFillAmount();
         _timer = 0f;
-        _progressBar.SetActive(false);
-        if(!_isComplete) _uiManager.transitionAnimator.Play("TS_4_Normal_Reveal", 0, 0);
+        _progressBarUI.SetActive(false);
+        if (!_isComplete)
+        {
+            //여기에 연출 초기화 하는 코드 작성되면 됨.
+            // 예시 : _uiManager.transitionAnimator.Play("TS_4_Normal_Reveal", 0, 0);
+        }
         _startEnter = false;
-        */
     }
 
     void ShowInteractionMark()
@@ -223,10 +219,10 @@ public class PlayerInteract : Singleton<PlayerInteract>
         Dictionary<string, string> data = new Dictionary<string, string>();
         data.Add("eventID","");
         //플레이어가 현재 상호작용 중인 트리거가 있어야 함.
-        if (_curInteractableEventID != null)
+        if (curInteractableTrigger != null)
         {
             //해당 트리거에서 이벤트 아이디 가져오기
-            string eventID = _curInteractableEventID.GetComponent<EventTrigger>().eventID;
+            string eventID = curInteractableTrigger.GetComponent<EventTrigger>().eventID;
             data["eventID"] = eventID;
             EventStructure eventStructure = DataManager.Instance._events[eventID];
             

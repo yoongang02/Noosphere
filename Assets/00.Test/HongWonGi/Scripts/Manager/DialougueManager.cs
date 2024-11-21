@@ -191,7 +191,7 @@ public class DialogueManager : Singleton<DialogueManager>
             _currentDialogueId = "";
             _currentLineIndex = 0;
             UIManager.Instance.dialogueUI.gameObject.SetActive(false);
-            UIManager.Instance.PopUp(true, "E를 눌러 대화시작");
+            //UIManager.Instance.PopUp(true, "E를 눌러 대화시작");
         }
     }
 }

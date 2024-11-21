@@ -31,6 +31,8 @@ public class PlayerController : Singleton<PlayerController>
     [Header("Ray Settings")]
     [SerializeField] private float _rayDistance;
     [SerializeField] private float _rayHeight;
+    
+    
     private void OnDrawGizmos()
     {
         Vector3 rayStart = transform.position + Vector3.up * _rayHeight; // Ray 시작점을 위로 올림
@@ -225,22 +227,26 @@ public class PlayerController : Singleton<PlayerController>
 
     private void OnTriggerEnter(Collider other)
     {
+        /*
         if (other.CompareTag("NPC"))
         {
             isPlayerNearNPC = true;
             _currentNPC = other.gameObject;
             UIManager.Instance.PopUp(true, "E를 눌러 대화시작");
         }
+        */
     }
 
     private void OnTriggerExit(Collider other)
     {
+    /*
         if (other.CompareTag("NPC"))
         {
             isPlayerNearNPC = false;
             _currentNPC = null;
             UIManager.Instance.PopUp(false);
         }
+        */
     }
 
     private void OnDestroy()
