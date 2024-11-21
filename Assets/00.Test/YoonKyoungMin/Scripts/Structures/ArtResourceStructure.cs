@@ -11,6 +11,7 @@ public class ArtResourceStructure
     public string map_background_img;
     public string text_detail_start_img;
     public int text_detail_img_cnt;
+    public string prefab_grab_for_use;
 
     public Sprite GetSpriteFromFilePath(string path)
     {
@@ -28,6 +29,19 @@ public class ArtResourceStructure
     public GameObject GetPrefabFromFilePath()
     {
         GameObject resultGameObject = Resources.Load<GameObject>(evidence_detail_prefab);
+
+        if (resultGameObject == null)
+        {
+            Debug.Log(evidence_detail_prefab + "에 프리팹이 존재하지 않습니다.");
+            return null;
+        }
+
+        return resultGameObject;
+    }
+
+    public GameObject GetPrefabForGrab()
+    {
+        GameObject resultGameObject = Resources.Load<GameObject>(prefab_grab_for_use);
 
         if (resultGameObject == null)
         {

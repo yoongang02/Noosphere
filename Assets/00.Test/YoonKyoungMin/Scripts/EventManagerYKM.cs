@@ -19,6 +19,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     
     //다음 이벤트 정보
     public string startEventID;
+    public string currentEventID;
     public string nextEventID = "";
     
     void Awake()
@@ -67,10 +68,22 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         {
             DataManager.Instance._lockConditions[lockConditionId].UnLock();
         }
-        
+        //이벤트 트리거를 삭제해야하는 트리거라면 확인 후 삭제
+        GameObject mentalTrigger = PlayerInteract.Instance.curEnterNPCTrigger;
+        GameObject interactableTrigger = PlayerInteract.Instance.curInteractableTrigger;
+        if (mentalTrigger != null && (mentalTrigger.GetComponent<EventTrigger>().eventID == eventID) && mentalTrigger.GetComponent<EventTrigger>().canDestroyWhenExecutionComplete)
+        {
+            Destroy(mentalTrigger);
+        }
+        if (interactableTrigger != null && (interactableTrigger.GetComponent<EventTrigger>().eventID == eventID) && interactableTrigger.GetComponent<EventTrigger>().canDestroyWhenExecutionComplete)
+        {
+            Destroy(interactableTrigger);
+        }
     }
     
-    IEnumerator HandleEventWithEvidence(EventStructure eventStructure){
+    IEnumerator HandleEventWithEvidence(EventStructure eventStructure)
+    {
+        currentEventID = eventStructure.event_id;
         
         //락 조건이 있다면, 락 걸기
         if (DataManager.Instance._lockConditions.ContainsKey(eventStructure.lock_condition_id))
@@ -126,6 +139,11 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 }
                 //결과 실행
                 StartCoroutine(ExecuteResult(inputResultType));
+            }
+            else if (branchType == "mental")
+            {
+                //진입 성공할 때까지 기다리기
+                yield return new WaitUntil(() => PlayerInteract.Instance._isComplete);
             }
         }
         //결과 실행하기

@@ -345,10 +345,12 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
+    /*
     public void PopUp(bool isActive,string text="")
     {
         popUI.gameObject.SetActive(isActive);
         popUI.text = text;
     }
+    */
     
 }

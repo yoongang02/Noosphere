@@ -112,6 +112,13 @@ public class InventoryManager : Singleton<InventoryManager>
             _chapterInventory.realWorldEvidences.Add(newSlot);
         }
         UpdateInventoryUI();
+        
+        //맵에서 증거 오브젝트 파괴하기
+        if (PlayerInteract.Instance._evidenceGameObject != null)
+        {
+            Debug.Log("맵에서 습득한 오브젝트 파괴");
+            Destroy(PlayerInteract.Instance._evidenceGameObject);
+        }
     }
 
     //현재 보이는 인벤토리 UI 업데이트

@@ -57,9 +57,4 @@ public class EvidenceStructure
         }
         return false;
     }
-
-    void OpenEvidenceInfo()
-    {
-        
-    }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using VHierarchy.Libs;
 
 public class InventoryNavigator : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class InventoryNavigator : MonoBehaviour
     private List<GameObject> mentalWorldSlots = new List<GameObject>();
     private int currentIndex = 0;
     private bool isBothInventory = false;
+    public bool canEvidenceUse = false;
+    [SerializeField] private string _curUseEventID;
 
 
     void Update()
@@ -50,9 +53,10 @@ public class InventoryNavigator : MonoBehaviour
                     UIManager.Instance.ShowDetailEvidenceInInventory(evidence);
                 }
                 //Space 버튼을 누르면 증거물 사용하기
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (canEvidenceUse && Input.GetKeyDown(KeyCode.Space))
                 {
                     Debug.Log("아이템 사용하기");
+                    StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(_curUseEventID));
                     //인벤토리 창 자동으로 닫기
                     InventoryManager.Instance.isInventoryOpen = !InventoryManager.Instance.isInventoryOpen;
                     InventoryManager.Instance.ControlWindow();
@@ -297,11 +301,21 @@ public class InventoryNavigator : MonoBehaviour
         
         if (canUse == "Y")
         {
-            _slotUseBtn.color = UnityExtension.HexColor(UIManager.BlackColor);
+            //플레이어가 현재 상황에서 사용할 수 있는 증거물 아이디를 가져오기
+            PlayerInteract playerInteract = PlayerController.Instance.GetComponent<PlayerInteract>();
+            //현재 선택한 슬롯의 증거물 아이디 가져오기
+            string slotId = _curSelectedSlot.GetComponent<InventorySlotInfo>().evidence_id;
+
+            _curUseEventID = playerInteract.GetPlayeCanUseEvidenceID()["eventID"];
+            //두 증거물 아이디 값 비교하기, 같으면 사용할 수 있음.
+            if (slotId == playerInteract.GetPlayeCanUseEvidenceID()[evidenceId])
+            {
+                _slotUseBtn.color = UnityExtension.HexColor(UIManager.BlackColor);
+                canEvidenceUse = true;
+                return;
+            }
         }
-        else if (canUse == "N")
-        {
-            _slotUseBtn.color = UnityExtension.HexColor("#B3B3B3");
-        }
+        _slotUseBtn.color = UnityExtension.HexColor("#B3B3B3");
+        canEvidenceUse = false;
     }
 }
