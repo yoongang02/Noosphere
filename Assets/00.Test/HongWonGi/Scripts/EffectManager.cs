@@ -6,18 +6,18 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
+using UnityEngine.UI;
 
 
 public class EffectManager : Singleton<EffectManager>
 {
     private string _currentEffectID;
     public bool isEffectEnd = false;
-
-    [SerializeField] private Camera _mainCamera;
-    [SerializeField] private UnityEngine.Rendering.Universal.UniversalAdditionalCameraData cameraData;
-    [SerializeField] private VideoPlayer vhsEffect;
-    [SerializeField] private Volume vhsVolume;
-    
+    [SerializeField] private RawImage _vhsImage;
+    [SerializeField] private Volume _vhsVolume;
+    public GameObject vhsObj;
+    private Camera _mainCamera;
+    private UnityEngine.Rendering.Universal.UniversalAdditionalCameraData _cameraData;
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -30,19 +30,13 @@ public class EffectManager : Singleton<EffectManager>
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // 메인 카메라 찾기
         _mainCamera = Camera.main;
-        if(_mainCamera != null)
+        if (_mainCamera != null)
         {
-            // 카메라 데이터 할당
-            cameraData = _mainCamera.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();
-            // VideoPlayer 카메라 할당
-            if(vhsEffect != null)
-            {
-                vhsEffect.targetCamera = _mainCamera;
-            }
+            _cameraData = _mainCamera.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();
         }
     }
+
     //
     //SetEffect불러오기
     //
@@ -57,12 +51,13 @@ public class EffectManager : Singleton<EffectManager>
                 isEffectEnd = true;
                 DoEffect(effect.artresource_id);
             }
+
             if (!string.IsNullOrEmpty(effect.soundresource_id))
             {
                 SoundResourceStructure sound = DataManager.Instance._sound[effect.soundresource_id];
-                if (sound.soundresource_Type=="Sound")
+                if (sound.soundresource_Type == "Sound")
                 {
-                    SoundManager.Instance.PlaySound(effect.soundresource_id,sound.loop_count);
+                    SoundManager.Instance.PlaySound(effect.soundresource_id, sound.loop_count);
                 }
                 else
                 {
@@ -84,26 +79,27 @@ public class EffectManager : Singleton<EffectManager>
 
     public void StartMentalEffect(float value)
     {
-        cameraData.renderPostProcessing = true;
-   
-        // VHS 이펙트의 알파값 조절 (0 ~ 1)
-        var vhsColor = vhsEffect.targetCameraAlpha;
-        vhsEffect.targetCameraAlpha = value;
+        vhsObj.SetActive(true);
+        _cameraData.renderPostProcessing = true;
 
-        // Volume weight 조절 (0 ~ 1)
-        vhsVolume.weight = value;
+        Color color = _vhsImage.color;
+        color.a = value;
+        _vhsImage.color = color;
+        _vhsVolume.weight = value;
         if (value >= 1f)
         {
-            EndMetnalEffect();
+            ResetMetalEffect();
         }
-
     }
 
-    public void EndMetnalEffect()
+    public void ResetMetalEffect()
     {
-        var vhsColor = vhsEffect.targetCameraAlpha;
-        vhsEffect.targetCameraAlpha = 0;
-        vhsVolume.weight = 0;
-        cameraData.renderPostProcessing = false;
+        vhsObj.SetActive(false);
+        
+        Color color = _vhsImage.color;
+        color.a = 0f;
+        _vhsImage.color = color;
+        _vhsVolume.weight = 0;
+        _cameraData.renderPostProcessing = false;
     }
 }

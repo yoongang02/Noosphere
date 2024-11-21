@@ -85,8 +85,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
             if (_startEnter && !_isComplete && Input.GetKey(KeyCode.Space))
             {
                 float value = _progressBarFill.FillAmount();
-                //여기에 value에 따른 연출 진행상황 코드 추가하면 됨.
-                // 예시 : _uiManager.transitionAnimator.Play("TS_4_Normal_Reveal", 0, value);
+                EffectManager.Instance.StartMentalEffect(value);
                 
                 if (value >= 1f)
                 {
@@ -180,6 +179,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
         _progressBarUI.SetActive(false);
         if (!_isComplete)
         {
+            EffectManager.Instance.ResetMetalEffect();
             //여기에 연출 초기화 하는 코드 작성되면 됨.
             // 예시 : _uiManager.transitionAnimator.Play("TS_4_Normal_Reveal", 0, 0);
         }
