@@ -122,8 +122,8 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     ? eventStructure.branch_True
                     : eventStructure.branch_False;
                     */
-                branchResult = eventStructure.branch_False;
-                yield return ExecuteResult(branchResult);
+                // branchResult = eventStructure.branch_False;
+                // yield return ExecuteResult(branchResult);
             }
             else if (branchType == "mental")
             {
