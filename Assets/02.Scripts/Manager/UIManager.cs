@@ -252,6 +252,7 @@ public class UIManager : Singleton<UIManager>
         }
         
         //evidence 성질에 따라 프리팹인지 UI인지 결정
+        if (evidence.shape_Type == "P") SetPrefabDetail(artResource);
         SetActiveExtra(evidence.shape_Type);
     }
 
