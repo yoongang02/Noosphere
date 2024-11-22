@@ -285,5 +285,12 @@ public class PlayerController : Singleton<PlayerController>
         {
             Debug.LogWarning("No main camera found in the current scene.");
         }
+        
+        GameObject parent = GameObject.Find("-----[Cameras]");
+        //dialogue camera 찾기
+        foreach (Transform child in parent.transform)
+        {
+            if (child.name == "Dialogue Camera") _dialogueCamera = child.GetComponent<CinemachineVirtualCamera>();
+        }
     }
 }

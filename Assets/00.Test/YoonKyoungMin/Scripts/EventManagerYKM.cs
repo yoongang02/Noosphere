@@ -126,6 +126,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             {
                 //진입 성공할 때까지 기다리기
                 yield return new WaitUntil(() => PlayerInteract.Instance._isComplete);
+                PlayerInteract.Instance._isComplete = false;
                 branchResult = eventStructure.branch_True;
                 StartCoroutine(ExecuteResult(branchResult));
             }

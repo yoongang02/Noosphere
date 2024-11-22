@@ -13,6 +13,7 @@ public class EnterPath : MonoBehaviour
     {
         PlayerInteract.Instance.curEnterNPCTrigger = null;
         PlayerInteract.Instance._interactionMark.SetActive(false);
+        PlayerInteract.Instance.InitProgressBar();
         if (PlayerInteract.Instance.isPlayerInMetanlWorld)
         {
             PlayerInteract.Instance.isPlayerInMetanlWorld = false;

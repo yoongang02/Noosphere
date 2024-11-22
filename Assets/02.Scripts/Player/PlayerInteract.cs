@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using VHierarchy.Libs;
+using UnityEngine.SceneManagement;
 
 public class PlayerInteract : Singleton<PlayerInteract>
 {
@@ -82,6 +83,16 @@ public class PlayerInteract : Singleton<PlayerInteract>
                     }
                 }
             }
+
+            if (_canEnter && isPlayerInMetanlWorld && Input.GetKeyDown(KeyCode.Space))
+            {
+                if (InventoryManager.Instance.IsAcquiredEvidence("evidence_001"))
+                {
+                    _progressBarUI.SetActive(true);
+                    _startEnter = true;
+                    StartCoroutine(EventManagerYKM.Instance.ExecuteEvent("Event_A009"));
+                }
+            }
             
             //진입시작했고, 완료되지 않았고, 스페이스를 계속 누르고 있다면
             if (_startEnter && !_isComplete && Input.GetKey(KeyCode.Space))
@@ -93,7 +104,15 @@ public class PlayerInteract : Singleton<PlayerInteract>
                 {
                     _isComplete = true;
                     //씬 이동 함수 실행하면 됨.
-                    curEnterNPCTrigger.GetComponent<EnterPath>().StartEnterToPath();
+                    if (curEnterNPCTrigger != null)
+                    {
+                        curEnterNPCTrigger.GetComponent<EnterPath>().StartEnterToPath();
+                    }
+                    else
+                    {
+                        StartEnterToPath("PrologueMap_real");
+                        StartCoroutine(EventManagerYKM.Instance.ExecuteEvent("Event_A010"));
+                    }
                 }
             }
             else
@@ -182,7 +201,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
         }
     }
 
-    void InitProgressBar()
+    public void InitProgressBar()
     {
         _progressBarFill.InitFillAmount();
         _timer = 0f;
@@ -243,5 +262,15 @@ public class PlayerInteract : Singleton<PlayerInteract>
             return data;
         }
         return data;
+    }
+    
+    public void StartEnterToPath(string destination)
+    {
+        PlayerInteract.Instance.curEnterNPCTrigger = null;
+        PlayerInteract.Instance._interactionMark.SetActive(false);
+        PlayerInteract.Instance.InitProgressBar();
+   
+        PlayerInteract.Instance.isPlayerInMetanlWorld = false;
+        SceneManager.LoadScene(destination);
     }
 }
