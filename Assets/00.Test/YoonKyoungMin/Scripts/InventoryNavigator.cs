@@ -58,7 +58,6 @@ public class InventoryNavigator : MonoBehaviour
                 {
                     Debug.Log("아이템 사용하기");
                     DialogueTextON.Instance.ShowSimpleText("열렸다!");
-                    // StartCoroutine(EventManagerYKM.Instance.ExecuteEvent("Event_A018"));
                     //인벤토리 창 자동으로 닫기
                     InventoryManager.Instance.isInventoryOpen = !InventoryManager.Instance.isInventoryOpen;
                     InventoryManager.Instance.ControlWindow();
@@ -78,6 +77,7 @@ public class InventoryNavigator : MonoBehaviour
                         InventoryManager.Instance.currentViewChapter = inputIndex;
                         SetChapterSelected(inputIndex);
                         InventoryManager.Instance.UpdateInventoryUI();
+                        UpdateSelection();
                     }
                 }
             }

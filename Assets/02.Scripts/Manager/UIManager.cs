@@ -41,18 +41,30 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private Sprite _evidenceDetailInventoryBackground;
     [SerializeField] private List<Sprite> _evidenceTextDetailImgs;
     [SerializeField] private GameObject _evidenceDetailPrefabParent;
-    [Space]
-    [SerializeField] private GameObject _evidenceDetailTextParent;
-    [SerializeField] private GameObject _evidenceDetailTextLeftBtn;
-    [SerializeField] private GameObject _evidenceDetailTextRightBtn;
-    [SerializeField] private Image _evidenceDetailTextImg;
-    [SerializeField] private int _evidenceDetailTextCurPageIndex = 0;
+    [Space] [SerializeField] private GameObject _newsPaperParent;
+    [Space] [SerializeField] private GameObject _letterParent;
+    [Space] [SerializeField] private GameObject _participateFileParent;
+    [Space] [SerializeField] private GameObject _researchFileMParent;
+    [Space] [SerializeField] private GameObject _researchFileRParent;
+    [Space] [SerializeField] private GameObject _diaryParent;
+    
     public bool _isDetailOpen = false;
-    [SerializeField] private bool _isDetailText = false;
+    private Dictionary<string, GameObject> _detailParents = new Dictionary<string,GameObject>();
     
     [Space(5)] [Header("강제 종료 관련 변수")] [SerializeField] 
     private EvidenceStructure curDetailEvidence;
     [SerializeField] private float _forceQuitSeconds = 0.5f;
+
+    void Start()
+    {
+        _detailParents.Add("P",_evidenceDetailPrefabParent);
+        _detailParents.Add("newsPaper",_newsPaperParent);
+        _detailParents.Add("letter",_letterParent);
+        _detailParents.Add("participateFile",_participateFileParent);
+        _detailParents.Add("researchFileM",_researchFileMParent);
+        _detailParents.Add("researchFileR",_researchFileRParent);
+        _detailParents.Add("diary",_diaryParent);
+    }
     
     void Update()
     {
@@ -96,50 +108,6 @@ public class UIManager : Singleton<UIManager>
                 isSelecting = false;
             }
         }
-
-        //증거물 상세내용 UI가 열려있고, 텍스트 상세내용이라면 페이지 버튼 활성화
-        if (_isDetailOpen)
-        {
-            if(_isDetailText)
-            {
-                if (Input.GetKeyDown(KeyCode.LeftArrow) && _evidenceDetailTextCurPageIndex != 0)
-                {
-                    _evidenceDetailTextCurPageIndex -= 1;
-                    UpdateTextDetail(_evidenceDetailTextCurPageIndex);
-                }
-
-                if (Input.GetKeyDown(KeyCode.RightArrow) && (_evidenceDetailTextCurPageIndex != (_evidenceTextDetailImgs.Count -1)))
-                {
-                    _evidenceDetailTextCurPageIndex += 1;
-                    UpdateTextDetail(_evidenceDetailTextCurPageIndex);
-                }
-                
-                //현재 상세 내용을 보고 있는 증거물에 서브 증거물이 존재한다면, 그리고 그 서브 증거물의 타입이 page라면
-                if (!curDetailEvidence.sub_evidence_id.IsNullOrEmpty() &&
-                    curDetailEvidence.sub_Evidence_Acquisition_Type == "page")
-                {
-                    //page가 제한조건 이상이 되었다면
-                    if (_evidenceDetailTextCurPageIndex >= curDetailEvidence.acquisition_Page_Num-1)
-                    {
-                        if (DataManager.Instance._evidences.ContainsKey(curDetailEvidence.sub_evidence_id))
-                        {
-                            Debug.Log(curDetailEvidence.sub_evidence_id + " 숨겨져 있던 증거물 발견!!");
-                            //해당 증거물 접근 횟수 증가
-                            DataManager.Instance._evidences[curDetailEvidence.sub_evidence_id].accessCnt++;
-                            //강제 종료 코루틴 호출
-                            CoroutineManager.Instance.StartManagedCoroutine(ForceQuitInteraction());
-                        }
-                    }
-                }
-            }
-
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                Debug.Log("상세 내용 창만 닫기");
-                CloseDetailEvidence();
-            }
-        }
-
     }
 
     //증거물 조사 UI의 정보 세팅하기
@@ -284,21 +252,24 @@ public class UIManager : Singleton<UIManager>
         }
         
         //evidence 성질에 따라 프리팹인지 UI인지 결정
-        if (evidence.shape_Type == 'P')
-        {
-            SetPrefabDetail(artResource);
-            _evidenceDetailPrefabParent.SetActive(true);
-            _evidenceDetailTextParent.SetActive(false);
-        }
-        else if (evidence.shape_Type == 'T')
-        {
-            _isDetailText = true;
-            SetTextDetail(artResource);
-            _evidenceDetailPrefabParent.SetActive(false);
-            _evidenceDetailTextParent.SetActive(true);
-        }
+        SetActiveExtra(evidence.shape_Type);
     }
 
+    void SetActiveExtra(string key)
+    {
+        foreach (var detail in _detailParents)
+        {
+            if (detail.Key == key)
+            {
+                detail.Value.SetActive(true);
+            }
+            else
+            {
+                detail.Value.SetActive(false);
+            }
+            
+        }
+    }
     void SetPrefabDetail(ArtResourceStructure artResource)
     {
         //prefab parent 아래에 자식 오브젝트가 있다면 제거 후, 올바른 오브젝트 생성
@@ -313,6 +284,7 @@ public class UIManager : Singleton<UIManager>
         Instantiate(artResource.GetPrefabFromFilePath(), _evidenceDetailPrefabParent.transform);
     }
 
+    /*
     void SetTextDetail(ArtResourceStructure artResource)
     {
         //초기화
@@ -344,7 +316,9 @@ public class UIManager : Singleton<UIManager>
             Debug.Log("text detail img가 존재하지 않습니다.");
         }
     }
+    */
 
+    /*
     void UpdateTextDetail(int index)
     {
         //index에 따라 이미지 변경
@@ -354,7 +328,9 @@ public class UIManager : Singleton<UIManager>
         //페이지 버튼 변경
         UpdateTextDetailBtns(totalPageCnt);
     }
+    /*
 
+    /*
     void UpdateTextDetailBtns(int totalPage)
     {
         if (totalPage > 1)
@@ -381,6 +357,7 @@ public class UIManager : Singleton<UIManager>
             _evidenceDetailTextRightBtn.SetActive(false);
         }
     }
+    /*
 
     /*
     public void PopUp(bool isActive,string text="")
@@ -389,7 +366,7 @@ public class UIManager : Singleton<UIManager>
         popUI.text = text;
     }
     */
-    IEnumerator ForceQuitInteraction()
+    public IEnumerator ForceQuitInteraction(EvidenceStructure evidenceStructure)
     {
         yield return new WaitForSeconds(_forceQuitSeconds);
         Debug.Log("강제 종료!!!!");
@@ -397,17 +374,17 @@ public class UIManager : Singleton<UIManager>
         {
             CloseDetailEvidence();
 
-            if (!curDetailEvidence.acquisition_Page_Result_id.IsNullOrEmpty())
+            if (!evidenceStructure.acquisition_Page_Result_id.IsNullOrEmpty())
             {
-                string resultID = curDetailEvidence.acquisition_Page_Result_id;
-                if (curDetailEvidence.accessCnt == 1)
+                string resultID = evidenceStructure.acquisition_Page_Result_id;
+                if (evidenceStructure.accessCnt == 1)
                 {
                     if (DataManager.Instance._events.ContainsKey(resultID))
                     {
                         CoroutineManager.Instance.StartManagedCoroutine(EventManagerYKM.Instance.ExecuteEvent(resultID));
                     }
                 }
-                else if (curDetailEvidence.accessCnt >= 2)
+                else if (evidenceStructure.accessCnt >= 2)
                 {
                     //첫번째 열람했을 떄 호출하는 이벤트의 다음 이벤트를 확인하고 해당 이벤트를 호출
                     if (DataManager.Instance._events.ContainsKey(resultID))
