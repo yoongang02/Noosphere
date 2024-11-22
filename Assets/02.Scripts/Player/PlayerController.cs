@@ -26,8 +26,9 @@ public class PlayerController : Singleton<PlayerController>
     private Animator _animator;
     private float _defaultSpeed;
     public bool isDialogueOn = false; //대화시작
-    private bool isPlayerNearNPC = false; //플레이어 NPC가까이있나? 
-    private GameObject _currentNPC;
+    public bool isPlayerNearNPC = false; //플레이어 NPC가까이있나?
+    // public bool isNpcRayOn=false;
+    public GameObject _currentNPC;
     private float lastStepTime = 0f;
     [Header("Ray Settings")]
     [SerializeField] private float _rayDistance;
@@ -46,7 +47,7 @@ public class PlayerController : Singleton<PlayerController>
         _animator = GetComponent<Animator>();
         _defaultSpeed = _moveSpeed;
         InputManager.Instance.moveAction += HandleInput;
-        InputManager.Instance.selectBtnAction += OnEKey;
+        // InputManager.Instance.selectBtnAction += OnEKey;
         if (_mainCamera == null)
             _mainCamera = Camera.main;
     }
@@ -63,54 +64,53 @@ public class PlayerController : Singleton<PlayerController>
         _animator.SetBool("Interact", state);
     }
 
-    private void OnEKey()
-    {
-        if (_currentNPC == null) return;
+    // private void OnEKey()
+    // {
+    //     if (_currentNPC == null) return;
+    //     if (!isDialogueOn && isPlayerNearNPC&&isNpcRayOn)
+    //     {
+    //         StartDialogue();
+    //     }
+    //     else if (isDialogueOn)
+    //     {
+    //         // interact 타입일 때만 처리
+    //         NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
+    //         if (npcDialogue != null &&
+    //             DataManager.Instance._dialogue[npcDialogue.dialogueId].trigger_type == "interact")
+    //         {
+    //             if (DialogueManager.Instance.isTyping)
+    //             {
+    //                 DialogueManager.Instance.isTyping = false;
+    //             }
+    //             else
+    //             {
+    //                 DialogueManager.Instance.ShowNextLine().Forget();
+    //             }
+    //         }
+    //     }
+    //
+    //     /*
+    //     if (isDialogueOn && !UIManager.Instance.isPopUpOpen)
+    //     {
+    //         ContinueDialogue();
+    //     }
+    //     else if (!isDialogueOn && isPlayerNearNPC)
+    //     {
+    //         StartDialogue();
+    //     }
+    //     */
+    // }
 
-        if (!isDialogueOn && isPlayerNearNPC)
-        {
-            StartDialogue();
-        }
-        else if (isDialogueOn)
-        {
-            // interact 타입일 때만 처리
-            NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
-            if (npcDialogue != null &&
-                DataManager.Instance._dialogue[npcDialogue.dialogueId].trigger_type == "interact")
-            {
-                if (DialogueManager.Instance.isTyping)
-                {
-                    DialogueManager.Instance.isTyping = false;
-                }
-                else
-                {
-                    DialogueManager.Instance.ShowNextLine().Forget();
-                }
-            }
-        }
-
-        /*
-        if (isDialogueOn && !UIManager.Instance.isPopUpOpen)
-        {
-            ContinueDialogue();
-        }
-        else if (!isDialogueOn && isPlayerNearNPC)
-        {
-            StartDialogue();
-        }
-        */
-    }
-
-    private void StartDialogue()
-    {
-        // NpcCameraOn();
-        NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
-        if (npcDialogue != null && !string.IsNullOrEmpty(npcDialogue.dialogueId))
-        {
-            UIManager.Instance.dialogueUI.gameObject.SetActive(true);
-            DialogueManager.Instance.StartDialogue(npcDialogue.dialogueId);
-        }
-    }
+    // private void StartDialogue()
+    // {
+    //     // NpcCameraOn();
+    //     NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
+    //     if (npcDialogue != null && !string.IsNullOrEmpty(npcDialogue.dialogueId))
+    //     {
+    //         UIManager.Instance.dialogueUI.gameObject.SetActive(true);
+    //         DialogueManager.Instance.StartDialogue(npcDialogue.dialogueId);
+    //     }
+    // }
 
     private void NpcCameraOn()
     {
@@ -133,24 +133,26 @@ public class PlayerController : Singleton<PlayerController>
             _animator.SetFloat("MoveSpeed", 0f);
             return;
         }
-        Vector3 rayStart = transform.position + Vector3.up * _rayHeight; // Ray 시작점을 위로 올림
-        Ray ray = new Ray(rayStart, transform.forward);
-        RaycastHit hit;
-        if(Physics.Raycast(ray, out hit, _rayDistance))
-        {
-            Debug.DrawRay(rayStart, transform.forward * _rayDistance, Color.green);
-            if(hit.collider.CompareTag("NPC"))
-            {
-                isPlayerNearNPC = true;
-                _currentNPC = hit.collider.gameObject;
-                Debug.Log("NPC를 바라보고 있습니다.");
-            }
-        }
-        else
-        {
-            isPlayerNearNPC = false;
-            Debug.DrawRay(rayStart, transform.forward * _rayDistance, Color.red);
-        }
+        // Vector3 rayStart = transform.position + Vector3.up * _rayHeight; // Ray 시작점을 위로 올림
+        // Ray ray = new Ray(rayStart, transform.forward);
+        // RaycastHit hit;
+        // if(Physics.Raycast(ray, out hit, _rayDistance))
+        // {
+        //     Debug.DrawRay(rayStart, transform.forward * _rayDistance, Color.green);
+        //     if(hit.collider.CompareTag("NPC"))
+        //     {
+        //         // isPlayerNearNPC = true;
+        //         isNpcRayOn = true;
+        //         _currentNPC = hit.collider.gameObject;
+        //         Debug.Log("NPC를 바라보고 있습니다.");
+        //     }
+        // }
+        // else
+        // {
+        //     // isPlayerNearNPC = false;
+        //     isNpcRayOn = false;
+        //     Debug.DrawRay(rayStart, transform.forward * _rayDistance, Color.red);
+        // }
         float moveX = 0f;
         float moveY = 0f;
 
@@ -228,26 +230,26 @@ public class PlayerController : Singleton<PlayerController>
 
     private void OnTriggerEnter(Collider other)
     {
-        /*
+        
         if (other.CompareTag("NPC"))
         {
             isPlayerNearNPC = true;
             _currentNPC = other.gameObject;
-            UIManager.Instance.PopUp(true, "E를 눌러 대화시작");
+            // UIManager.Instance.PopUp(true, "E를 눌러 대화시작");
         }
-        */
+        
     }
 
     private void OnTriggerExit(Collider other)
     {
-    /*
+    
         if (other.CompareTag("NPC"))
         {
             isPlayerNearNPC = false;
             _currentNPC = null;
-            UIManager.Instance.PopUp(false);
+            // UIManager.Instance.PopUp(false);
         }
-        */
+        
     }
 
     private void OnDestroy()
@@ -255,7 +257,7 @@ public class PlayerController : Singleton<PlayerController>
         if (InputManager.Instance != null)
         {
             InputManager.Instance.moveAction -= HandleInput;
-            InputManager.Instance.selectBtnAction -= OnEKey;
+            // InputManager.Instance.selectBtnAction -= OnEKey;
         }
     }
     

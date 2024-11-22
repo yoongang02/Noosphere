@@ -26,6 +26,7 @@ public class InputFieldManager : Singleton<InputFieldManager>
     public void SetQuestionField(string id)
     {
         _questionText.transform.parent.gameObject.SetActive(true);
+
         PlayerController.Instance.isDialogueOn = true;
         _currentID = id;
         isAnswer = false;
@@ -48,31 +49,45 @@ public class InputFieldManager : Singleton<InputFieldManager>
     {
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
+           
             isSubmitAnswer = true;
-            
             string formattedValue = value.Replace(" ", "");
             string formattedAnswer = _currentAnswer.Replace(" ", "");
 
             if (formattedValue == formattedAnswer)
             {
                 DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].input_correct);
-                isAnswer = true;
+                isAnswer = true;//isSubmitAnswer = true;
                 DataManager.Instance._input[_currentID].isSolved = true;
             }
             else
             {
                 DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].input_wrong);
-                isAnswer = false;
+                //isSubmitAnswer = false;
+                isAnswer = false;//isSubmitAnswer = false;
+                // DataManager.Instance._input[_currentID].isSolved = false;
             }
 
-            CloseInputField();
+            CloseInput();
         }
     }
-    
+
+    private void CloseInput()
+    {
+        if (_questionText.transform.parent.gameObject.activeSelf)
+        {
+            _questionText.transform.parent.gameObject.SetActive(false);
+            _inputText.text = ""; 
+        }
+    }
+
     private void CloseInputField()
     {
         if (_questionText.transform.parent.gameObject.activeSelf)
         {
+            isAnswer = false;
+            isSubmitAnswer = false;
+            // PlayerController.Instance.isDialogueOn = false;
             _questionText.transform.parent.gameObject.SetActive(false);
             _inputText.text = ""; 
         }

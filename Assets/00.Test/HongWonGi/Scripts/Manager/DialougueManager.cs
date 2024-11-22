@@ -16,12 +16,13 @@ public class DialogueManager : Singleton<DialogueManager>
     private float _currentTextElapsedTime = 0f;
     private int _currentLetterIndex = 0;
     public bool isTyping = false;
-    public bool isDialogeEnd=false;// 완전히 대화 끝났을때 true반환
+    public bool isDialogeEnd = false; // 완전히 대화 끝났을때 true반환
 
     private void Start()
     {
         InputManager.Instance.exitBtnAction += OnEscapePressed;
     }
+
     private void OnDestroy()
     {
         if (InputManager.Instance != null)
@@ -29,6 +30,7 @@ public class DialogueManager : Singleton<DialogueManager>
             InputManager.Instance.exitBtnAction -= OnEscapePressed;
         }
     }
+
     public void SetDialogue(string id)
     {
         _currentDialogueId = id;
@@ -76,12 +78,14 @@ public class DialogueManager : Singleton<DialogueManager>
     }
 
     private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
+    {if (Input.GetKeyDown(KeyCode.E))
         {
+            Debug.LogWarning("E key pressed");
+        
             if (!string.IsNullOrEmpty(_currentDialogueId) && 
-                DataManager.Instance._dialogue[_currentDialogueId].trigger_type == "auto") // auto 타입 체크
+                DataManager.Instance._dialogue[_currentDialogueId].trigger_type == "auto")
             {
+                Debug.Log("Auto type detected");
                 if (isTyping)
                 {
                     isTyping = false;
@@ -91,12 +95,51 @@ public class DialogueManager : Singleton<DialogueManager>
                     ShowNextLine().Forget();
                 }
             }
+            else if (PlayerController.Instance._currentNPC != null && PlayerController.Instance.isPlayerNearNPC)
+            {
+                NpcDialogue npcDialogue = PlayerController.Instance._currentNPC.GetComponent<NpcDialogue>();
+                if (npcDialogue != null && !string.IsNullOrEmpty(npcDialogue.dialogueId))
+                {
+                    if (!UIManager.Instance.dialogueUI.gameObject.activeSelf)
+                    {
+                        PlayerController.Instance.isDialogueOn = true;
+                        UIManager.Instance.dialogueUI.gameObject.SetActive(true);
+                        StartDialogue(npcDialogue.dialogueId);
+                    }
+                    else if (isTyping)
+                    {
+                        isTyping = false;
+                    }
+                    else
+                    {
+                        ShowNextLine().Forget();
+                    }
+                }
+            }
         }
+        // if (Input.GetKeyDown(KeyCode.E))
+        // {
+        //     if (!string.IsNullOrEmpty(_currentDialogueId) &&
+        //         DataManager.Instance._dialogue[_currentDialogueId].trigger_type == "auto") // auto 타입 체크
+        //     {
+        //         if (isTyping)
+        //         {
+        //             isTyping = false;
+        //         }
+        //         else
+        //         {
+        //             ShowNextLine().Forget();
+        //         }
+        //     }
+        // }=====================
     }
-
     public void StartDialogue(string dialogueId)
     {
-        UIManager.Instance.popUI.gameObject.SetActive(false);
+        if (PlayerController.Instance._currentNPC != null)
+        {
+            PlayerController.Instance._currentNPC.GetComponent<Collider>().enabled = true;
+        }
+        // UIManager.Instance.popUI.gameObject.SetActive(false);
         if (DataManager.Instance._dialogue.ContainsKey(dialogueId))
         {
             _currentDialogueId = dialogueId;
@@ -149,6 +192,10 @@ public class DialogueManager : Singleton<DialogueManager>
             else
             {
                 Debug.Log("대화가 종료되었습니다.");
+                if (PlayerController.Instance._currentNPC != null)
+                {
+                    PlayerController.Instance._currentNPC.GetComponent<Collider>().enabled = false;
+                }
                 PlayerController.Instance.isDialogueOn = false;
                 isDialogeEnd = true;
                 _currentDialogueId = "";
@@ -181,10 +228,12 @@ public class DialogueManager : Singleton<DialogueManager>
         isTyping = false;
         _toggleIcon.SetActive(true);
     }
+
     private void OnEscapePressed()
     {
-        if (!string.IsNullOrEmpty(_currentDialogueId) && 
-            DataManager.Instance._dialogue[_currentDialogueId].trigger_type == "interact"&&PlayerController.Instance.isDialogueOn)
+        if (!string.IsNullOrEmpty(_currentDialogueId) &&
+            DataManager.Instance._dialogue[_currentDialogueId].trigger_type == "interact" &&
+            PlayerController.Instance.isDialogueOn)
         {
             PlayerController.Instance.isDialogueOn = false;
             isDialogeEnd = true;
