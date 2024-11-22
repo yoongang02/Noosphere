@@ -57,7 +57,8 @@ public class InventoryNavigator : MonoBehaviour
                 if (canEvidenceUse && Input.GetKeyDown(KeyCode.Space))
                 {
                     Debug.Log("아이템 사용하기");
-                    DialogueTextON.Instance.ShowSimpleText("열렸다!");
+                    DialogueTextON.Instance.ShowSimpleText("(철컥) 열렸다!");
+                    canEvidenceUse = false;
                     UIManager.Instance.OpenInvestigateUI(DataManager.Instance._evidences["evidence_007"]);
                     //인벤토리 창 자동으로 닫기
                     InventoryManager.Instance.isInventoryOpen = !InventoryManager.Instance.isInventoryOpen;
@@ -67,6 +68,7 @@ public class InventoryNavigator : MonoBehaviour
             
             //좌우 화살표 클릭 시, 페이지 넘김
             
+            /*
             //숫자 키 클릭 시, 챕터 넘김
             for (int i = 0; i <= 9; i++)
             {
@@ -82,6 +84,7 @@ public class InventoryNavigator : MonoBehaviour
                     }
                 }
             }
+            */
         }
 
         if (UIManager.Instance._isDetailOpen && Input.GetKeyDown(KeyCode.Escape))

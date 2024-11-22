@@ -39,7 +39,7 @@ public class EvidenceDetailOnePageNavigator : MonoBehaviour
                 UpdateUI();
             }
 
-            if (Input.GetKeyDown(KeyCode.RightArrow) && (curPage != pageCnt))
+            if (Input.GetKeyDown(KeyCode.RightArrow) && (curPage != pageCnt-1))
             {
                 curPage += 1;
                 UpdateUI();

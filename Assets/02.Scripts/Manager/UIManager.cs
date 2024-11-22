@@ -8,7 +8,7 @@ using VFolders.Libs;
 
 public class UIManager : Singleton<UIManager>
 {
-    public static string GreenColor = "#01EE00";
+    public static string GreenColor = "#9AC4DB";
     public static string WhiteColor = "#FFFFFF";
     public static string BlackColor = "#000000";
     /*
