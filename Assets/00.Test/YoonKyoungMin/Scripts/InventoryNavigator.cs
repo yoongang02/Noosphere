@@ -58,6 +58,7 @@ public class InventoryNavigator : MonoBehaviour
                 {
                     Debug.Log("아이템 사용하기");
                     DialogueTextON.Instance.ShowSimpleText("열렸다!");
+                    UIManager.Instance.OpenInvestigateUI(DataManager.Instance._evidences["evidence_007"]);
                     //인벤토리 창 자동으로 닫기
                     InventoryManager.Instance.isInventoryOpen = !InventoryManager.Instance.isInventoryOpen;
                     InventoryManager.Instance.ControlWindow();
