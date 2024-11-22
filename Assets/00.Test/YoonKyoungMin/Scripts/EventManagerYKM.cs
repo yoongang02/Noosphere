@@ -204,6 +204,11 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             {
                 yield return ExecuteEvent(id);
             }
+            else if (resultType == "evidence")
+            {
+                EvidenceStructure evidenceStructure = DataManager.Instance._evidences[resultType];
+                if(evidenceStructure != null) InventoryManager.Instance.AddEvidence(evidenceStructure);
+            }
         }
     }
 
