@@ -97,9 +97,9 @@ public class DialogueManager : Singleton<DialogueManager>
                     ShowNextLine().Forget();
                 }
             }
-            // else if (DataManager.Instance._dialogue[_currentDialogueId].trigger_type == "interact")
-            // {
-                else if (PlayerController.Instance._currentNPC != null && PlayerController.Instance.isPlayerNearNPC)
+            else if (!string.IsNullOrEmpty(_currentDialogueId) &&DataManager.Instance._dialogue[_currentDialogueId].trigger_type == "interact")
+            {
+                 if (PlayerController.Instance._currentNPC != null && PlayerController.Instance.isPlayerNearNPC)
                 {
                     NpcDialogue npcDialogue = PlayerController.Instance._currentNPC.GetComponent<NpcDialogue>();
 
@@ -125,7 +125,8 @@ public class DialogueManager : Singleton<DialogueManager>
                     }
                 }
             }
-        
+        }
+
 
         // if (Input.GetKeyDown(KeyCode.E))
         // {
@@ -190,7 +191,7 @@ public class DialogueManager : Singleton<DialogueManager>
                     _currentLineIndex = 0;
                     ShowNextLine().Forget();
                 }
-                else
+                else  
                 {
                     Debug.LogWarning($"Next Dialogue ID {dialogue.next_dialouge_id} not found.");
                 }
@@ -207,9 +208,15 @@ public class DialogueManager : Singleton<DialogueManager>
                 _currentLineIndex = 0;
                 UIManager.Instance.dialogueUI.gameObject.SetActive(false);
                 PlayerController.Instance.ResetCamera();
-                if (PlayerController.Instance._currentNPC!=null)
+                if (PlayerController.Instance._currentNPC != null)
                 {
-                    PlayerController.Instance.ResetAndSetupTrigger();
+                    NpcDialogue npcDialogue = PlayerController.Instance._currentNPC.GetComponent<NpcDialogue>();
+                    if (npcDialogue != null)
+                    {
+                        npcDialogue.dialogueId = string.Empty;
+                    }
+                    PlayerController.Instance.isPlayerNearNPC = false;
+                    PlayerController.Instance._currentNPC = null;
                 }
 
             }
