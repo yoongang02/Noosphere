@@ -10769,7 +10769,12 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 82922429cbdac54429b0f516f6fff101,
         type: 3}
       propertyPath: m_Name
-      value: SM_prop_Laboratory_Cabinet (1)
+      value: cabinet_obj
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 82922429cbdac54429b0f516f6fff101,
+        type: 3}
+      propertyPath: m_TagString
+      value: NPC
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10783,6 +10788,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1852940037}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 82922429cbdac54429b0f516f6fff101,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1852940038}
   m_SourcePrefab: {fileID: 100100000, guid: 82922429cbdac54429b0f516f6fff101, type: 3}
 --- !u!4 &1852940035 stripped
 Transform:
@@ -10818,6 +10827,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -8038674762066692816, guid: 82922429cbdac54429b0f516f6fff101, type: 3}
+--- !u!114 &1852940038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1852940036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dafb578f0885dd46bc015ce35adc4f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueId: 
 --- !u!1001 &1892003032
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using TMPro;
+using Unity.VisualScripting;
 
 public class DialogueManager : Singleton<DialogueManager>
 {
@@ -39,7 +40,7 @@ public class DialogueManager : Singleton<DialogueManager>
         {
             if (dialogue.trigger_type == "auto") //대화창 바로 뜨기
             {
-                // PlayerController.Instance.isDialogueOn = true;
+                PlayerController.Instance.isDialogueOn = true;
                 UIManager.Instance.dialogueUI.gameObject.SetActive(true);
                 ShowNextLine().Forget();
             }
@@ -57,7 +58,7 @@ public class DialogueManager : Singleton<DialogueManager>
 
     private void SetInteractDialogue(string interactionType)
     {
-        if (interactionType == "npc")
+        if (interactionType == "npc"||interactionType=="object")
         {
             GameObject npcObject = GameObject.Find(DataManager.Instance._dialogue[_currentDialogueId].character_id);
             if (npcObject != null)
@@ -71,14 +72,15 @@ public class DialogueManager : Singleton<DialogueManager>
                 Debug.LogWarning($"{DataManager.Instance._dialogue[_currentDialogueId].character_id} npc가 없습니다");
             }
         }
-        else if (interactionType == "object")
-        {
-            //상호작용 대상이 물건일때 .
-        }
+        // else if (interactionType == "object")
+        // {
+        //     //상호작용 대상이 물건일때 .
+        // }
     }
 
     private void Update()
-    {if (Input.GetKeyDown(KeyCode.E))
+    {
+        if (Input.GetKeyDown(KeyCode.E))
         {
             Debug.LogWarning("E key pressed");
         
@@ -135,10 +137,6 @@ public class DialogueManager : Singleton<DialogueManager>
     }
     public void StartDialogue(string dialogueId)
     {
-        if (PlayerController.Instance._currentNPC != null)
-        {
-            PlayerController.Instance._currentNPC.GetComponent<Collider>().enabled = true;
-        }
         // UIManager.Instance.popUI.gameObject.SetActive(false);
         if (DataManager.Instance._dialogue.ContainsKey(dialogueId))
         {
@@ -191,11 +189,7 @@ public class DialogueManager : Singleton<DialogueManager>
             }
             else
             {
-                Debug.Log("대화가 종료되었습니다.");
-                if (PlayerController.Instance._currentNPC != null)
-                {
-                    PlayerController.Instance._currentNPC.GetComponent<Collider>().enabled = false;
-                }
+                Debug.LogWarning("대화가 종료되었습니다.");
                 PlayerController.Instance.isDialogueOn = false;
                 isDialogeEnd = true;
                 _currentDialogueId = "";

@@ -59,6 +59,10 @@ public class InputFieldManager : Singleton<InputFieldManager>
                 DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].input_correct);
                 isAnswer = true;//isSubmitAnswer = true;
                 DataManager.Instance._input[_currentID].isSolved = true;
+                if (PlayerController.Instance._currentNPC != null)
+                {
+                    PlayerController.Instance._currentNPC.GetComponent<NpcDialogue>().dialogueId = string.Empty;
+                }
             }
             else
             {
@@ -83,14 +87,14 @@ public class InputFieldManager : Singleton<InputFieldManager>
 
     private void CloseInputField()
     {
-        if (_questionText.transform.parent.gameObject.activeSelf)
-        {
-            isAnswer = false;
-            isSubmitAnswer = false;
-            // PlayerController.Instance.isDialogueOn = false;
-            _questionText.transform.parent.gameObject.SetActive(false);
-            _inputText.text = ""; 
-        }
+        // if (_questionText.transform.parent.gameObject.activeSelf)
+        // {
+        //     isAnswer = false;
+        //     isSubmitAnswer = false;
+        //     // PlayerController.Instance.isDialogueOn = false;
+        //     _questionText.transform.parent.gameObject.SetActive(false);
+        //     _inputText.text = ""; 
+        // }
     }
 
     private void OnDestroy()
