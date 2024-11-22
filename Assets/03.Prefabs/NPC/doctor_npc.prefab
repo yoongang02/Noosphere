@@ -1302,7 +1302,7 @@ GameObject:
   - component: {fileID: 7192101958602092885}
   - component: {fileID: 5927402225525613454}
   - component: {fileID: 4490868548574643316}
-  - component: {fileID: 3241672533326618856}
+  - component: {fileID: 1210634078445853605}
   m_Layer: 0
   m_Name: doctor_npc
   m_TagString: NPC
@@ -1377,8 +1377,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 0}
---- !u!135 &3241672533326618856
-SphereCollider:
+--- !u!136 &1210634078445853605
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1395,9 +1395,11 @@ SphereCollider:
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.29
-  m_Center: {x: 0, y: 1, z: 0}
+  serializedVersion: 2
+  m_Radius: 0.4954073
+  m_Height: 1.8317282
+  m_Direction: 1
+  m_Center: {x: 0.0083027035, y: 0.4158641, z: 0.058445305}
 --- !u!1 &5041545182349850292
 GameObject:
   m_ObjectHideFlags: 0
@@ -2060,13 +2062,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7424931996741967972}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2147227, y: -0.53813744, z: 0.15136638, w: 0.8008685}
+  m_LocalRotation: {x: 0.12897733, y: -0.8297747, z: 0.22887206, w: 0.49239865}
   m_LocalPosition: {x: 0.9139999, y: 1.343, z: 0.43000022}
   m_LocalScale: {x: 0.09999999, y: 0.1, z: 0.09999999}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8475008555714687663}
-  m_LocalEulerAnglesHint: {x: 30.454, y: 292.408, z: 0.754}
+  m_LocalEulerAnglesHint: {x: 30.454, y: 241.57599, z: 0.754}
 --- !u!33 &8961571721117451664
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2631,6 +2633,16 @@ PrefabInstance:
     - target: {fileID: 7001910730849322798, guid: b71399de11bc84aa2a57982cf31c79bd,
         type: 3}
       propertyPath: eventID
+      value: Event_A011
+      objectReference: {fileID: 0}
+    - target: {fileID: 7001910730849322798, guid: b71399de11bc84aa2a57982cf31c79bd,
+        type: 3}
+      propertyPath: eventIdList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7001910730849322798, guid: b71399de11bc84aa2a57982cf31c79bd,
+        type: 3}
+      propertyPath: eventIdList.Array.data[0]
       value: Event_A011
       objectReference: {fileID: 0}
     m_RemovedComponents: []

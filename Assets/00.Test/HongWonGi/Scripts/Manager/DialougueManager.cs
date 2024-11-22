@@ -47,6 +47,8 @@ public class DialogueManager : Singleton<DialogueManager>
 
             if (dialogue.trigger_type == "interact")
             {
+                UIManager.Instance.dialogueUI.gameObject.SetActive(false);
+                PlayerController.Instance.isDialogueOn = false;
                 SetInteractDialogue(dialogue.interaction_type);
             }
         }
@@ -80,14 +82,12 @@ public class DialogueManager : Singleton<DialogueManager>
 
     private void Update()
     {
+
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Debug.LogWarning("E key pressed");
-        
-            if (!string.IsNullOrEmpty(_currentDialogueId) && 
+            if (!string.IsNullOrEmpty(_currentDialogueId) &&
                 DataManager.Instance._dialogue[_currentDialogueId].trigger_type == "auto")
             {
-                Debug.Log("Auto type detected");
                 if (isTyping)
                 {
                     isTyping = false;
@@ -97,28 +97,37 @@ public class DialogueManager : Singleton<DialogueManager>
                     ShowNextLine().Forget();
                 }
             }
-            else if (PlayerController.Instance._currentNPC != null && PlayerController.Instance.isPlayerNearNPC)
+            else if (!string.IsNullOrEmpty(_currentDialogueId) &&DataManager.Instance._dialogue[_currentDialogueId].trigger_type == "interact")
             {
-                NpcDialogue npcDialogue = PlayerController.Instance._currentNPC.GetComponent<NpcDialogue>();
-                if (npcDialogue != null && !string.IsNullOrEmpty(npcDialogue.dialogueId))
+                 if (PlayerController.Instance._currentNPC != null && PlayerController.Instance.isPlayerNearNPC)
                 {
-                    if (!UIManager.Instance.dialogueUI.gameObject.activeSelf)
+                    NpcDialogue npcDialogue = PlayerController.Instance._currentNPC.GetComponent<NpcDialogue>();
+
+                    if (npcDialogue != null && !string.IsNullOrEmpty(npcDialogue.dialogueId))
                     {
-                        PlayerController.Instance.isDialogueOn = true;
-                        UIManager.Instance.dialogueUI.gameObject.SetActive(true);
-                        StartDialogue(npcDialogue.dialogueId);
-                    }
-                    else if (isTyping)
-                    {
-                        isTyping = false;
-                    }
-                    else
-                    {
-                        ShowNextLine().Forget();
+                        if (!UIManager.Instance.dialogueUI.gameObject.activeSelf)
+                        {
+
+                            Debug.LogWarning("뭐가없지3");
+                            PlayerController.Instance.isDialogueOn = true;
+                            PlayerController.Instance.NpcCameraOn();
+                            UIManager.Instance.dialogueUI.gameObject.SetActive(true);
+                            StartDialogue(npcDialogue.dialogueId);
+                        }
+                        else if (isTyping)
+                        {
+                            isTyping = false;
+                        }
+                        else
+                        {
+                            ShowNextLine().Forget();
+                        }
                     }
                 }
             }
         }
+
+
         // if (Input.GetKeyDown(KeyCode.E))
         // {
         //     if (!string.IsNullOrEmpty(_currentDialogueId) &&
@@ -182,20 +191,34 @@ public class DialogueManager : Singleton<DialogueManager>
                     _currentLineIndex = 0;
                     ShowNextLine().Forget();
                 }
-                else
+                else  
                 {
                     Debug.LogWarning($"Next Dialogue ID {dialogue.next_dialouge_id} not found.");
                 }
             }
             else
             {
+               
                 Debug.LogWarning("대화가 종료되었습니다.");
+            
+    
                 PlayerController.Instance.isDialogueOn = false;
                 isDialogeEnd = true;
                 _currentDialogueId = "";
                 _currentLineIndex = 0;
-                // PlayerController.Instance.ResetCamera();
                 UIManager.Instance.dialogueUI.gameObject.SetActive(false);
+                PlayerController.Instance.ResetCamera();
+                if (PlayerController.Instance._currentNPC != null)
+                {
+                    NpcDialogue npcDialogue = PlayerController.Instance._currentNPC.GetComponent<NpcDialogue>();
+                    if (npcDialogue != null)
+                    {
+                        npcDialogue.dialogueId = string.Empty;
+                    }
+                    PlayerController.Instance.isPlayerNearNPC = false;
+                    PlayerController.Instance._currentNPC = null;
+                }
+
             }
         }
     }
