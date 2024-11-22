@@ -24,7 +24,7 @@ public class UIManager : Singleton<UIManager>
     public TextMeshProUGUI popUI;
 
     //증거물 조사 UI
-    private bool _isInvestigateUIOpened = false;
+    public bool _isInvestigateUIOpened = false;
     [Header("증거물 조사 UI")]
     [SerializeField] private GameObject _investigateUI;
     [SerializeField] private GameObject _investigateUIYesBtn;
@@ -196,6 +196,8 @@ public class UIManager : Singleton<UIManager>
         isEvidenceAcquired = false;
         _investigateUI.SetActive(true);
         isSelecting = true;
+
+        PlayerController.Instance.isDialogueOn = true;
     }
 
     public void CloseInvestigateUI()
@@ -203,6 +205,8 @@ public class UIManager : Singleton<UIManager>
         _isInvestigateUIOpened = false;
         _curInvestigateEvidence = null;
         _investigateUI.SetActive(false);
+        PlayerController.Instance.isDialogueOn = false;
+        EventManagerYKM.Instance.StopCoroutine();
     }
     //증거물 조사 UI - 버튼 선택
     void SetButtonSelected(GameObject btn, Color color)

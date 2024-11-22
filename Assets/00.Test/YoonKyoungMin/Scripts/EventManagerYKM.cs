@@ -117,9 +117,12 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             else if (branchType == "evidence")
             {
                 Debug.Log(eventStructure.branch_Element + "에 대해서 분기 체크 시작");
+                /*
                 branchResult = InventoryManager.Instance.IsAcquiredEvidence(eventStructure.branch_Element)
                     ? eventStructure.branch_True
                     : eventStructure.branch_False;
+                    */
+                branchResult = eventStructure.branch_False;
                 yield return ExecuteResult(branchResult);
             }
             else if (branchType == "mental")
@@ -128,7 +131,10 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 yield return new WaitUntil(() => PlayerInteract.Instance._isComplete);
                 PlayerInteract.Instance._isComplete = false;
                 branchResult = eventStructure.branch_True;
-                StartCoroutine(ExecuteResult(branchResult));
+                if (!branchResult.IsNullOrEmpty())
+                {
+                    StartCoroutine(ExecuteResult(branchResult));
+                }
             }
         }
         //결과 실행하기
@@ -192,11 +198,22 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             {
                 InputFieldManager.Instance.SetQuestionField(id);
                 yield return new WaitUntil(() => InputFieldManager.Instance.isSubmitAnswer);
+                PlayerInteract.Instance.canInteract = true;
             }
             else if (resultType == "Event")
             {
                 yield return ExecuteEvent(id);
             }
+        }
+    }
+
+    public void StopCoroutine()
+    {
+        StopAllCoroutines();
+        string lockID = DataManager.Instance._events[currentEventID].lock_condition_id;
+        if (!lockID.IsNullOrEmpty())
+        {
+            DataManager.Instance._lockConditions[lockID].UnLock();
         }
     }
 }

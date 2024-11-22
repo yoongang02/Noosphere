@@ -213,6 +213,14 @@ public class InventoryManager : Singleton<InventoryManager>
 
     public void ControlWindow()
     {
+        if (isInventoryOpen)
+        {
+            PlayerController.Instance.isDialogueOn = true;
+        }
+        else
+        {
+            PlayerController.Instance.isDialogueOn = false;
+        }
         _inventoryWindow.SetActive(isInventoryOpen);
         if(isInventoryOpen) GetComponent<InventoryNavigator>().InitNavigator(_realWorldInventory.transform,_mentalWorldInventory.transform);
     }
