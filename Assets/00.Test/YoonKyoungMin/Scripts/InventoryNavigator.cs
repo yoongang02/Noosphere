@@ -76,6 +76,7 @@ public class InventoryNavigator : MonoBehaviour
                         InventoryManager.Instance.currentViewChapter = inputIndex;
                         SetChapterSelected(inputIndex);
                         InventoryManager.Instance.UpdateInventoryUI();
+                        UpdateSelection();
                     }
                 }
             }
