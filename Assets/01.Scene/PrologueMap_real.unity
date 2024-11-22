@@ -4353,6 +4353,7 @@ MonoBehaviour:
   dontDestroy: 1
   dialogueUI: {fileID: 603420748}
   popUI: {fileID: 0}
+  _isInvestigateUIOpened: 0
   _investigateUI: {fileID: 603420751}
   _investigateUIYesBtn: {fileID: 603420750}
   _investigateUINoBtn: {fileID: 603420749}
@@ -6204,7 +6205,7 @@ PrefabInstance:
     - target: {fileID: 7001910730849322798, guid: fb4baf99a940e47a4885dbdfd0ffd3e9,
         type: 3}
       propertyPath: eventIdList.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7001910730849322798, guid: fb4baf99a940e47a4885dbdfd0ffd3e9,
         type: 3}
@@ -6219,7 +6220,7 @@ PrefabInstance:
     - target: {fileID: 7001910730849322798, guid: fb4baf99a940e47a4885dbdfd0ffd3e9,
         type: 3}
       propertyPath: eventIdList.Array.data[2]
-      value: Event_A003
+      value: Event_A027
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -322893245724761164, guid: fb4baf99a940e47a4885dbdfd0ffd3e9, type: 3}
@@ -7433,6 +7434,11 @@ PrefabInstance:
       propertyPath: _dialogueCamera
       value: 
       objectReference: {fileID: 580446751}
+    - target: {fileID: 2401281327227322371, guid: 788ed82389619477a98998d9611c4b32,
+        type: 3}
+      propertyPath: _enterTime
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 2401281327227322371, guid: 788ed82389619477a98998d9611c4b32,
         type: 3}
       propertyPath: dontDestroy
@@ -9290,6 +9296,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7001910730849322798, guid: b71399de11bc84aa2a57982cf31c79bd,
         type: 3}
+      propertyPath: canDestroyEvidence
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7001910730849322798, guid: b71399de11bc84aa2a57982cf31c79bd,
+        type: 3}
       propertyPath: eventIdList.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -9396,6 +9407,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3847808126026302203, guid: a795d44576f144fefbb22d506c87c90e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4139902605256687446, guid: a795d44576f144fefbb22d506c87c90e,
         type: 3}
@@ -13735,6 +13751,11 @@ PrefabInstance:
     - target: {fileID: 7001910730849322798, guid: b71399de11bc84aa2a57982cf31c79bd,
         type: 3}
       propertyPath: canDestroy
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7001910730849322798, guid: b71399de11bc84aa2a57982cf31c79bd,
+        type: 3}
+      propertyPath: canDestroyEvidence
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7001910730849322798, guid: b71399de11bc84aa2a57982cf31c79bd,

@@ -243,6 +243,7 @@ public class DialogueManager : Singleton<DialogueManager>
 
         UIManager.Instance.dialogueUI.text = text;
         isTyping = false;
+        
         _toggleIcon.SetActive(true);
     }
 

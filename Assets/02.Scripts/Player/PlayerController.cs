@@ -115,7 +115,7 @@ public class PlayerController : Singleton<PlayerController>
 
     public void NpcCameraOn()
     {
-        _currentNPC.GetComponent<NpcState>().SetState(NPCState.IsTalking);
+        //_currentNPC.GetComponent<NpcState>().SetState(NPCState.IsTalking);
         _dialogueCamera.transform.gameObject.SetActive(true);
         _dialogueCamera.Follow = _currentNPC.transform.GetChild(0).transform;
         

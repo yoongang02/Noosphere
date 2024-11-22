@@ -84,13 +84,13 @@ public class PlayerInteract : Singleton<PlayerInteract>
                 }
             }
 
-            if (_canEnter && isPlayerInMetanlWorld && Input.GetKeyDown(KeyCode.Space))
+            if (!InventoryManager.Instance.GetComponent<InventoryNavigator>().canEvidenceUse && !InventoryManager.Instance.isInventoryOpen && !UIManager.Instance._isDetailOpen && !UIManager.Instance._isInvestigateUIOpened &&_canEnter && isPlayerInMetanlWorld && Input.GetKeyDown(KeyCode.Space))
             {
                 if (InventoryManager.Instance.IsAcquiredEvidence("evidence_001"))
                 {
                     _progressBarUI.SetActive(true);
                     _startEnter = true;
-                    StartCoroutine(EventManagerYKM.Instance.ExecuteEvent("Event_A009"));
+                    if(EventManagerYKM.Instance.currentEventID == "Event_A008") StartCoroutine(EventManagerYKM.Instance.ExecuteEvent("Event_A009"));
                 }
             }
             
@@ -111,7 +111,15 @@ public class PlayerInteract : Singleton<PlayerInteract>
                     else
                     {
                         StartEnterToPath("PrologueMap_real");
-                        StartCoroutine(EventManagerYKM.Instance.ExecuteEvent("Event_A010"));
+                        if (EventManagerYKM.Instance.currentEventID == "Event_A009")
+                        {
+                            StartCoroutine(EventManagerYKM.Instance.ExecuteEvent("Event_A010"));
+                        }
+                        else
+                        {
+                            StartCoroutine(EventManagerYKM.Instance.ExecuteEvent("Event_A028"));
+                        }
+                        
                     }
                 }
             }
