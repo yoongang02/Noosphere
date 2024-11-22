@@ -49,13 +49,13 @@ public class UIManager : Singleton<UIManager>
     [Space] [SerializeField] private GameObject _diaryParent;
     
     public bool _isDetailOpen = false;
-    private Dictionary<string, GameObject> _detailParents;
+    private Dictionary<string, GameObject> _detailParents = new Dictionary<string,GameObject>();
     
     [Space(5)] [Header("강제 종료 관련 변수")] [SerializeField] 
     private EvidenceStructure curDetailEvidence;
     [SerializeField] private float _forceQuitSeconds = 0.5f;
 
-    void Awake()
+    void Start()
     {
         _detailParents.Add("P",_evidenceDetailPrefabParent);
         _detailParents.Add("newsPaper",_newsPaperParent);
