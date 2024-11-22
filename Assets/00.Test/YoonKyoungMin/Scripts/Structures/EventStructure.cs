@@ -72,17 +72,10 @@ public class EventStructure
             //증거 인벤토리에 있는지 확인, 혹은 사용했는지 구분
             string useType = DataManager.Instance._evidences[id].can_Use;
 
-            if (useType == "Y")
+            //우선은 획득한 상태만 체크하기.
+            if (InventoryManager.Instance.IsAcquiredEvidence(id))
             {
-                
-            }
-            else if(useType == "N")
-            {
-                //우선은 획득한 상태만 체크하기.
-                if (InventoryManager.Instance.IsAcquiredEvidence(id))
-                {
-                    isMet = true;
-                }
+                isMet = true;
             }
         }
         else if (conditionType == "dialogue")

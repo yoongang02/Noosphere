@@ -255,6 +255,13 @@ public class UIManager : Singleton<UIManager>
     {
         _isDetailOpen = false;
         _evidenceDetailUI.SetActive(false);
+
+        //해당 이벤트만 예외 조건으로 실행
+        if (EventManagerYKM.Instance.nextEventID == "Event_A008")
+        {
+            CoroutineManager.Instance.StartManagedCoroutine(
+                EventManagerYKM.Instance.ExecuteEvent(EventManagerYKM.Instance.nextEventID));
+        }
     }
 
     void SetDetailEvidence(EvidenceStructure evidence)

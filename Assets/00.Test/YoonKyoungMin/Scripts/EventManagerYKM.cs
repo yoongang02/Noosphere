@@ -56,7 +56,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         //실행 조건 만족하는지 체크
         if (eventStructure.CheckCondition())
         {
-            StartCoroutine(HandleEventWithEvidence(eventStructure));
+            yield return HandleEventWithEvidence(eventStructure);
         }
         
         //실행이 모두 끝나면 nextEventID 갱신하기
@@ -106,61 +106,32 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             //분기 조건이 input인지
             //분기 조건이 evidence인지
             string branchType = eventStructure.branch_Element.Substring(0, eventStructure.branch_Element.IndexOf('_'));
-            string inputResultType;
+            string branchResult = "";
             if (branchType == "input")
             {
                 InputFieldStructure input = DataManager.Instance._input[eventStructure.branch_Element];
                 Debug.Log(eventStructure.branch_Element + "에 대해서 분기 체크 시작");
-                if (input.isSolved)
-                {
-                    //input이 해결되었다면
-                    inputResultType = eventStructure.branch_True;
-                    //이벤트 타입이 실행 완료로 변경.
-                    eventStructure.isExecuted = true;
-                    Debug.Log("input 해결 완료");
-                }
-                else
-                {
-                    //input이 해결되지 않았다면
-                    inputResultType = eventStructure.branch_False;
-                    Debug.Log("input 해결 미완료");
-                }
-                //결과 실행
-                StartCoroutine(ExecuteResult(inputResultType));
+                branchResult = input.isSolved ? eventStructure.branch_True : eventStructure.branch_False;
             }
             else if (branchType == "evidence")
             {
                 Debug.Log(eventStructure.branch_Element + "에 대해서 분기 체크 시작");
-                //해당 증거물을 보유하고 있다면
-                if (InventoryManager.Instance.IsAcquiredEvidence(eventStructure.branch_Element))
-                {
-                    //input이 해결되었다면
-                    inputResultType = eventStructure.branch_True;
-                    //이벤트 타입이 실행 완료로 변경.
-                    eventStructure.isExecuted = true;
-                    Debug.Log("evidence 해결 완료");
-                }
-                else
-                {
-                    //input이 해결되지 않았다면
-                    inputResultType = eventStructure.branch_False;
-                    Debug.Log("evidence 해결 미완료");
-                }
-                //결과 실행
-                StartCoroutine(ExecuteResult(inputResultType));
+                branchResult = InventoryManager.Instance.IsAcquiredEvidence(eventStructure.branch_Element)
+                    ? eventStructure.branch_True
+                    : eventStructure.branch_False;
             }
             else if (branchType == "mental")
             {
                 //진입 성공할 때까지 기다리기
                 yield return new WaitUntil(() => PlayerInteract.Instance._isComplete);
-                //결과 실행
-                StartCoroutine(ExecuteResult(eventStructure.branch_True));
+                branchResult = eventStructure.branch_True;
             }
+            yield return ExecuteResult(branchResult);
         }
         //결과 실행하기
         foreach (var resultID in eventStructure.resultIDs)
         {
-            StartCoroutine(ExecuteResult(resultID));
+            yield return ExecuteResult(resultID);
         }
         
         // 증거물 조사 UI 띄우기
@@ -221,7 +192,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             }
             else if (resultType == "Event")
             {
-                StartCoroutine(ExecuteEvent(id));
+                yield return ExecuteEvent(id);
             }
         }
     }
