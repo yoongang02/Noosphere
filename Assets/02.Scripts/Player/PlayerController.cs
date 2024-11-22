@@ -125,7 +125,7 @@ public class PlayerController : Singleton<PlayerController>
     {
         if(PlayerController.Instance._currentNPC==null) return;
         _currentNPC.GetComponent<NpcState>().SetState(NPCState.Idle);
-        _dialogueCamera.Follow = null;
+        // _dialogueCamera.Follow = null;
         _dialogueCamera.transform.gameObject.SetActive(false);
     } 
     private void HandleInput()
@@ -302,7 +302,19 @@ public class PlayerController : Singleton<PlayerController>
         //dialogue camera 찾기
         foreach (Transform child in parent.transform)
         {
-            if (child.name == "Dialogue Camera") _dialogueCamera = child.GetComponent<CinemachineVirtualCamera>();
+            if (child.name == "Dialogue Camera") 
+            {
+                _dialogueCamera = child.GetComponent<CinemachineVirtualCamera>();
+            }
+            else if (child.name == "Virtual Camera")
+            {
+                CinemachineVirtualCamera abcCamera = child.GetComponent<CinemachineVirtualCamera>();
+                if (abcCamera != null)
+                {
+                    abcCamera.LookAt = transform;
+                    Debug.Log("Set ABCCamera LookAt to player");
+                }
+            }
         }
     }
 }
