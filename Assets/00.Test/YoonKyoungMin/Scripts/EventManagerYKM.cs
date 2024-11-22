@@ -112,6 +112,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 InputFieldStructure input = DataManager.Instance._input[eventStructure.branch_Element];
                 Debug.Log(eventStructure.branch_Element + "에 대해서 분기 체크 시작");
                 branchResult = input.isSolved ? eventStructure.branch_True : eventStructure.branch_False;
+                yield return ExecuteResult(branchResult);
             }
             else if (branchType == "evidence")
             {
@@ -119,14 +120,15 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 branchResult = InventoryManager.Instance.IsAcquiredEvidence(eventStructure.branch_Element)
                     ? eventStructure.branch_True
                     : eventStructure.branch_False;
+                yield return ExecuteResult(branchResult);
             }
             else if (branchType == "mental")
             {
                 //진입 성공할 때까지 기다리기
                 yield return new WaitUntil(() => PlayerInteract.Instance._isComplete);
                 branchResult = eventStructure.branch_True;
+                StartCoroutine(ExecuteResult(branchResult));
             }
-            yield return ExecuteResult(branchResult);
         }
         //결과 실행하기
         foreach (var resultID in eventStructure.resultIDs)
