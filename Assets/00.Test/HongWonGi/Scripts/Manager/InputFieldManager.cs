@@ -9,7 +9,7 @@ public class InputFieldManager : Singleton<InputFieldManager>
 {
     public bool isAnswer = false;
     public bool isSubmitAnswer = false;
-    [SerializeField] private TextMeshProUGUI _questionText;
+    [SerializeField] public TextMeshProUGUI _questionText;
     [SerializeField] private TMP_InputField _inputText;
     private string _currentAnswer;
     private string _currentID;
@@ -81,7 +81,11 @@ public class InputFieldManager : Singleton<InputFieldManager>
         if (_questionText.transform.parent.gameObject.activeSelf)
         {
             _questionText.transform.parent.gameObject.SetActive(false);
-            _inputText.text = ""; 
+            _inputText.text = "";
+            if (PlayerController.Instance._currentNPC != null)
+            {
+                PlayerController.Instance.ResetCamera();
+            }
         }
     }
 

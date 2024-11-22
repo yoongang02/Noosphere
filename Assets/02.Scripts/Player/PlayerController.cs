@@ -29,6 +29,7 @@ public class PlayerController : Singleton<PlayerController>
     public bool isPlayerNearNPC = false; //플레이어 NPC가까이있나?
     // public bool isNpcRayOn=false;
     public GameObject _currentNPC;
+    public GameObject _swapNpc;
     private float lastStepTime = 0f;
     [Header("Ray Settings")]
     [SerializeField] private float _rayDistance;
@@ -112,7 +113,7 @@ public class PlayerController : Singleton<PlayerController>
     //     }
     // }
 
-    private void NpcCameraOn()
+    public void NpcCameraOn()
     {
         _currentNPC.GetComponent<NpcState>().SetState(NPCState.IsTalking);
         _dialogueCamera.transform.gameObject.SetActive(true);
@@ -122,7 +123,8 @@ public class PlayerController : Singleton<PlayerController>
 
     public void ResetCamera()
     {
-        // _currentNPC.GetComponent<NpcState>().SetState(NPCState.Idle);
+        if(PlayerController.Instance._currentNPC==null) return;
+        _currentNPC.GetComponent<NpcState>().SetState(NPCState.Idle);
         _dialogueCamera.Follow = null;
         _dialogueCamera.transform.gameObject.SetActive(false);
     } 
@@ -230,16 +232,14 @@ public class PlayerController : Singleton<PlayerController>
 
     private void OnTriggerEnter(Collider other)
     {
-        
         if (other.CompareTag("NPC"))
         {
             isPlayerNearNPC = true;
             _currentNPC = other.gameObject;
-            // UIManager.Instance.PopUp(true, "E를 눌러 대화시작");
+            _swapNpc = other.gameObject;
+            // UIManager.Instance.PopUp(true, "E를e 눌러 대화시작");
         }
-        
     }
-
     private void OnTriggerExit(Collider other)
     {
     
@@ -249,7 +249,17 @@ public class PlayerController : Singleton<PlayerController>
             _currentNPC = null;
             // UIManager.Instance.PopUp(false);
         }
-        
+    }
+    public void ResetAndSetupTrigger()
+    {
+        isPlayerNearNPC = false;
+        _currentNPC = null;
+    
+        if (_swapNpc != null)
+        {
+            isPlayerNearNPC = true;
+            _currentNPC = _swapNpc;
+        }
     }
 
     private void OnDestroy()
