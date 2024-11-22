@@ -56,7 +56,8 @@ public class InventoryNavigator : MonoBehaviour
                 if (canEvidenceUse && Input.GetKeyDown(KeyCode.Space))
                 {
                     Debug.Log("아이템 사용하기");
-                    StartCoroutine(EventManagerYKM.Instance.ExecuteEvent("Event_A018"));
+                    //StartCoroutine(EventManagerYKM.Instance.ExecuteEvent("Event_A018"));
+                    
                     //인벤토리 창 자동으로 닫기
                     InventoryManager.Instance.isInventoryOpen = !InventoryManager.Instance.isInventoryOpen;
                     InventoryManager.Instance.ControlWindow();
