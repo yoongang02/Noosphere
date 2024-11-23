@@ -12,7 +12,7 @@ public class ClearTrigger : MonoBehaviour
       if (other.CompareTag("Player"))
       {
          Debug.Log("트리거 엔터");
-         // SceneManager.LoadScene(nextScene);
+         SceneManager.LoadScene(nextScene);
       }
    }
 }
