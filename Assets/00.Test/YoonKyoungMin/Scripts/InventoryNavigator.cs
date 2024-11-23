@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using VHierarchy.Libs;
 using Cysharp.Threading.Tasks;
 
 public class InventoryNavigator : MonoBehaviour

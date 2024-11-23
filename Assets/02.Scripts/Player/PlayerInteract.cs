@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using VHierarchy.Libs;
 using UnityEngine.SceneManagement;
 
 public class PlayerInteract : Singleton<PlayerInteract>
@@ -234,7 +233,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
         {
             EventStructure _event = DataManager.Instance._events[id];
             Debug.Log("nextEventID : " + EventManagerYKM.Instance.nextEventID + ", thisID : " + id +" , eventCondition? : " + _event.CheckCondition());
-            if ( EventManagerYKM.Instance.nextEventID.IsNullOrEmpty() || EventManagerYKM.Instance.nextEventID == id)
+            if ( String.IsNullOrEmpty(EventManagerYKM.Instance.nextEventID) || EventManagerYKM.Instance.nextEventID == id)
             {
                 Debug.Log("nextEventID 관련해서는 만족함.");
                 if (_event.CheckCondition())
