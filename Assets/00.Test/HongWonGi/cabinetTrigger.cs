@@ -35,7 +35,7 @@ public class cabinetTrigger : MonoBehaviour
 
     private void ToggleDialogue()
     {
-        if (!isDialogueActive)
+        if (!isDialogueActive && !EventManagerYKM.Instance.isGetDiary)
         {
             // 'E' 키 입력 처리 - 대화 창 표시
             DialogueTextON.Instance.ShowSimpleText("굳게 닫혀있다");

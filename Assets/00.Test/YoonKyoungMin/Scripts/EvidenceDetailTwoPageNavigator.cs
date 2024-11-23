@@ -65,8 +65,10 @@ public class EvidenceDetailTwoPageNavigator : MonoBehaviour
                             Debug.Log(evidenceStructure.sub_evidence_id + " 숨겨져 있던 증거물 발견!!");
                             //해당 증거물 접근 횟수 증가
                             DataManager.Instance._evidences[evidenceStructure.sub_evidence_id].accessCnt++;
+                            
                             //강제 종료 코루틴 호출
                             CoroutineManager.Instance.StartManagedCoroutine(UIManager.Instance.ForceQuitInteraction(evidenceStructure));
+                       
                         }
                     }
                 }

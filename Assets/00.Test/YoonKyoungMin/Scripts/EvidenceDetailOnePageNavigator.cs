@@ -43,30 +43,30 @@ public class EvidenceDetailOnePageNavigator : MonoBehaviour
             {
                 curPage += 1;
                 UpdateUI();
-            }
-
-            
-            //현재 상세 내용을 보고 있는 증거물에 서브 증거물이 존재한다면, 그리고 그 서브 증거물의 타입이 page라면
-            if (evidenceStructure != null)
-            {
-                if (!evidenceStructure.sub_evidence_id.IsNullOrEmpty() &&
-                    evidenceStructure.sub_Evidence_Acquisition_Type == "page")
+                
+                //현재 상세 내용을 보고 있는 증거물에 서브 증거물이 존재한다면, 그리고 그 서브 증거물의 타입이 page라면
+                if (evidenceStructure != null)
                 {
-                    //page가 제한조건 이상이 되었다면
-                    int limitPage = evidenceStructure.acquisition_Page_Num;
-                    if (limitPage >= curPage * 2 && limitPage <= curPage * 2 + 1)
+                    if (!evidenceStructure.sub_evidence_id.IsNullOrEmpty() &&
+                        evidenceStructure.sub_Evidence_Acquisition_Type == "page")
                     {
-                        if (DataManager.Instance._evidences.ContainsKey(evidenceStructure.sub_evidence_id))
+                        //page가 제한조건 이상이 되었다면
+                        int limitPage = evidenceStructure.acquisition_Page_Num;
+                        if (limitPage >= curPage * 2 && limitPage <= curPage * 2 + 1)
                         {
-                            Debug.Log(evidenceStructure.sub_evidence_id + " 숨겨져 있던 증거물 발견!!");
-                            //해당 증거물 접근 횟수 증가
-                            DataManager.Instance._evidences[evidenceStructure.sub_evidence_id].accessCnt++;
-                            //강제 종료 코루틴 호출
-                            CoroutineManager.Instance.StartManagedCoroutine(UIManager.Instance.ForceQuitInteraction(evidenceStructure));
+                            if (DataManager.Instance._evidences.ContainsKey(evidenceStructure.sub_evidence_id))
+                            {
+                                Debug.Log(evidenceStructure.sub_evidence_id + " 숨겨져 있던 증거물 발견!!");
+                                //해당 증거물 접근 횟수 증가
+                                DataManager.Instance._evidences[evidenceStructure.sub_evidence_id].accessCnt++;
+                                //강제 종료 코루틴 호출
+                                CoroutineManager.Instance.StartManagedCoroutine(UIManager.Instance.ForceQuitInteraction(evidenceStructure));
+                            }
                         }
                     }
                 }
             }
+            
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {

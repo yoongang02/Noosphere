@@ -218,6 +218,8 @@ public class UIManager : Singleton<UIManager>
         curDetailEvidence = evidence;
         SetDetailEvidence(evidence);
         Debug.Log("자세히 보기 실행");
+        PlayerController.Instance._uiCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+        PlayerController.Instance._uiCanvas.worldCamera = PlayerController.Instance._mainCamera;
         //상세보기 창 열기
         _isDetailOpen = true;
         _evidenceDetailUI.SetActive(true);
@@ -227,6 +229,11 @@ public class UIManager : Singleton<UIManager>
     {
         _isDetailOpen = false;
         _evidenceDetailUI.SetActive(false);
+
+        if (PlayerController.Instance._uiCanvas.renderMode == RenderMode.ScreenSpaceCamera)
+        {
+            PlayerController.Instance._uiCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        }
 
         //해당 이벤트만 예외 조건으로 실행
         if (EventManagerYKM.Instance.nextEventID == "Event_A008")
@@ -380,6 +387,7 @@ public class UIManager : Singleton<UIManager>
                 string resultID = evidenceStructure.acquisition_Page_Result_id;
                 if (evidenceStructure.accessCnt == 1)
                 {
+                    DialogueTextON.Instance.ShowSimpleText("그 부분은 필요 없는 내용입니다. 훈련에 집중하세요.");
                     if (DataManager.Instance._events.ContainsKey(resultID))
                     {
                         CoroutineManager.Instance.StartManagedCoroutine(EventManagerYKM.Instance.ExecuteEvent(resultID));
@@ -390,6 +398,7 @@ public class UIManager : Singleton<UIManager>
                     //첫번째 열람했을 떄 호출하는 이벤트의 다음 이벤트를 확인하고 해당 이벤트를 호출
                     if (DataManager.Instance._events.ContainsKey(resultID))
                     {
+                        DialogueTextON.Instance.ShowSimpleText("나중에 열어보자...");
                         string nextEventID = DataManager.Instance._events[resultID].next_Event_id;
                         
                         if (DataManager.Instance._events.ContainsKey(nextEventID))

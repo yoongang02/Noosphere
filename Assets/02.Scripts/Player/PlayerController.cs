@@ -15,6 +15,7 @@ public class PlayerController : Singleton<PlayerController>
     [Header("플레이어 설정")] [SerializeField] private float _moveSpeed;
     [SerializeField] private float _sprintMultiplier = 2f;
     public Camera _mainCamera;
+    public Canvas _uiCanvas;
     [SerializeField] private CinemachineVirtualCamera _dialogueCamera;
     [Header("플레이어 사운드")] [SerializeField] private List<AudioClip> _walkSounds;
     [SerializeField] private List<AudioClip> runSounds;
@@ -297,6 +298,8 @@ public class PlayerController : Singleton<PlayerController>
         {
             Debug.LogWarning("No main camera found in the current scene.");
         }
+
+        if(_uiCanvas.renderMode == RenderMode.ScreenSpaceCamera) _uiCanvas.worldCamera = _mainCamera;
         
         GameObject parent = GameObject.Find("-----[Cameras]");
         //dialogue camera 찾기

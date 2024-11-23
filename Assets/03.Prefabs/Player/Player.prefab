@@ -1365,6 +1365,7 @@ MonoBehaviour:
   _moveSpeed: 2
   _sprintMultiplier: 2
   _mainCamera: {fileID: 0}
+  _uiCanvas: {fileID: 0}
   _dialogueCamera: {fileID: 0}
   _walkSounds:
   - {fileID: 8300000, guid: c93a1adccb3d745acbdaef4b13597741, type: 3}
@@ -1383,7 +1384,10 @@ MonoBehaviour:
   stepInterval: 0.5
   runInterval: 0.4
   isDialogueOn: 0
-  _rayDistance: 0.5
+  isPlayerNearNPC: 0
+  _currentNPC: {fileID: 0}
+  _swapNpc: {fileID: 0}
+  _rayDistance: 0.68
   _rayHeight: 0.79
 --- !u!54 &5763481761334650358
 Rigidbody:
@@ -1411,7 +1415,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!136 &6921987843211955200
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1431,10 +1435,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.13943017
+  m_Radius: 0.15141967
   m_Height: 1.1066452
   m_Direction: 1
-  m_Center: {x: 0, y: 0.5321774, z: -0.007200241}
+  m_Center: {x: -0.011989504, y: 0.5321774, z: -0.007200241}
 --- !u!95 &5290161552278181353
 Animator:
   serializedVersion: 5
@@ -1468,13 +1472,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 600829e7886d9498a9a45db8923be313, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dontDestroy: 0
+  dontDestroy: 1
   canInteract: 1
   curInteractableTrigger: {fileID: 0}
   _interactionMark: {fileID: 4027558490432177639}
   _evidenceGameObject: {fileID: 0}
   isPlayerInMetanlWorld: 0
-  _enterTime: 5
+  _enterTime: 15
   curEnterNPCTrigger: {fileID: 0}
   _canEnter: 0
   _startEnter: 0
