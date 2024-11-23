@@ -60,6 +60,7 @@ public class InventoryNavigator : MonoBehaviour
                     {
                         DialogueTextON.Instance.ShowSimpleText("(철컥) 열렸다!");
                         EventManagerYKM.Instance.isGetDiary = true;
+                        EventManagerYKM.Instance.diaryAccessCnt = 1;
                         canEvidenceUse = false;
                         UIManager.Instance.OpenInvestigateUI(DataManager.Instance._evidences["evidence_007"]);
                         //인벤토리 창 자동으로 닫기

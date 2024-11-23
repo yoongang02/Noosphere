@@ -21,6 +21,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     public string currentEventID;
     public string nextEventID = "";
     public bool isGetDiary = false;
+    public int diaryAccessCnt = 0;
     
     void Awake()
     {

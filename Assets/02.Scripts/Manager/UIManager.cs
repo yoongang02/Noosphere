@@ -222,6 +222,7 @@ public class UIManager : Singleton<UIManager>
         PlayerController.Instance._uiCanvas.worldCamera = PlayerController.Instance._mainCamera;
         //상세보기 창 열기
         _isDetailOpen = true;
+        if (evidence.evidence_id == "evidence_007") EventManagerYKM.Instance.diaryAccessCnt++;
         _evidenceDetailUI.SetActive(true);
     }
 
@@ -378,6 +379,18 @@ public class UIManager : Singleton<UIManager>
     {
         yield return new WaitForSeconds(_forceQuitSeconds);
         Debug.Log("강제 종료!!!!");
+
+        CloseDetailEvidence();
+        
+        if (EventManagerYKM.Instance.diaryAccessCnt == 1)
+        {
+            DialogueTextON.Instance.ShowSimpleText("그 부분은 필요 없는 내용입니다. 훈련에 집중하세요.");
+        }
+        else if(EventManagerYKM.Instance.diaryAccessCnt > 1)
+        {
+            DialogueTextON.Instance.ShowSimpleText("나중에 열어보자...");
+        }
+        /*
         if (_isDetailOpen)
         {
             CloseDetailEvidence();
@@ -408,6 +421,6 @@ public class UIManager : Singleton<UIManager>
                     }
                 }
             }
-        }
+            */
     }
 }
