@@ -1,9 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using VHierarchy.Libs;
-
 public class EvidenceDetailOnePageNavigator : MonoBehaviour
 {
     public int curPage = 0;
@@ -49,7 +48,7 @@ public class EvidenceDetailOnePageNavigator : MonoBehaviour
             //현재 상세 내용을 보고 있는 증거물에 서브 증거물이 존재한다면, 그리고 그 서브 증거물의 타입이 page라면
             if (evidenceStructure != null)
             {
-                if (!evidenceStructure.sub_evidence_id.IsNullOrEmpty() &&
+                if (!String.IsNullOrEmpty(evidenceStructure.sub_evidence_id) &&
                     evidenceStructure.sub_Evidence_Acquisition_Type == "page")
                 {
                     //page가 제한조건 이상이 되었다면

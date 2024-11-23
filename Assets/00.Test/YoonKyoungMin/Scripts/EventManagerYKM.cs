@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using VHierarchy.Libs;
 
 public class EventManagerYKM : Singleton<EventManagerYKM>
 {
@@ -43,7 +42,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             yield return null;
         }
 
-        if (!nextEventID.IsNullOrEmpty() && nextEventID != eventID)
+        if (String.IsNullOrEmpty(nextEventID) && nextEventID != eventID)
         {
             Debug.Log("현재 실행되어야 하는 이벤트는 " + nextEventID + "입니다.");
             yield return null;
@@ -131,7 +130,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 yield return new WaitUntil(() => PlayerInteract.Instance._isComplete);
                 PlayerInteract.Instance._isComplete = false;
                 branchResult = eventStructure.branch_True;
-                if (!branchResult.IsNullOrEmpty())
+                if (!String.IsNullOrEmpty(branchResult))
                 {
                     StartCoroutine(ExecuteResult(branchResult));
                 }
@@ -216,7 +215,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     {
         StopAllCoroutines();
         string lockID = DataManager.Instance._events[currentEventID].lock_condition_id;
-        if (!lockID.IsNullOrEmpty())
+        if (!String.IsNullOrEmpty(lockID))
         {
             DataManager.Instance._lockConditions[lockID].UnLock();
         }

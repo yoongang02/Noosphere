@@ -1,10 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
-using VFolders.Libs;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -375,7 +375,7 @@ public class UIManager : Singleton<UIManager>
         {
             CloseDetailEvidence();
 
-            if (!evidenceStructure.acquisition_Page_Result_id.IsNullOrEmpty())
+            if (!String.IsNullOrEmpty(evidenceStructure.acquisition_Page_Result_id))
             {
                 string resultID = evidenceStructure.acquisition_Page_Result_id;
                 if (evidenceStructure.accessCnt == 1)

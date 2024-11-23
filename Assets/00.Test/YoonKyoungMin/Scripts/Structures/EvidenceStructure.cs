@@ -1,6 +1,5 @@
+using System;
 using UnityEngine;
-using VFolders.Libs;
-
 public class EvidenceStructure
 {
     //기본 csv 파일 내 필드 값들
@@ -66,7 +65,7 @@ public class EvidenceStructure
     //현재 상세보기하고 있는 증거물에 획득 가능한 서브 증거물이 있는지
     public bool CheckSubEvidence()
     {
-        if (!sub_evidence_id.IsNullOrEmpty()) return true;
+        if (!String.IsNullOrEmpty(sub_evidence_id)) return true;
         return false;
     }
 }
