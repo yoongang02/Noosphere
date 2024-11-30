@@ -8,7 +8,7 @@ public class EvidenceStructure
     public char evidence_Type;
     public string shape_Type; //증거물 타입 종류. T : text, P : Prefab
     public char acquisition_Type;
-    public string can_Use;
+    public char can_Use;
     public string unlock_Condition;
     public string evidence_Text_Display;
     public string artresource_id;

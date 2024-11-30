@@ -22,40 +22,20 @@ public class EventStructure
     //이벤트 실행 여부
     public bool isExecuted = false;
     
-    //조건 체크
-    public bool CheckCondition()
-    {
-        //반복 불가능인데 실행 횟수가 0 초과라면 실행 불가능
-        if (!repeat_Type && isExecuted)
-        {
-            Debug.Log("이미 실행된 이벤트이며, 반복 불가능한 이벤트입니다.");
-            return false;
-        }
-        //조건 타입 and 인데, 조건을 만족하지 못했다면
-        if (condition_Type == "and")
-        {
-            foreach (var condition in conditions)
-            {
-                if (!IsConditionMet(condition))
-                {
-                    return false;
-                }
-            }   
-        }
-        Debug.Log(this.event_id + " 이벤트 실행 조건을 만족함.");
-        return true;
-    }
     
     //조건 충족하는지
-    private bool IsConditionMet(string conditionID)
+    public bool IsConditionMet(string conditionID)
     {
+        //조건이 비어있으면 충족함으로 리턴
         if (string.IsNullOrEmpty(conditionID)) return true;
         
         bool isMet = false;
-        //Condition Manager
+        
+        //조건 id 앞에 !(not)이 붙어있는지 체크
         char boolType = conditionID[0];
         string conditionType;
         string id;
+        
         if (boolType == '!')
         {
             conditionType = conditionID.Substring(1, conditionID.IndexOf('_')-1);
@@ -66,21 +46,39 @@ public class EventStructure
             conditionType = conditionID.Substring(0, conditionID.IndexOf('_'));
             id = conditionID;
         }
+        
         Debug.Log($"boolType : {boolType} , conditonType : {conditionType} , id : {id}");
+        
         if (conditionType == "evidence")
         {
             //증거 인벤토리에 있는지 확인, 혹은 사용했는지 구분
-            string useType = DataManager.Instance._evidences[id].can_Use;
+            EvidenceStructure evidence = DataManager.Instance._evidences[id];
+            char canUse = evidence.can_Use;
+            char acquisitionType = evidence.acquisition_Type;
 
-            //우선은 획득한 상태만 체크하기.
-            if (InventoryManager.Instance.IsAcquiredEvidence(id))
+            if (canUse == 'Y')
             {
-                isMet = true;
+                //아이템을 사용했는지 체크
             }
-        }
-        else if (conditionType == "dialogue")
-        {
-            
+            else if (canUse == 'N')
+            {
+                //사용할 수 없는 아이템이나, 인벤토리에 획득 가능한 아이템이면 인벤토리에 있는지 체크
+                if (acquisitionType == 'Y')
+                {
+                    if (InventoryManager.Instance.IsAcquiredEvidence(id))
+                    {
+                        isMet = true;
+                    }
+                    else
+                    {
+                        Debug.Log(id+"가 인벤토리 내에 존재하지 않습니다.");
+                    }
+                }
+                else if(acquisitionType == 'N')
+                {
+                    //접근 횟수로 체크(나중에 필요하면 구현)
+                }
+            }
         }
         else if (conditionType == "Event")
         {
