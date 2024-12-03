@@ -11,11 +11,5 @@ public class DialogueStructure
     public string interaction_type;
     public string dialogue_Text;
     public string next_dialouge_id;
-    public List<string> Dialogue_Text_List
-    {
-        get
-        {
-            return new List<string>(dialogue_Text.Split('/'));
-        }
-    }
+    public List<string> Dialogue_Text_List;
 }
