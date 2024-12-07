@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using TMPro;
-using Unity.VisualScripting;
 
-public class DialogueManager : Singleton<DialogueManager>
+
+public class NewDialogueManager : Singleton<NewDialogueManager>
 {
     [SerializeField] private GameObject _toggleIcon;
     private string _currentDialogueId = "";
@@ -48,8 +48,6 @@ public class DialogueManager : Singleton<DialogueManager>
             if (dialogue.trigger_type == "interact")
             {
                 UIManager.Instance.dialogueUI.gameObject.SetActive(false);
-                PlayerController.Instance.isDialogueOn = false;
-                SetInteractDialogue(dialogue.interaction_type);
             }
         }
         else
@@ -57,105 +55,42 @@ public class DialogueManager : Singleton<DialogueManager>
             Debug.LogWarning($" {_currentDialogueId} 못찾음");
         }
     }
-
-    private void SetInteractDialogue(string interactionType)
-    {
-        if (interactionType == "npc"||interactionType=="object")
-        {
-            GameObject npcObject = GameObject.Find(DataManager.Instance._dialogue[_currentDialogueId].character_id);
-            if (npcObject != null)
-            {
-                NpcDialogue npcDialogue = npcObject.GetComponent<NpcDialogue>();
-                npcDialogue.dialogueId = _currentDialogueId;
-                // npcDialogue.dialogueText = _dialogue[_currentDialogueId].Dialogue_Text_List;
-            }
-            else
-            {
-                Debug.LogWarning($"{DataManager.Instance._dialogue[_currentDialogueId].character_id} npc가 없습니다");
-            }
-        }
-        // else if (interactionType == "object")
-        // {
-        //     //상호작용 대상이 물건일때 .
-        // }
-    }
-
     private void Update()
     {
-
-        if (Input.GetKeyDown(KeyCode.E)&&!string.IsNullOrEmpty(_currentDialogueId))
+        if ((Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0)) && !string.IsNullOrEmpty(_currentDialogueId))
         {
-            if (DataManager.Instance._dialogue[_currentDialogueId].trigger_type == "auto")
-            {
-                if (isTyping)
-                {
-                    isTyping = false;
-                }
-                else
-                {
-                    ShowNextLine().Forget();
-                }
-            }
-            else if (DataManager.Instance._dialogue[_currentDialogueId].trigger_type == "interact")
-            {
-                 if (PlayerController.Instance._currentNPC != null && PlayerController.Instance.isPlayerNearNPC)
-                {
-                    NpcDialogue npcDialogue = PlayerController.Instance._currentNPC.GetComponent<NpcDialogue>();
+            HandleDialogueInput();
+        }
+    }
 
-                    if (npcDialogue != null && !string.IsNullOrEmpty(npcDialogue.dialogueId))
-                    {
-                        if (!UIManager.Instance.dialogueUI.gameObject.activeSelf)
-                        {
-                            PlayerController.Instance.isDialogueOn = true;
-                            PlayerController.Instance.NpcCameraOn();
-                            UIManager.Instance.dialogueUI.gameObject.SetActive(true);
-                            StartDialogue(npcDialogue.dialogueId);
-                        }
-                        else if (isTyping)
-                        {
-                            isTyping = false;
-                        }
-                        else
-                        {
-                            ShowNextLine().Forget();
-                        }
-                    }
-                }
+    private void HandleDialogueInput()
+    {
+        DialogueStructure dialogue = DataManager.Instance._dialogue[_currentDialogueId];
+    
+        bool canProceed = dialogue.trigger_type == "auto" || 
+                          (dialogue.trigger_type == "interact" && PlayerInteract.Instance.isInteractObj);
+
+        if (!canProceed) return;
+       
+
+        if (dialogue.trigger_type == "interact")
+        {
+            UIManager.Instance.dialogueUI.gameObject.SetActive(true);
+            if (dialogue.interaction_type == "npc")
+            {
+                PlayerController.Instance.NpcCameraOn();
             }
         }
 
-
-        // if (Input.GetKeyDown(KeyCode.E))
-        // {
-        //     if (!string.IsNullOrEmpty(_currentDialogueId) &&
-        //         DataManager.Instance._dialogue[_currentDialogueId].trigger_type == "auto") // auto 타입 체크
-        //     {
-        //         if (isTyping)
-        //         {
-        //             isTyping = false;
-        //         }
-        //         else
-        //         {
-        //             ShowNextLine().Forget();
-        //         }
-        //     }
-        // }=====================
-    }
-    public void StartDialogue(string dialogueId)
-    {
-        // UIManager.Instance.popUI.gameObject.SetActive(false);
-        if (DataManager.Instance._dialogue.ContainsKey(dialogueId))
+        if (isTyping)
         {
-            _currentDialogueId = dialogueId;
-            _currentLineIndex = 0;
-            ShowNextLine().Forget();
+            isTyping = false;
         }
         else
         {
-            Debug.LogWarning($"Dialogue ID {dialogueId} not found.");
+            ShowNextLine().Forget();
         }
     }
-
     public async UniTaskVoid ShowNextLine()
     {
         _toggleIcon.SetActive(false);
@@ -188,16 +123,15 @@ public class DialogueManager : Singleton<DialogueManager>
                     _currentLineIndex = 0;
                     ShowNextLine().Forget();
                 }
-                else  
+                else
                 {
                     Debug.LogWarning($"Next Dialogue ID {dialogue.next_dialouge_id} not found.");
                 }
             }
             else
             {
-               
                 Debug.LogWarning("대화가 종료되었습니다.");
-                
+
                 PlayerController.Instance.isDialogueOn = false;
                 isDialogeEnd = true;
                 _currentDialogueId = "";
@@ -211,10 +145,12 @@ public class DialogueManager : Singleton<DialogueManager>
                     {
                         npcDialogue.dialogueId = string.Empty;
                     }
+
                     PlayerController.Instance.isPlayerNearNPC = false;
                     PlayerController.Instance._currentNPC = null;
                 }
 
+                PlayerInteract.Instance.isInteractObj = false;
             }
         }
     }
@@ -239,7 +175,7 @@ public class DialogueManager : Singleton<DialogueManager>
 
         UIManager.Instance.dialogueUI.text = text;
         isTyping = false;
-        
+
         _toggleIcon.SetActive(true);
     }
 
