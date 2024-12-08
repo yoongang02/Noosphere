@@ -4,20 +4,19 @@ using UnityEngine;
 public class EventStructure
 {
     //csv 필드
-    public string event_id;
+    public string eventId;
     public string description;
-    public bool repeat_Type; //반복 여부 true,false
-    public string condition_Type; //조건 타입 or,and
+    public bool repeatType; //반복 여부 true,false
+    public string conditionType; //조건 타입 or,and
+    public bool isAuto; //자동 실행 여부 true, false
     public string[] conditions;
-    public string[] resultIDs;
-    public bool branch_Type;
-    public string branch_Element;
-    public string branch_True;
-    public string branch_False;
-    public string evidence_id;
-    public string lock_condition_id; //이벤트 실행 시 락되는 조건
-    public string location_id;
-    public string next_Event_id;
+    public string[] results;
+    public string[] conditionFalseResults;
+    public string repeatFalseResult;
+    public string evidenceId;
+    public string lockConditionId; //이벤트 실행 시 락되는 조건
+    public string locationId;
+    public string nextEventId;
     
     //이벤트 실행 여부
     public bool isExecuted = false;
@@ -47,14 +46,12 @@ public class EventStructure
             id = conditionID;
         }
         
-        Debug.Log($"boolType : {boolType} , conditonType : {conditionType} , id : {id}");
-        
-        if (conditionType == "evidence")
+        if (conditionType == "Evidence")
         {
             //증거 인벤토리에 있는지 확인, 혹은 사용했는지 구분
             EvidenceStructure evidence = DataManager.Instance._evidences[id];
-            char canUse = evidence.can_Use;
-            char acquisitionType = evidence.acquisition_Type;
+            char canUse = evidence.canUse;
+            char acquisitionType = evidence.acquisitionType;
 
             if (canUse == 'Y')
             {
@@ -87,7 +84,7 @@ public class EventStructure
                 isMet = true;
             }
         }
-        else if (conditionType == "input")
+        else if (conditionType == "Input")
         {
             if (DataManager.Instance._input.ContainsKey(id) && DataManager.Instance._input[id].isSolved)
             {

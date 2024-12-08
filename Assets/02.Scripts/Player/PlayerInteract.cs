@@ -232,15 +232,17 @@ public class PlayerInteract : Singleton<PlayerInteract>
         if (DataManager.Instance._events.ContainsKey(id))
         {
             EventStructure _event = DataManager.Instance._events[id];
-            Debug.Log("nextEventID : " + EventManagerYKM.Instance.nextEventID + ", thisID : " + id +" , eventCondition? : " + _event.CheckCondition());
+            
             if ( String.IsNullOrEmpty(EventManagerYKM.Instance.nextEventID) || EventManagerYKM.Instance.nextEventID == id)
             {
                 Debug.Log("nextEventID 관련해서는 만족함.");
+                /*
                 if (_event.CheckCondition())
                 {
                     Debug.Log("checkInteractionAvail이 true로 리턴됨.");
                     return true;
                 }
+                */
             }
         }
         Debug.Log("checkInteractionAvail이 false로 리턴됨.");
@@ -260,11 +262,13 @@ public class PlayerInteract : Singleton<PlayerInteract>
                 data.Add("eventID",eventID);
                 EventStructure eventStructure = DataManager.Instance._events[eventID];
             
+                /*
                 //해당 이벤트가 분기점이 있는지 체크
                 if (eventStructure.branch_Type)
                 {
                     data[eventID] = eventStructure.branch_Element;
                 }
+                */
             }
             return data;
         }

@@ -4,6 +4,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
 
 public class CSVParserYKM
 {
@@ -48,7 +49,8 @@ public class CSVParserYKM
             T entry = new T();
             
             List<string> conditionsList = new List<string>(); 
-            List<string> resultIDsList = new List<string>();
+            List<string> resultsList = new List<string>();
+            List<string> conditionFalseResultsList = new List<string>();
     
             for (int j = 0; j < headers.Length && j < values.Length; j++)
             {
@@ -77,18 +79,23 @@ public class CSVParserYKM
                 }
                 else
                 {
-                    if (header.StartsWith("condition_id")) 
+                    if (header.StartsWith("condition")) 
                     {
                         conditionsList.Add(value);
                     }
-                    else if (header.StartsWith("result_id")) 
+                    else if (header.StartsWith("result")) 
                     {
-                        resultIDsList.Add(value);
+                        resultsList.Add(value);
+                    }
+                    else if (header.StartsWith("conditionFalseResult"))
+                    {
+                        conditionFalseResultsList.Add(value);
                     }
                 }
             }
             FieldInfo conditionsField = typeof(T).GetField("conditions", BindingFlags.Public | BindingFlags.Instance);
-            FieldInfo resultsField = typeof(T).GetField("resultIDs", BindingFlags.Public | BindingFlags.Instance);
+            FieldInfo resultsField = typeof(T).GetField("results", BindingFlags.Public | BindingFlags.Instance);
+            FieldInfo conditionFalseResultField = typeof(T).GetField("conditionFalseResults", BindingFlags.Public | BindingFlags.Instance);
             
             if (conditionsField != null && conditionsField.FieldType == typeof(string[]))
             {
@@ -97,7 +104,12 @@ public class CSVParserYKM
             
             if (resultsField != null && resultsField.FieldType == typeof(string[]))
             {
-                resultsField.SetValue(entry, resultIDsList.ToArray());
+                resultsField.SetValue(entry, resultsList.ToArray());
+            }
+            
+            if (conditionFalseResultField != null && conditionFalseResultField.FieldType == typeof(string[]))
+            {
+                conditionFalseResultField.SetValue(entry, conditionFalseResultsList.ToArray());
             }
             
             dictionary[key] = entry;

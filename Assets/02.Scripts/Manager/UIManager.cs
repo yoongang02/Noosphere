@@ -118,11 +118,11 @@ public class UIManager : Singleton<UIManager>
         {
             if (text.gameObject.name == "Evidence Name")
             {
-                text.text = evidence.evidence_name;
+                text.text = evidence.evidenceName;
             }
             else if (text.gameObject.name == "Evidence Text")
             {
-                text.text = evidence.evidence_Text_Display;
+                text.text = evidence.evidenceTextDisplay;
             }
         }
 
@@ -131,18 +131,18 @@ public class UIManager : Singleton<UIManager>
         {
             if (image.gameObject.name == "Evidence Img")
             {
-                Debug.Log("art resource id : " + evidence.artresource_id);
+                Debug.Log("art resource id : " + evidence.artresourceId);
                 //아트 리소스 불러오기
-                if (DataManager.Instance._artResources.ContainsKey(evidence.artresource_id))
+                if (DataManager.Instance._artResources.ContainsKey(evidence.artresourceId))
                 {
                     //아트 리소스 내 증거물 인벤토리 이미지 가져오기
-                    ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresource_id];
+                    ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresourceId];
                     Debug.Log("artResource debug : " + artResource + ", filePath : " + artResource.inventoryFilePath);
                     image.sprite = artResource.GetSpriteFromFilePath(artResource.inventoryFilePath);
                 }
                 else
                 {
-                    Debug.Log(evidence.artresource_id + "가 리소스 내에 존재하지 않습니다.");
+                    Debug.Log(evidence.artresourceId + "가 리소스 내에 존재하지 않습니다.");
                 }
 
                 break;
@@ -174,7 +174,7 @@ public class UIManager : Singleton<UIManager>
         _curInvestigateEvidence = null;
         _investigateUI.SetActive(false);
         PlayerController.Instance.isDialogueOn = false;
-        EventManagerYKM.Instance.StopCoroutine();
+        //EventManagerYKM.Instance.StopCoroutine();
     }
     //증거물 조사 UI - 버튼 선택
     void SetButtonSelected(GameObject btn, Color color)
@@ -222,7 +222,7 @@ public class UIManager : Singleton<UIManager>
         PlayerController.Instance._uiCanvas.worldCamera = PlayerController.Instance._mainCamera;
         //상세보기 창 열기
         _isDetailOpen = true;
-        if (evidence.evidence_id == "evidence_007") EventManagerYKM.Instance.diaryAccessCnt++;
+        //if (evidence.evidence_id == "evidence_007") EventManagerYKM.Instance.diaryAccessCnt++;
         _evidenceDetailUI.SetActive(true);
     }
 
@@ -246,7 +246,7 @@ public class UIManager : Singleton<UIManager>
 
     void SetDetailEvidence(EvidenceStructure evidence)
     {
-        ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresource_id];
+        ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresourceId];
         //배경 이미지 변경하기
         Image backgroundImg = _evidenceDetailBackground.GetComponent<Image>();
 
@@ -260,8 +260,8 @@ public class UIManager : Singleton<UIManager>
         }
         
         //evidence 성질에 따라 프리팹인지 UI인지 결정
-        if (evidence.shape_Type == "P") SetPrefabDetail(artResource);
-        SetActiveExtra(evidence.shape_Type);
+        if (evidence.shapeType == "Object") SetPrefabDetail(artResource);
+        SetActiveExtra(evidence.shapeType);
     }
 
     void SetActiveExtra(string key)
@@ -382,6 +382,7 @@ public class UIManager : Singleton<UIManager>
 
         CloseDetailEvidence();
         
+        /*
         if (EventManagerYKM.Instance.diaryAccessCnt == 1)
         {
             DialogueTextON.Instance.ShowSimpleText("그 부분은 필요 없는 내용입니다. 훈련에 집중하세요.");
@@ -390,6 +391,7 @@ public class UIManager : Singleton<UIManager>
         {
             DialogueTextON.Instance.ShowSimpleText("나중에 열어보자...");
         }
+        */
         /*
         if (_isDetailOpen)
         {

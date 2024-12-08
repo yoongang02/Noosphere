@@ -56,6 +56,7 @@ public class InventoryNavigator : MonoBehaviour
                 if (canEvidenceUse && Input.GetKeyDown(KeyCode.Space))
                 {
                     Debug.Log("아이템 사용하기");
+                    /*
                     if (!EventManagerYKM.Instance.isGetDiary)
                     {
                         DialogueTextON.Instance.ShowSimpleText("(철컥) 열렸다!");
@@ -67,6 +68,7 @@ public class InventoryNavigator : MonoBehaviour
                         InventoryManager.Instance.isInventoryOpen = !InventoryManager.Instance.isInventoryOpen;
                         InventoryManager.Instance.ControlWindow();
                     }
+                    */
                 }
             }
             
@@ -307,9 +309,9 @@ public class InventoryNavigator : MonoBehaviour
     void SetSlotUseBtn(GameObject slot)
     {
         string evidenceId = slot.GetComponent<InventorySlotInfo>().evidence_id;
-        string canUse = DataManager.Instance._evidences[evidenceId].can_Use;
+        char canUse = DataManager.Instance._evidences[evidenceId].canUse;
         
-        if (canUse == "Y")
+        if (canUse == 'Y')
         {
             //플레이어가 현재 상황에서 사용할 수 있는 증거물 아이디를 가져오기
             PlayerInteract playerInteract = PlayerController.Instance.GetComponent<PlayerInteract>();
