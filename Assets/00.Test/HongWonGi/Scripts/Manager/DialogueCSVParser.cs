@@ -36,7 +36,7 @@ public class DialogueCSVParser
                 {
                     currentDialogueId = dialogueId;
                     currentDialogue = new DialogueStructure();
-                    currentDialogue.dialogue_id = dialogueId;
+                    currentDialogue.dialogueId = dialogueId;
                     currentDialogue.Dialogue_Text_List = new List<string>();
     
                     for (int j = 1; j < headers.Length && j < values.Length; j++)
@@ -48,12 +48,12 @@ public class DialogueCSVParser
                         SetField(currentDialogue, header, value);
                     }
     
-                    currentDialogue.Dialogue_Text_List.Add(currentDialogue.dialogue_Text);
+                    currentDialogue.Dialogue_Text_List.Add(currentDialogue.dialogueText);
                     dictionary[currentDialogueId] = currentDialogue;
                 }
                 else if (currentDialogue != null)
                 {
-                    int textIndex = Array.FindIndex(headers, h => h.Trim().Replace("\"", "") == "dialogue_Text");
+                    int textIndex = Array.FindIndex(headers, h => h.Trim().Replace("\"", "") == "dialogueText");
                     if (textIndex >= 0 && textIndex < values.Length)
                     {
                         string additionalText = values[textIndex].Trim().Replace("\"", "");

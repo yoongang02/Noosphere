@@ -30,11 +30,11 @@ public class dialoguetest : MonoBehaviour
             if (dialogueDictionary.TryGetValue(id, out DialogueStructure dialogue))
             {
                 Debug.Log($"=== Dialogue Data for ID: {id} ===");
-                Debug.Log($"Dialogue ID: {dialogue.dialogue_id}");
-                Debug.Log($"Character ID: {dialogue.character_id}");
-                Debug.Log($"Trigger Type: {dialogue.trigger_type}");
-                Debug.Log($"Interaction Type: {dialogue.interaction_type}");
-                Debug.Log($"Next Dialogue ID: {dialogue.next_dialouge_id}");
+                Debug.Log($"Dialogue ID: {dialogue.dialogueId}");
+                Debug.Log($"Character ID: {dialogue.characterID}");
+                Debug.Log($"Trigger Type: {dialogue.triggerType}");
+                Debug.Log($"Interaction Type: {dialogue.interactionType}");
+                Debug.Log($"Next Dialogue ID: {dialogue.nextDialougeId}");
             
                 if (dialogue.Dialogue_Text_List != null && dialogue.Dialogue_Text_List.Count > 0)
                 {

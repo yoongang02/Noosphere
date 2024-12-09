@@ -38,14 +38,14 @@ public class NewDialogueManager : Singleton<NewDialogueManager>
         isDialogeEnd = false;
         if (DataManager.Instance._dialogue.TryGetValue(_currentDialogueId, out DialogueStructure dialogue))
         {
-            if (dialogue.trigger_type == "auto") //대화창 바로 뜨기
+            if (dialogue.triggerType == "auto") //대화창 바로 뜨기
             {
                 PlayerController.Instance.isDialogueOn = true;
                 UIManager.Instance.dialogueUI.gameObject.SetActive(true);
                 ShowNextLine().Forget();
             }
 
-            if (dialogue.trigger_type == "interact")
+            if (dialogue.triggerType == "interact")
             {
                 UIManager.Instance.dialogueUI.gameObject.SetActive(false);
             }
@@ -67,16 +67,16 @@ public class NewDialogueManager : Singleton<NewDialogueManager>
     {
         DialogueStructure dialogue = DataManager.Instance._dialogue[_currentDialogueId];
     
-        bool canProceed = dialogue.trigger_type == "auto" || 
-                          (dialogue.trigger_type == "interact" && PlayerInteract.Instance.isInteractObj);
+        bool canProceed = dialogue.triggerType == "auto" || 
+                          (dialogue.triggerType == "interact" && PlayerInteract.Instance.isInteractObj);
 
         if (!canProceed) return;
        
 
-        if (dialogue.trigger_type == "interact")
+        if (dialogue.triggerType == "interact")
         {
             UIManager.Instance.dialogueUI.gameObject.SetActive(true);
-            if (dialogue.interaction_type == "npc")
+            if (dialogue.interactionType == "npc")
             {
                 PlayerController.Instance.NpcCameraOn();
             }
@@ -115,17 +115,17 @@ public class NewDialogueManager : Singleton<NewDialogueManager>
         }
         else
         {
-            if (!string.IsNullOrEmpty(dialogue.next_dialouge_id))
+            if (!string.IsNullOrEmpty(dialogue.nextDialougeId))
             {
-                if (DataManager.Instance._dialogue.ContainsKey(dialogue.next_dialouge_id))
+                if (DataManager.Instance._dialogue.ContainsKey(dialogue.nextDialougeId))
                 {
-                    _currentDialogueId = dialogue.next_dialouge_id;
+                    _currentDialogueId = dialogue.nextDialougeId;
                     _currentLineIndex = 0;
                     ShowNextLine().Forget();
                 }
                 else
                 {
-                    Debug.LogWarning($"Next Dialogue ID {dialogue.next_dialouge_id} not found.");
+                    Debug.LogWarning($"Next Dialogue ID {dialogue.nextDialougeId} not found.");
                 }
             }
             else
@@ -182,7 +182,7 @@ public class NewDialogueManager : Singleton<NewDialogueManager>
     private void OnEscapePressed()
     {
         if (!string.IsNullOrEmpty(_currentDialogueId) &&
-            DataManager.Instance._dialogue[_currentDialogueId].trigger_type == "interact" &&
+            DataManager.Instance._dialogue[_currentDialogueId].triggerType == "interact" &&
             PlayerController.Instance.isDialogueOn)
         {
             PlayerController.Instance.isDialogueOn = false;
