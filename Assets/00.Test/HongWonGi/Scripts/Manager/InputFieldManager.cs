@@ -38,8 +38,8 @@ public class InputFieldManager : Singleton<InputFieldManager>
             return;
         }
 
-        _questionText.text = structure.questionText;
-        _currentAnswer = structure.correctAnswer;
+        _questionText.text = structure.question_text;
+        _currentAnswer = structure.correct_answer;
         _inputText.text = "";
         
         _inputText.Select();
@@ -56,7 +56,8 @@ public class InputFieldManager : Singleton<InputFieldManager>
 
             if (formattedValue == formattedAnswer)
             {
-                DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].inputCorrect);
+                // DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].input_correct);
+                NewDialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].input_correct);
                 isAnswer = true;//isSubmitAnswer = true;
                 DataManager.Instance._input[_currentID].isSolved = true;
                 if (PlayerController.Instance._currentNPC != null)
@@ -66,7 +67,8 @@ public class InputFieldManager : Singleton<InputFieldManager>
             }
             else
             {
-                DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].inputWrong);
+                // DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].input_wrong);
+                NewDialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].input_wrong);
                 //isSubmitAnswer = false;
                 isAnswer = false;//isSubmitAnswer = false;
                 // DataManager.Instance._input[_currentID].isSolved = false;
@@ -82,7 +84,7 @@ public class InputFieldManager : Singleton<InputFieldManager>
         {
             _questionText.transform.parent.gameObject.SetActive(false);
             _inputText.text = "";
-            if (PlayerController.Instance._currentNPC != null)
+            if (PlayerController.Instance.npcState != null)
             {
                 PlayerController.Instance.ResetCamera();
             }

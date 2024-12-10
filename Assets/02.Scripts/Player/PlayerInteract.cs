@@ -29,8 +29,8 @@ public class PlayerInteract : Singleton<PlayerInteract>
     [SerializeField] private EnterProgressBar _progressBarFill;
     
     public bool isEnd = false;
-    
-    
+
+    public bool isInteractObj;
     void Update()
     {
         if (!InventoryManager.Instance.isInventoryOpen)
@@ -177,7 +177,11 @@ public class PlayerInteract : Singleton<PlayerInteract>
             curInteractableTrigger = other.gameObject;
             foreach (string eventID in other.GetComponent<EventTrigger>().eventIdList)
             {
-                if(CheckInteractionAvail(eventID)) ShowInteractionMark();
+                if (CheckInteractionAvail(eventID))
+                {
+                    ShowInteractionMark();
+                    isInteractObj = true;
+                }
             }
         } //정신세계 진입 트리거에 들어가면
         else if (other.CompareTag("EventMentalEnterTrigger"))
@@ -197,6 +201,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
         {
             curInteractableTrigger = null; 
             _interactionMark.SetActive(false);
+            isInteractObj = false;
         }
         
         //정신세계 진입 트리거에 나가면
