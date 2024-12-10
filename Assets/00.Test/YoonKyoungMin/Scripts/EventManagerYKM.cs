@@ -52,11 +52,17 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
 
         
         EventStructure eventStructure = DataManager.Instance._events[eventID];
+        currentEventID = eventStructure.eventId;
+        Debug.Log("#0 :" + eventID + "이벤트 실행");
         
         //1. LockCondition 실행
         string lockConditionID = eventStructure.lockConditionId;
         LockConditionStructure lockCondition = DataManager.Instance._lockConditions[lockConditionID];
-        lockCondition.Lock();
+        if (lockCondition != null)
+        {
+            Debug.Log("#1 :" + lockConditionID + "락 조건 실행");
+            lockCondition.Lock();
+        }
         
         //2. 반복 가능한 이벤트인지 체크
         //반복 불가능인데 이미 실행된 이벤트라면 실행 불가능
@@ -160,7 +166,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     void StartDialogue(string dialogueID)
     {
         Debug.Log(dialogueID + " 대화 시작");
-        DialogueManager.Instance.SetDialogue(dialogueID);
+        //DialogueManager.Instance.SetDialogue(dialogueID);
     }
 
     //effect 시작
@@ -181,6 +187,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     {
         Debug.Log("성공적이지 못하게 이벤트 종료");
         DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();
+        currentEventID = "";
     }
     
     public void CloseEventSuccess(EventStructure _event)

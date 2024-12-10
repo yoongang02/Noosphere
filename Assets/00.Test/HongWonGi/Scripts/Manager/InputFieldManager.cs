@@ -56,7 +56,7 @@ public class InputFieldManager : Singleton<InputFieldManager>
 
             if (formattedValue == formattedAnswer)
             {
-                DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].inputCorrect);
+                //DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].inputCorrect);
                 isAnswer = true;//isSubmitAnswer = true;
                 DataManager.Instance._input[_currentID].isSolved = true;
                 if (PlayerController.Instance._currentNPC != null)
@@ -66,7 +66,7 @@ public class InputFieldManager : Singleton<InputFieldManager>
             }
             else
             {
-                DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].inputWrong);
+                //DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].inputWrong);
                 //isSubmitAnswer = false;
                 isAnswer = false;//isSubmitAnswer = false;
                 // DataManager.Instance._input[_currentID].isSolved = false;
