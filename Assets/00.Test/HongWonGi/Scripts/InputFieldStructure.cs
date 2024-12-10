@@ -4,11 +4,11 @@ using UnityEngine;
 [System.Serializable]
 public class InputFieldStructure
 {
-   public string input_id;
-   public string question_text;
-   public string correct_answer;
-   public string input_wrong;
-   public string input_correct;
+   public string inputId;
+   public string questionText;
+   public string correctAnswer;
+   public string inputWrong;
+   public string inputCorrect;
 
    public bool isSolved = false;
 }

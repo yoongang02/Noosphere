@@ -48,22 +48,22 @@ public class EffectManager : Singleton<EffectManager>
         // isEffectEnd = false;
         if (DataManager.Instance._effect.TryGetValue(_currentEffectID, out EffectStructure effect))
         {
-            if (!string.IsNullOrEmpty(effect.artresource_id))
+            if (!string.IsNullOrEmpty(effect.artresourceId))
             {
                 isEffectEnd = true;
-                DoEffect(effect.artresource_id);
+                DoEffect(effect.artresourceId);
             }
 
-            if (!string.IsNullOrEmpty(effect.soundresource_id))
+            if (!string.IsNullOrEmpty(effect.soundresourceId))
             {
-                SoundResourceStructure sound = DataManager.Instance._sound[effect.soundresource_id];
-                if (sound.soundresource_Type == "Sound")
+                SoundResourceStructure sound = DataManager.Instance._sound[effect.soundresourceId];
+                if (sound.soundresourceId == "Sound")
                 {
-                    SoundManager.Instance.PlaySound(effect.soundresource_id, sound.loop_count);
+                    SoundManager.Instance.PlaySound(effect.soundresourceId, sound.loopCount);
                 }
                 else
                 {
-                    SoundManager.Instance.PlayBGM(effect.soundresource_id);
+                    SoundManager.Instance.PlayBGM(effect.soundresourceId);
                 }
             }
         }

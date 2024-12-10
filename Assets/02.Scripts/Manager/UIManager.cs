@@ -256,7 +256,7 @@ public class UIManager : Singleton<UIManager>
         }
         else
         {
-            backgroundImg.sprite = artResource.GetSpriteFromFilePath(artResource.map_background_img);
+            backgroundImg.sprite = artResource.GetSpriteFromFilePath(artResource.mapBackgroundImg);
         }
         
         //evidence 성질에 따라 프리팹인지 UI인지 결정

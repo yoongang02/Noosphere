@@ -2,16 +2,15 @@ using UnityEngine;
 
 public class ArtResourceStructure
 {
-    public string artresource_id;
-    public string artresource_Name;
-    public string artresource_Type;
+    public string artresourceId;
+    public string artresourceName;
+    public string artresourceType;
     public string filePath;
     public string inventoryFilePath;
-    public string evidence_detail_prefab;
-    public string map_background_img;
-    public string text_detail_start_img;
-    public int text_detail_img_cnt;
-    public string prefab_grab_for_use;
+    public string evidenceDetailPrefab;
+    public string mapBackgroundImg;
+    public string textDetailStartImg;
+    public int textDetailImgCnt;
 
     public Sprite GetSpriteFromFilePath(string path)
     {
@@ -28,29 +27,14 @@ public class ArtResourceStructure
 
     public GameObject GetPrefabFromFilePath()
     {
-        GameObject resultGameObject = Resources.Load<GameObject>(evidence_detail_prefab);
+        GameObject resultGameObject = Resources.Load<GameObject>(evidenceDetailPrefab);
 
         if (resultGameObject == null)
         {
-            Debug.Log(evidence_detail_prefab + "에 프리팹이 존재하지 않습니다.");
+            Debug.Log(evidenceDetailPrefab + "에 프리팹이 존재하지 않습니다.");
             return null;
         }
 
         return resultGameObject;
     }
-
-    public GameObject GetPrefabForGrab()
-    {
-        GameObject resultGameObject = Resources.Load<GameObject>(prefab_grab_for_use);
-
-        if (resultGameObject == null)
-        {
-            Debug.Log(evidence_detail_prefab + "에 프리팹이 존재하지 않습니다.");
-            return null;
-        }
-
-        return resultGameObject;
-    }
-    
-    
 }
