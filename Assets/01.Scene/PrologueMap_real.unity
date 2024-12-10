@@ -238,12 +238,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 37645764}
-  - component: {fileID: 37645763}
   - component: {fileID: 37645762}
   - component: {fileID: 37645761}
   - component: {fileID: 37645760}
   - component: {fileID: 37645759}
   - component: {fileID: 37645765}
+  - component: {fileID: 37645766}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -315,24 +315,6 @@ MonoBehaviour:
   startEventID: Event_A001
   currentEventID: 
   nextEventID: 
-  isGetDiary: 0
-  diaryAccessCnt: 0
---- !u!114 &37645763
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 37645758}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb10ea7e141b5b14d8818d1b61d0f653, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dontDestroy: 1
-  _toggleIcon: {fileID: 1670821716}
-  isTyping: 0
-  isDialogeEnd: 0
 --- !u!4 &37645764
 Transform:
   m_ObjectHideFlags: 0
@@ -362,6 +344,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroy: 1
+--- !u!114 &37645766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 37645758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0695cc7a9fabdb946b441f60031f897d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dontDestroy: 1
+  _toggleIcon: {fileID: 1670821716}
+  isTyping: 0
+  isDialogeEnd: 0
 --- !u!1001 &51715751
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6293,54 +6291,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1039705411}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1048793184
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1048793186}
-  - component: {fileID: 1048793185}
-  m_Layer: 0
-  m_Name: NewDialogueManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1048793185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1048793184}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0695cc7a9fabdb946b441f60031f897d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dontDestroy: 1
-  _toggleIcon: {fileID: 1670821716}
-  isTyping: 0
-  isDialogeEnd: 0
---- !u!4 &1048793186
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1048793184}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.035, y: 1.109, z: 2.601}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1058907459
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12843,4 +12793,3 @@ SceneRoots:
   - {fileID: 1039705411}
   - {fileID: 37645764}
   - {fileID: 843536472}
-  - {fileID: 1048793186}

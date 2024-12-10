@@ -11,7 +11,7 @@ public class DialogueCSVParser
      public async UniTask<Dictionary<string, DialogueStructure>> Parse(string sheetName)
         {
             Dictionary<string, DialogueStructure> dictionary = new Dictionary<string, DialogueStructure>();
-            string csvUrl = $"https://docs.google.com/spreadsheets/d/1_FGkVesLGBKbpmC8z1mUbG4eAKJRUxRIqBI6XJeGda8/gviz/tq?tqx=out:csv&sheet={sheetName}";
+            string csvUrl = $"https://docs.google.com/spreadsheets/d/1rxLYxA5PoZcaMP9xGD0NrBs78GOLY9sKJv7_Ft9oPww/gviz/tq?tqx=out:csv&sheet={sheetName}";
             
             string csvData = await LoadCSVFromURL(csvUrl);
             if (string.IsNullOrWhiteSpace(csvData)) return dictionary;

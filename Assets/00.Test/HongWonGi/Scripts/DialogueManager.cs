@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 using TMPro;
 
 
-public class NewDialogueManager : Singleton<NewDialogueManager>
+public class DialogueManager : Singleton<DialogueManager>
 {
     [SerializeField] private GameObject _toggleIcon;
     private string _currentDialogueId = "";

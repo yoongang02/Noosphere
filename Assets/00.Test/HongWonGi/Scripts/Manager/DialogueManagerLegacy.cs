@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 using TMPro;
 using Unity.VisualScripting;
 
-public class DialogueManager : Singleton<DialogueManager>
+public class DialogueManagerLegacy : Singleton<DialogueManagerLegacy>
 {
     /*
     [SerializeField] private GameObject _toggleIcon;
