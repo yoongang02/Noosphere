@@ -8,6 +8,7 @@ using Unity.VisualScripting;
 
 public class DialogueManager : Singleton<DialogueManager>
 {
+    /*
     [SerializeField] private GameObject _toggleIcon;
     private string _currentDialogueId = "";
     private int _currentLineIndex = 0;
@@ -257,4 +258,5 @@ public class DialogueManager : Singleton<DialogueManager>
             //UIManager.Instance.PopUp(true, "E를 눌러 대화시작");
         }
     }
+    */
 }

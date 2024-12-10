@@ -51,7 +51,7 @@ public class EvidenceDetailOnePageNavigator : MonoBehaviour
                         evidenceStructure.subEvidenceAcquisitionType == "page")
                     {
                         //page가 제한조건 이상이 되었다면
-                        int limitPage = evidenceStructure.acquisitionPageNum;
+                        int limitPage = int.Parse(evidenceStructure.acquisitionPageNum);
                         if (limitPage >= curPage * 2 && limitPage <= curPage * 2 + 1)
                         {
                             if (DataManager.Instance._evidences.ContainsKey(evidenceStructure.subEvidenceId))
