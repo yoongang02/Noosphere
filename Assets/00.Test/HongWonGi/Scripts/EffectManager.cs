@@ -13,7 +13,7 @@ using DG.Tweening;
 public class EffectManager : Singleton<EffectManager>
 {
     private string _currentEffectID;
-    public bool isEffectEnd = false;
+    public Action OnEffectEnd;
     [SerializeField] private RawImage _vhsImage;
     [SerializeField] private Volume _vhsVolume;
     public GameObject vhsObj;
@@ -50,7 +50,7 @@ public class EffectManager : Singleton<EffectManager>
         {
             if (!string.IsNullOrEmpty(effect.artresourceId))
             {
-                isEffectEnd = true;
+                OnEffectEnd?.Invoke();
                 DoEffect(effect.artresourceId);
             }
 

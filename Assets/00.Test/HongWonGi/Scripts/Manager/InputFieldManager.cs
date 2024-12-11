@@ -8,11 +8,11 @@ using TMPro;
 public class InputFieldManager : Singleton<InputFieldManager>
 {
     public bool isAnswer = false;
-    public bool isSubmitAnswer = false;
     [SerializeField] public TextMeshProUGUI _questionText;
     [SerializeField] private TMP_InputField _inputText;
     private string _currentAnswer;
     private string _currentID;
+    public Action OnInputEnd;
 
     private void Start()
     {
@@ -30,7 +30,6 @@ public class InputFieldManager : Singleton<InputFieldManager>
         PlayerController.Instance.isDialogueOn = true;
         _currentID = id;
         isAnswer = false;
-        isSubmitAnswer = false;
         
         if (!DataManager.Instance._input.TryGetValue(id, out InputFieldStructure structure))
         {
@@ -49,15 +48,14 @@ public class InputFieldManager : Singleton<InputFieldManager>
     {
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-           
-            isSubmitAnswer = true;
             string formattedValue = value.Replace(" ", "");
             string formattedAnswer = _currentAnswer.Replace(" ", "");
 
             if (formattedValue == formattedAnswer)
             {
-                //DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].inputCorrect);
-                isAnswer = true;//isSubmitAnswer = true;
+                DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].inputCorrect);
+                isAnswer = true;
+                Debug.Log("#input 정답 맞춤");
                 DataManager.Instance._input[_currentID].isSolved = true;
                 if (PlayerController.Instance._currentNPC != null)
                 {
@@ -66,12 +64,12 @@ public class InputFieldManager : Singleton<InputFieldManager>
             }
             else
             {
-                //DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].inputWrong);
-                //isSubmitAnswer = false;
-                isAnswer = false;//isSubmitAnswer = false;
-                // DataManager.Instance._input[_currentID].isSolved = false;
+                DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].inputWrong);
+                Debug.Log("#input 정답 못 맞춤");
+                isAnswer = false;
+                DataManager.Instance._input[_currentID].isSolved = false;
             }
-
+            OnInputEnd?.Invoke();
             CloseInput();
         }
     }
@@ -91,14 +89,13 @@ public class InputFieldManager : Singleton<InputFieldManager>
 
     private void CloseInputField()
     {
-        // if (_questionText.transform.parent.gameObject.activeSelf)
-        // {
-        //     isAnswer = false;
-        //     isSubmitAnswer = false;
-        //     // PlayerController.Instance.isDialogueOn = false;
-        //     _questionText.transform.parent.gameObject.SetActive(false);
-        //     _inputText.text = ""; 
-        // }
+        if (_questionText.transform.parent.gameObject.activeSelf)
+        {
+            isAnswer = false;
+            PlayerController.Instance.isDialogueOn = false;
+            _questionText.transform.parent.gameObject.SetActive(false);
+            _inputText.text = ""; 
+        }
     }
 
     private void OnDestroy()

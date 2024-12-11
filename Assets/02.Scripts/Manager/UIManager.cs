@@ -31,7 +31,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private GameObject _investigateUINoBtn;
     [SerializeField] private GameObject _curSelectedBtn;
     private EvidenceStructure _curInvestigateEvidence;
-    public bool isSelecting = false;
+    public Action OnSelectEnd;
     public bool isEvidenceAcquired = false;
 
     [Space(5)] [Header("증거물 상세 내용 UI")] [SerializeField]
@@ -91,7 +91,7 @@ public class UIManager : Singleton<UIManager>
                     new BaseEventData(EventSystem.current), (x, y) => x.OnSelect(y)
                 );
                 Debug.Log("상세 내용 조사 YES BTN 클릭");
-                isSelecting = false;
+                OnSelectEnd?.Invoke();
             }
             
             //ESC - NO 선택
@@ -105,7 +105,7 @@ public class UIManager : Singleton<UIManager>
                     _curSelectedBtn, 
                     new BaseEventData(EventSystem.current), (x, y) => x.OnSelect(y)
                 );
-                isSelecting = false;
+                OnSelectEnd?.Invoke();
             }
         }
     }
@@ -163,7 +163,6 @@ public class UIManager : Singleton<UIManager>
         _isInvestigateUIOpened = true;
         isEvidenceAcquired = false;
         _investigateUI.SetActive(true);
-        isSelecting = true;
 
         PlayerController.Instance.isDialogueOn = true;
     }

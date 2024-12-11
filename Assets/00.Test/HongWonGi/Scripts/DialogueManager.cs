@@ -17,7 +17,7 @@ public class DialogueManager : Singleton<DialogueManager>
     private float _currentTextElapsedTime = 0f;
     private int _currentLetterIndex = 0;
     public bool isTyping = false;
-    public bool isDialogeEnd = false; // 완전히 대화 끝났을때 true반환
+    public Action OnDialogueEnd;
 
     private void Start()
     {
@@ -35,7 +35,6 @@ public class DialogueManager : Singleton<DialogueManager>
     public void SetDialogue(string id)
     {
         _currentDialogueId = id;
-        isDialogeEnd = false;
         if (DataManager.Instance._dialogue.TryGetValue(_currentDialogueId, out DialogueStructure dialogue))
         {
             if (dialogue.triggerType == "auto") //대화창 바로 뜨기
@@ -133,7 +132,7 @@ public class DialogueManager : Singleton<DialogueManager>
                 Debug.LogWarning("대화가 종료되었습니다.");
 
                 PlayerController.Instance.isDialogueOn = false;
-                isDialogeEnd = true;
+                OnDialogueEnd?.Invoke();
                 _currentDialogueId = "";
                 _currentLineIndex = 0;
                 UIManager.Instance.dialogueUI.gameObject.SetActive(false);
@@ -186,7 +185,7 @@ public class DialogueManager : Singleton<DialogueManager>
             PlayerController.Instance.isDialogueOn)
         {
             PlayerController.Instance.isDialogueOn = false;
-            isDialogeEnd = true;
+            OnDialogueEnd?.Invoke();
             _currentDialogueId = "";
             _currentLineIndex = 0;
             UIManager.Instance.dialogueUI.gameObject.SetActive(false);

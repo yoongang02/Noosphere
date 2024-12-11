@@ -38,7 +38,6 @@ public class PlayerInteract : Singleton<PlayerInteract>
             //E키를 이용한 상호작용
             if (canInteract && curInteractableTrigger != null && Input.GetKeyDown(KeyCode.E))
             { 
-                Debug.Log("이벤트 실행되나???");
                 //이벤트 실행
                 _evidenceGameObject = null;
                 EventTrigger trigger = curInteractableTrigger.GetComponent<EventTrigger>();
@@ -240,7 +239,6 @@ public class PlayerInteract : Singleton<PlayerInteract>
             
             if ( String.IsNullOrEmpty(EventManagerYKM.Instance.nextEventID) || EventManagerYKM.Instance.nextEventID == id)
             {
-                Debug.Log("nextEventID 관련해서는 만족함.");
                 /*
                 if (_event.CheckCondition())
                 {
