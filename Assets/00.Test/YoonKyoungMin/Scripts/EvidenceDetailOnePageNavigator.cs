@@ -30,6 +30,7 @@ public class EvidenceDetailOnePageNavigator : MonoBehaviour
     void Update()
     {
         //증거물 상세내용 UI가 열려있고, 텍스트 상세내용이라면 페이지 버튼 활성화
+        /*
         if (UIManager.Instance._isDetailOpen)
         {
             if (Input.GetKeyDown(KeyCode.LeftArrow) && curPage != 0)
@@ -74,6 +75,7 @@ public class EvidenceDetailOnePageNavigator : MonoBehaviour
                 UIManager.Instance.CloseDetailEvidence();
             }
         }
+         */
     }
 
     void UpdateUI()

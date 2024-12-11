@@ -61,6 +61,7 @@ public class InventoryManager : Singleton<InventoryManager>
             ControlWindow();
         }
         
+        /*
         //인벤토리 닫기
         if (isInventoryOpen && Input.GetKeyDown(KeyCode.Escape) && !UIManager.Instance._isDetailOpen)
         {
@@ -68,6 +69,7 @@ public class InventoryManager : Singleton<InventoryManager>
             isInventoryOpen = !isInventoryOpen;
             ControlWindow();
         }
+        */
     }
 
     void InitInventory()

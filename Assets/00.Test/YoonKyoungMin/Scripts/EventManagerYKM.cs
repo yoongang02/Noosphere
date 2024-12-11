@@ -125,7 +125,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             
             // 증거물 조사 UI 띄우기
             EvidenceStructure evidence = DataManager.Instance._evidences[eventStructure.evidenceId];
-            UIManager.Instance.OpenInvestigateUI(evidence);
+            UIManager.Instance.OpenUI(UIManager.Instance.investigateUI);
 
             // UI에서 입력을 기다림
             bool isSelectEnd = false;

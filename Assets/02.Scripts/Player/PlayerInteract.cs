@@ -27,8 +27,6 @@ public class PlayerInteract : Singleton<PlayerInteract>
     [Header("정신세계 진입 관련 UI 변수")]
     [SerializeField] private GameObject _progressBarUI;
     [SerializeField] private EnterProgressBar _progressBarFill;
-    
-    public bool isEnd = false;
 
     public bool isInteractObj;
     void Update()
@@ -82,6 +80,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
                 }
             }
 
+            /*
             if (!InventoryManager.Instance.GetComponent<InventoryNavigator>().canEvidenceUse && !InventoryManager.Instance.isInventoryOpen && !UIManager.Instance._isDetailOpen && !UIManager.Instance._isInvestigateUIOpened &&_canEnter && isPlayerInMetanlWorld && Input.GetKeyDown(KeyCode.Space))
             {
                 if (InventoryManager.Instance.IsAcquiredEvidence("evidence_001"))
@@ -91,6 +90,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
                     if(EventManagerYKM.Instance.currentEventID == "Event_A008") StartCoroutine(EventManagerYKM.Instance.ExecuteEvent("Event_A009"));
                 }
             }
+            */
             
             //진입시작했고, 완료되지 않았고, 스페이스를 계속 누르고 있다면
             if (_startEnter && !_isComplete && Input.GetKey(KeyCode.Space))
