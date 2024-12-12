@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class LockConditionStructure
 {
-    public string lock_condition_id;
+    public string lockConditionId;
 
     public void Lock()
     {
-        switch (lock_condition_id)
+        switch (lockConditionId)
         {
             case "lock_condition_001":
                 LockPlayerMove();

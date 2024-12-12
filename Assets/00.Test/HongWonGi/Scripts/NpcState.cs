@@ -17,7 +17,6 @@ public class NpcState : MonoBehaviour
 
     private void Start()
     {
-        _animator = GetComponent<Animator>();
         _player = GameObject.FindGameObjectWithTag("Player").transform;
         _originalRotation = transform.rotation;
         SetState(NPCState.Idle);

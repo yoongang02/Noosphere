@@ -56,10 +56,10 @@ public class StartSceneController : MonoBehaviour
     
     void SetBtnSelected(GameObject btn)
     {
-        btn.GetComponent<TextMeshProUGUI>().color = UnityExtension.HexColor(UIManager.GreenColor);
+        //btn.GetComponent<TextMeshProUGUI>().color = UnityExtension.HexColor(UIManager.GreenColor);
         foreach (var _btn in _startUIBtns)
         {
-            if (_btn != btn) _btn.GetComponent<TextMeshProUGUI>().color = UnityExtension.HexColor(UIManager.BlackColor);
+            //if (_btn != btn) _btn.GetComponent<TextMeshProUGUI>().color = UnityExtension.HexColor(UIManager.BlackColor);
         }
     }
 

@@ -24,6 +24,7 @@ public class InventoryNavigator : MonoBehaviour
 
     void Update()
     {
+        /*
         if (InventoryManager.Instance.isInventoryOpen && !UIManager.Instance._isDetailOpen)
         {
             if (_curSelectedSlot != null)
@@ -56,6 +57,7 @@ public class InventoryNavigator : MonoBehaviour
                 if (canEvidenceUse && Input.GetKeyDown(KeyCode.Space))
                 {
                     Debug.Log("아이템 사용하기");
+                    /*
                     if (!EventManagerYKM.Instance.isGetDiary)
                     {
                         DialogueTextON.Instance.ShowSimpleText("(철컥) 열렸다!");
@@ -67,12 +69,12 @@ public class InventoryNavigator : MonoBehaviour
                         InventoryManager.Instance.isInventoryOpen = !InventoryManager.Instance.isInventoryOpen;
                         InventoryManager.Instance.ControlWindow();
                     }
+                
                 }
             }
-            
             //좌우 화살표 클릭 시, 페이지 넘김
             
-            /*
+
             //숫자 키 클릭 시, 챕터 넘김
             for (int i = 0; i <= 9; i++)
             {
@@ -88,13 +90,16 @@ public class InventoryNavigator : MonoBehaviour
                     }
                 }
             }
-            */
+        
         }
+        */
 
+        /*
         if (UIManager.Instance._isDetailOpen && Input.GetKeyDown(KeyCode.Escape))
         {
             UIManager.Instance.CloseDetailEvidence();
         }
+        */
     }
 
     public void InitNavigator(Transform realWorld, Transform mentalWorld)
@@ -307,9 +312,9 @@ public class InventoryNavigator : MonoBehaviour
     void SetSlotUseBtn(GameObject slot)
     {
         string evidenceId = slot.GetComponent<InventorySlotInfo>().evidence_id;
-        string canUse = DataManager.Instance._evidences[evidenceId].can_Use;
+        char canUse = DataManager.Instance._evidences[evidenceId].canUse;
         
-        if (canUse == "Y")
+        if (canUse == 'Y')
         {
             //플레이어가 현재 상황에서 사용할 수 있는 증거물 아이디를 가져오기
             PlayerInteract playerInteract = PlayerController.Instance.GetComponent<PlayerInteract>();
@@ -318,6 +323,7 @@ public class InventoryNavigator : MonoBehaviour
             
             foreach (var key in playerInteract.GetPlayeCanUseEvidenceID().Keys)
             {
+                /*
                 //두 증거물 아이디 값 비교하기, 같으면 사용할 수 있음.
                 if (slotId == playerInteract.GetPlayeCanUseEvidenceID()[key])
                 {
@@ -325,6 +331,7 @@ public class InventoryNavigator : MonoBehaviour
                     canEvidenceUse = true;
                     return;
                 }
+                */
             }
         }
         _slotUseBtn.color = UnityExtension.HexColor("#B3B3B3");

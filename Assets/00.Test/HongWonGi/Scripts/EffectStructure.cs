@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class EffectStructure
 {
-  public string effect_id;
-  public string effect_name;
+  public string effectId;
+  public string effectName;
   public string description;
-  public string artresource_id;
-  public string soundresource_id;
+  public string artresourceId;
+  public string soundresourceId;
 }

@@ -10,16 +10,16 @@ public class InventorySlot
 {
     public string evidence_id;
     public string evidence_name;
-    public string can_Use;
+    public char canUse;
     //public string evidence_Text_Display;
     public string artresource_id;
 
     public InventorySlot(EvidenceStructure evidence)
     {
-        evidence_id = evidence.evidence_id;
-        evidence_name = evidence.evidence_name;
-        can_Use = evidence.can_Use;
-        artresource_id = evidence.artresource_id;
+        evidence_id = evidence.evidenceId;
+        evidence_name = evidence.evidenceName;
+        canUse = evidence.canUse;
+        artresource_id = evidence.artresourceId;
     }
 }
 public class ChapterInventory
@@ -61,6 +61,7 @@ public class InventoryManager : Singleton<InventoryManager>
             ControlWindow();
         }
         
+        /*
         //인벤토리 닫기
         if (isInventoryOpen && Input.GetKeyDown(KeyCode.Escape) && !UIManager.Instance._isDetailOpen)
         {
@@ -68,6 +69,7 @@ public class InventoryManager : Singleton<InventoryManager>
             isInventoryOpen = !isInventoryOpen;
             ControlWindow();
         }
+        */
     }
 
     void InitInventory()
@@ -99,13 +101,13 @@ public class InventoryManager : Singleton<InventoryManager>
         InventorySlot newSlot = new InventorySlot(evidence);
         
         //현실 증거인지 정신세계 증거인지 csv에서 구분 필요
-        if (evidence.evidence_Type == 'M')
+        if (evidence.evidenceType == 'M')
         {
             //정신세계 증거
             _chapterInventory.mentalWorldEvidences.Add(newSlot);
             
         }
-        else if (evidence.evidence_Type == 'R')
+        else if (evidence.evidenceType == 'R')
         {
             //현실세계 증거
             _chapterInventory.realWorldEvidences.Add(newSlot);
@@ -175,7 +177,7 @@ public class InventoryManager : Singleton<InventoryManager>
                 if (DataManager.Instance._artResources.ContainsKey(evidence.artresource_id))
                 {
                     ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresource_id];
-                    img.sprite = artResource.GetSpriteFromFilePath(artResource.inventoryFilePath);
+                    img.sprite = artResource.GetSpriteFromFilePath(artResource.filePathInventoryThumbnail);
                 }
                 else
                 {

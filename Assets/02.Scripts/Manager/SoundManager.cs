@@ -70,7 +70,7 @@ public class SoundManager : Singleton<SoundManager>
             yield return new WaitForSeconds(clip.length);
         }
 
-        EffectManager.Instance.isEffectEnd = true;
+        EffectManager.Instance.OnEffectEnd?.Invoke();
     }
 
     public void ClearLoadedAudioClip() => _loadedClip.Clear();

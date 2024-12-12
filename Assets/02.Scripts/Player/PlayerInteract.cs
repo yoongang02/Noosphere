@@ -27,10 +27,8 @@ public class PlayerInteract : Singleton<PlayerInteract>
     [Header("정신세계 진입 관련 UI 변수")]
     [SerializeField] private GameObject _progressBarUI;
     [SerializeField] private EnterProgressBar _progressBarFill;
-    
-    public bool isEnd = false;
-    
-    
+
+    public bool isInteractObj;
     void Update()
     {
         if (!InventoryManager.Instance.isInventoryOpen)
@@ -38,7 +36,6 @@ public class PlayerInteract : Singleton<PlayerInteract>
             //E키를 이용한 상호작용
             if (canInteract && curInteractableTrigger != null && Input.GetKeyDown(KeyCode.E))
             { 
-                Debug.Log("이벤트 실행되나???");
                 //이벤트 실행
                 _evidenceGameObject = null;
                 EventTrigger trigger = curInteractableTrigger.GetComponent<EventTrigger>();
@@ -83,6 +80,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
                 }
             }
 
+            /*
             if (!InventoryManager.Instance.GetComponent<InventoryNavigator>().canEvidenceUse && !InventoryManager.Instance.isInventoryOpen && !UIManager.Instance._isDetailOpen && !UIManager.Instance._isInvestigateUIOpened &&_canEnter && isPlayerInMetanlWorld && Input.GetKeyDown(KeyCode.Space))
             {
                 if (InventoryManager.Instance.IsAcquiredEvidence("evidence_001"))
@@ -92,6 +90,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
                     if(EventManagerYKM.Instance.currentEventID == "Event_A008") StartCoroutine(EventManagerYKM.Instance.ExecuteEvent("Event_A009"));
                 }
             }
+            */
             
             //진입시작했고, 완료되지 않았고, 스페이스를 계속 누르고 있다면
             if (_startEnter && !_isComplete && Input.GetKey(KeyCode.Space))
@@ -177,7 +176,11 @@ public class PlayerInteract : Singleton<PlayerInteract>
             curInteractableTrigger = other.gameObject;
             foreach (string eventID in other.GetComponent<EventTrigger>().eventIdList)
             {
-                if(CheckInteractionAvail(eventID)) ShowInteractionMark();
+                if (CheckInteractionAvail(eventID))
+                {
+                    ShowInteractionMark();
+                    isInteractObj = true;
+                }
             }
         } //정신세계 진입 트리거에 들어가면
         else if (other.CompareTag("EventMentalEnterTrigger"))
@@ -197,6 +200,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
         {
             curInteractableTrigger = null; 
             _interactionMark.SetActive(false);
+            isInteractObj = false;
         }
         
         //정신세계 진입 트리거에 나가면
@@ -232,18 +236,18 @@ public class PlayerInteract : Singleton<PlayerInteract>
         if (DataManager.Instance._events.ContainsKey(id))
         {
             EventStructure _event = DataManager.Instance._events[id];
-            Debug.Log("nextEventID : " + EventManagerYKM.Instance.nextEventID + ", thisID : " + id +" , eventCondition? : " + _event.CheckCondition());
+            
             if ( String.IsNullOrEmpty(EventManagerYKM.Instance.nextEventID) || EventManagerYKM.Instance.nextEventID == id)
             {
-                Debug.Log("nextEventID 관련해서는 만족함.");
+                /*
                 if (_event.CheckCondition())
                 {
                     Debug.Log("checkInteractionAvail이 true로 리턴됨.");
                     return true;
                 }
+                */
             }
         }
-        Debug.Log("checkInteractionAvail이 false로 리턴됨.");
         return false;
     }
 
@@ -260,11 +264,13 @@ public class PlayerInteract : Singleton<PlayerInteract>
                 data.Add("eventID",eventID);
                 EventStructure eventStructure = DataManager.Instance._events[eventID];
             
+                /*
                 //해당 이벤트가 분기점이 있는지 체크
                 if (eventStructure.branch_Type)
                 {
                     data[eventID] = eventStructure.branch_Element;
                 }
+                */
             }
             return data;
         }

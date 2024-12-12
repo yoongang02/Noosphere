@@ -30,6 +30,7 @@ public class EvidenceDetailOnePageNavigator : MonoBehaviour
     void Update()
     {
         //증거물 상세내용 UI가 열려있고, 텍스트 상세내용이라면 페이지 버튼 활성화
+        /*
         if (UIManager.Instance._isDetailOpen)
         {
             if (Input.GetKeyDown(KeyCode.LeftArrow) && curPage != 0)
@@ -47,18 +48,18 @@ public class EvidenceDetailOnePageNavigator : MonoBehaviour
                 //현재 상세 내용을 보고 있는 증거물에 서브 증거물이 존재한다면, 그리고 그 서브 증거물의 타입이 page라면
                 if (evidenceStructure != null)
                 {
-                    if (!String.IsNullOrEmpty(evidenceStructure.sub_evidence_id) &&
-                        evidenceStructure.sub_Evidence_Acquisition_Type == "page")
+                    if (!String.IsNullOrEmpty(evidenceStructure.subEvidenceId) &&
+                        evidenceStructure.subEvidenceAcquisitionType == "page")
                     {
                         //page가 제한조건 이상이 되었다면
-                        int limitPage = evidenceStructure.acquisition_Page_Num;
+                        int limitPage = int.Parse(evidenceStructure.acquisitionPageNum);
                         if (limitPage >= curPage * 2 && limitPage <= curPage * 2 + 1)
                         {
-                            if (DataManager.Instance._evidences.ContainsKey(evidenceStructure.sub_evidence_id))
+                            if (DataManager.Instance._evidences.ContainsKey(evidenceStructure.subEvidenceId))
                             {
-                                Debug.Log(evidenceStructure.sub_evidence_id + " 숨겨져 있던 증거물 발견!!");
+                                Debug.Log(evidenceStructure.subEvidenceId + " 숨겨져 있던 증거물 발견!!");
                                 //해당 증거물 접근 횟수 증가
-                                DataManager.Instance._evidences[evidenceStructure.sub_evidence_id].accessCnt++;
+                                DataManager.Instance._evidences[evidenceStructure.subEvidenceId].accessCnt++;
                                 //강제 종료 코루틴 호출
                                 CoroutineManager.Instance.StartManagedCoroutine(UIManager.Instance.ForceQuitInteraction(evidenceStructure));
                             }
@@ -74,6 +75,7 @@ public class EvidenceDetailOnePageNavigator : MonoBehaviour
                 UIManager.Instance.CloseDetailEvidence();
             }
         }
+         */
     }
 
     void UpdateUI()

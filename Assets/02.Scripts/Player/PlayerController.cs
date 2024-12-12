@@ -35,8 +35,9 @@ public class PlayerController : Singleton<PlayerController>
     [Header("Ray Settings")]
     [SerializeField] private float _rayDistance;
     [SerializeField] private float _rayHeight;
-    
-    
+
+    private GameObject npcCam;
+    public NpcState npcState;
     private void OnDrawGizmos()
     {
         Vector3 rayStart = transform.position + Vector3.up * _rayHeight; // Ray 시작점을 위로 올림
@@ -65,69 +66,23 @@ public class PlayerController : Singleton<PlayerController>
         isDialogueOn = state;
         _animator.SetBool("Interact", state);
     }
-
-    // private void OnEKey()
-    // {
-    //     if (_currentNPC == null) return;
-    //     if (!isDialogueOn && isPlayerNearNPC&&isNpcRayOn)
-    //     {
-    //         StartDialogue();
-    //     }
-    //     else if (isDialogueOn)
-    //     {
-    //         // interact 타입일 때만 처리
-    //         NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
-    //         if (npcDialogue != null &&
-    //             DataManager.Instance._dialogue[npcDialogue.dialogueId].trigger_type == "interact")
-    //         {
-    //             if (DialogueManager.Instance.isTyping)
-    //             {
-    //                 DialogueManager.Instance.isTyping = false;
-    //             }
-    //             else
-    //             {
-    //                 DialogueManager.Instance.ShowNextLine().Forget();
-    //             }
-    //         }
-    //     }
-    //
-    //     /*
-    //     if (isDialogueOn && !UIManager.Instance.isPopUpOpen)
-    //     {
-    //         ContinueDialogue();
-    //     }
-    //     else if (!isDialogueOn && isPlayerNearNPC)
-    //     {
-    //         StartDialogue();
-    //     }
-    //     */
-    // }
-
-    // private void StartDialogue()
-    // {
-    //     // NpcCameraOn();
-    //     NpcDialogue npcDialogue = _currentNPC.GetComponent<NpcDialogue>();
-    //     if (npcDialogue != null && !string.IsNullOrEmpty(npcDialogue.dialogueId))
-    //     {
-    //         UIManager.Instance.dialogueUI.gameObject.SetActive(true);
-    //         DialogueManager.Instance.StartDialogue(npcDialogue.dialogueId);
-    //     }
-    // }
-
     public void NpcCameraOn()
     {
-        _currentNPC.GetComponent<NpcState>().SetState(NPCState.IsTalking);
+        // _currentNPC.GetComponent<NpcState>().SetState(NPCState.IsTalking);
+        npcState.SetState(NPCState.IsTalking);
         _dialogueCamera.transform.gameObject.SetActive(true);
-        _dialogueCamera.Follow = _currentNPC.transform.GetChild(0).transform;
-        
+        _dialogueCamera.Follow = npcCam.transform;
+
     }
 
     public void ResetCamera()
     {
-        if(PlayerController.Instance._currentNPC==null) return;
-        _currentNPC.GetComponent<NpcState>().SetState(NPCState.Idle);
+        if(npcState==null) return;
+        npcState.SetState(NPCState.Idle);
+        // _currentNPC.GetComponent<NpcState>().SetState(NPCState.Idle);
         // _dialogueCamera.Follow = null;
         _dialogueCamera.transform.gameObject.SetActive(false);
+        // _dialogueCamera.Follow = null;
     } 
     private void HandleInput()
     {
@@ -202,16 +157,6 @@ public class PlayerController : Singleton<PlayerController>
 
     private void Move(Vector3 direction)
     {
-        // if (direction != Vector3.zero)
-        // {
-        //     // 부드러운 회전 구현
-        //     transform.rotation = Quaternion.Lerp(transform.rotation, 
-        //                                       Quaternion.LookRotation(direction), 
-        //                                       Time.deltaTime * 10f);
-        //     
-        //     // 로컬 좌표계 기준으로 전방 이동
-        //     transform.Translate(Vector3.forward * Time.deltaTime * _moveSpeed, Space.Self);
-        // }
         if (direction != Vector3.zero)
         {
             transform.rotation = Quaternion.LookRotation(direction);
@@ -233,22 +178,36 @@ public class PlayerController : Singleton<PlayerController>
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("NPC"))
+        // if (other.CompareTag("NPC"))
+        // {
+        //     isPlayerNearNPC = true;
+        //     _currentNPC = other.gameObject;
+        //     _swapNpc = other.gameObject;
+        //     // UIManager.Instance.PopUp(true, "E를e 눌러 대화시작");
+        // }
+        if (other.CompareTag("EventInteractionTrigger"))
         {
-            isPlayerNearNPC = true;
-            _currentNPC = other.gameObject;
-            _swapNpc = other.gameObject;
-            // UIManager.Instance.PopUp(true, "E를e 눌러 대화시작");
+            EventTrigger eventTrigger = other.GetComponent<EventTrigger>();
+            if (eventTrigger.isNpc)
+            {
+                npcCam = eventTrigger.npcCameraPoint;
+                npcState = other.GetComponent<NpcState>();
+            }
         }
     }
     private void OnTriggerExit(Collider other)
     {
     
-        if (other.CompareTag("NPC"))
+        // if (other.CompareTag("NPC"))
+        // {
+        //     isPlayerNearNPC = false;
+        //     _currentNPC = null;
+        //     // UIManager.Instance.PopUp(false);
+        // }
+        if (other.CompareTag("EventInteractionTrigger"))
         {
-            isPlayerNearNPC = false;
-            _currentNPC = null;
-            // UIManager.Instance.PopUp(false);
+            npcCam = null;
+            npcState = null;
         }
     }
     public void ResetAndSetupTrigger()
