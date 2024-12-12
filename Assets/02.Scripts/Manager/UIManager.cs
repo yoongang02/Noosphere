@@ -13,6 +13,7 @@ public class UIManager : Singleton<UIManager>
 
     public UIBase investigateUI;
     public UIBase evidenceDetailUI;
+    
     /*
     public GameObject _showPressBtnUI;
     public GameObject _bookInfo;
@@ -23,11 +24,16 @@ public class UIManager : Singleton<UIManager>
     */
     
     public TextMeshProUGUI dialogueUI;
-    public TextMeshProUGUI popUI;
+    //public TextMeshProUGUI popUI;
     
     public bool isInMap = true;
     
     public Action OnSelectEnd;
+
+    void Start()
+    {
+        
+    }
     
     private void Update()
     {
@@ -43,6 +49,7 @@ public class UIManager : Singleton<UIManager>
         if (ui == null) return;
 
         // 스택에 추가하고 UI를 활성화
+        // 상호작용 금지
         uiStack.Push(ui);
         ui.OnOpen();
     }
@@ -52,6 +59,7 @@ public class UIManager : Singleton<UIManager>
         if (ui == null) return;
 
         // 스택에 추가하고 UI를 활성화
+        // 상호작용 금지
         uiStack.Push(ui);
         ui.OnOpen(evidence);
     }
@@ -62,6 +70,11 @@ public class UIManager : Singleton<UIManager>
 
         UIBase topUI = uiStack.Pop();
         topUI.OnClose();
+
+        if (!IsAnyUIOpen())
+        {
+            //상호작용 금지 해제
+        }
     }
     
     public void CloseAllUI()

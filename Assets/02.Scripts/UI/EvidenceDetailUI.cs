@@ -5,11 +5,24 @@ using UnityEngine.UI;
 
 public class EvidenceDetailUI : UIBase
 {
-    [Header("증거물 상세 내용 UI")]
-    [SerializeField] private Image _backgroundImage;
-    [SerializeField] private Sprite _evidenceDetailInventoryBackground;
-    [SerializeField] private List<Sprite> _evidenceTextDetailImgs;
-    [SerializeField] private GameObject _evidenceDetailPrefabParent;
+    [Header("증거물 상세 UI GameObject")] [SerializeField]
+    private GameObject _objectUI;
+    private GameObject _onePageUI;
+    private GameObject _twoPageUI;
+    
+    [Header("증거물 상세내용 공통 UI")]
+    [SerializeField] private Image _bgImg;
+    [SerializeField] private Sprite _inventoryBgImg;
+    
+    [Header("Object 증거물")]
+    [SerializeField] private GameObject _objectParent;
+
+    [Header("Page 증거물")] [SerializeField] private int _curPage;
+    [SerializeField] private int _totalPage;
+    [SerializeField] private List<Sprite> _pages;
+    private GameObject _prevPageBtn; //이전 페이지 버튼
+    private GameObject _nextPageBtn; //다음 페이지 버튼
+    
     public override void OnOpen()
     {
         base.OnOpen();
@@ -60,16 +73,26 @@ public class EvidenceDetailUI : UIBase
         {
             if (!UIManager.Instance.isInMap)
             {
-                _backgroundImage.sprite = _evidenceDetailInventoryBackground;
+                _bgImg.sprite = _inventoryBgImg;
             }
             else
             {
-                _backgroundImage.sprite = artResource.GetSpriteFromFilePath(artResource.mapBackgroundImg);
+                _bgImg.sprite = artResource.GetSpriteFromFilePath(artResource.filePathMapBackground);
             }
             
             //evidence 성질에 따라 프리팹인지 UI인지 결정
-            if (evidence.shapeType == "Object") SetPrefabDetail(artResource);
-            //SetActiveExtra(evidence.shapeType);
+            if (evidence.shapeType == "Object")
+            {
+                SetObjectDetail(artResource);
+            }
+            else if (evidence.shapeType == "OnePage")
+            {
+                InitPageVariables(artResource);
+            }
+            else if (evidence.shapeType == "TwoPage")
+            {
+                InitPageVariables(artResource);
+            }
         }
         else
         {
@@ -77,20 +100,71 @@ public class EvidenceDetailUI : UIBase
         }
     }
     
-    void SetPrefabDetail(ArtResourceStructure artResource)
+    // shapeType이 object인 증거물인 경우
+    void SetObjectDetail(ArtResourceStructure artResource)
     {
         //prefab parent 아래에 자식 오브젝트가 있다면 제거 후, 올바른 오브젝트 생성
-        if (_evidenceDetailPrefabParent.transform.childCount > 0)
+        if (_objectParent.transform.childCount > 0)
         {
-            foreach (Transform child in _evidenceDetailPrefabParent.transform)
+            foreach (Transform child in _objectParent.transform)
             {
                 Destroy(child.gameObject);
             }
         }
 
-        Instantiate(artResource.GetPrefabFromFilePath(), _evidenceDetailPrefabParent.transform);
+        Instantiate(artResource.GetPrefabFromFilePath(), _objectParent.transform);
     }
 
+    void InitPageVariables(ArtResourceStructure artResource)
+    {
+        //페이지 초기화
+        _curPage = 0;
+        //페이지 리스트 초기화
+        _pages.Clear();
+        //상세 이미지 불러와서 페이지 리스트에 저장
+        _totalPage = artResource.pageCnt;
+        //시작 위치에서 totalPage 수 만큼, 변수 증가해서 읽어들이기
+        string imgPath = artResource.filePathStartPage;
+        for (int page = 0; page < _totalPage; page++)
+        {
+            int lastUnderscoreIndex = imgPath.LastIndexOf('_'); 
+            string prefix = imgPath.Substring(0, lastUnderscoreIndex + 1);
+            string modifiedString = $"{prefix}{page:D2}";
+            
+            Sprite pageImg = artResource.GetSpriteFromFilePath(modifiedString);
+            _pages.Add(pageImg);
+        }
+    }
+    
+    // shapeType이 onePage인 증거물인 경우
+    void SetOnePageDetail(ArtResourceStructure artResource)
+    {
+        //버튼 참조하기
+        _prevPageBtn = _onePageUI.transform.Find("PageBtns").GetChild(0).gameObject;
+        _nextPageBtn = _onePageUI.transform.Find("PageBtns").GetChild(1).gameObject;
+        
+        //페이지가 1개인 경우 vs 1개 이상인 경우
+        //1개인 경우 : 좌우이동 버튼 비활성화
+        //1개 이상인 경우 : 좌우이동 버튼 활성화
+        if (_totalPage == 1)
+        {
+            _prevPageBtn.SetActive(false);
+            _nextPageBtn.SetActive(false);
+        }
+        else if (_totalPage > 1)
+        {
+            _prevPageBtn.SetActive(true);
+            _nextPageBtn.SetActive(true);
+        }
+        else
+        {
+            Debug.Log($"{artResource.artresourceId}의 pageCnt가 올바르지 않습니다.");
+        }
+        
+        //이미지 설정하기
+        
+    }
+    
     /*
     void SetTextDetail(ArtResourceStructure artResource)
     {

@@ -27,21 +27,18 @@ public class UIBase : MonoBehaviour
     
     public virtual void OnOpen()
     {
-        //상호작용 금지
         gameObject.SetActive(true);
         Debug.Log($"#{gameObject.name}이(가) 열렸습니다.");
     }
     
     public virtual void OnOpen(EvidenceStructure evidence)
     {
-        //상호작용 금지
         gameObject.SetActive(true);
         Debug.Log($"#{gameObject.name}이(가) 열렸습니다.");
     }
     
     public virtual void OnClose()
     {
-        //상호작용 금지 해제
         gameObject.SetActive(false);
         Debug.Log($"#{gameObject.name}이(가) 닫혔습니다.");
     }

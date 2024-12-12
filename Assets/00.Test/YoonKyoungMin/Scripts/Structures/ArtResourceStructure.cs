@@ -6,11 +6,11 @@ public class ArtResourceStructure
     public string artresourceName;
     public string artresourceType;
     public string filePath;
-    public string inventoryFilePath;
-    public string evidenceDetailPrefab;
-    public string mapBackgroundImg;
-    public string textDetailStartImg;
-    public int textDetailImgCnt;
+    public string filePathInventoryThumbnail;
+    public string filePathEvidencePrefab;
+    public string filePathMapBackground;
+    public string filePathStartPage;
+    public int pageCnt;
 
     public Sprite GetSpriteFromFilePath(string path)
     {
@@ -27,11 +27,11 @@ public class ArtResourceStructure
 
     public GameObject GetPrefabFromFilePath()
     {
-        GameObject resultGameObject = Resources.Load<GameObject>(evidenceDetailPrefab);
+        GameObject resultGameObject = Resources.Load<GameObject>(filePathEvidencePrefab);
 
         if (resultGameObject == null)
         {
-            Debug.Log(evidenceDetailPrefab + "에 프리팹이 존재하지 않습니다.");
+            Debug.Log(filePathEvidencePrefab + "에 프리팹이 존재하지 않습니다.");
             return null;
         }
 

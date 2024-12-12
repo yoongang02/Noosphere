@@ -177,7 +177,7 @@ public class InventoryManager : Singleton<InventoryManager>
                 if (DataManager.Instance._artResources.ContainsKey(evidence.artresource_id))
                 {
                     ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresource_id];
-                    img.sprite = artResource.GetSpriteFromFilePath(artResource.inventoryFilePath);
+                    img.sprite = artResource.GetSpriteFromFilePath(artResource.filePathInventoryThumbnail);
                 }
                 else
                 {

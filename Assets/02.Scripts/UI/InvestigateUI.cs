@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class InvestigateUI : UIBase
 {
@@ -74,6 +75,34 @@ public class InvestigateUI : UIBase
     public override void HandleMouseInput()
     {
         base.HandleMouseInput();
+        
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        foreach (var result in results)
+        {
+            if (result.gameObject == _yesBtn)
+            {
+                AddYesBtnEvent();
+                if (Input.GetMouseButtonDown(0)) 
+                {
+                    OnClickEvent?.Invoke();
+                }
+            }
+            else if (result.gameObject == _noBtn)
+            {
+                AddNoBtnEvent();
+                if (Input.GetMouseButtonDown(0)) 
+                {
+                    OnClickEvent?.Invoke();
+                }
+            }
+        }
     }
 
     void RemoveAllListeners()
@@ -121,7 +150,7 @@ public class InvestigateUI : UIBase
         {
             //아트 리소스 내 증거물 인벤토리 이미지 가져오기
             ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresourceId];
-            _evidenceImage.sprite = artResource.GetSpriteFromFilePath(artResource.inventoryFilePath);
+            _evidenceImage.sprite = artResource.GetSpriteFromFilePath(artResource.filePathInventoryThumbnail);
         }
         else
         {
