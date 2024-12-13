@@ -66,6 +66,15 @@ public class UIBase : MonoBehaviour
     }
     */
     
+    public void RemoveAllListeners()
+    {
+        OnHoverEvent.RemoveAllListeners();
+        OnClickEvent.RemoveAllListeners();
+        OnHoverExitEvent.RemoveAllListeners();
+        OnExitEvent.RemoveAllListeners();
+        OnForceQuitEvent.RemoveAllListeners();
+    }
+    
     public void SetButtonSelected(GameObject btn, Color color)
     {
         TextMeshProUGUI tmp = btn.GetComponent<TextMeshProUGUI>();

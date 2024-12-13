@@ -1,25 +1,23 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class InventorySlot
 {
-    public string evidence_id;
-    public string evidence_name;
+    public string evidenceId;
+    public string evidenceName;
     public char canUse;
-    //public string evidence_Text_Display;
-    public string artresource_id;
+    public string artresourceId;
 
     public InventorySlot(EvidenceStructure evidence)
     {
-        evidence_id = evidence.evidenceId;
-        evidence_name = evidence.evidenceName;
+        evidenceId = evidence.evidenceId;
+        evidenceName = evidence.evidenceName;
         canUse = evidence.canUse;
-        artresource_id = evidence.artresourceId;
+        artresourceId = evidence.artresourceId;
     }
 }
 public class ChapterInventory
@@ -27,25 +25,56 @@ public class ChapterInventory
     public List<InventorySlot> realWorldEvidences { get; set; } = new List<InventorySlot>();
     public List<InventorySlot> mentalWorldEvidences { get; set; } = new List<InventorySlot>();
 }
-public class InventoryManager : Singleton<InventoryManager>
+public class InventoryManager : UIBase
 {
+    //싱글톤
+    private static InventoryManager _instance;
+    
+    public static InventoryManager Instance 
+    { 
+        get 
+        { 
+            if (_instance == null) 
+            {
+                _instance = FindObjectOfType<InventoryManager>();
+                if (_instance == null) 
+                {
+                    GameObject singletonObject = new GameObject(nameof(InventoryManager));
+                    _instance = singletonObject.AddComponent<InventoryManager>();
+                }
+            }
+            return _instance;
+        } 
+    }
+    
     //key : 챕터 숫자
     Dictionary<int, ChapterInventory> chapterInventories = new Dictionary<int, ChapterInventory>();
     
-    //인벤토리 창 오픈 여부
-    public bool isInventoryOpen = false;
-    
     //인벤토리 UI
+    [Header("인벤토리 UI 오브젝트")]
     [SerializeField] private GameObject _inventoryWindow;
     [SerializeField] private GameObject _realWorldInventory;
     [SerializeField] private GameObject _mentalWorldInventory;
     [SerializeField] private GameObject _inventorySlotPrefab;
+    [SerializeField] private GameObject _inventoryIcon;
     
+    [Space(5)][Header("인벤토리 정보")]
     //챕터 관련
     public List<GameObject> deselectedChapterUIList;
     public List<GameObject> selectedChapterUIList;
     public int currentViewChapter = 0;
+    
+    void Awake(){
+        
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
+        _instance = this;
+        DontDestroyOnLoad(gameObject); 
+    }
     void Start()
     {
         //인벤토리 초기화
@@ -54,30 +83,62 @@ public class InventoryManager : Singleton<InventoryManager>
 
     void Update()
     {
-        //인벤토리 열기 or 닫기
-        if (Input.GetKeyDown(KeyCode.Tab))
+        //인벤토리 열기
+        if (!UIManager.Instance.IsUIOpen(this))
         {
-            isInventoryOpen = !isInventoryOpen;
-            ControlWindow();
-        }
+            //키보드 입력 - Tab 버튼
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                UIManager.Instance.OpenUI(this);
+            }
         
-        /*
-        //인벤토리 닫기
-        if (isInventoryOpen && Input.GetKeyDown(KeyCode.Escape) && !UIManager.Instance._isDetailOpen)
-        {
-            Debug.Log("인벤토리 창만 닫기");
-            isInventoryOpen = !isInventoryOpen;
-            ControlWindow();
+            //마우스 입력 - 인벤토리 아이콘 클릭
+            PointerEventData pointerData = new PointerEventData(EventSystem.current)
+            {
+                position = Input.mousePosition
+            };
+
+            List<RaycastResult> results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerData, results);
+
+            foreach (var result in results)
+            {
+                if (result.gameObject == _inventoryIcon && Input.GetMouseButtonDown(0))
+                {
+                    UIManager.Instance.OpenUI(this);
+                }
+            }
         }
-        */
     }
 
+    public override void OnOpen()
+    {
+        base.OnOpen();
+        _inventoryWindow.SetActive(true);
+        //인벤토리 열었을 때, 현재 상태를 바탕으로 인벤토리 업데이트 진행
+        GetComponent<InventoryNavigator>().InitNavigator(_realWorldInventory.transform,_mentalWorldInventory.transform);
+    }
+
+    public override void OnClose()
+    {
+        base.OnClose();
+    }
+
+    public override void HandleKeyboardInput()
+    {
+        base.HandleKeyboardInput();
+        GetComponent<InventoryNavigator>().HandleKeyboardInput();
+    }
+    
+    public override void HandleMouseInput()
+    {
+        base.HandleMouseInput();
+    }
     void InitInventory()
     {
         //챕터 정보 저장하기
         int chapterCount = Enum.GetValues(typeof(EventManagerYKM.ChapterInfo)).Length;
         InitChapter();
-        isInventoryOpen = false;
         chapterInventories.Clear();
         
         for (int i = 0; i < chapterCount; i++)
@@ -105,16 +166,16 @@ public class InventoryManager : Singleton<InventoryManager>
         {
             //정신세계 증거
             _chapterInventory.mentalWorldEvidences.Add(newSlot);
-            
         }
         else if (evidence.evidenceType == 'R')
         {
             //현실세계 증거
             _chapterInventory.realWorldEvidences.Add(newSlot);
         }
+        
         UpdateInventoryUI();
         
-        //맵에서 증거 오브젝트 파괴하기
+        //맵에서 증거 오브젝트 파괴하기 - 현재 오류 존재. 다시 씬으로 이동해오면 원상복구 됨. 아예 삭제 해 버려야 함.
         if (PlayerInteract.Instance._evidenceGameObject != null)
         {
             Debug.Log("맵에서 습득한 오브젝트 파괴");
@@ -135,7 +196,7 @@ public class InventoryManager : Singleton<InventoryManager>
         foreach (var evidence in currentInventory.realWorldEvidences)
         {
             GameObject slot = Instantiate(_inventorySlotPrefab, _realWorldInventory.transform);
-            slot.GetComponent<InventorySlotInfo>().evidence_id = evidence.evidence_id;
+            slot.GetComponent<InventorySlotInfo>().evidenceId = evidence.evidenceId;
             UpdateSlotUI(slot, evidence);
         }
 
@@ -143,7 +204,7 @@ public class InventoryManager : Singleton<InventoryManager>
         foreach (var evidence in currentInventory.mentalWorldEvidences)
         {
             GameObject slot = Instantiate(_inventorySlotPrefab, _mentalWorldInventory.transform);
-            slot.GetComponent<InventorySlotInfo>().evidence_id = evidence.evidence_id;
+            slot.GetComponent<InventorySlotInfo>().evidenceId = evidence.evidenceId;
             UpdateSlotUI(slot, evidence);
         }
     }
@@ -166,7 +227,7 @@ public class InventoryManager : Singleton<InventoryManager>
     void UpdateSlotUI(GameObject slot, InventorySlot evidence)
     {
         TextMeshProUGUI nameText = slot.GetComponentInChildren<TextMeshProUGUI>(true);
-        nameText.text = evidence.evidence_name;
+        nameText.text = evidence.evidenceName;
         
         Image[] images = slot.GetComponentsInChildren<Image>(true);
         foreach (Image img in images)
@@ -174,14 +235,14 @@ public class InventoryManager : Singleton<InventoryManager>
             if (img.gameObject.name == "EvidenceImg")
             {
                 //아트 리소스 불러오기
-                if (DataManager.Instance._artResources.ContainsKey(evidence.artresource_id))
+                if (DataManager.Instance._artResources.ContainsKey(evidence.artresourceId))
                 {
-                    ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresource_id];
+                    ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresourceId];
                     img.sprite = artResource.GetSpriteFromFilePath(artResource.filePathInventoryThumbnail);
                 }
                 else
                 {
-                    Debug.Log(evidence.artresource_id +"가 리소스 내에 존재하지 않습니다.");
+                    Debug.Log(evidence.artresourceId +"가 리소스 내에 존재하지 않습니다.");
                 }
                 break;
             }
@@ -196,33 +257,19 @@ public class InventoryManager : Singleton<InventoryManager>
         {
             foreach (var slot in chapter.Value.realWorldEvidences)
             {
-                if (slot.evidence_id == evidence_id)
+                if (slot.evidenceId == evidence_id)
                 {
                     return true;
                 }
             }
             foreach (var slot in chapter.Value.mentalWorldEvidences)
             {
-                if (slot.evidence_id == evidence_id)
+                if (slot.evidenceId == evidence_id)
                 {
                     return true;
                 }
             }
         }
         return false;
-    }
-
-    public void ControlWindow()
-    {
-        if (isInventoryOpen)
-        {
-            PlayerController.Instance.isDialogueOn = true;
-        }
-        else
-        {
-            PlayerController.Instance.isDialogueOn = false;
-        }
-        _inventoryWindow.SetActive(isInventoryOpen);
-        if(isInventoryOpen) GetComponent<InventoryNavigator>().InitNavigator(_realWorldInventory.transform,_mentalWorldInventory.transform);
     }
 }

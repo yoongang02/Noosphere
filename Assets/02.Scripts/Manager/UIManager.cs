@@ -13,18 +13,9 @@ public class UIManager : Singleton<UIManager>
 
     public UIBase investigateUI;
     public UIBase evidenceDetailUI;
-    
-    /*
-    public GameObject _showPressBtnUI;
-    public GameObject _bookInfo;
-    public GameObject _bookPopUp;
-    public bool isPopUpOpen = false;
-    public Animator transitionAnimator;
-    public GameObject _endingMessage;
-    */
+    public UIBase inventoryUI;
     
     public TextMeshProUGUI dialogueUI;
-    //public TextMeshProUGUI popUI;
     
     public bool isInMap = true;
     
