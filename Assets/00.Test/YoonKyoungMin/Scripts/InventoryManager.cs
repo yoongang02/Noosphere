@@ -1,10 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class InventorySlot
 {
@@ -51,15 +50,15 @@ public class InventoryManager : UIBase
     //key : 챕터 숫자
     Dictionary<int, ChapterInventory> chapterInventories = new Dictionary<int, ChapterInventory>();
     
-    //인벤토리 창 오픈 여부
-    public bool isInventoryOpen = false;
-    
     //인벤토리 UI
+    [Header("인벤토리 UI 오브젝트")]
     [SerializeField] private GameObject _inventoryWindow;
     [SerializeField] private GameObject _realWorldInventory;
     [SerializeField] private GameObject _mentalWorldInventory;
     [SerializeField] private GameObject _inventorySlotPrefab;
+    [SerializeField] private GameObject _inventoryIcon;
     
+    [Space(5)][Header("인벤토리 정보")]
     //챕터 관련
     public List<GameObject> deselectedChapterUIList;
     public List<GameObject> selectedChapterUIList;
@@ -84,30 +83,62 @@ public class InventoryManager : UIBase
 
     void Update()
     {
-        //인벤토리 열기 or 닫기
-        if (Input.GetKeyDown(KeyCode.Tab))
+        //인벤토리 열기
+        if (!UIManager.Instance.IsUIOpen(this))
         {
-            isInventoryOpen = !isInventoryOpen;
-            ControlWindow();
-        }
+            //키보드 입력 - Tab 버튼
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                UIManager.Instance.OpenUI(this);
+            }
         
-        /*
-        //인벤토리 닫기
-        if (isInventoryOpen && Input.GetKeyDown(KeyCode.Escape) && !UIManager.Instance._isDetailOpen)
-        {
-            Debug.Log("인벤토리 창만 닫기");
-            isInventoryOpen = !isInventoryOpen;
-            ControlWindow();
+            //마우스 입력 - 인벤토리 아이콘 클릭
+            PointerEventData pointerData = new PointerEventData(EventSystem.current)
+            {
+                position = Input.mousePosition
+            };
+
+            List<RaycastResult> results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerData, results);
+
+            foreach (var result in results)
+            {
+                if (result.gameObject == _inventoryIcon && Input.GetMouseButtonDown(0))
+                {
+                    UIManager.Instance.OpenUI(this);
+                }
+            }
         }
-        */
     }
 
+    public override void OnOpen()
+    {
+        base.OnOpen();
+        _inventoryWindow.SetActive(true);
+        //인벤토리 열었을 때, 현재 상태를 바탕으로 인벤토리 업데이트 진행
+        GetComponent<InventoryNavigator>().InitNavigator(_realWorldInventory.transform,_mentalWorldInventory.transform);
+    }
+
+    public override void OnClose()
+    {
+        base.OnClose();
+    }
+
+    public override void HandleKeyboardInput()
+    {
+        base.HandleKeyboardInput();
+        GetComponent<InventoryNavigator>().HandleKeyboardInput();
+    }
+    
+    public override void HandleMouseInput()
+    {
+        base.HandleMouseInput();
+    }
     void InitInventory()
     {
         //챕터 정보 저장하기
         int chapterCount = Enum.GetValues(typeof(EventManagerYKM.ChapterInfo)).Length;
         InitChapter();
-        isInventoryOpen = false;
         chapterInventories.Clear();
         
         for (int i = 0; i < chapterCount; i++)
@@ -135,16 +166,16 @@ public class InventoryManager : UIBase
         {
             //정신세계 증거
             _chapterInventory.mentalWorldEvidences.Add(newSlot);
-            
         }
         else if (evidence.evidenceType == 'R')
         {
             //현실세계 증거
             _chapterInventory.realWorldEvidences.Add(newSlot);
         }
+        
         UpdateInventoryUI();
         
-        //맵에서 증거 오브젝트 파괴하기
+        //맵에서 증거 오브젝트 파괴하기 - 현재 오류 존재. 다시 씬으로 이동해오면 원상복구 됨. 아예 삭제 해 버려야 함.
         if (PlayerInteract.Instance._evidenceGameObject != null)
         {
             Debug.Log("맵에서 습득한 오브젝트 파괴");
@@ -165,7 +196,7 @@ public class InventoryManager : UIBase
         foreach (var evidence in currentInventory.realWorldEvidences)
         {
             GameObject slot = Instantiate(_inventorySlotPrefab, _realWorldInventory.transform);
-            slot.GetComponent<InventorySlotInfo>().evidence_id = evidence.evidenceId;
+            slot.GetComponent<InventorySlotInfo>().evidenceId = evidence.evidenceId;
             UpdateSlotUI(slot, evidence);
         }
 
@@ -173,7 +204,7 @@ public class InventoryManager : UIBase
         foreach (var evidence in currentInventory.mentalWorldEvidences)
         {
             GameObject slot = Instantiate(_inventorySlotPrefab, _mentalWorldInventory.transform);
-            slot.GetComponent<InventorySlotInfo>().evidence_id = evidence.evidenceId;
+            slot.GetComponent<InventorySlotInfo>().evidenceId = evidence.evidenceId;
             UpdateSlotUI(slot, evidence);
         }
     }
@@ -240,19 +271,5 @@ public class InventoryManager : UIBase
             }
         }
         return false;
-    }
-
-    public void ControlWindow()
-    {
-        if (isInventoryOpen)
-        {
-            PlayerController.Instance.isDialogueOn = true;
-        }
-        else
-        {
-            PlayerController.Instance.isDialogueOn = false;
-        }
-        _inventoryWindow.SetActive(isInventoryOpen);
-        if(isInventoryOpen) GetComponent<InventoryNavigator>().InitNavigator(_realWorldInventory.transform,_mentalWorldInventory.transform);
     }
 }

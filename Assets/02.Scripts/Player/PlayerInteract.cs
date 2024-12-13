@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -31,7 +29,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
     public bool isInteractObj;
     void Update()
     {
-        if (!InventoryManager.Instance.isInventoryOpen)
+        if (!UIManager.Instance.IsAnyUIOpen())
         {
             //E키를 이용한 상호작용
             if (canInteract && curInteractableTrigger != null && Input.GetKeyDown(KeyCode.E))

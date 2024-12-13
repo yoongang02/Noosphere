@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class InventorySlotInfo : MonoBehaviour
 {
-    public string evidence_id;
+    public string evidenceId;
 }
