@@ -8,18 +8,17 @@ using UnityEngine.UI;
 
 public class InventorySlot
 {
-    public string evidence_id;
-    public string evidence_name;
+    public string evidenceId;
+    public string evidenceName;
     public char canUse;
-    //public string evidence_Text_Display;
-    public string artresource_id;
+    public string artresourceId;
 
     public InventorySlot(EvidenceStructure evidence)
     {
-        evidence_id = evidence.evidenceId;
-        evidence_name = evidence.evidenceName;
+        evidenceId = evidence.evidenceId;
+        evidenceName = evidence.evidenceName;
         canUse = evidence.canUse;
-        artresource_id = evidence.artresourceId;
+        artresourceId = evidence.artresourceId;
     }
 }
 public class ChapterInventory
@@ -27,8 +26,28 @@ public class ChapterInventory
     public List<InventorySlot> realWorldEvidences { get; set; } = new List<InventorySlot>();
     public List<InventorySlot> mentalWorldEvidences { get; set; } = new List<InventorySlot>();
 }
-public class InventoryManager : Singleton<InventoryManager>
+public class InventoryManager : UIBase
 {
+    //싱글톤
+    private static InventoryManager _instance;
+    
+    public static InventoryManager Instance 
+    { 
+        get 
+        { 
+            if (_instance == null) 
+            {
+                _instance = FindObjectOfType<InventoryManager>();
+                if (_instance == null) 
+                {
+                    GameObject singletonObject = new GameObject(nameof(InventoryManager));
+                    _instance = singletonObject.AddComponent<InventoryManager>();
+                }
+            }
+            return _instance;
+        } 
+    }
+    
     //key : 챕터 숫자
     Dictionary<int, ChapterInventory> chapterInventories = new Dictionary<int, ChapterInventory>();
     
@@ -45,7 +64,18 @@ public class InventoryManager : Singleton<InventoryManager>
     public List<GameObject> deselectedChapterUIList;
     public List<GameObject> selectedChapterUIList;
     public int currentViewChapter = 0;
+    
+    void Awake(){
+        
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
+        _instance = this;
+        DontDestroyOnLoad(gameObject); 
+    }
     void Start()
     {
         //인벤토리 초기화
@@ -135,7 +165,7 @@ public class InventoryManager : Singleton<InventoryManager>
         foreach (var evidence in currentInventory.realWorldEvidences)
         {
             GameObject slot = Instantiate(_inventorySlotPrefab, _realWorldInventory.transform);
-            slot.GetComponent<InventorySlotInfo>().evidence_id = evidence.evidence_id;
+            slot.GetComponent<InventorySlotInfo>().evidence_id = evidence.evidenceId;
             UpdateSlotUI(slot, evidence);
         }
 
@@ -143,7 +173,7 @@ public class InventoryManager : Singleton<InventoryManager>
         foreach (var evidence in currentInventory.mentalWorldEvidences)
         {
             GameObject slot = Instantiate(_inventorySlotPrefab, _mentalWorldInventory.transform);
-            slot.GetComponent<InventorySlotInfo>().evidence_id = evidence.evidence_id;
+            slot.GetComponent<InventorySlotInfo>().evidence_id = evidence.evidenceId;
             UpdateSlotUI(slot, evidence);
         }
     }
@@ -166,7 +196,7 @@ public class InventoryManager : Singleton<InventoryManager>
     void UpdateSlotUI(GameObject slot, InventorySlot evidence)
     {
         TextMeshProUGUI nameText = slot.GetComponentInChildren<TextMeshProUGUI>(true);
-        nameText.text = evidence.evidence_name;
+        nameText.text = evidence.evidenceName;
         
         Image[] images = slot.GetComponentsInChildren<Image>(true);
         foreach (Image img in images)
@@ -174,14 +204,14 @@ public class InventoryManager : Singleton<InventoryManager>
             if (img.gameObject.name == "EvidenceImg")
             {
                 //아트 리소스 불러오기
-                if (DataManager.Instance._artResources.ContainsKey(evidence.artresource_id))
+                if (DataManager.Instance._artResources.ContainsKey(evidence.artresourceId))
                 {
-                    ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresource_id];
+                    ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresourceId];
                     img.sprite = artResource.GetSpriteFromFilePath(artResource.filePathInventoryThumbnail);
                 }
                 else
                 {
-                    Debug.Log(evidence.artresource_id +"가 리소스 내에 존재하지 않습니다.");
+                    Debug.Log(evidence.artresourceId +"가 리소스 내에 존재하지 않습니다.");
                 }
                 break;
             }
@@ -196,14 +226,14 @@ public class InventoryManager : Singleton<InventoryManager>
         {
             foreach (var slot in chapter.Value.realWorldEvidences)
             {
-                if (slot.evidence_id == evidence_id)
+                if (slot.evidenceId == evidence_id)
                 {
                     return true;
                 }
             }
             foreach (var slot in chapter.Value.mentalWorldEvidences)
             {
-                if (slot.evidence_id == evidence_id)
+                if (slot.evidenceId == evidence_id)
                 {
                     return true;
                 }
