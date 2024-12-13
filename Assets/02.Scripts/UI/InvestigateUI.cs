@@ -105,12 +105,6 @@ public class InvestigateUI : UIBase
         }
     }
 
-    void RemoveAllListeners()
-    {
-        OnHoverEvent.RemoveAllListeners();
-        OnClickEvent.RemoveAllListeners();
-    }
-
     void AddYesBtnEvent()
     {
         AddOnHoverListener(SelectYesBtn);
