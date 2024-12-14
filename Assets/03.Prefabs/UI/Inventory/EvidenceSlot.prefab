@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 1471106426292402901}
   - component: {fileID: 4091798799618730100}
   - component: {fileID: -6202971717877948730}
+  - component: {fileID: 776789408794725242}
   m_Layer: 5
   m_Name: EvidenceSlot
   m_TagString: Untagged
@@ -225,7 +226,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c30ecf6f273224e7fb9c114ad1cb068e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  evidence_id: 
+  evidenceId: 
+--- !u!114 &776789408794725242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1615828161483426635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eeb2a7d976a6b4c50a87915d50782f12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentIndex: 0
+  isBothInventory: 0
+  canEvidenceUse: 0
+  inventorySlots: []
+  _selectedSprite: {fileID: 0}
+  _deselectedSprite: {fileID: 0}
+  _slotUseBtn: {fileID: 0}
 --- !u!1 &8094573179339725542
 GameObject:
   m_ObjectHideFlags: 0

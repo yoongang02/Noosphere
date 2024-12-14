@@ -135,19 +135,13 @@ public class InventoryManager : UIBase
     {
         //챕터 정보 저장하기
         int chapterCount = Enum.GetValues(typeof(EventManagerYKM.ChapterInfo)).Length;
-        InitChapter();
+        currentViewChapter = 0;
         chapterInventories.Clear();
         
         for (int i = 0; i < chapterCount; i++)
         {
             chapterInventories.Add(i,new ChapterInventory());
         }
-    }
-
-    //챕터 초기화(맨 처음 실행 후, 다시 실행되지 않음)
-    void InitChapter()
-    {
-        currentViewChapter = 0;
     }
 
     //증거물 가져오기

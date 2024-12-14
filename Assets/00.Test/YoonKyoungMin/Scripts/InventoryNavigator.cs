@@ -7,10 +7,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class InventoryNavigator : MonoBehaviour, IPointerClickHandler
+public class InventoryNavigator : MonoBehaviour
 {
     [Header("인벤토리 네비게이션 정보")]
-    [SerializeField] private GameObject _curSelectedSlot;
+    protected GameObject _curSelectedSlot;
     public int currentIndex = 0;
     public bool isBothInventory = false; //정신세계 증거물과 현실세계 증거물이 모두 있을 때
     public bool canEvidenceUse = false;
@@ -197,7 +197,7 @@ public class InventoryNavigator : MonoBehaviour, IPointerClickHandler
     }
 
     //슬롯 선택 시, 슬롯 선택에 따른 업데이트
-    private void UpdateSelection()
+    protected void UpdateSelection()
     {
         _curSelectedSlot = inventorySlots[currentIndex];
         SetSlotSelected(_curSelectedSlot);
@@ -205,7 +205,7 @@ public class InventoryNavigator : MonoBehaviour, IPointerClickHandler
     }
 
     //슬롯 배경 업데이트
-    private void SetSlotSelected(GameObject slot)
+    protected void SetSlotSelected(GameObject slot)
     {
         Image slotImg = slot.GetComponent<Image>();
         slotImg.sprite = _selectedSprite;
@@ -215,8 +215,14 @@ public class InventoryNavigator : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    protected void SetSlotDeselected(GameObject slot)
+    {
+        Image slotImg = slot.GetComponent<Image>();
+        slotImg.sprite = _deselectedSprite;
+    }
+
     //챕터 선택
-    private void SetChapterSelected(int index)
+    protected void SetChapterSelected(int index)
     {
         GameObject selectedChapter = InventoryManager.Instance.selectedChapterUIList[index];
         GameObject deselectedChapter = InventoryManager.Instance.deselectedChapterUIList[index];
@@ -235,7 +241,25 @@ public class InventoryNavigator : MonoBehaviour, IPointerClickHandler
         //인벤토리 업데이트 하기
         InventoryManager.Instance.UpdateInventoryUI();
     }
-
+    
+    //챕터 호버 enter
+    protected void HoverEnterOnChapter(int index)
+    {
+        GameObject hoverObject = InventoryManager.Instance.selectedChapterUIList[index];
+        if (!hoverObject.activeSelf)
+        {
+            hoverObject.SetActive(true);
+        }
+    }
+    //챕터 호버 exit
+    protected void HoverExitOnChapter(int index)
+    {
+        GameObject hoverObject = InventoryManager.Instance.selectedChapterUIList[index];
+        if (hoverObject.activeSelf)
+        {
+            hoverObject.SetActive(false);
+        }
+    }
     //현실 세계 항목에 있는 슷롯인지 확인
     private bool IsInRealWorldSlot()
     {
@@ -313,56 +337,9 @@ public class InventoryNavigator : MonoBehaviour, IPointerClickHandler
             }
         }
     }
-    
-    //마우스 클릭 이벤트 관리
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        //젤 위에 있는 UI 아니면 작동 X
-        if (!InventoryManager.Instance.IsTopUI())
-        {
-            return;
-        }
-        
-        //클릭한 오브젝트가 슬롯인지 파악
-        GameObject clickedObject = eventData.pointerClick;
-        if (inventorySlots.Contains(clickedObject))
-        {
-            //인덱스 값 가져오기
-            currentIndex = inventorySlots.IndexOf(clickedObject);
-            
-            if (eventData.button == PointerEventData.InputButton.Left)
-            {
-                if (_curSelectedSlot != clickedObject)
-                {
-                    //현재 선택된 오브젝트와 클릭한 오브젝트가 다를 경우 -> 신규 선택
-                    UpdateSelection();
-                }
-                else
-                {
-                    //현재 선택된 오브젝트와 클릭한 오브젝트가 같을 경우 -> 상세 보기 기능
-                    OpenEvidenceDetailUI();
-                }
-            }
-
-            // 우클릭 감지
-            if (eventData.button == PointerEventData.InputButton.Right)
-            {
-                //현재 선택된 오브젝트가 우클릭한 오브젝트와 같아야 함. -> 사용하기 기능
-                if (_curSelectedSlot == clickedObject)
-                {
-                    UseEvidence();
-                }
-            }
-        }
-
-        if (eventData.button == PointerEventData.InputButton.Left)
-        {
-            Debug.Log($"{clickedObject} 가 클릭 됨");
-        }
-    }
 
     //증거물 상세 내용 UI 열기
-    void OpenEvidenceDetailUI()
+    protected void OpenEvidenceDetailUI()
     {
         string id = _curSelectedSlot.GetComponent<InventorySlotInfo>().evidenceId;
         EvidenceStructure evidence = DataManager.Instance._evidences[id];
@@ -370,7 +347,7 @@ public class InventoryNavigator : MonoBehaviour, IPointerClickHandler
     }
 
     //증거물 사용하기
-    void UseEvidence()
+    protected void UseEvidence()
     {
         
     }
