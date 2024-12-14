@@ -170,11 +170,10 @@ public class InventoryManager : UIBase
         UpdateInventoryUI();
         
         //맵에서 증거 오브젝트 파괴하기 - 현재 오류 존재. 다시 씬으로 이동해오면 원상복구 됨. 아예 삭제 해 버려야 함.
-        if (PlayerInteract.Instance._evidenceGameObject != null)
+        if (PlayerInteract.Instance._evidenceObjectInScene != null)
         {
             Debug.Log("맵에서 습득한 오브젝트 파괴");
-            PlayerInteract.Instance._interactionMark.SetActive(false);
-            Destroy(PlayerInteract.Instance._evidenceGameObject);
+            Destroy(PlayerInteract.Instance._evidenceObjectInScene);
         }
     }
 
