@@ -11,11 +11,9 @@ public class PlayerInteract : Singleton<PlayerInteract>
     [SerializeField] private GameObject _interactionMark;
     [SerializeField] private GameObject _evidenceObjectInScene;
     
-    [Space(5)][Header("상호작용 표식")] 
-    public bool canEnter = false;
+    [Space(5)][Header("정신세계 진입")] 
     public GameObject mentalTrigger;
-
-    public bool isInteractObj;
+    
     void Update()
     {
         if (!UIManager.Instance.IsAnyUIOpen())
@@ -74,7 +72,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
         else if (other.CompareTag("EventMentalEnterTrigger"))
         {
             //정신세계 진입 트리거에 들어가면
-            canEnter = true;
+            mentalTrigger = other.gameObject;
             foreach (string eventID in other.GetComponent<EventTrigger>().eventIdList)
             {
                 if(CheckInteractionAvail(eventID)) ShowInteractionMark();
@@ -88,18 +86,16 @@ public class PlayerInteract : Singleton<PlayerInteract>
         if (other.CompareTag("EventInteractionTrigger"))
         {
             interactionTrigger = null;
+            _evidenceObjectInScene = null;
             HideInteractionMark();
-            isInteractObj = false;
         }
         
         //정신세계 진입 트리거에 나가면
         if (other.CompareTag("EventMentalEnterTrigger"))
         {
-            canEnter = false;
+            mentalTrigger = null;
             HideInteractionMark();
         }
-        
-        if(_evidenceObjectInScene != null) _evidenceObjectInScene = null;
     }
 
     
@@ -114,12 +110,10 @@ public class PlayerInteract : Singleton<PlayerInteract>
         _interactionMark.SetActive(false);
     }
 
-    bool CheckInteractionAvail(string id)
+    public bool CheckInteractionAvail(string id)
     {
         if (DataManager.Instance._events.ContainsKey(id))
         {
-            EventStructure _event = DataManager.Instance._events[id];
-            
             if (String.IsNullOrEmpty(EventManagerYKM.Instance.nextEventID) || EventManagerYKM.Instance.nextEventID == id)
             {
                 return true;

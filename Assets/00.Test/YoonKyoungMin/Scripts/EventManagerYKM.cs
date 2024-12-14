@@ -181,6 +181,11 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 {
                     StartCoroutine(ExecuteEvent(resultID));
                 }
+                else if (resultType == "Mental")
+                {
+                    MentalStructure mentalStructure = DataManager.Instance._mental[resultID];
+                    PlayerInteract.Instance.GetComponent<MentalEnterProcess>().StartEnter(mentalStructure);
+                }
 
                 resultNum++;
             }

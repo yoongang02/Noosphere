@@ -51,6 +51,7 @@ public class CSVParserYKM
             List<string> conditionsList = new List<string>(); 
             List<string> resultsList = new List<string>();
             List<string> conditionFalseResultsList = new List<string>();
+            List<string> mentalFalseResults = new List<string>();
     
             for (int j = 0; j < headers.Length && j < values.Length; j++)
             {
@@ -91,11 +92,16 @@ public class CSVParserYKM
                     {
                         conditionFalseResultsList.Add(value);
                     }
+                    else if (header.StartsWith("mentalFalseResult"))
+                    {
+                        mentalFalseResults.Add(value);
+                    }
                 }
             }
             FieldInfo conditionsField = typeof(T).GetField("conditions", BindingFlags.Public | BindingFlags.Instance);
             FieldInfo resultsField = typeof(T).GetField("results", BindingFlags.Public | BindingFlags.Instance);
             FieldInfo conditionFalseResultField = typeof(T).GetField("conditionFalseResults", BindingFlags.Public | BindingFlags.Instance);
+            FieldInfo mentalFalseResultField = typeof(T).GetField("mentalFalseResults", BindingFlags.Public | BindingFlags.Instance);
             
             if (conditionsField != null && conditionsField.FieldType == typeof(string[]))
             {
@@ -110,6 +116,11 @@ public class CSVParserYKM
             if (conditionFalseResultField != null && conditionFalseResultField.FieldType == typeof(string[]))
             {
                 conditionFalseResultField.SetValue(entry, conditionFalseResultsList.ToArray());
+            }
+            
+            if (mentalFalseResultField != null && mentalFalseResultField.FieldType == typeof(string[]))
+            {
+                mentalFalseResultField.SetValue(entry, mentalFalseResults.ToArray());
             }
             
             dictionary[key] = entry;

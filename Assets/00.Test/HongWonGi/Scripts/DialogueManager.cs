@@ -67,7 +67,7 @@ public class DialogueManager : Singleton<DialogueManager>
         DialogueStructure dialogue = DataManager.Instance._dialogue[_currentDialogueId];
     
         bool canProceed = dialogue.triggerType == "auto" || 
-                          (dialogue.triggerType == "interact" && PlayerInteract.Instance.isInteractObj);
+                          (dialogue.triggerType == "interact" && dialogue.interactionType == "object");
 
         if (!canProceed) return;
        
@@ -149,7 +149,7 @@ public class DialogueManager : Singleton<DialogueManager>
                     PlayerController.Instance._currentNPC = null;
                 }
 
-                PlayerInteract.Instance.isInteractObj = false;
+                //PlayerInteract.Instance.isInteractObj = false;
             }
         }
     }
