@@ -8,6 +8,7 @@ public class DialBtn : MonoBehaviour, IDragHandler, IPointerDownHandler
     [SerializeField] private RectTransform _handle;
     [SerializeField] private RectTransform _centerPoint;
     [SerializeField] private Canvas _canvas;
+    [SerializeField] private GameObject _dialBtnImg;
 
     private int _maxChips = 360; // 최대 값 (100%에 해당)
     private float _radius;
@@ -54,6 +55,7 @@ public class DialBtn : MonoBehaviour, IDragHandler, IPointerDownHandler
 
         // 핸들의 위치를 업데이트
         _handle.anchoredPosition = newPosition;
+        _dialBtnImg.transform.rotation = Quaternion.Euler(0, 0, _currentAngle);
         UpdateRadioNum();
     }
 
@@ -65,6 +67,7 @@ public class DialBtn : MonoBehaviour, IDragHandler, IPointerDownHandler
                               new Vector2(Mathf.Cos(_currentAngle * Mathf.Deg2Rad),
                                   Mathf.Sin(_currentAngle * Mathf.Deg2Rad)) * _radius;
         _handle.anchoredPosition = newPosition;
+        _dialBtnImg.transform.rotation = Quaternion.Euler(0, 0, _currentAngle);
         UpdateRadioNum();
     }
 

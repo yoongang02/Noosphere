@@ -9,7 +9,7 @@ using DG.Tweening;
 
 public class RadioManager : MonoBehaviour
 {
-    [SerializeField] private GameObject radioPanel;
+    [SerializeField] private GameObject _radioPanel;
     [Header("RadioUI")]
     [SerializeField] private List<DialBtn> _dialBtn;
     [SerializeField] private TextMeshProUGUI _radioText;
@@ -19,9 +19,8 @@ public class RadioManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _realText;
     [SerializeField] private TextMeshProUGUI _mirrorText;
 
-    [Header("Animation Settings")] 
-    [SerializeField] private float _fadeDuration = 1f;
-    [SerializeField] private float _displayDuration = 2f;
+    private float _fadeDuration = 1f;
+    private float _displayDuration = 2f;
     private int _tenDigit = 0;
     private int _oneDigit = 0;
     private int _decimalDigit = 0;
