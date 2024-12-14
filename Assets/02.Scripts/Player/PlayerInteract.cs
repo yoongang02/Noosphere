@@ -54,7 +54,11 @@ public class PlayerInteract : Singleton<PlayerInteract>
         {
             foreach (string eventID in other.GetComponent<EventTrigger>().eventIdList)
             {
-                StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
+                if (CheckInteractionAvail(eventID))
+                {
+                    StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
+                    return;
+                }
             }
         }
         else if (other.CompareTag("EventInteractionTrigger"))
@@ -66,6 +70,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
                 if (CheckInteractionAvail(eventID))
                 {
                     ShowInteractionMark();
+                    return;
                 }
             }
         }
@@ -75,7 +80,11 @@ public class PlayerInteract : Singleton<PlayerInteract>
             mentalTrigger = other.gameObject;
             foreach (string eventID in other.GetComponent<EventTrigger>().eventIdList)
             {
-                if(CheckInteractionAvail(eventID)) ShowInteractionMark();
+                if (CheckInteractionAvail(eventID))
+                {
+                    ShowInteractionMark();
+                    return;
+                }
             }
         }
     }

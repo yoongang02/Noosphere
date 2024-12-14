@@ -6327,7 +6327,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5226925772450090396, guid: 788ed82389619477a98998d9611c4b32,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1039705414}
   m_SourcePrefab: {fileID: 100100000, guid: 788ed82389619477a98998d9611c4b32, type: 3}
 --- !u!4 &1039705412 stripped
 Transform:
@@ -6335,6 +6339,31 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1039705411}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1039705413 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5226925772450090396, guid: 788ed82389619477a98998d9611c4b32,
+    type: 3}
+  m_PrefabInstance: {fileID: 1039705411}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1039705414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1039705413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c0cd146a86f94bedb7d493a1291e223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enterTime: 5
+  _startEnter: 0
+  _timer: 0
+  isComplete: 0
+  _mentalInfo: {fileID: 0}
+  _progressBarUI: {fileID: 1806179402}
+  _progressBarFill: {fileID: 128335932}
 --- !u!1001 &1058907459
 PrefabInstance:
   m_ObjectHideFlags: 0

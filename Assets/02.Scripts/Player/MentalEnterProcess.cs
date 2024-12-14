@@ -32,31 +32,34 @@ public class MentalEnterProcess : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("현재 정신세계 진입이 불가능함.");
+                        Debug.Log($"{eventID} 는 현재 정신세계 진입이 불가능함.");
                     }
                 }
             }
             
             //진입시작했고, 완료되지 않았고, 스페이스를 계속 누르고 있다면
-            if (_startEnter && !isComplete && Input.GetKey(KeyCode.Space))
+            if (_startEnter && !isComplete)
             {
-                float value = _progressBarFill.FillAmount();
-                EffectManager.Instance.StartMentalEffect(value);
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    float value = _progressBarFill.FillAmount();
+                    EffectManager.Instance.StartMentalEffect(value);
                 
-                if (value >= 1f)
-                {
-                    isComplete = true;
+                    if (value >= 1f)
+                    {
+                        isComplete = true;
+                    }
                 }
-            }
-            else
-            {
-                //스페이스에서 손 때면, 현 상태에서 연출 멈추는 효과 구현 코드 여기에 작성되면 됨.
-                float value = _progressBarFill.DrainAmount();
-                EffectManager.Instance.StartMentalEffect(value);
-
-                if (value <= 0)
+                else
                 {
-                    FailEnter();
+                    //스페이스에서 손 때면, 현 상태에서 연출 멈추는 효과 구현 코드 여기에 작성되면 됨.
+                    float value = _progressBarFill.DrainAmount();
+                    EffectManager.Instance.StartMentalEffect(value);
+
+                    if (value <= 0)
+                    {
+                        FailEnter();
+                    }
                 }
             }
         }
@@ -101,6 +104,8 @@ public class MentalEnterProcess : MonoBehaviour
         _timer = 0f;
         _progressBarFill.InitFillAmount();
         _startEnter = false;
+
+        _mentalInfo = null;
     }
 
     public void StartEnter(MentalStructure mentalStructure)

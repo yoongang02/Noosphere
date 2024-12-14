@@ -80,7 +80,7 @@ public class CSVParserYKM
                 }
                 else
                 {
-                    if (header.StartsWith("condition")) 
+                    if (header.StartsWith("conditionNum")) 
                     {
                         conditionsList.Add(value);
                     }
