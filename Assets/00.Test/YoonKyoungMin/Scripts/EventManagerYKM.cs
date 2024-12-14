@@ -21,6 +21,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     public string currentEventID;
     public string nextEventID = "";
     
+    
     void Awake()
     {
         //게임 시작 시, 스테이지 정보 초기화

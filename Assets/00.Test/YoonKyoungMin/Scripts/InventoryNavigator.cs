@@ -2,13 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class InventoryNavigator : MonoBehaviour
 {
     [Header("인벤토리 네비게이션 정보")]
-    [SerializeField] private GameObject _curSelectedSlot;
+    protected GameObject _curSelectedSlot;
     public int currentIndex = 0;
     public bool isBothInventory = false; //정신세계 증거물과 현실세계 증거물이 모두 있을 때
     public bool canEvidenceUse = false;
@@ -27,9 +29,11 @@ public class InventoryNavigator : MonoBehaviour
         realWorldSlots.Clear();
         mentalWorldSlots.Clear();
         inventorySlots.Clear();
+        
         //현재 인벤토리 기준으로 재설정
         realWorldSlots = GetChildSlots(realWorld);
         mentalWorldSlots = GetChildSlots(mentalWorld);
+        
         //실제 이동에 사용할 슬롯 리스트
         if (realWorldSlots.Count > 0 && mentalWorldSlots.Count > 0)
         {
@@ -52,12 +56,11 @@ public class InventoryNavigator : MonoBehaviour
             return;
         }
 
+        //챕터 및 선택 초기화
         int chapterIndex = InventoryManager.Instance.currentViewChapter;
         SetChapterSelected(chapterIndex);
-        
-        _curSelectedSlot = inventorySlots[0];
-        SetSlotSelected(_curSelectedSlot);
-        SetSlotUseBtn(_curSelectedSlot);
+        currentIndex = 0;
+        UpdateSelection();
     }
 
     //증거물 행 별로 슬롯에 추가 함수
@@ -194,7 +197,7 @@ public class InventoryNavigator : MonoBehaviour
     }
 
     //슬롯 선택 시, 슬롯 선택에 따른 업데이트
-    private void UpdateSelection()
+    protected void UpdateSelection()
     {
         _curSelectedSlot = inventorySlots[currentIndex];
         SetSlotSelected(_curSelectedSlot);
@@ -202,7 +205,7 @@ public class InventoryNavigator : MonoBehaviour
     }
 
     //슬롯 배경 업데이트
-    private void SetSlotSelected(GameObject slot)
+    protected void SetSlotSelected(GameObject slot)
     {
         Image slotImg = slot.GetComponent<Image>();
         slotImg.sprite = _selectedSprite;
@@ -212,8 +215,14 @@ public class InventoryNavigator : MonoBehaviour
         }
     }
 
+    protected void SetSlotDeselected(GameObject slot)
+    {
+        Image slotImg = slot.GetComponent<Image>();
+        slotImg.sprite = _deselectedSprite;
+    }
+
     //챕터 선택
-    private void SetChapterSelected(int index)
+    protected void SetChapterSelected(int index)
     {
         GameObject selectedChapter = InventoryManager.Instance.selectedChapterUIList[index];
         GameObject deselectedChapter = InventoryManager.Instance.deselectedChapterUIList[index];
@@ -228,8 +237,29 @@ public class InventoryNavigator : MonoBehaviour
         {
             if(_chapter != deselectedChapter) _chapter.SetActive(true);
         }
+        
+        //인벤토리 업데이트 하기
+        InventoryManager.Instance.UpdateInventoryUI();
     }
-
+    
+    //챕터 호버 enter
+    protected void HoverEnterOnChapter(int index)
+    {
+        GameObject hoverObject = InventoryManager.Instance.selectedChapterUIList[index];
+        if (!hoverObject.activeSelf)
+        {
+            hoverObject.SetActive(true);
+        }
+    }
+    //챕터 호버 exit
+    protected void HoverExitOnChapter(int index)
+    {
+        GameObject hoverObject = InventoryManager.Instance.selectedChapterUIList[index];
+        if (hoverObject.activeSelf)
+        {
+            hoverObject.SetActive(false);
+        }
+    }
     //현실 세계 항목에 있는 슷롯인지 확인
     private bool IsInRealWorldSlot()
     {
@@ -296,37 +326,28 @@ public class InventoryNavigator : MonoBehaviour
                 
             //증거물 상세 정보 열기 - 키보드 E
             if (Input.GetKeyDown(KeyCode.E))
-            {
-                string id = _curSelectedSlot.GetComponent<InventorySlotInfo>().evidenceId;
-                EvidenceStructure evidence = DataManager.Instance._evidences[id];
-                UIManager.Instance.OpenUI(UIManager.Instance.evidenceDetailUI,evidence);
+            { 
+                OpenEvidenceDetailUI();
             }
+            
             //Space 버튼을 누르면 증거물 사용하기
             if (canEvidenceUse && Input.GetKeyDown(KeyCode.Space))
             {
-                    
-            }
-        }
-        
-        //숫자 키 클릭 시, 챕터 넘김
-        for (int i = 0; i <= 9; i++)
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha0 + i))
-            {
-                int inputIndex = i - 1;
-                if (inputIndex >= 0 && inputIndex < InventoryManager.Instance.selectedChapterUIList.Count)
-                {
-                    InventoryManager.Instance.currentViewChapter = inputIndex;
-                    SetChapterSelected(inputIndex);
-                    InventoryManager.Instance.UpdateInventoryUI();
-                    UpdateSelection();
-                }
+                UseEvidence();
             }
         }
     }
 
-    //인벤토리 네비게이션 - 마우스 입력
-    public void HandleMouseInput()
+    //증거물 상세 내용 UI 열기
+    protected void OpenEvidenceDetailUI()
+    {
+        string id = _curSelectedSlot.GetComponent<InventorySlotInfo>().evidenceId;
+        EvidenceStructure evidence = DataManager.Instance._evidences[id];
+        UIManager.Instance.OpenUI(UIManager.Instance.evidenceDetailUI,evidence);
+    }
+
+    //증거물 사용하기
+    protected void UseEvidence()
     {
         
     }
