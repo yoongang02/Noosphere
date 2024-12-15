@@ -50,8 +50,8 @@ public class EffectManager : Singleton<EffectManager>
         {
             if (!string.IsNullOrEmpty(effect.artresourceId))
             {
-                OnEffectEnd?.Invoke();
                 DoEffect(effect.artresourceId);
+                StartCoroutine(EndEffect());
             }
 
             if (!string.IsNullOrEmpty(effect.soundresourceId))
@@ -107,5 +107,11 @@ public class EffectManager : Singleton<EffectManager>
         _vhsImage.color = color;
         _vhsVolume.weight = 0;
         _cameraData.renderPostProcessing = false;
+    }
+
+    IEnumerator EndEffect()
+    {
+        yield return new WaitForSeconds(1f);
+        OnEffectEnd?.Invoke();
     }
 }

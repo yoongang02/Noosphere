@@ -26,4 +26,12 @@ public class EnterProgressBar : MonoBehaviour
         bar.fillAmount = value;
         return value;
     }
+
+    public float DrainAmount()
+    {
+        bar.fillAmount -= _fillSpeed * Time.deltaTime;
+        float value = Mathf.Clamp(bar.fillAmount, 0f, 1f);
+        bar.fillAmount = value;
+        return value;
+    }
 }

@@ -84,12 +84,12 @@ public class InventoryManager : UIBase
     void Update()
     {
         //인벤토리 열기
-        if (!UIManager.Instance.IsUIOpen(this))
+        if (!UIManager.Instance.IsAnyUIOpen())
         {
             //키보드 입력 - Tab 버튼
             if (Input.GetKeyDown(KeyCode.Tab))
             {
-                UIManager.Instance.OpenUI(this);
+                UIManager.Instance.OpenUI(UIManager.Instance.inventoryUI);
             }
         
             //마우스 입력 - 인벤토리 아이콘 클릭
@@ -105,7 +105,7 @@ public class InventoryManager : UIBase
             {
                 if (result.gameObject == _inventoryIcon && Input.GetMouseButtonDown(0))
                 {
-                    UIManager.Instance.OpenUI(this);
+                    UIManager.Instance.OpenUI(UIManager.Instance.inventoryUI);
                 }
             }
         }
@@ -122,6 +122,7 @@ public class InventoryManager : UIBase
     public override void OnClose()
     {
         base.OnClose();
+        _inventoryWindow.SetActive(false);
     }
 
     public override void HandleKeyboardInput()
@@ -253,17 +254,11 @@ public class InventoryManager : UIBase
     //인벤토리 내에 해당 증거물이 존재하는지 확인
     public bool IsAcquiredEvidence(string evidence_id)
     {
-        Debug.Log(evidence_id + "획득검사");
-        foreach (var chapter in chapterInventories)
+        int chapterIndex = (int)EventManagerYKM.Instance.curStageInfo;
+        
+        if (chapterInventories[chapterIndex].realWorldEvidences.Count > 0)
         {
-            foreach (var slot in chapter.Value.realWorldEvidences)
-            {
-                if (slot.evidenceId == evidence_id)
-                {
-                    return true;
-                }
-            }
-            foreach (var slot in chapter.Value.mentalWorldEvidences)
+            foreach (var slot in chapterInventories[chapterIndex].realWorldEvidences)
             {
                 if (slot.evidenceId == evidence_id)
                 {
@@ -271,6 +266,18 @@ public class InventoryManager : UIBase
                 }
             }
         }
+
+        if (chapterInventories[chapterIndex].mentalWorldEvidences.Count > 0)
+        {
+            foreach (var slot in chapterInventories[chapterIndex].mentalWorldEvidences)
+            {
+                if (slot.evidenceId == evidence_id)
+                {
+                    return true;
+                }
+            }
+        }
+        
         return false;
     }
 }

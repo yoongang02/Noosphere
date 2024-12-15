@@ -21,36 +21,32 @@ public class UIBase : MonoBehaviour
         if (IsTopUI())
         {
             HandleKeyboardInput();
-            HandleMouseInput();
         }
     }
     
     public virtual void OnOpen()
     {
-        gameObject.SetActive(true);
         Debug.Log($"#{gameObject.name}이(가) 열렸습니다.");
     }
     
     public virtual void OnOpen(EvidenceStructure evidence)
     {
-        gameObject.SetActive(true);
+        if (evidence == null)
+        {
+            Debug.LogError("🔥 evidence가 null이므로 OpenUI()를 호출할 수 없습니다.");
+            return;
+        }
         Debug.Log($"#{gameObject.name}이(가) 열렸습니다.");
     }
     
     public virtual void OnClose()
     {
-        gameObject.SetActive(false);
         Debug.Log($"#{gameObject.name}이(가) 닫혔습니다.");
     }
     
     public virtual void HandleKeyboardInput()
     {
-        //UI에 대해 공통적인 키보드 입력 상호작용이 있다면 여기서 작성.
-        //각 UI마다 별도로 키보드 입력 상호작용이 있다면 해당 UI 스크립트에서 override해서 작성.
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            //UIManager.Instance.CloseTopUI();
-        }
+        
     }
     
     public virtual void HandleMouseInput()
@@ -59,12 +55,11 @@ public class UIBase : MonoBehaviour
         //각 UI마다 별도로 마우스 입력 상호작용이 있다면 해당 UI 스크립트에서 override해서 작성.
     }
     
-    /*
     public bool IsTopUI()
     {
         return UIManager.Instance.GetTopUI() == this;
     }
-    */
+
     
     public void RemoveAllListeners()
     {
@@ -119,11 +114,6 @@ public class UIBase : MonoBehaviour
     public void RemoveOnExitListener(UnityAction action)
     {
         OnExitEvent.RemoveListener(action);
-    }
-    
-    public bool IsTopUI()
-    {
-        return UIManager.Instance.GetTopUI() == this;
     }
 
 }

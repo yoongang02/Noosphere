@@ -126,18 +126,27 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             
             // 증거물 조사 UI 띄우기
             EvidenceStructure evidence = DataManager.Instance._evidences[eventStructure.evidenceId];
-            UIManager.Instance.OpenUI(UIManager.Instance.investigateUI);
+            UIManager.Instance.OpenUI(UIManager.Instance.investigateUI, evidence);
 
             // UI에서 입력을 기다림
             bool isSelectEnd = false;
-            UIManager.Instance.OnSelectEnd += () => isSelectEnd = true;
+            UIManager.Instance.OnSelectEnd += () =>
+            {
+                isSelectEnd = true;
+            };
             yield return new WaitUntil(() => isSelectEnd);
-            Debug.Log("#4-1 : "+eventStructure.eventId+"의 증거물"+eventStructure.evidenceId+" 습득 선택 완료");
+            Debug.Log("#4-1 : "+eventStructure.eventId+"의 증거물"+eventStructure.evidenceId+" 선택 완료");
         }
         
         //일단 결과까지 왔다면 이벤트가 성공적으로 실행된 것.
         //결과의 실행 여부는 각 결과ID에 따라 처리
         CloseEventSuccess(eventStructure);
+        
+        //예외 이벤트 처리 코드
+        if (!UIManager.Instance.IsAcquiredInInvestigateUI() && currentEventID == "Event_A007")
+        {
+            nextEventID = "Event_A007";
+        }
         
         //5. 결과들 실행하기
         int resultNum = 1;
@@ -180,6 +189,11 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 else if (resultType == "Event")
                 {
                     StartCoroutine(ExecuteEvent(resultID));
+                }
+                else if (resultType == "Mental")
+                {
+                    MentalStructure mentalStructure = DataManager.Instance._mental[resultID];
+                    PlayerInteract.Instance.GetComponent<MentalEnterProcess>().StartEnter(mentalStructure);
                 }
 
                 resultNum++;

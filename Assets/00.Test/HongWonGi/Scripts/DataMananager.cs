@@ -16,6 +16,7 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<string, InputFieldStructure> _input = new Dictionary<string, InputFieldStructure>();
     public Dictionary<string, EffectStructure> _effect = new Dictionary<string, EffectStructure>();
     public Dictionary<string, SoundResourceStructure> _sound = new Dictionary<string, SoundResourceStructure>();
+    public Dictionary<string, MentalStructure> _mental = new Dictionary<string, MentalStructure>();
 
     public async UniTask InitializeData(Action<float> onProgressUpdated = null)
     {
@@ -28,7 +29,8 @@ public class DataManager : Singleton<DataManager>
             async () => { _input = await LoadData<InputFieldStructure>("Input"); },
             async () => { _effect = await LoadData<EffectStructure>("Effect"); },
             async () => { _dialogue = await LoadDialogueData(); },
-            async () => { _sound = await LoadData<SoundResourceStructure>("SoundResource"); }
+            async () => { _sound = await LoadData<SoundResourceStructure>("SoundResource"); },
+            async () => { _mental = await LoadData<MentalStructure>("Mental"); }
         };
 
         int totalSteps = loadSteps.Count;

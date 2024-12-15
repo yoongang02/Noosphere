@@ -1,143 +1,164 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MentalEnterProcess : MonoBehaviour
 {
     //정신세계 진입 관련 변수
-    [Header("정신세계 진입 관련 조건 변수")]
-    public bool isPlayerInMetanlWorld = false;
+    [Header("정신세계 진입")]
     [SerializeField] private float _enterTime = 5.0f;
-    public GameObject curEnterNPCTrigger;
     [SerializeField] bool _startEnter = false;
-    public bool _isComplete = false;
     [SerializeField] float _timer = 0f;
+    public bool isComplete = false;
+    [SerializeField] private MentalStructure _mentalInfo;
     
-    [Header("정신세계 진입 관련 UI 변수")]
+    [Header("정신세계 진입 UI")]
     [SerializeField] private GameObject _progressBarUI;
     [SerializeField] private EnterProgressBar _progressBarFill;
-
-
+    
     void Update()
     {
-         /*
-            //Space 키를 이용한 정신세계 진입 상호작용
-            if (_canEnter && curEnterNPCTrigger != null && Input.GetKeyDown(KeyCode.Space))
+        if (!UIManager.Instance.IsAnyUIOpen())
+        {
+            if (!_startEnter && PlayerInteract.Instance.canInteract && PlayerInteract.Instance.mentalTrigger != null && Input.GetKeyDown(KeyCode.Space))
             {
-                //현재 진입 가능한지 체크
-                foreach (string eventID in curEnterNPCTrigger.GetComponent<EventTrigger>().eventIdList)
+                foreach (string eventID in PlayerInteract.Instance.mentalTrigger.GetComponent<EventTrigger>().eventIdList)
                 {
-                    if (CheckInteractionAvail(eventID))
+                    if (PlayerInteract.Instance.CheckInteractionAvail(eventID))
                     {
-                        Debug.Log("현재 정신세계 진입 가능한 이벤트임.");
                         //이벤트 실행 가능하다면 실행
                         StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
-                        _progressBarUI.SetActive(true);
-                        _startEnter = true;
+                        PlayerInteract.Instance.HideInteractionMark();
+                        break;
                     }
                     else
                     {
-                        Debug.Log("현재 정신세계 진입이 불가능함.");
+                        Debug.Log($"{eventID} 는 현재 정신세계 진입이 불가능함.");
                     }
                 }
             }
-            */
-
-            /*
-            if (!InventoryManager.Instance.GetComponent<InventoryNavigator>().canEvidenceUse && !InventoryManager.Instance.isInventoryOpen && !UIManager.Instance._isDetailOpen && !UIManager.Instance._isInvestigateUIOpened &&_canEnter && isPlayerInMetanlWorld && Input.GetKeyDown(KeyCode.Space))
-            {
-                if (InventoryManager.Instance.IsAcquiredEvidence("evidence_001"))
-                {
-                    _progressBarUI.SetActive(true);
-                    _startEnter = true;
-                    if(EventManagerYKM.Instance.currentEventID == "Event_A008") StartCoroutine(EventManagerYKM.Instance.ExecuteEvent("Event_A009"));
-                }
-            }
-            */
             
             //진입시작했고, 완료되지 않았고, 스페이스를 계속 누르고 있다면
-            /*
-            if (_startEnter && !_isComplete && Input.GetKey(KeyCode.Space))
+            if (_startEnter && !isComplete)
             {
-                float value = _progressBarFill.FillAmount();
-                EffectManager.Instance.StartMentalEffect(value);
-                
-                if (value >= 1f)
+                if (Input.GetKey(KeyCode.Space))
                 {
-                    _isComplete = true;
-                    //씬 이동 함수 실행하면 됨.
-                    if (curEnterNPCTrigger != null)
+                    float value = _progressBarFill.FillAmount();
+                    EffectManager.Instance.StartMentalEffect(value);
+                
+                    if (value >= 1f)
                     {
-                        curEnterNPCTrigger.GetComponent<EnterPath>().StartEnterToPath();
+                        isComplete = true;
                     }
-                    else
+                }
+                else
+                {
+                    //스페이스에서 손 때면, 현 상태에서 게이지 감소하는 코드
+                    float value = _progressBarFill.DrainAmount();
+                    EffectManager.Instance.StartMentalEffect(value);
+
+                    if (value <= 0)
                     {
-                        StartEnterToPath("PrologueMap_real");
-                        if (EventManagerYKM.Instance.currentEventID == "Event_A009")
-                        {
-                            StartCoroutine(EventManagerYKM.Instance.ExecuteEvent("Event_A010"));
-                        }
-                        else
-                        {
-                            StartCoroutine(EventManagerYKM.Instance.ExecuteEvent("Event_A028"));
-                        }
-                        
+                        FailEnter();
                     }
                 }
             }
-            else
-            {
-                //스페이스에서 손 때면, 현 상태에서 연출 멈추는 효과 구현 코드 여기에 작성되면 됨.
-                //예시 : _uiManager.transitionAnimator.speed = 0;
-            }
-            */
+        }
+        
     }
     void FixedUpdate()
     {
-        /*
         //정신세게 진입이 시작되었다면
         if (_startEnter)
         {
             _timer += Time.fixedDeltaTime;
 
-            if (_isComplete)
+            if (isComplete)
             {
-                Debug.Log("시간 내에 진입 완료");
-                InitProgressBar();
+                Debug.Log($"#{_mentalInfo.mentalId} 시간 내에 진입 완료.");
+                CompleteEnter();
             }
 
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
                 Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
             {
-                Debug.Log("진입 중에 움직임");
-                InitProgressBar();
+                Debug.Log($"#{_mentalInfo.mentalId} 진입 중에 움직여서 초기화 됨.");
+                FailEnter();
             }
 
             if (_timer >= _enterTime)
             {
-                if (!_isComplete)
+                if (!isComplete)
                 {
-                    Debug.Log("시간 내에 진입 완료하지 못함");
-                    InitProgressBar();
+                    Debug.Log($"#{_mentalInfo.mentalId} 시간 내에 진입하지 못함.");
+                    FailEnter();
                 }
             }
         }
-        */
     }
     
-    /*
     public void InitProgressBar()
     {
-        _progressBarFill.InitFillAmount();
-        _timer = 0f;
         _progressBarUI.SetActive(false);
-        if (!_isComplete)
-        {
-            EffectManager.Instance.ResetMetalEffect();
-            //여기에 연출 초기화 하는 코드 작성되면 됨.
-            // 예시 : _uiManager.transitionAnimator.Play("TS_4_Normal_Reveal", 0, 0);
-        }
+        EffectManager.Instance.ResetMetalEffect();
+        
+        _timer = 0f;
+        _progressBarFill.InitFillAmount();
         _startEnter = false;
+
+        _mentalInfo = null;
     }
-    */
+
+    public void StartEnter(MentalStructure mentalStructure)
+    {
+        _mentalInfo = mentalStructure;
+        _startEnter = true;
+        _progressBarUI.SetActive(true);
+    }
+
+    void CompleteEnter()
+    {
+        //씬 이동
+        StartCoroutine(LoadSceneAsync(_mentalInfo.destination));
+        
+        //이동 성공 시 결과가 있다면 실행
+        if (!string.IsNullOrEmpty(_mentalInfo.mentalTrueResult))
+        {
+            StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(_mentalInfo.mentalTrueResult));
+        }
+        
+        //바 초기화
+        InitProgressBar();
+    }
+
+    void FailEnter()
+    {
+        //이동 실패 시 결과가 있다면 실행
+        foreach (var result in _mentalInfo.mentalFalseResults)
+        {
+            if (!string.IsNullOrEmpty(result))
+            {
+                StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(result));
+            }
+        }
+        
+        //바 초기화
+        InitProgressBar();
+
+        if (EventManagerYKM.Instance.currentEventID == "Event_A026")
+        {
+            EventManagerYKM.Instance.nextEventID = "Event_A026";
+        }
+    }
+    
+    private IEnumerator LoadSceneAsync(string sceneName)
+    {
+        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
+        
+        while (!operation.isDone)
+        {
+            yield return null;
+        }
+    }
 }

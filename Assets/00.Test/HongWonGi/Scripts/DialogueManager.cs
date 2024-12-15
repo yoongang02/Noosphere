@@ -67,7 +67,7 @@ public class DialogueManager : Singleton<DialogueManager>
         DialogueStructure dialogue = DataManager.Instance._dialogue[_currentDialogueId];
     
         bool canProceed = dialogue.triggerType == "auto" || 
-                          (dialogue.triggerType == "interact" && PlayerInteract.Instance.isInteractObj);
+                          (dialogue.triggerType == "interact" && dialogue.interactionType == "object");
 
         if (!canProceed) return;
        
@@ -130,7 +130,13 @@ public class DialogueManager : Singleton<DialogueManager>
             else
             {
                 Debug.LogWarning("대화가 종료되었습니다.");
-
+                
+                //예외 이벤트 처리 코드/////////////
+                if (EventManagerYKM.Instance.currentEventID == "Event_A004")
+                {
+                    GameObject.Find("Artresource_0002").transform.GetChild(0).gameObject.SetActive(false);
+                }
+                ////////////////////////////////
                 PlayerController.Instance.isDialogueOn = false;
                 OnDialogueEnd?.Invoke();
                 _currentDialogueId = "";
@@ -149,7 +155,7 @@ public class DialogueManager : Singleton<DialogueManager>
                     PlayerController.Instance._currentNPC = null;
                 }
 
-                PlayerInteract.Instance.isInteractObj = false;
+                //PlayerInteract.Instance.isInteractObj = false;
             }
         }
     }
