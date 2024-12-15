@@ -22,14 +22,17 @@ public class EvidenceDetailUI : UIBase
     [SerializeField] private Image _secondPage;
     [SerializeField] private GameObject _prevPageBtn; //이전 페이지 버튼
     [SerializeField] private GameObject _nextPageBtn; //다음 페이지 버튼
-    
-    public override void OnOpen()
-    {
-        base.OnOpen();
-    }
 
     public override void OnOpen(EvidenceStructure evidence)
     {
+        base.OnOpen(evidence);
+        Debug.Log($"#{evidence}에 대한 상세 설명 오픈");
+        if (evidence == null)
+        {
+            Debug.LogError("🔥 evidence가 null이므로 OpenUI()를 호출할 수 없습니다.");
+            return;
+        }
+        
         //인벤토리에서 증거물 상세사항을 오픈할 경우에는 UI 순서를 위해 아래의 설정이 필요함.
         if (!UIManager.Instance.isInMap)
         {
@@ -39,10 +42,15 @@ public class EvidenceDetailUI : UIBase
         else
         {
             //맵에서 증거물 상세사항이 오픈된 경우에는 해당 증거물을 습득함.
+            Debug.Log($"Evidence Detail UI {evidence} 확인");
             evidence.AcquireEvidence();
         }
         SetDetailEvidence(evidence);
-        base.OnOpen(evidence);
+        
+        if (transform.childCount > 0)
+        {
+            transform.GetChild(0).gameObject.SetActive(true);
+        }
     }
 
     public override void OnClose()
@@ -57,6 +65,8 @@ public class EvidenceDetailUI : UIBase
         _objectUI.SetActive(false);
         _onePageUI.SetActive(false);
         _twoPageUI.SetActive(false);
+        
+        transform.GetChild(0).gameObject.SetActive(false);
     }
 
     public override void HandleKeyboardInput()
@@ -64,45 +74,18 @@ public class EvidenceDetailUI : UIBase
         base.HandleKeyboardInput();
         
         //키보드 A - 이전 페이지 버튼 
-        if (_prevPageBtn.activeSelf && Input.GetKeyDown(KeyCode.A))
+        if (_prevPageBtn != null && _nextPageBtn != null)
         {
-            RemoveAllListeners();
-            AddOnClickListener(ClickPrevPageEvent);
-            OnClickEvent?.Invoke();
-        }
-
-        //키보드 D - 다음 페이지 버튼
-        if (_nextPageBtn.activeSelf && Input.GetKeyDown(KeyCode.D))
-        { 
-            RemoveAllListeners();
-            AddOnClickListener(ClickNextPageEvent);
-            OnClickEvent?.Invoke();
-        }
-        
-    }
-
-    public override void HandleMouseInput()
-    {
-        base.HandleMouseInput();
-        
-        PointerEventData pointerData = new PointerEventData(EventSystem.current)
-        {
-            position = Input.mousePosition
-        };
-
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(pointerData, results);
-
-        foreach (var result in results)
-        {
-            if (result.gameObject == _prevPageBtn && Input.GetMouseButtonDown(0))
+            if (_prevPageBtn.activeSelf && Input.GetKeyDown(KeyCode.A))
             {
                 RemoveAllListeners();
                 AddOnClickListener(ClickPrevPageEvent);
                 OnClickEvent?.Invoke();
             }
-            else if (result.gameObject == _nextPageBtn && Input.GetMouseButtonDown(0))
-            {
+
+            //키보드 D - 다음 페이지 버튼
+            if (_nextPageBtn.activeSelf && Input.GetKeyDown(KeyCode.D))
+            { 
                 RemoveAllListeners();
                 AddOnClickListener(ClickNextPageEvent);
                 OnClickEvent?.Invoke();
@@ -113,7 +96,7 @@ public class EvidenceDetailUI : UIBase
     void SetDetailEvidence(EvidenceStructure evidence)
     {
         ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresourceId];
-
+        
         if (artResource != null)
         {
             if (!UIManager.Instance.isInMap)
@@ -161,8 +144,16 @@ public class EvidenceDetailUI : UIBase
                 Destroy(child.gameObject);
             }
         }
-
-        Instantiate(artResource.GetPrefabFromFilePath(), _objectUI.transform);
+        
+        GameObject prefab = artResource.GetPrefabFromFilePath();
+        if (prefab != null)
+        {
+            Instantiate(prefab, _objectUI.transform);
+        }
+        else
+        {
+            Debug.LogError($"🔥 {artResource.filePath}에 해당하는 프리팹이 존재하지 않습니다.");
+        }
     }
 
     void InitPageVariables(ArtResourceStructure artResource)

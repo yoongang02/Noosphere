@@ -31,10 +31,10 @@ public class ChapterClickHandler : InventoryNavigator, IPointerClickHandler, IPo
         }
         
         //클릭한 오브젝트가 챕터인지 파악
-        GameObject clickedObject = eventData.pointerClick;
-        if (InventoryManager.Instance.deselectedChapterUIList.Contains(clickedObject))
+        GameObject enteredObject = eventData.pointerEnter;
+        if (InventoryManager.Instance.deselectedChapterUIList.Contains(enteredObject))
         {
-            int chapterIndex = InventoryManager.Instance.deselectedChapterUIList.IndexOf(clickedObject);
+            int chapterIndex = InventoryManager.Instance.deselectedChapterUIList.IndexOf(enteredObject);
             HoverEnterOnChapter(chapterIndex);
         }
     }
@@ -48,10 +48,10 @@ public class ChapterClickHandler : InventoryNavigator, IPointerClickHandler, IPo
         }
         
         //클릭한 오브젝트가 챕터인지 파악
-        GameObject clickedObject = eventData.pointerClick;
-        if (InventoryManager.Instance.deselectedChapterUIList.Contains(clickedObject))
+        GameObject exitedObject = eventData.pointerEnter;
+        if (exitedObject != null)
         {
-            int chapterIndex = InventoryManager.Instance.deselectedChapterUIList.IndexOf(clickedObject);
+            int chapterIndex = InventoryManager.Instance.deselectedChapterUIList.IndexOf(exitedObject);
             HoverExitOnChapter(chapterIndex);
         }
     }

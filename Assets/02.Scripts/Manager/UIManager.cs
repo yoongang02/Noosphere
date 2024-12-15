@@ -48,7 +48,12 @@ public class UIManager : Singleton<UIManager>
     public void OpenUI(UIBase ui, EvidenceStructure evidence)
     {
         if (ui == null) return;
-
+        
+        if (evidence == null)
+        {
+            Debug.LogError("🔥 evidence가 null이므로 OpenUI()를 호출할 수 없습니다.");
+            return;
+        }
         // 스택에 추가하고 UI를 활성화
         // 상호작용 금지
         uiStack.Push(ui);
@@ -90,5 +95,10 @@ public class UIManager : Singleton<UIManager>
     public bool IsUIOpen(UIBase ui)
     {
         return uiStack.Contains(ui);
+    }
+
+    public bool IsAcquiredInInvestigateUI()
+    {
+        return investigateUI.GetComponent<InvestigateUI>().isAquired;
     }
 }

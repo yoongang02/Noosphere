@@ -59,10 +59,10 @@ public class SlotClickHandler : InventoryNavigator, IPointerClickHandler, IPoint
             return;
         }
         
-        GameObject clickedObject = eventData.pointerClick;
-        if (inventorySlots.Contains(clickedObject))
+        GameObject enteredObject = eventData.pointerEnter;
+        if (inventorySlots.Contains(enteredObject))
         {
-            SetSlotSelected(clickedObject);
+            SetSlotSelected(enteredObject);
         }
     }
 
@@ -74,10 +74,11 @@ public class SlotClickHandler : InventoryNavigator, IPointerClickHandler, IPoint
             return;
         }
         
-        GameObject clickedObject = eventData.pointerClick;
-        if (inventorySlots.Contains(clickedObject))
+        GameObject exitedObject = eventData.pointerEnter;
+        
+        if (exitedObject != null)
         {
-            SetSlotDeselected(clickedObject);
+            SetSlotDeselected(exitedObject);
         }
     }
 }
