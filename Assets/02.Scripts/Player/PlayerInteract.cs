@@ -38,6 +38,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
                     {
                         StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
                         HideInteractionMark();
+                        break;
                     }
                 }
             }
@@ -57,7 +58,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
                 if (CheckInteractionAvail(eventID))
                 {
                     StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
-                    return;
+                    break;
                 }
             }
         }
@@ -70,7 +71,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
                 if (CheckInteractionAvail(eventID))
                 {
                     ShowInteractionMark();
-                    return;
+                    break;
                 }
             }
         }
@@ -83,7 +84,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
                 if (CheckInteractionAvail(eventID))
                 {
                     ShowInteractionMark();
-                    return;
+                    break;
                 }
             }
         }
@@ -114,7 +115,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
         _interactionMark.SetActive(true);
     }
 
-    void HideInteractionMark()
+    public void HideInteractionMark()
     {
         _interactionMark.SetActive(false);
     }

@@ -130,7 +130,13 @@ public class DialogueManager : Singleton<DialogueManager>
             else
             {
                 Debug.LogWarning("대화가 종료되었습니다.");
-
+                
+                //예외 이벤트 처리 코드/////////////
+                if (EventManagerYKM.Instance.currentEventID == "Event_A004")
+                {
+                    GameObject.Find("Artresource_0002").transform.GetChild(0).gameObject.SetActive(false);
+                }
+                ////////////////////////////////
                 PlayerController.Instance.isDialogueOn = false;
                 OnDialogueEnd?.Invoke();
                 _currentDialogueId = "";

@@ -21,7 +21,7 @@ public class MentalEnterProcess : MonoBehaviour
     {
         if (!UIManager.Instance.IsAnyUIOpen())
         {
-            if (PlayerInteract.Instance.canInteract && PlayerInteract.Instance.mentalTrigger != null && Input.GetKeyDown(KeyCode.Space))
+            if (!_startEnter && PlayerInteract.Instance.canInteract && PlayerInteract.Instance.mentalTrigger != null && Input.GetKeyDown(KeyCode.Space))
             {
                 foreach (string eventID in PlayerInteract.Instance.mentalTrigger.GetComponent<EventTrigger>().eventIdList)
                 {
@@ -29,6 +29,8 @@ public class MentalEnterProcess : MonoBehaviour
                     {
                         //이벤트 실행 가능하다면 실행
                         StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
+                        PlayerInteract.Instance.HideInteractionMark();
+                        break;
                     }
                     else
                     {
@@ -52,7 +54,7 @@ public class MentalEnterProcess : MonoBehaviour
                 }
                 else
                 {
-                    //스페이스에서 손 때면, 현 상태에서 연출 멈추는 효과 구현 코드 여기에 작성되면 됨.
+                    //스페이스에서 손 때면, 현 상태에서 게이지 감소하는 코드
                     float value = _progressBarFill.DrainAmount();
                     EffectManager.Instance.StartMentalEffect(value);
 
@@ -117,21 +119,21 @@ public class MentalEnterProcess : MonoBehaviour
 
     void CompleteEnter()
     {
-        //바 초기화
-        InitProgressBar();
         //씬 이동
         StartCoroutine(LoadSceneAsync(_mentalInfo.destination));
+        
         //이동 성공 시 결과가 있다면 실행
         if (!string.IsNullOrEmpty(_mentalInfo.mentalTrueResult))
         {
             StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(_mentalInfo.mentalTrueResult));
         }
+        
+        //바 초기화
+        InitProgressBar();
     }
 
     void FailEnter()
     {
-        //바 초기화
-        InitProgressBar();
         //이동 실패 시 결과가 있다면 실행
         foreach (var result in _mentalInfo.mentalFalseResults)
         {
@@ -139,6 +141,14 @@ public class MentalEnterProcess : MonoBehaviour
             {
                 StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(result));
             }
+        }
+        
+        //바 초기화
+        InitProgressBar();
+
+        if (EventManagerYKM.Instance.currentEventID == "Event_A026")
+        {
+            EventManagerYKM.Instance.nextEventID = "Event_A026";
         }
     }
     
