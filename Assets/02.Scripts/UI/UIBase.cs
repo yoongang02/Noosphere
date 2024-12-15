@@ -21,7 +21,6 @@ public class UIBase : MonoBehaviour
         if (IsTopUI())
         {
             HandleKeyboardInput();
-            HandleMouseInput();
         }
     }
     
@@ -45,12 +44,7 @@ public class UIBase : MonoBehaviour
     
     public virtual void HandleKeyboardInput()
     {
-        //UI에 대해 공통적인 키보드 입력 상호작용이 있다면 여기서 작성.
-        //각 UI마다 별도로 키보드 입력 상호작용이 있다면 해당 UI 스크립트에서 override해서 작성.
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            //UIManager.Instance.CloseTopUI();
-        }
+        
     }
     
     public virtual void HandleMouseInput()

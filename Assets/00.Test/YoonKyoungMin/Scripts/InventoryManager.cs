@@ -84,12 +84,12 @@ public class InventoryManager : UIBase
     void Update()
     {
         //인벤토리 열기
-        if (!UIManager.Instance.IsUIOpen(this))
+        if (!UIManager.Instance.IsAnyUIOpen())
         {
             //키보드 입력 - Tab 버튼
             if (Input.GetKeyDown(KeyCode.Tab))
             {
-                UIManager.Instance.OpenUI(this);
+                UIManager.Instance.OpenUI(UIManager.Instance.inventoryUI);
             }
         
             //마우스 입력 - 인벤토리 아이콘 클릭
@@ -105,7 +105,7 @@ public class InventoryManager : UIBase
             {
                 if (result.gameObject == _inventoryIcon && Input.GetMouseButtonDown(0))
                 {
-                    UIManager.Instance.OpenUI(this);
+                    UIManager.Instance.OpenUI(UIManager.Instance.inventoryUI);
                 }
             }
         }
@@ -122,6 +122,7 @@ public class InventoryManager : UIBase
     public override void OnClose()
     {
         base.OnClose();
+        _inventoryWindow.SetActive(false);
     }
 
     public override void HandleKeyboardInput()

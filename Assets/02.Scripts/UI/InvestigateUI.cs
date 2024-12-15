@@ -88,6 +88,7 @@ public class InvestigateUI : UIBase
         {
             if (result.gameObject == _yesBtn)
             {
+                RemoveAllListeners();
                 AddYesBtnEvent();
                 if (Input.GetMouseButtonDown(0)) 
                 {
@@ -96,6 +97,7 @@ public class InvestigateUI : UIBase
             }
             else if (result.gameObject == _noBtn)
             {
+                RemoveAllListeners();
                 AddNoBtnEvent();
                 if (Input.GetMouseButtonDown(0)) 
                 {
@@ -108,6 +110,7 @@ public class InvestigateUI : UIBase
     void AddYesBtnEvent()
     {
         AddOnHoverListener(SelectYesBtn);
+        AddOnClickListener(OnClose);
         AddOnClickListener(UIManager.Instance.evidenceDetailUI.OnOpen);
         OnHoverEvent?.Invoke();
     }
@@ -131,6 +134,13 @@ public class InvestigateUI : UIBase
         SetButtonSelected(_noBtn,UnityExtension.HexColor(GreenColor));
         SetButtonSelected(_yesBtn,UnityExtension.HexColor(WhiteColor));
         _curSelectedBtn = _noBtn;
+
+        
+        //예외 이벤트 처리 코드
+        if (EventManagerYKM.Instance.currentEventID == "Event_A007")
+        {
+            EventManagerYKM.Instance.nextEventID = "Event_A007";
+        }
     }
     
     //증거물 조사 UI의 정보 세팅하기
