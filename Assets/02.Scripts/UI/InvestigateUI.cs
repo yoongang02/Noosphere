@@ -93,9 +93,12 @@ public class InvestigateUI : UIBase, IPointerClickHandler, IPointerEnterHandler,
     {
         HoverYesBtn();
         UIManager.Instance.CloseTopUI();
-        UIManager.Instance.OpenUI(UIManager.Instance.evidenceDetailUI,_curEvidence);
+        
         isAquired = true;
         UIManager.Instance.OnSelectEnd?.Invoke();
+        
+        UIManager.Instance.OpenUI(UIManager.Instance.evidenceDetailUI,_curEvidence);
+        
         _curEvidence = null;
     }
 
@@ -103,8 +106,10 @@ public class InvestigateUI : UIBase, IPointerClickHandler, IPointerEnterHandler,
     {
         HoverNoBtn();
         UIManager.Instance.CloseTopUI();
+        
         isAquired = false;
         UIManager.Instance.OnSelectEnd?.Invoke();
+        
         _curEvidence = null;
     }
     //증거물 조사 UI의 정보 세팅하기

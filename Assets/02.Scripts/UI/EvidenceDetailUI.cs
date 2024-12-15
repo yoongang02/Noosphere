@@ -27,11 +27,13 @@ public class EvidenceDetailUI : UIBase
     {
         base.OnOpen(evidence);
         Debug.Log($"#{evidence}에 대한 상세 설명 오픈");
+        
         if (evidence == null)
         {
             Debug.LogError("🔥 evidence가 null이므로 OpenUI()를 호출할 수 없습니다.");
             return;
         }
+        
         
         //인벤토리에서 증거물 상세사항을 오픈할 경우에는 UI 순서를 위해 아래의 설정이 필요함.
         if (!UIManager.Instance.isInMap)
@@ -45,6 +47,7 @@ public class EvidenceDetailUI : UIBase
             Debug.Log($"Evidence Detail UI {evidence} 확인");
             evidence.AcquireEvidence();
         }
+        
         SetDetailEvidence(evidence);
         
         if (transform.childCount > 0)
@@ -96,6 +99,7 @@ public class EvidenceDetailUI : UIBase
     void SetDetailEvidence(EvidenceStructure evidence)
     {
         ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresourceId];
+        Debug.Log(artResource.artresourceId + " 아트 리소스 아이디!");
         
         if (artResource != null)
         {
@@ -107,6 +111,7 @@ public class EvidenceDetailUI : UIBase
             {
                 _bgImg.sprite = artResource.GetSpriteFromFilePath(artResource.filePathMapBackground);
             }
+            
             
             //evidence 성질에 따라 프리팹인지 UI인지 결정
             if (evidence.shapeType == "Object")
@@ -126,6 +131,7 @@ public class EvidenceDetailUI : UIBase
                 SetTwoPageDetail(artResource);
                 _twoPageUI.SetActive(true);
             }
+            
         }
         else
         {
@@ -164,6 +170,7 @@ public class EvidenceDetailUI : UIBase
         _totalPage = artResource.pageCnt;
         //시작 위치에서 totalPage 수 만큼, 변수 증가해서 읽어들이기
         string imgPath = artResource.filePathStartPage;
+        
         for (int page = 0; page < _totalPage; page++)
         {
             int lastUnderscoreIndex = imgPath.LastIndexOf('_'); 
@@ -231,8 +238,8 @@ public class EvidenceDetailUI : UIBase
         }
         
         //이미지 설정하기
-        _firstPage = _onePageUI.transform.Find("Pages").GetChild(0).gameObject.GetComponent<Image>();
-        _secondPage = _onePageUI.transform.Find("Pages").GetChild(1).gameObject.GetComponent<Image>();
+        _firstPage = _twoPageUI.transform.Find("Pages").GetChild(0).gameObject.GetComponent<Image>();
+        _secondPage = _twoPageUI.transform.Find("Pages").GetChild(1).gameObject.GetComponent<Image>();
         _firstPage.sprite = _pages[0];
         _secondPage.sprite = _pages[1];
     }
@@ -252,8 +259,8 @@ public class EvidenceDetailUI : UIBase
     void UpdateTwoPage()
     {
         //이미지 업데이트
-        _firstPage.sprite = _pages[_curPage - 1];
-        _secondPage.sprite = _pages[_curPage];
+        _firstPage.sprite = _pages[_curPage - 2];
+        _secondPage.sprite = _pages[_curPage - 1];
         //버튼 업데이트
         bool prev = _curPage != 2;
         bool next = _curPage != _totalPage;
@@ -267,11 +274,19 @@ public class EvidenceDetailUI : UIBase
         if (_secondPage == null)
         {
             _curPage++;
+            if (_curPage > _totalPage)
+            {
+                _curPage = _totalPage;
+            }
             UpdateOnePage();
         }
         else
         {
             _curPage += 2;
+            if (_curPage > _totalPage)
+            {
+                _curPage = _totalPage;
+            }
             UpdateTwoPage();
         }
     }
