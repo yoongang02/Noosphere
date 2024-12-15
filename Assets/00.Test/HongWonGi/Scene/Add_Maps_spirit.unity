@@ -659,8 +659,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b589533c7e5e0664b966eb89ef79208e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snapOffsst: 30
-  piecePos: {fileID: 42378052}
+  _piecePos: {fileID: 42378052}
+  isRight: 0
 --- !u!1 &40920358
 GameObject:
   m_ObjectHideFlags: 0
@@ -754,7 +754,7 @@ GameObject:
   m_Component:
   - component: {fileID: 42378053}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4686,8 +4686,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b589533c7e5e0664b966eb89ef79208e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snapOffsst: 30
-  piecePos: {fileID: 563790245}
+  _piecePos: {fileID: 563790245}
+  isRight: 0
 --- !u!1001 &431904517
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5591,7 +5591,7 @@ GameObject:
   m_Component:
   - component: {fileID: 492250543}
   m_Layer: 5
-  m_Name: GameObject (4)
+  m_Name: 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5831,7 +5831,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 235504801}
-  - {fileID: 1880075768}
+  - {fileID: 1679521688}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -6281,7 +6281,7 @@ GameObject:
   m_Component:
   - component: {fileID: 563790246}
   m_Layer: 5
-  m_Name: GameObject (1)
+  m_Name: 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7932,8 +7932,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b589533c7e5e0664b966eb89ef79208e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snapOffsst: 30
-  piecePos: {fileID: 962363655}
+  _piecePos: {fileID: 962363655}
+  isRight: 0
 --- !u!1 &690943116
 GameObject:
   m_ObjectHideFlags: 0
@@ -9463,7 +9463,7 @@ GameObject:
   m_Component:
   - component: {fileID: 962363656}
   m_Layer: 5
-  m_Name: GameObject (2)
+  m_Name: 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15002,8 +15002,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b589533c7e5e0664b966eb89ef79208e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snapOffsst: 30
-  piecePos: {fileID: 1727402435}
+  _piecePos: {fileID: 1727402435}
+  isRight: 0
 --- !u!1001 &1459568282
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16017,11 +16017,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 42378053}
   - {fileID: 563790246}
   - {fileID: 962363656}
   - {fileID: 1727402436}
   - {fileID: 492250543}
+  - {fileID: 42378053}
   m_Father: {fileID: 1770775042}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -17062,6 +17062,64 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1669906209}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1679521687
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1679521688}
+  - component: {fileID: 1679521689}
+  m_Layer: 5
+  m_Name: PuzzleMirror
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1679521688
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679521687}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1880075768}
+  m_Father: {fileID: 499529636}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1679521689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679521687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7477f8eadf76b86448c79cb3a80b5961, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dontDestroy: 0
+  mirrorPieces:
+  - {fileID: 429206952}
+  - {fileID: 673108848}
+  - {fileID: 1443306951}
+  - {fileID: 1991725460}
+  - {fileID: 28705162}
+  isPuzzleClear: 0
+  ui: {fileID: 1880075767}
 --- !u!1001 &1684420538
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17366,7 +17424,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1727402436}
   m_Layer: 5
-  m_Name: GameObject (3)
+  m_Name: 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17605,7 +17663,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -603, y: 37}
+  m_AnchoredPosition: {x: -602.5, y: 37}
   m_SizeDelta: {x: 69, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1746459447
@@ -19526,7 +19584,7 @@ GameObject:
   - component: {fileID: 1880075770}
   - component: {fileID: 1880075769}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: MirrorPuzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19539,7 +19597,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1880075767}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -19547,12 +19605,12 @@ RectTransform:
   - {fileID: 1770775042}
   - {fileID: 378296681}
   - {fileID: 919394351}
-  m_Father: {fileID: 499529636}
+  m_Father: {fileID: 1679521688}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 1820, y: 980}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1880075769
 MonoBehaviour:
@@ -19567,7 +19625,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.99959075, b: 0, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.7882353}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -20747,8 +20805,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b589533c7e5e0664b966eb89ef79208e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snapOffsst: 30
-  piecePos: {fileID: 492250542}
+  _piecePos: {fileID: 492250542}
+  isRight: 0
 --- !u!1001 &1993872917
 PrefabInstance:
   m_ObjectHideFlags: 0
