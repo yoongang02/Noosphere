@@ -4,16 +4,26 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class MirrorPuzzleManager :Singleton<MirrorPuzzleManager>
+public class MirrorPuzzleManager : Singleton<MirrorPuzzleManager>
 {
-    [SerializeField] private List<GameObject> mirrorPieces;
+    [SerializeField] private List<GameObject> _mirrorPieces;
+    [SerializeField] private GameObject _mirror;
+    [SerializeField] private GameObject _brokeMirror;
+    [SerializeField] private GameObject _mirrorPanel;
     public bool isPuzzleClear = false;
     public Action OnResetPuzzle;
-    public GameObject ui;
+    public bool isMirrorBroke = false;
+
 
     public void GetMirrorPiece(int mirrorIdx)
     {
-        mirrorPieces[mirrorIdx].SetActive(true);
+        if (!isMirrorBroke)
+        {
+            Debug.Log("거울 안깨져서 조각 획득 x");
+            return;
+        }
+
+        _mirrorPieces[mirrorIdx].SetActive(true);
     }
 
     private void Update()
@@ -25,10 +35,10 @@ public class MirrorPuzzleManager :Singleton<MirrorPuzzleManager>
     }
 
     public void CheckAnswer()
-    { 
+    {
         bool allCorrect = true;
-        
-        foreach (var piece in mirrorPieces)
+
+        foreach (var piece in _mirrorPieces)
         {
             if (!piece.GetComponent<PuzzlePiece>().isRight)
             {
@@ -36,19 +46,19 @@ public class MirrorPuzzleManager :Singleton<MirrorPuzzleManager>
                 break;
             }
         }
-            
+
         if (allCorrect)
         {
             isPuzzleClear = true;
-            ui.SetActive(false);
+            _mirrorPanel.SetActive(false);
+            _mirror.SetActive(true);
+            _brokeMirror.SetActive(false);
             Debug.Log("퍼즐 클리어!");
         }
-        
     }
 
-    public void ResetAllPieces()//거울 퍼즐 초기화
+    public void ResetAllPieces() //거울 퍼즐 초기화
     {
         OnResetPuzzle?.Invoke();
     }
-    
 }

@@ -10,6 +10,7 @@ public class BrokeMirrorEffect : MonoBehaviour
 
     private void OnEnable()
     {
+        MirrorPuzzleManager.Instance.isMirrorBroke = true;
         _mirror.SetActive(false);
         _brokeMirror.SetActive(true);
     }
