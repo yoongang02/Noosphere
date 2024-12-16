@@ -5,11 +5,13 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class MirrorPuzzleManager : Singleton<MirrorPuzzleManager>
-{
+{ 
+    [SerializeField] private GameObject _mirrorPanel;
     [SerializeField] private List<GameObject> _mirrorPieces;
+    [Header("World Mirror Object")]
     [SerializeField] private GameObject _mirror;
     [SerializeField] private GameObject _brokeMirror;
-    [SerializeField] private GameObject _mirrorPanel;
+   
     public bool isPuzzleClear = false;
     public Action OnResetPuzzle;
     public bool isMirrorBroke = false;

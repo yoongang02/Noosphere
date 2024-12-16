@@ -215,14 +215,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroy: 0
-  mirrorPieces:
+  _mirrorPanel: {fileID: 7534624903047882452}
+  _mirrorPieces:
   - {fileID: 4960867597548236366}
   - {fileID: 1931017513398677976}
   - {fileID: 7761888314173212186}
   - {fileID: 8973750545666045021}
   - {fileID: 3320794656694989821}
+  _mirror: {fileID: 0}
+  _brokeMirror: {fileID: 0}
   isPuzzleClear: 0
-  ui: {fileID: 7534624903047882452}
+  isMirrorBroke: 0
 --- !u!1 &3082801701268170086
 GameObject:
   m_ObjectHideFlags: 0
@@ -1056,7 +1059,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3701916025402256790
 RectTransform:
   m_ObjectHideFlags: 0
