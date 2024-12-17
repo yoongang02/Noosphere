@@ -287,33 +287,6 @@ public class InventoryNavigator : MonoBehaviour
             }
         }
     }
-    //챕터 호버 exit
-    protected void HoverExitOnChapter()
-    {
-        Debug.Log("Chapter Hover Exit 실행되나??");
-        //현재 기본으로 보고 있던 챕터가 보이도록
-        int chapterIndex = InventoryManager.Instance.currentViewChapter;
-        GameObject curChapterSelected = InventoryManager.Instance.selectedChapterUIList[chapterIndex];
-        GameObject curChapterDeselected = InventoryManager.Instance.deselectedChapterUIList[chapterIndex];
-        
-        //선택 버전의 나머지 애들 비활성화
-        foreach (var chapter in InventoryManager.Instance.selectedChapterUIList)
-        {
-            if (chapter != curChapterSelected)
-            {
-                chapter.SetActive(false);
-            }
-        }
-            
-        //비선택 버전의 나머지 애들 활성화
-        foreach (var chapter in InventoryManager.Instance.deselectedChapterUIList)
-        {
-            if (chapter != curChapterDeselected)
-            {
-                chapter.SetActive(true);
-            }
-        }
-    }
     //현실 세계 항목에 있는 슷롯인지 확인
     private bool IsInRealWorldSlot()
     {

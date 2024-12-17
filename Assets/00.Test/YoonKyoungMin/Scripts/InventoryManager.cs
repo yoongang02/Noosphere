@@ -124,6 +124,7 @@ public class InventoryManager : UIBase
     {
         base.OnClose();
         UIManager.Instance.isInMap = true;
+        currentViewChapter = (int)EventManagerYKM.Instance.curStageInfo;
         _inventoryWindow.SetActive(false);
     }
 
