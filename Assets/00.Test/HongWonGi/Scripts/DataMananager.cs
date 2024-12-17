@@ -12,7 +12,7 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<string, LockConditionStructure> _lockConditions = new Dictionary<string, LockConditionStructure>();
     public Dictionary<string, EvidenceStructure> _evidences = new Dictionary<string, EvidenceStructure>();
     public Dictionary<string, ArtResourceStructure> _artResources = new Dictionary<string, ArtResourceStructure>();
-     public Dictionary<string, DialogueStructure> _dialogue = new Dictionary<string, DialogueStructure>();
+    public Dictionary<string, DialogueStructure> _dialogue = new Dictionary<string, DialogueStructure>();
     public Dictionary<string, InputFieldStructure> _input = new Dictionary<string, InputFieldStructure>();
     public Dictionary<string, EffectStructure> _effect = new Dictionary<string, EffectStructure>();
     public Dictionary<string, SoundResourceStructure> _sound = new Dictionary<string, SoundResourceStructure>();

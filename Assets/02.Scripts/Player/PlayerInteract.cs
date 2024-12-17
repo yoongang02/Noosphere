@@ -10,8 +10,8 @@ public class PlayerInteract : Singleton<PlayerInteract>
     public GameObject interactionTrigger;
     [SerializeField] private GameObject _interactionMark;
     [SerializeField] private GameObject _evidenceObjectInScene;
-    
-    [Space(5)][Header("정신세계 진입")] 
+
+    [Space(5)] [Header("정신세계 진입")] public bool isInMental = false;
     public GameObject mentalTrigger;
     
     void Update()
