@@ -33,13 +33,13 @@ public class LockConditionStructure
     public void UnLock()
     {
         Debug.Log("lock condition 해제");
-        PlayerController.Instance.isDialogueOn = false;
+        PlayerController.Instance.canMove = true;
         PlayerInteract.Instance.canInteract = true;
     }
 
     void LockPlayerMove()
     {
-        PlayerController.Instance.isDialogueOn = true;
+        PlayerController.Instance.canMove = false;
         Debug.Log("플레이어 움직임 Lock");
     }
 

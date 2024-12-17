@@ -44,7 +44,6 @@ public class EvidenceDetailUI : UIBase
         else
         {
             //맵에서 증거물 상세사항이 오픈된 경우에는 해당 증거물을 습득함.
-            Debug.Log($"Evidence Detail UI {evidence} 확인");
             evidence.AcquireEvidence();
         }
         
@@ -70,6 +69,12 @@ public class EvidenceDetailUI : UIBase
         _twoPageUI.SetActive(false);
         
         transform.GetChild(0).gameObject.SetActive(false);
+        
+        //예외 이벤트 처리 코드 - 정신세계 첫 진입 시, 인벤토리 관련 다이얼로그
+        if (EventManagerYKM.Instance.currentEventID == "Event_A007")
+        {
+            StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(EventManagerYKM.Instance.nextEventID));
+        }
     }
 
     public override void HandleKeyboardInput()
@@ -180,9 +185,6 @@ public class EvidenceDetailUI : UIBase
             Sprite pageImg = artResource.GetSpriteFromFilePath(modifiedString);
             _pages.Add(pageImg);
         }
-        //버튼 참조하기
-        _prevPageBtn = _onePageUI.transform.Find("PageBtns").GetChild(0).gameObject;
-        _nextPageBtn = _onePageUI.transform.Find("PageBtns").GetChild(1).gameObject;
         //이미지 null로 초기화
         _firstPage = null;
         _secondPage = null;
@@ -196,6 +198,11 @@ public class EvidenceDetailUI : UIBase
         //페이지가 1개인 경우 vs 1개 이상인 경우
         //1개인 경우 : 좌우이동 버튼 비활성화
         //1개 이상인 경우 : 좌우이동 버튼 활성화
+        
+        //버튼 참조하기
+        _prevPageBtn = _onePageUI.transform.Find("PageBtns").GetChild(0).gameObject;
+        _nextPageBtn = _onePageUI.transform.Find("PageBtns").GetChild(1).gameObject;
+        
         if (_totalPage == 1)
         {
             _prevPageBtn.SetActive(false);
@@ -203,7 +210,7 @@ public class EvidenceDetailUI : UIBase
         }
         else if (_totalPage > 1)
         {
-            _prevPageBtn.SetActive(false);
+            _prevPageBtn.SetActive(true);
             _nextPageBtn.SetActive(true);
         }
         else
@@ -213,7 +220,7 @@ public class EvidenceDetailUI : UIBase
         
         //이미지 설정하기
         _firstPage = _onePageUI.transform.Find("Pages").GetChild(0).gameObject.GetComponent<Image>();
-        _firstPage.sprite = _pages[0];
+        UpdateOnePage();
     }
     
     // shapeType이 twoPage인 증거물인 경우
@@ -221,6 +228,11 @@ public class EvidenceDetailUI : UIBase
     {
         //페이지 초기화
         _curPage = 2;
+        
+        //버튼 참조하기
+        _prevPageBtn = _twoPageUI.transform.Find("PageBtns").GetChild(0).gameObject;
+        _nextPageBtn = _twoPageUI.transform.Find("PageBtns").GetChild(1).gameObject;
+        
         //페이지가 2개인 경우, 2개 이상인 경우
         if (_totalPage == 2)
         {
@@ -229,7 +241,7 @@ public class EvidenceDetailUI : UIBase
         }
         else if (_totalPage > 2)
         {
-            _prevPageBtn.SetActive(false);
+            _prevPageBtn.SetActive(true);
             _nextPageBtn.SetActive(true);
         }
         else
@@ -238,22 +250,34 @@ public class EvidenceDetailUI : UIBase
         }
         
         //이미지 설정하기
+        _twoPageUI.GetComponent<Image>().sprite = artResource.GetSpriteFromFilePath(artResource.filePathContentBackground);
         _firstPage = _twoPageUI.transform.Find("Pages").GetChild(0).gameObject.GetComponent<Image>();
         _secondPage = _twoPageUI.transform.Find("Pages").GetChild(1).gameObject.GetComponent<Image>();
-        _firstPage.sprite = _pages[0];
-        _secondPage.sprite = _pages[1];
+        UpdateTwoPage();
     }
 
     void UpdateOnePage()
     {
         //이미지 업데이트
         _firstPage.sprite = _pages[_curPage - 1];
-        //버튼 업데이트
-        bool prev = _curPage != 1;
-        bool next = _curPage != _totalPage;
         
-        _prevPageBtn.SetActive(prev);
-        _nextPageBtn.SetActive(next);
+        //버튼 업데이트
+        if (_curPage == 1)
+        {
+            SetBtnAble(_nextPageBtn);
+            SetBtnDisable(_prevPageBtn);
+            return;
+        }
+
+        if (_curPage == _totalPage)
+        {
+            SetBtnAble(_prevPageBtn);
+            SetBtnDisable(_nextPageBtn);
+            return;
+        }
+        
+        SetBtnAble(_prevPageBtn);
+        SetBtnAble(_nextPageBtn);
     }
     
     void UpdateTwoPage()
@@ -261,32 +285,40 @@ public class EvidenceDetailUI : UIBase
         //이미지 업데이트
         _firstPage.sprite = _pages[_curPage - 2];
         _secondPage.sprite = _pages[_curPage - 1];
-        //버튼 업데이트
-        bool prev = _curPage != 2;
-        bool next = _curPage != _totalPage;
         
-        _prevPageBtn.SetActive(prev);
-        _nextPageBtn.SetActive(next);
+        //버튼 업데이트
+        if (_curPage == 2)
+        {
+            SetBtnAble(_nextPageBtn);
+            SetBtnDisable(_prevPageBtn);
+            return;
+        }
+
+        if (_curPage == _totalPage)
+        {
+            SetBtnAble(_prevPageBtn);
+            SetBtnDisable(_nextPageBtn);
+            return;
+        }
+        
+        SetBtnAble(_prevPageBtn);
+        SetBtnAble(_nextPageBtn);
     }
 
     void ClickNextPageEvent()
     {
         if (_secondPage == null)
         {
+            if(_curPage >= _totalPage) return;
+            
             _curPage++;
-            if (_curPage > _totalPage)
-            {
-                _curPage = _totalPage;
-            }
             UpdateOnePage();
         }
         else
         {
+            if(_curPage >= _totalPage) return;
+            
             _curPage += 2;
-            if (_curPage > _totalPage)
-            {
-                _curPage = _totalPage;
-            }
             UpdateTwoPage();
         }
     }
@@ -295,13 +327,27 @@ public class EvidenceDetailUI : UIBase
     {
         if (_secondPage == null)
         {
+            if(_curPage <= 1) return;
+            
             _curPage--;
             UpdateOnePage();
         }
         else
         {
+            if(_curPage <= 2) return;
+            
             _curPage -= 2;
             UpdateTwoPage();
         }
+    }
+
+    void SetBtnDisable(GameObject btn)
+    {
+        btn.GetComponent<Image>().color = UnityExtension.HexColor(GrayColor);
+    }
+
+    void SetBtnAble(GameObject btn)
+    {
+        btn.GetComponent<Image>().color = UnityExtension.HexColor(WhiteColor);
     }
 }

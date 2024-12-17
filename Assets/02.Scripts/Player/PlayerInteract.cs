@@ -10,8 +10,8 @@ public class PlayerInteract : Singleton<PlayerInteract>
     public GameObject interactionTrigger;
     [SerializeField] private GameObject _interactionMark;
     [SerializeField] private GameObject _evidenceObjectInScene;
-    
-    [Space(5)][Header("정신세계 진입")] 
+
+    [Space(5)] [Header("정신세계 진입")] public bool isInMental = false;
     public GameObject mentalTrigger;
     
     void Update()
@@ -144,14 +144,6 @@ public class PlayerInteract : Singleton<PlayerInteract>
             {
                 data.Add("eventID",eventID);
                 EventStructure eventStructure = DataManager.Instance._events[eventID];
-            
-                /*
-                //해당 이벤트가 분기점이 있는지 체크
-                if (eventStructure.branch_Type)
-                {
-                    data[eventID] = eventStructure.branch_Element;
-                }
-                */
             }
             return data;
         }

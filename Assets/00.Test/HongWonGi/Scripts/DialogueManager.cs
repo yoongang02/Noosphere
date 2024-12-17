@@ -6,8 +6,41 @@ using Cysharp.Threading.Tasks;
 using TMPro;
 
 
-public class DialogueManager : Singleton<DialogueManager>
+public class DialogueManager : UIBase
 {
+    //싱글톤
+    private static DialogueManager _instance;
+    
+    public static DialogueManager Instance 
+    { 
+        get 
+        { 
+            if (_instance == null) 
+            {
+                _instance = FindObjectOfType<DialogueManager>();
+                if (_instance == null) 
+                {
+                    GameObject singletonObject = new GameObject(nameof(DialogueManager));
+                    _instance = singletonObject.AddComponent<DialogueManager>();
+                }
+            }
+            return _instance;
+        } 
+    }
+
+    void Awake(){
+        
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        _instance = this;
+        DontDestroyOnLoad(gameObject); 
+    }
+
+    [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private GameObject _toggleIcon;
     private string _currentDialogueId = "";
     private int _currentLineIndex = 0;
@@ -18,7 +51,7 @@ public class DialogueManager : Singleton<DialogueManager>
     private int _currentLetterIndex = 0;
     public bool isTyping = false;
     public Action OnDialogueEnd;
-
+    
     private void Start()
     {
         InputManager.Instance.exitBtnAction += OnEscapePressed;
@@ -31,6 +64,17 @@ public class DialogueManager : Singleton<DialogueManager>
             InputManager.Instance.exitBtnAction -= OnEscapePressed;
         }
     }
+    public override void OnOpen()
+    {
+        base.OnOpen();
+        dialogueText.gameObject.SetActive(true);
+    }
+
+    public override void OnClose()
+    {
+        base.OnClose();
+        dialogueText.gameObject.SetActive(false);
+    }
 
     public void SetDialogue(string id)
     {
@@ -39,15 +83,16 @@ public class DialogueManager : Singleton<DialogueManager>
         {
             if (dialogue.triggerType == "auto") //대화창 바로 뜨기
             {
-                PlayerController.Instance.isDialogueOn = true;
-                UIManager.Instance.dialogueUI.gameObject.SetActive(true);
+                UIManager.Instance.OpenUI(UIManager.Instance.dialogueUI);
                 ShowNextLine().Forget();
             }
 
+            /*
             if (dialogue.triggerType == "interact")
             {
                 UIManager.Instance.dialogueUI.gameObject.SetActive(false);
             }
+            */
         }
         else
         {
@@ -74,7 +119,7 @@ public class DialogueManager : Singleton<DialogueManager>
 
         if (dialogue.triggerType == "interact")
         {
-            UIManager.Instance.dialogueUI.gameObject.SetActive(true);
+            UIManager.Instance.OpenUI(UIManager.Instance.dialogueUI);
             if (dialogue.interactionType == "npc")
             {
                 PlayerController.Instance.NpcCameraOn();
@@ -131,17 +176,18 @@ public class DialogueManager : Singleton<DialogueManager>
             {
                 Debug.LogWarning("대화가 종료되었습니다.");
                 
-                //예외 이벤트 처리 코드/////////////
+                //예외 이벤트 처리 코드
                 if (EventManagerYKM.Instance.currentEventID == "Event_A004")
                 {
                     GameObject.Find("Artresource_0002").transform.GetChild(0).gameObject.SetActive(false);
                 }
-                ////////////////////////////////
-                PlayerController.Instance.isDialogueOn = false;
+                
+                
                 OnDialogueEnd?.Invoke();
+                UIManager.Instance.CloseTopUI();
+                
                 _currentDialogueId = "";
                 _currentLineIndex = 0;
-                UIManager.Instance.dialogueUI.gameObject.SetActive(false);
                 PlayerController.Instance.ResetCamera();
                 if (PlayerController.Instance._currentNPC != null)
                 {
@@ -164,21 +210,21 @@ public class DialogueManager : Singleton<DialogueManager>
     private async UniTask TypeText(string text)
     {
         isTyping = true;
-        UIManager.Instance.dialogueUI.text = "";
+        dialogueText.text = "";
 
         if (!isTyping)
         {
-            UIManager.Instance.dialogueUI.text = text;
+            dialogueText.text = text;
             return;
         }
 
         for (int i = 0; i < text.Length && isTyping; i++)
         {
-            UIManager.Instance.dialogueUI.text += text[i];
+            dialogueText.text += text[i];
             await UniTask.Delay((int)(_letterDelay * 1000));
         }
 
-        UIManager.Instance.dialogueUI.text = text;
+        dialogueText.text = text;
         isTyping = false;
 
         _toggleIcon.SetActive(true);
@@ -188,14 +234,13 @@ public class DialogueManager : Singleton<DialogueManager>
     {
         if (!string.IsNullOrEmpty(_currentDialogueId) &&
             DataManager.Instance._dialogue[_currentDialogueId].triggerType == "interact" &&
-            PlayerController.Instance.isDialogueOn)
+            !PlayerController.Instance.canMove)
         {
-            PlayerController.Instance.isDialogueOn = false;
             OnDialogueEnd?.Invoke();
             _currentDialogueId = "";
             _currentLineIndex = 0;
-            UIManager.Instance.dialogueUI.gameObject.SetActive(false);
-            //UIManager.Instance.PopUp(true, "E를 눌러 대화시작");
+            
+            UIManager.Instance.CloseTopUI();
         }
     }
 }

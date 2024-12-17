@@ -192,8 +192,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 }
                 else if (resultType == "Mental")
                 {
-                    MentalStructure mentalStructure = DataManager.Instance._mental[resultID];
-                    PlayerInteract.Instance.GetComponent<MentalEnterProcess>().StartEnter(mentalStructure);
+                    PlayerInteract.Instance.GetComponent<MentalEnterProcess>().StartEnter(resultID);
                 }
 
                 resultNum++;

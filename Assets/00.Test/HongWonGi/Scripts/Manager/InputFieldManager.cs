@@ -27,7 +27,7 @@ public class InputFieldManager : Singleton<InputFieldManager>
     {
         _questionText.transform.parent.gameObject.SetActive(true);
 
-        PlayerController.Instance.isDialogueOn = true;
+        UIManager.Instance.LockPlayer();
         _currentID = id;
         isAnswer = false;
         
@@ -92,7 +92,7 @@ public class InputFieldManager : Singleton<InputFieldManager>
         if (_questionText.transform.parent.gameObject.activeSelf)
         {
             isAnswer = false;
-            PlayerController.Instance.isDialogueOn = false;
+            UIManager.Instance.UnLockPlayer();
             _questionText.transform.parent.gameObject.SetActive(false);
             _inputText.text = ""; 
         }

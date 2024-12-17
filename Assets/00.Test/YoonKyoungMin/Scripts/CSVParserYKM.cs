@@ -65,7 +65,7 @@ public class CSVParserYKM
                 string value = values[j].Trim().Replace("\"", "");
                 //Debug.Log(header + " : " + value);
                 FieldInfo field = typeof(T).GetField(header, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-
+                
                 if (field != null)
                 {
                     try
