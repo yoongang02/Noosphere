@@ -179,9 +179,6 @@ public class EvidenceDetailUI : UIBase
             Sprite pageImg = artResource.GetSpriteFromFilePath(modifiedString);
             _pages.Add(pageImg);
         }
-        //버튼 참조하기
-        _prevPageBtn = _onePageUI.transform.Find("PageBtns").GetChild(0).gameObject;
-        _nextPageBtn = _onePageUI.transform.Find("PageBtns").GetChild(1).gameObject;
         //이미지 null로 초기화
         _firstPage = null;
         _secondPage = null;
@@ -195,6 +192,11 @@ public class EvidenceDetailUI : UIBase
         //페이지가 1개인 경우 vs 1개 이상인 경우
         //1개인 경우 : 좌우이동 버튼 비활성화
         //1개 이상인 경우 : 좌우이동 버튼 활성화
+        
+        //버튼 참조하기
+        _prevPageBtn = _onePageUI.transform.Find("PageBtns").GetChild(0).gameObject;
+        _nextPageBtn = _onePageUI.transform.Find("PageBtns").GetChild(1).gameObject;
+        
         if (_totalPage == 1)
         {
             _prevPageBtn.SetActive(false);
@@ -220,6 +222,11 @@ public class EvidenceDetailUI : UIBase
     {
         //페이지 초기화
         _curPage = 2;
+        
+        //버튼 참조하기
+        _prevPageBtn = _twoPageUI.transform.Find("PageBtns").GetChild(0).gameObject;
+        _nextPageBtn = _twoPageUI.transform.Find("PageBtns").GetChild(1).gameObject;
+        
         //페이지가 2개인 경우, 2개 이상인 경우
         if (_totalPage == 2)
         {

@@ -170,7 +170,7 @@ public class InventoryManager : UIBase
         }
         
         //인벤토리 UI 업데이트하기
-        UpdateInventoryUI();
+        //UpdateInventoryUI();
         
         //맵에서 증거 오브젝트 파괴하기 - 현재 오류 존재. 다시 씬으로 이동해오면 원상복구 됨. 아예 삭제 해 버려야 함.
         /*
