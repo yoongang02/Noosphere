@@ -9,6 +9,7 @@ public class ArtResourceStructure
     public string filePathInventoryThumbnail;
     public string filePathEvidencePrefab;
     public string filePathMapBackground;
+    public string filePathContentBackground;
     public string filePathStartPage;
     public int pageCnt;
 
