@@ -144,14 +144,6 @@ public class PlayerInteract : Singleton<PlayerInteract>
             {
                 data.Add("eventID",eventID);
                 EventStructure eventStructure = DataManager.Instance._events[eventID];
-            
-                /*
-                //해당 이벤트가 분기점이 있는지 체크
-                if (eventStructure.branch_Type)
-                {
-                    data[eventID] = eventStructure.branch_Element;
-                }
-                */
             }
             return data;
         }

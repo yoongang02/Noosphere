@@ -10,7 +10,8 @@ public class UIManager : Singleton<UIManager>
 {
     //여러 UI 창을 관리하기 위해 스택 이용
     private Stack<UIBase> uiStack = new Stack<UIBase>();
-
+    public UIBase topUI;
+    
     public UIBase investigateUI;
     public UIBase evidenceDetailUI;
     public UIBase inventoryUI;
@@ -54,6 +55,7 @@ public class UIManager : Singleton<UIManager>
         // 상호작용 금지
         LockPlayer();
         uiStack.Push(ui);
+        topUI = ui;
         ui.OnOpen();
     }
 
@@ -70,6 +72,7 @@ public class UIManager : Singleton<UIManager>
         // 상호작용 금지
         LockPlayer();
         uiStack.Push(ui);
+        topUI = ui;
         ui.OnOpen(evidence);
     }
     
@@ -80,6 +83,15 @@ public class UIManager : Singleton<UIManager>
         UIBase topUI = uiStack.Pop();
         
         topUI.OnClose();
+
+        if (uiStack.Count > 0)
+        {
+            this.topUI = uiStack.Peek();
+        }
+        else
+        {
+            this.topUI = null;
+        }
 
         if (!IsAnyUIOpen())
         {

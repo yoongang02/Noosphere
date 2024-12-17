@@ -368,9 +368,10 @@ public class InventoryNavigator : MonoBehaviour
     //증거물 상세 내용 UI 열기
     protected void OpenEvidenceDetailUI()
     {
+        Debug.Log("인벤토리에서 상세 내용 오픈");
         string id = _curSelectedSlot.GetComponent<InventorySlotInfo>().evidenceId;
         EvidenceStructure evidence = DataManager.Instance._evidences[id];
-        UIManager.Instance.OpenUI(UIManager.Instance.evidenceDetailUI,evidence);
+        if(evidence != null) UIManager.Instance.OpenUI(UIManager.Instance.evidenceDetailUI,evidence);
     }
 
     //증거물 사용하기
