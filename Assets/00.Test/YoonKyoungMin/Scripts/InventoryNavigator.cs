@@ -10,7 +10,7 @@ using UnityEngine.EventSystems;
 public class InventoryNavigator : MonoBehaviour
 {
     [Header("인벤토리 네비게이션 정보")]
-    protected GameObject _curSelectedSlot;
+    [SerializeField] protected GameObject _curSelectedSlot;
     public int currentIndex = 0;
     public bool isBothInventory = false; //정신세계 증거물과 현실세계 증거물이 모두 있을 때
     public bool canEvidenceUse = false;
@@ -23,7 +23,7 @@ public class InventoryNavigator : MonoBehaviour
     [SerializeField] private Sprite _deselectedSprite;
     [SerializeField] private TextMeshProUGUI _slotUseBtn;
     
-    public void InitNavigator(Transform realWorld, Transform mentalWorld)
+    public void InitNavigator(GameObject realWorld, GameObject mentalWorld)
     {
         //초기화
         realWorldSlots.Clear();
@@ -31,34 +31,37 @@ public class InventoryNavigator : MonoBehaviour
         inventorySlots.Clear();
         
         //현재 인벤토리 기준으로 재설정
-        realWorldSlots = GetChildSlots(realWorld);
-        mentalWorldSlots = GetChildSlots(mentalWorld);
+        realWorldSlots = GetChildSlots(realWorld.transform);
+        mentalWorldSlots = GetChildSlots(mentalWorld.transform);
+        
         
         //실제 이동에 사용할 슬롯 리스트
         if (realWorldSlots.Count > 0 && mentalWorldSlots.Count > 0)
         {
             //현실세계 증거물과 정신세계 증거물을 교차로 넣기
+            Debug.Log("현실 증거물 정신 증거물 둘 다 존재?");
             AddSlotsPerRow();
             isBothInventory = true;
         }
         else if(realWorldSlots.Count > 0)
         {
+            Debug.Log($"현실 증거물 {realWorldSlots.Count}개 만 존재");
             inventorySlots = realWorldSlots;
         }
         else if (mentalWorldSlots.Count > 0)
         {
+            Debug.Log($"정신 증거물 {mentalWorldSlots.Count}개 만 존재");
             inventorySlots = mentalWorldSlots;
         }
 
         if (inventorySlots.Count == 0)
         {
+            Debug.Log("증거물이 아무것도 존재하지 않아");
             _curSelectedSlot = null;
             return;
         }
 
         //챕터 및 선택 초기화
-        int chapterIndex = InventoryManager.Instance.currentViewChapter;
-        SetChapterSelected(chapterIndex);
         currentIndex = 0;
         UpdateSelection();
     }
@@ -89,9 +92,15 @@ public class InventoryNavigator : MonoBehaviour
     List<GameObject> GetChildSlots(Transform parent)
     {
         List<GameObject> childSlots = new List<GameObject>();
-        foreach (Transform child in parent)
+
+        if (parent.childCount > 0)
         {
-            childSlots.Add(child.gameObject);
+            Debug.Log($"{parent.name}의 자식 개수는 {parent.childCount}개 입니다.");
+            foreach (Transform child in parent)
+            {
+                Debug.Log($"{parent.name}의 자식 {child.name} 을 ChildSlot에 추가");
+                childSlots.Add(child.gameObject);
+            }
         }
         return childSlots;
     }
@@ -279,8 +288,9 @@ public class InventoryNavigator : MonoBehaviour
         }
     }
     //챕터 호버 exit
-    protected void HoverExitOnChapter(int index)
+    protected void HoverExitOnChapter()
     {
+        Debug.Log("Chapter Hover Exit 실행되나??");
         //현재 기본으로 보고 있던 챕터가 보이도록
         int chapterIndex = InventoryManager.Instance.currentViewChapter;
         GameObject curChapterSelected = InventoryManager.Instance.selectedChapterUIList[chapterIndex];

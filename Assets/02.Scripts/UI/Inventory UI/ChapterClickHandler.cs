@@ -53,8 +53,7 @@ public class ChapterClickHandler : InventoryNavigator, IPointerClickHandler, IPo
         //클릭한 오브젝트가 챕터인지 파악
         if (_lastEnteredObject != null)
         {
-            int chapterIndex = InventoryManager.Instance.deselectedChapterUIList.IndexOf(_lastEnteredObject);
-            HoverExitOnChapter(chapterIndex);
+            HoverExitOnChapter();
             _lastEnteredObject = null;
         }
     }

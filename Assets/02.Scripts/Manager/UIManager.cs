@@ -14,6 +14,7 @@ public class UIManager : Singleton<UIManager>
     public UIBase investigateUI;
     public UIBase evidenceDetailUI;
     public UIBase inventoryUI;
+    public GameObject inventoryIcon;
     
     public TextMeshProUGUI dialogueUI;
     
@@ -32,6 +33,15 @@ public class UIManager : Singleton<UIManager>
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             CloseTopUI();
+        }
+
+        if (IsAnyUIOpen())
+        {
+            inventoryIcon.SetActive(false);
+        }
+        else
+        {
+            inventoryIcon.SetActive(true);
         }
     }
     
