@@ -86,8 +86,7 @@ public class RadioManager : MonoBehaviour
     /// </summary>
     private void CheckAnswer()
     {
-        // if (_radioText.text == "95.3MHz")
-        if (_radioText.text == "00.0MHz")
+        if (_radioText.text == "50.5MHz")
         {
             gameObject.SetActive(false);
             ShowDialogue().Forget();
