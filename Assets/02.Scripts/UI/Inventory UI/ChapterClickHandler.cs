@@ -54,25 +54,22 @@ public class ChapterClickHandler : InventoryNavigator, IPointerClickHandler, IPo
         }
         
         //클릭한 오브젝트가 챕터인지 파악
-        if (_lastEnteredObject != null)
-        {
-            int curChapterIndex = (int)EventManagerYKM.Instance.curStageInfo;
+        int curChapterIndex = InventoryManager.Instance.currentViewChapter;
         
-            GameObject selectedChapter = InventoryManager.Instance.selectedChapterUIList[curChapterIndex];
-            GameObject deselectedChapter = InventoryManager.Instance.deselectedChapterUIList[curChapterIndex];
-            selectedChapter.SetActive(true);
-            deselectedChapter.SetActive(false);
+        GameObject selectedChapter = InventoryManager.Instance.selectedChapterUIList[curChapterIndex];
+        GameObject deselectedChapter = InventoryManager.Instance.deselectedChapterUIList[curChapterIndex];
+        selectedChapter.SetActive(true);
+        deselectedChapter.SetActive(false);
 
-            foreach (var _chapter in InventoryManager.Instance.selectedChapterUIList)
-            {
-                if(_chapter != selectedChapter) _chapter.SetActive(false);
-            }
-            foreach (var _chapter in InventoryManager.Instance.deselectedChapterUIList)
-            {
-                if(_chapter != deselectedChapter) _chapter.SetActive(true);
-            }
-
-            _lastEnteredObject = null;
+        foreach (var _chapter in InventoryManager.Instance.selectedChapterUIList)
+        {
+            if(_chapter != selectedChapter) _chapter.SetActive(false);
         }
+        foreach (var _chapter in InventoryManager.Instance.deselectedChapterUIList)
+        {
+            if(_chapter != deselectedChapter) _chapter.SetActive(true);
+        }
+
+        _lastEnteredObject = null;
     }
 }
