@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class ChapterClickHandler : InventoryNavigator, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    private GameObject _lastEnteredObject;
     public void OnPointerClick(PointerEventData eventData)
     {
         //젤 위에 있는 UI 아니면 작동 X
@@ -34,6 +35,8 @@ public class ChapterClickHandler : InventoryNavigator, IPointerClickHandler, IPo
         GameObject enteredObject = eventData.pointerEnter;
         if (InventoryManager.Instance.deselectedChapterUIList.Contains(enteredObject))
         {
+            _lastEnteredObject = enteredObject;
+            
             int chapterIndex = InventoryManager.Instance.deselectedChapterUIList.IndexOf(enteredObject);
             HoverEnterOnChapter(chapterIndex);
         }
@@ -48,11 +51,11 @@ public class ChapterClickHandler : InventoryNavigator, IPointerClickHandler, IPo
         }
         
         //클릭한 오브젝트가 챕터인지 파악
-        GameObject exitedObject = eventData.pointerEnter;
-        if (exitedObject != null)
+        if (_lastEnteredObject != null)
         {
-            int chapterIndex = InventoryManager.Instance.deselectedChapterUIList.IndexOf(exitedObject);
+            int chapterIndex = InventoryManager.Instance.deselectedChapterUIList.IndexOf(_lastEnteredObject);
             HoverExitOnChapter(chapterIndex);
+            _lastEnteredObject = null;
         }
     }
 }

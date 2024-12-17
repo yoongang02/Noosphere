@@ -44,7 +44,6 @@ public class EvidenceDetailUI : UIBase
         else
         {
             //맵에서 증거물 상세사항이 오픈된 경우에는 해당 증거물을 습득함.
-            Debug.Log($"Evidence Detail UI {evidence} 확인");
             evidence.AcquireEvidence();
         }
         
@@ -248,18 +247,16 @@ public class EvidenceDetailUI : UIBase
     {
         //이미지 업데이트
         _firstPage.sprite = _pages[_curPage - 1];
+        
         //버튼 업데이트
-        bool prevAble = _curPage != 1;
-        bool nextAble = _curPage != _totalPage;
-
-        if (!prevAble)
+        if (_curPage == 1)
         {
             SetBtnAble(_nextPageBtn);
             SetBtnDisable(_prevPageBtn);
             return;
         }
 
-        if (!nextAble)
+        if (_curPage == _totalPage)
         {
             SetBtnAble(_prevPageBtn);
             SetBtnDisable(_nextPageBtn);
@@ -275,21 +272,24 @@ public class EvidenceDetailUI : UIBase
         //이미지 업데이트
         _firstPage.sprite = _pages[_curPage - 2];
         _secondPage.sprite = _pages[_curPage - 1];
-        //버튼 업데이트
-        bool prevAble = _curPage != 2;
-        bool nextAble = _curPage != _totalPage;
         
-        if (!prevAble)
+        //버튼 업데이트
+        if (_curPage == 2)
         {
             SetBtnAble(_nextPageBtn);
             SetBtnDisable(_prevPageBtn);
+            return;
         }
 
-        if (!nextAble)
+        if (_curPage == _totalPage)
         {
             SetBtnAble(_prevPageBtn);
             SetBtnDisable(_nextPageBtn);
+            return;
         }
+        
+        SetBtnAble(_prevPageBtn);
+        SetBtnAble(_nextPageBtn);
     }
 
     void ClickNextPageEvent()
@@ -330,11 +330,11 @@ public class EvidenceDetailUI : UIBase
 
     void SetBtnDisable(GameObject btn)
     {
-        btn.GetComponent<Image>().color = UnityExtension.HexColor("#7B7B7B");
+        btn.GetComponent<Image>().color = UnityExtension.HexColor(GrayColor);
     }
 
     void SetBtnAble(GameObject btn)
     {
-        btn.GetComponent<Image>().color = UnityExtension.HexColor("#ffffff");
+        btn.GetComponent<Image>().color = UnityExtension.HexColor(WhiteColor);
     }
 }

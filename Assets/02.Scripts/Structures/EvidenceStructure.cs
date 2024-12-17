@@ -32,8 +32,6 @@ public class EvidenceStructure
         //언락 조건을 만족하여 획득할 수 있다면
         if (acquisitionType == 'Y') //인벤토리에 획득할 수 있다면
         {
-            Debug.Log("acquisitionType이 Y");
-            
             //이미 획득했다면 증거 정보 열면 안됨.
             if (InventoryManager.Instance.IsAcquiredEvidence(this.evidenceId))
             {
@@ -43,16 +41,13 @@ public class EvidenceStructure
             {
                 //획득하지 않은 증거라면 인벤토리에 획득.
                 Debug.Log(evidenceId + " 증거물은 인벤토리에 존재하지 않는 증거물입니다.");
-                //InventoryManager.Instance.AddEvidence(this);
+                InventoryManager.Instance.AddEvidence(this);
             }
         }
         else if (acquisitionType == 'N') //인벤토리에 획득할 수 없다면
         {
-            Debug.Log("acquisitionType이 N");
-            /*
             accessCnt++;
             Debug.Log(evidenceId + " 증거물은 획득할 수 없는 증거물입니다.");
-            */
         }
     }
 

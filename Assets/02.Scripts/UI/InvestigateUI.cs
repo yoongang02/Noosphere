@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class InvestigateUI : UIBase, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+public class InvestigateUI : UIBase
 {
     [Header("증거물 조사 UI")] [SerializeField] private EvidenceStructure _curEvidence;
     [SerializeField] private GameObject _curSelectedBtn;
@@ -73,6 +73,39 @@ public class InvestigateUI : UIBase, IPointerClickHandler, IPointerEnterHandler,
             ClickNoBtn();
         }
     }
+
+    public override void HandleMouseInput()
+    {
+        base.HandleMouseInput();
+        
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        foreach (var result in results)
+        {
+            if (result.gameObject == _yesBtn)
+            {
+                HoverYesBtn();
+                if (Input.GetMouseButtonDown(0)) 
+                {
+                    ClickYesBtn();
+                }
+            }
+            else if (result.gameObject == _noBtn)
+            {
+                HoverNoBtn();
+                if (Input.GetMouseButtonDown(0)) 
+                {
+                    ClickNoBtn();
+                }
+            }
+        }
+    }
     
     
     void HoverYesBtn()
@@ -96,7 +129,6 @@ public class InvestigateUI : UIBase, IPointerClickHandler, IPointerEnterHandler,
         
         isAquired = true;
         UIManager.Instance.OnSelectEnd?.Invoke();
-        
         UIManager.Instance.OpenUI(UIManager.Instance.evidenceDetailUI,_curEvidence);
         
         _curEvidence = null;
@@ -128,54 +160,6 @@ public class InvestigateUI : UIBase, IPointerClickHandler, IPointerEnterHandler,
         else
         {
             Debug.Log(evidence.artresourceId + "가 리소스 내에 존재하지 않습니다.");
-        }
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        //클릭한 오브젝트가 슬롯인지 파악
-        GameObject clickedObject = eventData.pointerClick;
-        
-        if (eventData.button == PointerEventData.InputButton.Left)
-        {
-            if (clickedObject == _yesBtn)
-            {
-                ClickYesBtn();
-            }
-            else if (clickedObject == _noBtn)
-            {
-                ClickNoBtn();
-            }
-        }
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        //클릭한 오브젝트가 슬롯인지 파악
-        GameObject enteredObject = eventData.pointerEnter;
-        
-        if (enteredObject == _yesBtn)
-        {
-            HoverYesBtn();
-        }
-        else if (enteredObject == _noBtn)
-        {
-            HoverNoBtn();
-        }
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        //클릭한 오브젝트가 슬롯인지 파악
-        GameObject exitedObject = eventData.pointerEnter;
-        
-        if (exitedObject == _yesBtn)
-        {
-            SetButtonSelected(_yesBtn,UnityExtension.HexColor(WhiteColor));
-        }
-        else if (exitedObject == _noBtn)
-        {
-            SetButtonSelected(_yesBtn,UnityExtension.HexColor(WhiteColor));
         }
     }
 }

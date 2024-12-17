@@ -114,6 +114,7 @@ public class InventoryManager : UIBase
     public override void OnOpen()
     {
         base.OnOpen();
+        UIManager.Instance.isInMap = false;
         _inventoryWindow.SetActive(true);
         //인벤토리 열었을 때, 현재 상태를 바탕으로 인벤토리 업데이트 진행
         UpdateInventoryUI();
@@ -122,6 +123,7 @@ public class InventoryManager : UIBase
     public override void OnClose()
     {
         base.OnClose();
+        UIManager.Instance.isInMap = true;
         _inventoryWindow.SetActive(false);
     }
 

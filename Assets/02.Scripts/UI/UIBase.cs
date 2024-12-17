@@ -9,6 +9,7 @@ public class UIBase : MonoBehaviour
     protected static readonly string GreenColor = "#9AC4DB";
     protected static readonly string WhiteColor = "#FFFFFF";
     protected static readonly string BlackColor = "#000000";
+    protected static readonly string GrayColor = "#7B7B7B";
     
     public UnityEvent OnClickEvent;
     public UnityEvent OnHoverEvent;
@@ -21,6 +22,7 @@ public class UIBase : MonoBehaviour
         if (IsTopUI())
         {
             HandleKeyboardInput();
+            HandleMouseInput();
         }
     }
     
@@ -51,8 +53,7 @@ public class UIBase : MonoBehaviour
     
     public virtual void HandleMouseInput()
     {
-        //UI에 대해 공통적인 마우스 입력 상호작용이 있다면 여기서 작성.
-        //각 UI마다 별도로 마우스 입력 상호작용이 있다면 해당 UI 스크립트에서 override해서 작성.
+        
     }
     
     public bool IsTopUI()

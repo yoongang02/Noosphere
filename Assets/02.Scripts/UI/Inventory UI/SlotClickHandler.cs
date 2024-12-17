@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class SlotClickHandler : InventoryNavigator, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    private GameObject _lastEnteredObject;
     public void OnPointerClick(PointerEventData eventData)
     {
         //젤 위에 있는 UI 아니면 작동 X
@@ -62,6 +63,7 @@ public class SlotClickHandler : InventoryNavigator, IPointerClickHandler, IPoint
         GameObject enteredObject = eventData.pointerEnter;
         if (inventorySlots.Contains(enteredObject))
         {
+            _lastEnteredObject = enteredObject;
             SetSlotSelected(enteredObject);
         }
     }
@@ -74,11 +76,10 @@ public class SlotClickHandler : InventoryNavigator, IPointerClickHandler, IPoint
             return;
         }
         
-        GameObject exitedObject = eventData.pointerEnter;
-        
-        if (exitedObject != null)
+        if (_lastEnteredObject != null)
         {
-            SetSlotDeselected(exitedObject);
+            SetSlotDeselected(_lastEnteredObject);
+            _lastEnteredObject = null;
         }
     }
 }
