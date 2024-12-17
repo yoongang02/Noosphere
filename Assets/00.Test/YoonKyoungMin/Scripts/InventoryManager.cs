@@ -106,6 +106,7 @@ public class InventoryManager : UIBase
                 if (result.gameObject == _inventoryIcon && Input.GetMouseButtonDown(0))
                 {
                     UIManager.Instance.OpenUI(UIManager.Instance.inventoryUI);
+                    _inventoryIcon.SetActive(false);
                 }
             }
         }
@@ -125,6 +126,7 @@ public class InventoryManager : UIBase
         base.OnClose();
         UIManager.Instance.isInMap = true;
         _inventoryWindow.SetActive(false);
+        _inventoryIcon.SetActive(true);
     }
 
     public override void HandleKeyboardInput()
@@ -193,29 +195,40 @@ public class InventoryManager : UIBase
         ChapterInventory currentInventory = chapterInventories[currentViewChapter];
 
         // 현실 세계 증거물 추가
-        foreach (var evidence in currentInventory.realWorldEvidences)
+
+        
+        if (currentInventory.realWorldEvidences.Count != 0)
         {
-            GameObject slot = Instantiate(_inventorySlotPrefab, _realWorldInventory.transform);
-            slot.GetComponent<InventorySlotInfo>().evidenceId = evidence.evidenceId;
-            UpdateSlotUI(slot, evidence);
+            foreach (var evidence in currentInventory.realWorldEvidences)
+            {
+                GameObject slot = Instantiate(_inventorySlotPrefab, _realWorldInventory.transform);
+                slot.GetComponent<InventorySlotInfo>().evidenceId = evidence.evidenceId;
+                //UpdateSlotUI(slot, evidence);
+            }
         }
 
-        // 정신 세계 증거물 추가
-        foreach (var evidence in currentInventory.mentalWorldEvidences)
+        if (currentInventory.mentalWorldEvidences.Count != 0)
         {
-            GameObject slot = Instantiate(_inventorySlotPrefab, _mentalWorldInventory.transform);
-            slot.GetComponent<InventorySlotInfo>().evidenceId = evidence.evidenceId;
-            UpdateSlotUI(slot, evidence);
+            // 정신 세계 증거물 추가
+            foreach (var evidence in currentInventory.mentalWorldEvidences)
+            {
+                GameObject slot = Instantiate(_inventorySlotPrefab, _mentalWorldInventory.transform);
+                slot.GetComponent<InventorySlotInfo>().evidenceId = evidence.evidenceId;
+                //UpdateSlotUI(slot, evidence);
+            }
         }
-        
+        /*
         //인벤토리 네비게이션 업데이트
         GetComponent<InventoryNavigator>().InitNavigator(_realWorldInventory.transform,_mentalWorldInventory.transform);
+        */   
     }
     
     //인벤토리 슬롯 초기화
     void ClearInventoryUI(GameObject inventoryParent)
     {
         int childCount = inventoryParent.transform.childCount;
+        
+        if(childCount <= 0) return;
         
         for (int i = childCount - 1; i >= 0; i--)
         {

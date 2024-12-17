@@ -224,6 +224,8 @@ public class InventoryNavigator : MonoBehaviour
     //챕터 선택
     protected void SetChapterSelected(int index)
     {
+        InventoryManager.Instance.currentViewChapter = index;
+        
         GameObject selectedChapter = InventoryManager.Instance.selectedChapterUIList[index];
         GameObject deselectedChapter = InventoryManager.Instance.deselectedChapterUIList[index];
         selectedChapter.SetActive(true);
@@ -245,19 +247,61 @@ public class InventoryNavigator : MonoBehaviour
     //챕터 호버 enter
     protected void HoverEnterOnChapter(int index)
     {
-        GameObject hoverObject = InventoryManager.Instance.selectedChapterUIList[index];
-        if (!hoverObject.activeSelf)
+        //호버를 한 챕터의 선택 버전과 비선택 버전을 할당하기
+        GameObject selectedChapterUI = InventoryManager.Instance.selectedChapterUIList[index];
+        GameObject deselectedChapterUI = InventoryManager.Instance.deselectedChapterUIList[index];
+        
+        //호버한 챕터가 비활성화 되어 있다면
+        if (!selectedChapterUI.activeSelf)
         {
-            hoverObject.SetActive(true);
+            //선택 버전이 활성화되고
+            selectedChapterUI.SetActive(true);
+            //비선택 버전이 비활성화 되기
+            deselectedChapterUI.SetActive(false);
+
+            //선택 버전의 나머지 애들 비활성화
+            foreach (var chapter in InventoryManager.Instance.selectedChapterUIList)
+            {
+                if (chapter != selectedChapterUI)
+                {
+                    chapter.SetActive(false);
+                }
+            }
+            
+            //비선택 버전의 나머지 애들 활성화
+            foreach (var chapter in InventoryManager.Instance.deselectedChapterUIList)
+            {
+                if (chapter != deselectedChapterUI)
+                {
+                    chapter.SetActive(true);
+                }
+            }
         }
     }
     //챕터 호버 exit
     protected void HoverExitOnChapter(int index)
     {
-        GameObject hoverObject = InventoryManager.Instance.selectedChapterUIList[index];
-        if (hoverObject.activeSelf)
+        //현재 기본으로 보고 있던 챕터가 보이도록
+        int chapterIndex = InventoryManager.Instance.currentViewChapter;
+        GameObject curChapterSelected = InventoryManager.Instance.selectedChapterUIList[chapterIndex];
+        GameObject curChapterDeselected = InventoryManager.Instance.deselectedChapterUIList[chapterIndex];
+        
+        //선택 버전의 나머지 애들 비활성화
+        foreach (var chapter in InventoryManager.Instance.selectedChapterUIList)
         {
-            hoverObject.SetActive(false);
+            if (chapter != curChapterSelected)
+            {
+                chapter.SetActive(false);
+            }
+        }
+            
+        //비선택 버전의 나머지 애들 활성화
+        foreach (var chapter in InventoryManager.Instance.deselectedChapterUIList)
+        {
+            if (chapter != curChapterDeselected)
+            {
+                chapter.SetActive(true);
+            }
         }
     }
     //현실 세계 항목에 있는 슷롯인지 확인
