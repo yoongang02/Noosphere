@@ -164,7 +164,8 @@ public class MentalEnterProcess : MonoBehaviour
         
         //바 초기화
         InitProgressBar();
-        Debug.Log($"{PlayerInteract.Instance.isInMental} 정신세계에 도착했어. 도착 여부는 제대로 반영되었나?");
+        
+        PlayerInteract.Instance.HideInteractionMark();
     }
 
     void FailEnter()

@@ -14,7 +14,6 @@ public class InventoryNavigator : UIBase
     [SerializeField] protected GameObject _curSelectedSlot;
     public int currentIndex = 0;
     public bool isBothInventory = false; //정신세계 증거물과 현실세계 증거물이 모두 있을 때
-    public bool canEvidenceUse = false;
     
     [Space(5)][Header("인벤토리 네비게이션 UI")]
     public List<GameObject> inventorySlots = new List<GameObject>();
@@ -23,6 +22,10 @@ public class InventoryNavigator : UIBase
     [SerializeField] private Sprite _selectedSprite;
     [SerializeField] private Sprite _deselectedSprite;
     [SerializeField] private TextMeshProUGUI _slotUseBtn;
+    
+    [Space(5)][Header("증거물 사용 정보")]
+    public bool canEvidenceUse = false;
+    [SerializeField] private string _evidenceUseEventId;
     
     public override void OnOpen()
     {
@@ -359,22 +362,33 @@ public class InventoryNavigator : UIBase
         
         if (canUse == 'Y')
         {
-            //플레이어가 현재 상황에서 사용할 수 있는 증거물 아이디를 가져오기
-            PlayerInteract playerInteract = PlayerController.Instance.GetComponent<PlayerInteract>();
-            //현재 선택한 슬롯의 증거물 아이디 가져오기
-            string slotId = _curSelectedSlot.GetComponent<InventorySlotInfo>().evidenceId;
-            
-            foreach (var key in playerInteract.GetPlayeCanUseEvidenceID().Keys)
+            //플레이어가 현재 이벤트 트리거 내에 있다면 이벤트 가져오기
+            if (PlayerInteract.Instance.interactionTrigger != null)
             {
-                /*
-                //두 증거물 아이디 값 비교하기, 같으면 사용할 수 있음.
-                if (slotId == playerInteract.GetPlayeCanUseEvidenceID()[key])
+                EventTrigger trigger = PlayerInteract.Instance.interactionTrigger.GetComponent<EventTrigger>();
+                //상호작용 할 수 있는 이벤트가 있는지 확인
+                foreach (var _eventID in trigger.eventIdList)
                 {
-                    _slotUseBtn.color = UnityExtension.HexColor(UIManager.BlackColor);
-                    canEvidenceUse = true;
-                    return;
+                    if (!string.IsNullOrEmpty(_eventID) && DataManager.Instance._events.ContainsKey(_eventID))
+                    {
+                        //상호작용 가능하다면
+                        if (PlayerInteract.Instance.CheckInteractionAvail(_eventID))
+                        {
+                            EventStructure _event = DataManager.Instance._events[_eventID];
+                            //해당 이벤트의 조건에 증거물이 있는지 체크
+                            foreach (var condition in _event.conditions)
+                            {
+                                if (evidenceId == condition)
+                                {
+                                    _slotUseBtn.color = UnityExtension.HexColor(BlackColor);
+                                    _evidenceUseEventId = _eventID;
+                                    canEvidenceUse = true;
+                                    return;
+                                }
+                            }
+                        }
+                    }
                 }
-                */
             }
         }
         _slotUseBtn.color = UnityExtension.HexColor("#B3B3B3");
@@ -393,6 +407,13 @@ public class InventoryNavigator : UIBase
     //증거물 사용하기
     protected void UseEvidence()
     {
-        
+        PlayerInteract.Instance.isUsingEvidence = true;
+        StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(_evidenceUseEventId));
+    }
+
+    public void InitUsingEvidence()
+    {
+        canEvidenceUse = false;
+        _evidenceUseEventId = "";
     }
 }

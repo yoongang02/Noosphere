@@ -13,7 +13,8 @@ public class PlayerInteract : Singleton<PlayerInteract>
 
     [Space(5)] [Header("정신세계 진입")] public bool isInMental = false;
     public GameObject mentalTrigger;
-    
+
+    [Space(5)] [Header("증거물 사용")] public bool isUsingEvidence = false;
     void Update()
     {
         if (!UIManager.Instance.IsAnyUIOpen())
@@ -147,22 +148,10 @@ public class PlayerInteract : Singleton<PlayerInteract>
         }
         return false;
     }
-
-    public Dictionary<string,string> GetPlayeCanUseEvidenceID()
+    
+    public void InitUsingEvidence()
     {
-        Dictionary<string, string> data = new Dictionary<string, string>();
-       
-        //플레이어가 현재 상호작용 중인 트리거가 있어야 함.
-        if (interactionTrigger != null)
-        {
-            //해당 트리거에서 이벤트 아이디 가져오기
-            foreach (string eventID in interactionTrigger.GetComponent<EventTrigger>().eventIdList)
-            {
-                data.Add("eventID",eventID);
-                EventStructure eventStructure = DataManager.Instance._events[eventID];
-            }
-            return data;
-        }
-        return data;
+        isUsingEvidence = false;
+        InventoryManager.Instance.GetComponent<InventoryNavigator>().InitUsingEvidence();
     }
 }

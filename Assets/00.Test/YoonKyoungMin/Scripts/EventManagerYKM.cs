@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using Cysharp.Threading.Tasks;
 
 public class EventManagerYKM : Singleton<EventManagerYKM>
 {
@@ -41,14 +39,14 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         if (!DataManager.Instance._events.ContainsKey(eventID))
         {
             Debug.Log("#" + eventID + " 이벤트가 존재하지 않음.");
-            yield return null;
+            yield break;
         }
         
         //nextEventID가 비어있지 않은데, 실행하고자 하는 이벤트ID와 같지 않다면
         if (!string.IsNullOrEmpty(nextEventID) && nextEventID != eventID)
         {
             Debug.Log("#현재 실행되어야 하는 이벤트는 " + nextEventID + "입니다.");
-            yield return null;
+            yield break;
         }
 
         
@@ -83,13 +81,12 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     {
                         Debug.Log("#3-3 : "+eventStructure.eventId+"의 falseCondition"+falseResultNum+" 실행");
                         StartCoroutine(ExecuteEvent(falseResult));
+                        falseResultNum++;
                     }
-                    yield return null;
+                    yield break;
                 }
-                else
-                {
-                    Debug.Log("#3-1 : "+eventStructure.eventId+"의 condition"+conditionNum+" 만족");
-                }
+                
+                Debug.Log("#3-1 : "+eventStructure.eventId+"의 condition"+conditionNum+" 만족");
 
                 conditionNum++;
             }
@@ -98,7 +95,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         {
             CloseEventFailure(eventStructure);
             Debug.Log("#"+ eventID + "의 conditionType이 올바르지 않습니다.");
-            yield return null;
+            yield break;
         }
         
         //일단 결과까지 왔다면 이벤트가 성공적으로 실행된 것.
