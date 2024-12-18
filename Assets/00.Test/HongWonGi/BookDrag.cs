@@ -5,12 +5,11 @@ using UnityEngine.EventSystems;
 public class BookDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] private GameObject _placeholderObject;
+    [SerializeField] public int bookIdx;
     private RectTransform _rectTransform;
     private Canvas _canvas;
-    private Vector2 _originalPosition;
     private int _originalSiblingIndex;
     private Transform _originalParent;
-    
     private int _currentPlaceholderIndex = -1;
     private RectTransform _layoutGroupRect;
 
@@ -31,10 +30,9 @@ public class BookDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        _originalPosition = _rectTransform.position;
         _originalSiblingIndex = transform.GetSiblingIndex();
         _lastMousePosition = eventData.position;
-
+        //horizontal layout 사용하기 때문에 부모 바꿔서 자동정렬 된 것처럼 보이게함
         transform.SetParent(_canvas.transform);
 
         _placeholderObject.SetActive(false);
@@ -84,10 +82,12 @@ public class BookDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         }
 
         _placeholderObject.SetActive(false);
+        BookShelfManager.Instance.CheckBookOrder();
     }
 
     private bool IsInsideLayoutGroup(Vector2 position)
     {
+        //범위 밖에 나가면 placeholder안뜨게
         Vector2 localPoint;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             _layoutGroupRect,
@@ -122,6 +122,7 @@ public class BookDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     private int GetInsertIndex(Vector2 mousePosition)
     {
+        //마우스 위치에 따라 몇 번째로 들어갈까 계산 
         for (int i = 0; i < _originalParent.childCount; i++)
         {
             RectTransform child = _originalParent.GetChild(i) as RectTransform;
@@ -129,10 +130,12 @@ public class BookDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             {
                 if (mousePosition.x < child.position.x + (child.rect.width / 2))
                 {
+                    //중간점 기준으로 판단
                     return i;
                 }
             }
         }
+
         return _originalParent.childCount;
     }
 }
