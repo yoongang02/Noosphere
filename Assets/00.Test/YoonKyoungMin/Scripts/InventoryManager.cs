@@ -44,7 +44,9 @@ public class InventoryManager : Singleton<InventoryManager>
     public int currentViewChapter = 0;
 
     private InventoryNavigator _navigator;
-    
+
+    [Space(5)] [Header("증거물 사용 정보")] [SerializeField]
+    private string usingEvidenceId;
     void Start()
     {
         //인벤토리 초기화

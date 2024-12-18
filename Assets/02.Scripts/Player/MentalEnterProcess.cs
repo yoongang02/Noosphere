@@ -60,11 +60,12 @@ public class MentalEnterProcess : MonoBehaviour
             //진입시작했고, 완료되지 않았고, 스페이스를 계속 누르고 있다면
             if (_startEnter && !isComplete)
             {
+                PlayerInteract.Instance.HideInteractionMark();
                 if (Input.GetKey(KeyCode.Space))
                 {
                     float value = _progressBarFill.FillAmount();
                     EffectManager.Instance.StartMentalEffect(value);
-                
+                    
                     if (value >= 1f)
                     {
                         isComplete = true;

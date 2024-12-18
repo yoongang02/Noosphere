@@ -131,6 +131,7 @@ public class UIManager : Singleton<UIManager>
         //Debug.Log("UI 열 때 LockPlayer 실행되나?");
         PlayerController.Instance.canMove = false;
         PlayerInteract.Instance.canInteract = false;
+        PlayerInteract.Instance.HideInteractionMark();
     }
 
     public void UnLockPlayer()

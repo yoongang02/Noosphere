@@ -111,7 +111,7 @@ public class EffectManager : Singleton<EffectManager>
 
     IEnumerator EndEffect()
     {
-        yield return new WaitForSeconds(1f);
+        yield return null;
         OnEffectEnd?.Invoke();
     }
 }

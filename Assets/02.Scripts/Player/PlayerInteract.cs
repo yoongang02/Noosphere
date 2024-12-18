@@ -48,7 +48,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
  
 
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         //진입 시 바로 이벤트 실행되는 트리거에 진행하면
         if (other.CompareTag("EventTrigger"))
