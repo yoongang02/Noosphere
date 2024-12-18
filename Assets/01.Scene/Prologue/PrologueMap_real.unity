@@ -3355,9 +3355,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroy: 1
+  topUI: {fileID: 0}
   investigateUI: {fileID: 1697174932}
   evidenceDetailUI: {fileID: 2019230862}
-  inventoryUI: {fileID: 677771486}
+  inventoryUI: {fileID: 1731800553}
   dialogueUI: {fileID: 808127153}
   inventoryIcon: {fileID: 1787735429}
   isInMap: 1
@@ -4281,6 +4282,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3527233825153047822, guid: 78b9194bb1d73403987c6d5392add7f6,
+        type: 3}
+      propertyPath: _inventoryWindow
+      value: 
+      objectReference: {fileID: 1834748493}
     - target: {fileID: 3656898839110266676, guid: 78b9194bb1d73403987c6d5392add7f6,
         type: 3}
       propertyPath: m_IsActive
@@ -4408,6 +4414,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b05c65131625a467ea17e816ad4c23df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnClickEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHoverEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHoverExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnForceQuitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  _inventoryWindow: {fileID: 0}
   _curSelectedSlot: {fileID: 0}
   currentIndex: 0
   isBothInventory: 0
@@ -4428,6 +4450,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b05c65131625a467ea17e816ad4c23df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnClickEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHoverEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHoverExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnForceQuitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  _inventoryWindow: {fileID: 0}
   _curSelectedSlot: {fileID: 0}
   currentIndex: 0
   isBothInventory: 0
@@ -4448,6 +4486,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b05c65131625a467ea17e816ad4c23df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnClickEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHoverEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHoverExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnForceQuitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  _inventoryWindow: {fileID: 0}
   _curSelectedSlot: {fileID: 0}
   currentIndex: 0
   isBothInventory: 0
@@ -4877,6 +4931,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b05c65131625a467ea17e816ad4c23df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnClickEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHoverEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHoverExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnForceQuitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  _inventoryWindow: {fileID: 0}
   _curSelectedSlot: {fileID: 0}
   currentIndex: 0
   isBothInventory: 0
@@ -4897,6 +4967,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b05c65131625a467ea17e816ad4c23df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnClickEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHoverEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHoverExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnForceQuitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  _inventoryWindow: {fileID: 0}
   _curSelectedSlot: {fileID: 0}
   currentIndex: 0
   isBothInventory: 0
@@ -4917,6 +5003,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b05c65131625a467ea17e816ad4c23df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnClickEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHoverEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHoverExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnForceQuitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  _inventoryWindow: {fileID: 0}
   _curSelectedSlot: {fileID: 0}
   currentIndex: 0
   isBothInventory: 0
@@ -4925,18 +5027,6 @@ MonoBehaviour:
   _selectedSprite: {fileID: 0}
   _deselectedSprite: {fileID: 0}
   _slotUseBtn: {fileID: 0}
---- !u!114 &677771486 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8914443795023651713, guid: 78b9194bb1d73403987c6d5392add7f6,
-    type: 3}
-  m_PrefabInstance: {fileID: 603420746}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c329eda2bb8d34ffc810e89d04d0007b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &703876458
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10844,6 +10934,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1731800553 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3527233825153047822, guid: 78b9194bb1d73403987c6d5392add7f6,
+    type: 3}
+  m_PrefabInstance: {fileID: 603420746}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24ffc2b4ad57b4ecb9ea4ec2de3b511b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1753165594
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11520,6 +11622,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1834748493 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5092496254774438004, guid: 78b9194bb1d73403987c6d5392add7f6,
+    type: 3}
+  m_PrefabInstance: {fileID: 603420746}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1848159380
 PrefabInstance:
   m_ObjectHideFlags: 0

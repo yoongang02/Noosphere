@@ -7,8 +7,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class InventoryNavigator : MonoBehaviour
+public class InventoryNavigator : UIBase
 {
+    [SerializeField] private GameObject _inventoryWindow;
     [Header("인벤토리 네비게이션 정보")]
     [SerializeField] protected GameObject _curSelectedSlot;
     public int currentIndex = 0;
@@ -23,6 +24,58 @@ public class InventoryNavigator : MonoBehaviour
     [SerializeField] private Sprite _deselectedSprite;
     [SerializeField] private TextMeshProUGUI _slotUseBtn;
     
+    public override void OnOpen()
+    {
+        base.OnOpen();
+        UIManager.Instance.isInMap = false;
+        _inventoryWindow.SetActive(true);
+        //인벤토리 열었을 때, 현재 상태를 바탕으로 인벤토리 업데이트 진행
+        InventoryManager.Instance.UpdateInventoryUI();
+    }
+
+    public override void OnClose()
+    {
+        base.OnClose();
+        UIManager.Instance.isInMap = true;
+        InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curStageInfo;
+        _inventoryWindow.SetActive(false);
+    }
+
+    public override void HandleKeyboardInput()
+    {
+        if (_curSelectedSlot != null)
+        {
+            //슬롯 상하좌우 이동 - 키보드 WASD
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                MoveUp();
+            }
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                MoveLeft();
+            }
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                MoveDown();
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                MoveRight();
+            }
+                
+            //증거물 상세 정보 열기 - 키보드 E
+            if (Input.GetKeyDown(KeyCode.E))
+            { 
+                OpenEvidenceDetailUI();
+            }
+            
+            //Space 버튼을 누르면 증거물 사용하기
+            if (canEvidenceUse && Input.GetKeyDown(KeyCode.Space))
+            {
+                UseEvidence();
+            }
+        }
+    }
     public void InitNavigator(GameObject realWorld, GameObject mentalWorld)
     {
         //초기화
@@ -327,44 +380,7 @@ public class InventoryNavigator : MonoBehaviour
         _slotUseBtn.color = UnityExtension.HexColor("#B3B3B3");
         canEvidenceUse = false;
     }
-
-    //인벤토리 네비게이션 - 키보드 입력
-    public void HandleKeyboardInput()
-    {
-        if (_curSelectedSlot != null)
-        {
-            //슬롯 상하좌우 이동 - 키보드 WASD
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                MoveUp();
-            }
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                MoveLeft();
-            }
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                MoveDown();
-            }
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                MoveRight();
-            }
-                
-            //증거물 상세 정보 열기 - 키보드 E
-            if (Input.GetKeyDown(KeyCode.E))
-            { 
-                OpenEvidenceDetailUI();
-            }
-            
-            //Space 버튼을 누르면 증거물 사용하기
-            if (canEvidenceUse && Input.GetKeyDown(KeyCode.Space))
-            {
-                UseEvidence();
-            }
-        }
-    }
-
+    
     //증거물 상세 내용 UI 열기
     protected void OpenEvidenceDetailUI()
     {

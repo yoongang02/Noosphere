@@ -40,6 +40,7 @@ public class UIManager : Singleton<UIManager>
         if (IsAnyUIOpen())
         {
             inventoryIcon.SetActive(false);
+            LockPlayer();
         }
         else
         {
@@ -87,15 +88,11 @@ public class UIManager : Singleton<UIManager>
         if (uiStack.Count > 0)
         {
             this.topUI = uiStack.Peek();
+            LockPlayer();
         }
         else
         {
             this.topUI = null;
-        }
-
-        if (!IsAnyUIOpen())
-        {
-            //상호작용 금지 해제
             UnLockPlayer();
         }
     }
@@ -131,14 +128,14 @@ public class UIManager : Singleton<UIManager>
     
     public void LockPlayer()
     {
-        Debug.Log("UI 열 때 LockPlayer 실행되나?");
+        //Debug.Log("UI 열 때 LockPlayer 실행되나?");
         PlayerController.Instance.canMove = false;
         PlayerInteract.Instance.canInteract = false;
     }
 
     public void UnLockPlayer()
     {
-        Debug.Log("UI 모두 닫히면 UnLockPlayer 실행되나?");
+        //Debug.Log("UI 모두 닫히면 UnLockPlayer 실행되나?");
         PlayerController.Instance.canMove = true;
         PlayerInteract.Instance.canInteract = true;
     }
