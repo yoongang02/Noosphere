@@ -124,8 +124,24 @@ public class PlayerInteract : Singleton<PlayerInteract>
     {
         if (DataManager.Instance._events.ContainsKey(id))
         {
+            EventStructure eventStructure = DataManager.Instance._events[id];
             if (String.IsNullOrEmpty(EventManagerYKM.Instance.nextEventID) || EventManagerYKM.Instance.nextEventID == id)
             {
+                //반복 가능한 이벤트인지 체크
+                //반복 불가능인데 이미 실행된 이벤트라면 실행 불가능
+                if (!eventStructure.repeatType && eventStructure.isExecuted)
+                {
+                    Debug.Log("#" + id + "는 이미 실행된 이벤트이며, 반복 불가능한 이벤트입니다.");
+                    //반복 불가능할 경우의 결과 출력
+                    if (!string.IsNullOrEmpty(eventStructure.repeatFalseResult))
+                    {
+                        //repeatFalseResult 실행
+                        Debug.Log("#" + eventStructure.repeatFalseResult + "RepeatFalseResult 실행");
+                        StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventStructure.repeatFalseResult));
+                    }
+
+                    return false;
+                }
                 return true;
             }
         }

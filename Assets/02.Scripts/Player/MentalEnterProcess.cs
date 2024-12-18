@@ -53,7 +53,7 @@ public class MentalEnterProcess : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log($"{mentalInfo.combackEventId} 는 현재 정신세계 진입이 불가능함.");
+                    Debug.Log($"{mentalInfo.combackEventId} 는 현재 현실세계 진입이 불가능함.");
                 }
             }
             
@@ -183,11 +183,13 @@ public class MentalEnterProcess : MonoBehaviour
         if (EventManagerYKM.Instance.currentEventID == "Event_A026")
         {
             EventManagerYKM.Instance.nextEventID = "Event_A026";
+            DataManager.Instance._events["Event_A026"].isExecuted = false;
         }
 
         if (EventManagerYKM.Instance.currentEventID == "Event_A009")
         {
             EventManagerYKM.Instance.nextEventID = "Event_A009";
+            DataManager.Instance._events["Event_A009"].isExecuted = false;
         }
     }
     

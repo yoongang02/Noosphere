@@ -95,6 +95,7 @@ public class EventStructure
         //혹시 not 조건이 있다면 반대로 값을 출력
         if (boolType == '!') return !isMet;
         
+        if(conditionType == "Event") Debug.Log(id + "의 " + DataManager.Instance._events[id].isExecuted + "실행 여부??");
         return isMet;
     }
 }

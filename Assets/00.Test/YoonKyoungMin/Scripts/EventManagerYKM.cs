@@ -58,27 +58,9 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         
         //1. LockCondition 실행
         string lockConditionID = eventStructure.lockConditionId;
-        LockConditionStructure lockCondition = DataManager.Instance._lockConditions[lockConditionID];
-        if (lockCondition != null)
+        if (!string.IsNullOrEmpty(lockConditionID) && DataManager.Instance._lockConditions.ContainsKey(lockConditionID))
         {
-            Debug.Log("#1 : " + lockConditionID + "락 조건 실행");
-            lockCondition.Lock();
-        }
-        
-        //2. 반복 가능한 이벤트인지 체크
-        //반복 불가능인데 이미 실행된 이벤트라면 실행 불가능
-        if (!eventStructure.repeatType && eventStructure.isExecuted)
-        {
-            Debug.Log("#" + eventID + "는 이미 실행된 이벤트이며, 반복 불가능한 이벤트입니다.");
-            //반복 불가능할 경우의 결과 출력
-            if (!string.IsNullOrEmpty(eventStructure.repeatFalseResult))
-            {
-                //repeatFalseResult 실행
-                Debug.Log("#" + eventStructure.repeatFalseResult + "RepeatFalseResult 실행");
-                CloseEventFailure(eventStructure);
-                StartCoroutine(ExecuteEvent(eventStructure.repeatFalseResult));
-            }
-            yield return null;
+            DataManager.Instance._lockConditions[lockConditionID].Lock();
         }
         
         //3. ConditionType 체크
@@ -119,6 +101,10 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             yield return null;
         }
         
+        //일단 결과까지 왔다면 이벤트가 성공적으로 실행된 것.
+        //결과의 실행 여부는 각 결과ID에 따라 처리
+        CloseEventSuccess(eventStructure);
+        
         //4. evidenceID가 비어있지 않으면 증거물 습득
         if (!string.IsNullOrEmpty(eventStructure.evidenceId) && DataManager.Instance._evidences.ContainsKey(eventStructure.evidenceId))
         {
@@ -136,11 +122,12 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             };
             yield return new WaitUntil(() => isSelectEnd);
             Debug.Log("#4-1 : "+eventStructure.eventId+"의 증거물"+eventStructure.evidenceId+" 선택 완료");
+            
+            if (!UIManager.Instance.IsAcquiredInInvestigateUI())
+            {
+                eventStructure.isExecuted = false;
+            }
         }
-        
-        //일단 결과까지 왔다면 이벤트가 성공적으로 실행된 것.
-        //결과의 실행 여부는 각 결과ID에 따라 처리
-        CloseEventSuccess(eventStructure);
         
         //예외 이벤트 처리 코드
         if (!UIManager.Instance.IsAcquiredInInvestigateUI() && currentEventID == "Event_A007")
@@ -224,14 +211,22 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     public void CloseEventFailure(EventStructure _event)
     {
         Debug.Log("#6 : " + _event.eventId + " 성공적이지 못하게 이벤트 종료");
-        DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();
-        currentEventID = "";
+        if (!string.IsNullOrEmpty(_event.lockConditionId) &&
+            DataManager.Instance._lockConditions.ContainsKey(_event.lockConditionId))
+        {
+            DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();
+        }
+        //currentEventID = "";
     }
     
     public void CloseEventSuccess(EventStructure _event)
     {
         Debug.Log("#6 : " + _event.eventId + "성공적으로 이벤트 종료");
-        DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();
+        if (!string.IsNullOrEmpty(_event.lockConditionId) &&
+            DataManager.Instance._lockConditions.ContainsKey(_event.lockConditionId))
+        {
+            DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();   
+        }
         _event.isExecuted = true;
         nextEventID = _event.nextEventId;
     }
