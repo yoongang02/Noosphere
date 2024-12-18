@@ -42,6 +42,9 @@ public class DialogueManager : UIBase
 
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private GameObject _toggleIcon;
+
+    private DialogueStructure _curDialogue;
+    
     private string _currentDialogueId = "";
     private int _currentLineIndex = 0;
     private string _initialDialogueId = "";
@@ -51,19 +54,7 @@ public class DialogueManager : UIBase
     private int _currentLetterIndex = 0;
     public bool isTyping = false;
     public Action OnDialogueEnd;
-    
-    private void Start()
-    {
-        InputManager.Instance.exitBtnAction += OnEscapePressed;
-    }
 
-    private void OnDestroy()
-    {
-        if (InputManager.Instance != null)
-        {
-            InputManager.Instance.exitBtnAction -= OnEscapePressed;
-        }
-    }
     public override void OnOpen()
     {
         base.OnOpen();
@@ -78,98 +69,63 @@ public class DialogueManager : UIBase
 
     public void SetDialogue(string id)
     {
-        _currentDialogueId = id;
-        if (DataManager.Instance._dialogue.TryGetValue(_currentDialogueId, out DialogueStructure dialogue))
+        InitDialogue();
+        if (!string.IsNullOrEmpty(id) && DataManager.Instance._dialogue.ContainsKey(id))
         {
-            if (dialogue.triggerType == "auto") //대화창 바로 뜨기
+            _curDialogue = DataManager.Instance._dialogue[id];
+            _currentDialogueId = id;
+            UIManager.Instance.OpenUI(UIManager.Instance.dialogueUI);
+            
+            if (_curDialogue.triggerType == "interact" && _curDialogue.interactionType == "npc")
             {
-                UIManager.Instance.OpenUI(UIManager.Instance.dialogueUI);
-                ShowNextLine().Forget();
+                PlayerController.Instance.NpcCameraOn();
             }
-
-            /*
-            if (dialogue.triggerType == "interact")
-            {
-                UIManager.Instance.dialogueUI.gameObject.SetActive(false);
-            }
-            */
+            ShowNextLine().Forget();
         }
         else
         {
             Debug.LogWarning($" {_currentDialogueId} 못찾음");
         }
     }
-    private void Update()
+    public override void HandleKeyboardInput()
     {
         if ((Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0)) && !string.IsNullOrEmpty(_currentDialogueId))
         {
-            HandleDialogueInput();
-        }
-    }
-
-    private void HandleDialogueInput()
-    {
-        DialogueStructure dialogue = DataManager.Instance._dialogue[_currentDialogueId];
-    
-        bool canProceed = dialogue.triggerType == "auto" || 
-                          (dialogue.triggerType == "interact" && dialogue.interactionType == "object");
-
-        if (!canProceed) return;
-       
-
-        if (dialogue.triggerType == "interact")
-        {
-            UIManager.Instance.OpenUI(UIManager.Instance.dialogueUI);
-            if (dialogue.interactionType == "npc")
+            if (isTyping)
             {
-                PlayerController.Instance.NpcCameraOn();
+                isTyping = false;
             }
-        }
-
-        if (isTyping)
-        {
-            isTyping = false;
-        }
-        else
-        {
-            ShowNextLine().Forget();
+            else
+            {
+                ShowNextLine().Forget();
+            }
         }
     }
     public async UniTaskVoid ShowNextLine()
     {
         _toggleIcon.SetActive(false);
-        if (string.IsNullOrEmpty(_currentDialogueId))
-        {
-            Debug.LogWarning("현재 대화 ID가 설정되지 않았습니다.");
-            return;
-        }
 
-        if (!DataManager.Instance._dialogue.TryGetValue(_currentDialogueId, out DialogueStructure dialogue))
-        {
-            Debug.LogWarning($"Dialogue ID {_currentDialogueId} not found.");
-            return;
-        }
-
-        if (_currentLineIndex < dialogue.Dialogue_Text_List.Count)
+        if (_currentLineIndex < _curDialogue.Dialogue_Text_List.Count)
         {
             // 타이핑 시작
-            await TypeText(dialogue.Dialogue_Text_List[_currentLineIndex]);
+            await TypeText(_curDialogue.Dialogue_Text_List[_currentLineIndex]);
             // 타이핑이 완료되었거나 스킵되었을 때만 다음 라인으로 진행
             _currentLineIndex++;
         }
         else
         {
-            if (!string.IsNullOrEmpty(dialogue.nextDialougeId))
+            if (!string.IsNullOrEmpty(_curDialogue.nextDialougeId))
             {
-                if (DataManager.Instance._dialogue.ContainsKey(dialogue.nextDialougeId))
+                if (DataManager.Instance._dialogue.ContainsKey(_curDialogue.nextDialougeId))
                 {
-                    _currentDialogueId = dialogue.nextDialougeId;
+                    _currentDialogueId = _curDialogue.nextDialougeId;
+                    _curDialogue = DataManager.Instance._dialogue[_currentDialogueId];
                     _currentLineIndex = 0;
                     ShowNextLine().Forget();
                 }
                 else
                 {
-                    Debug.LogWarning($"Next Dialogue ID {dialogue.nextDialougeId} not found.");
+                    Debug.LogWarning($"Next Dialogue ID {_curDialogue.nextDialougeId} not found.");
                 }
             }
             else
@@ -182,26 +138,8 @@ public class DialogueManager : UIBase
                     GameObject.Find("Artresource_0002").transform.GetChild(0).gameObject.SetActive(false);
                 }
                 
-                
                 OnDialogueEnd?.Invoke();
                 UIManager.Instance.CloseTopUI();
-                
-                _currentDialogueId = "";
-                _currentLineIndex = 0;
-                PlayerController.Instance.ResetCamera();
-                if (PlayerController.Instance._currentNPC != null)
-                {
-                    NpcDialogue npcDialogue = PlayerController.Instance._currentNPC.GetComponent<NpcDialogue>();
-                    if (npcDialogue != null)
-                    {
-                        npcDialogue.dialogueId = string.Empty;
-                    }
-
-                    PlayerController.Instance.isPlayerNearNPC = false;
-                    PlayerController.Instance._currentNPC = null;
-                }
-
-                //PlayerInteract.Instance.isInteractObj = false;
             }
         }
     }
@@ -230,17 +168,11 @@ public class DialogueManager : UIBase
         _toggleIcon.SetActive(true);
     }
 
-    private void OnEscapePressed()
+    void InitDialogue()
     {
-        if (!string.IsNullOrEmpty(_currentDialogueId) &&
-            DataManager.Instance._dialogue[_currentDialogueId].triggerType == "interact" &&
-            !PlayerController.Instance.canMove)
-        {
-            OnDialogueEnd?.Invoke();
-            _currentDialogueId = "";
-            _currentLineIndex = 0;
-            
-            UIManager.Instance.CloseTopUI();
-        }
+        _currentDialogueId = "";
+        _currentLineIndex = 0;
+        _curDialogue = null;
+        PlayerController.Instance.ResetCamera();
     }
 }
