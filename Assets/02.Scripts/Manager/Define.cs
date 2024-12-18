@@ -3,7 +3,54 @@ public static class Define
     public const string _bgmRoot = "BGM";
     public const string _soundRoot = "Sound";
 
-    public const string soundresource_001 = "soundresource_001";
-    public const string soundresource_002 = "soundresource_002";
+    public const string Soundresource_001 = "Soundresource_001";
+    public const string Soundresource_002 = "Ani_Character_Main_Focus";
+    public const string Soundresource_003 = "Ani_Character_Main_Pulling_Lever";
+    public const string Soundresource_004 = "Character_Main_Running_Foot Step_1";
+    public const string Soundresource_005 = "Character_Main_Running_Foot Step_2";
+    public const string Soundresource_006 = "Character_Main_Running_Foot Step_3";
+    public const string Soundresource_007 = "Character_Main_Running_Foot Step_4";
+    public const string Soundresource_008 = "Character_Main_Running_Foot Step_5";
+    public const string Soundresource_009 = "Ani_Character_Main_Start_Walking";
+    public const string Soundresource_010 = "Character_Main_Walk_foot Step 1";
+    public const string Soundresource_011 = "Character_Main_Walk_foot Step 2";
+    public const string Soundresource_012 = "Character_Main_Walk_foot Step 3";
+    public const string Soundresource_013 = "Character_Main_Walk_foot Step 4";
+    public const string Soundresource_014 = "Character_Main_Walk_foot Step 5";
+    public const string Soundresource_015 = "Character_Main_Walk_foot Step 6";
+    public const string Soundresource_016 = "Ani_Character_Main_Working_On_device";
+    public const string Soundresource_017 = "Amb_Labortory";
+    public const string Soundresource_018 = "Ani_Character_Doctor_Head shake";
+    public const string Soundresource_019 = "Ani_Character_Doctor_Talking";
+    public const string Soundresource_020 = "Character_Doctor_Walk_Foot Step_1";
+    public const string Soundresource_021 = "Character_Doctor_Walk_Foot Step_2";
+    public const string Soundresource_022 = "Character_Doctor_Walk_Foot Step_3";
+    public const string Soundresource_023 = "Character_Doctor_Walk_Foot Step_4";
+    public const string Soundresource_024 = "Character_Doctor_Walk_Foot Step_5";
+    public const string Soundresource_025 = "Character_Doctor_Walk_Foot Step_6";
+    public const string Soundresource_026 = "Character_Main_Talk_Loop";
+    public const string Soundresource_027 = "Character_Doctor_Talk_Loop";
+    //[UI]----------------------------------------------------------------------------------------------
+    public const string Soundresource_028 = "정신세계_Gaze_End";
+    public const string Soundresource_029 = "정신세계_Gaze";
+    public const string Soundresource_030 = "ui_E_button_1";
+    public const string Soundresource_031 = "ui_E_button_2";
+    public const string Soundresource_032 = "ui_E_button_3";
+    public const string Soundresource_033 = "ui_E_button_4";
+    public const string Soundresource_034 = "ui_E_button_5";
+    public const string Soundresource_035 = "ui_select_button";
+    public const string Soundresource_036 = "ui_Back up_button";
+    public const string Soundresource_037 = "ui _Space_button";
+    public const string Soundresource_038 = "ui_paper_1";
+    public const string Soundresource_039 = "ui_paper_2";
+    public const string Soundresource_040 = "ui_paper_3";
+    public const string Soundresource_041 = "ui_paper_4";
+    public const string Soundresource_042 = "ui_inventory";
+    public const string Soundresource_043 = "ui_inventory_Select_1";
+    public const string Soundresource_044 = "ui_inventory_Select_2";
+    public const string Soundresource_045 = "ui_inventory_Select_3";
+    public const string Soundresource_046 = "ui_inventory_Select_4";
+    public const string Soundresource_047 = "ui_inventory_Select_5";
+    
     public const string porlogueBGM = "PrologueBGM";
 }
