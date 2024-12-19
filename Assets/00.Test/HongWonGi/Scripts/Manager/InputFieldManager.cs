@@ -63,9 +63,21 @@ public class InputFieldManager : UIBase
     public override void OnClose()
     {
         base.OnClose();
+        _inputFieldUI.SetActive(false);
+
+        if (isAnswer)
+        {
+            //맞았을 때 결과가 있다면 결과 실행
+            StartCoroutine(DoCorrectResult());
+        }
+        else
+        {
+            //틀렸을 때 결과가 있다면 결과 실행
+            StartCoroutine(DoWrongResult());
+        }
+        
         InitInputField();
         _currentID = "";
-        _inputFieldUI.SetActive(false);
     }
     
     /// <summary>
@@ -106,17 +118,12 @@ public class InputFieldManager : UIBase
                 Debug.Log("#input 정답 맞춤");
                 isAnswer = true;
                 DataManager.Instance._input[_currentID].isSolved = true;
-                
-                //맞았을 때 결과가 있다면 결과 실행
-                StartCoroutine(DoCorrectResult());
             }
             else
             {
                 Debug.Log("#input 정답 못 맞춤");
                 isAnswer = false;
                 DataManager.Instance._input[_currentID].isSolved = false;
-                //틀렸을 때 결과가 있다면 결과 실행
-                StartCoroutine(DoWrongResult());
             }
             OnInputEnd?.Invoke();
             
