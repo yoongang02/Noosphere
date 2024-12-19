@@ -26,34 +26,13 @@ public class ChapterInventory
     public List<InventorySlot> realWorldEvidences { get; set; } = new List<InventorySlot>();
     public List<InventorySlot> mentalWorldEvidences { get; set; } = new List<InventorySlot>();
 }
-public class InventoryManager : UIBase
+public class InventoryManager : Singleton<InventoryManager>
 {
-    //싱글톤
-    private static InventoryManager _instance;
-    
-    public static InventoryManager Instance 
-    { 
-        get 
-        { 
-            if (_instance == null) 
-            {
-                _instance = FindObjectOfType<InventoryManager>();
-                if (_instance == null) 
-                {
-                    GameObject singletonObject = new GameObject(nameof(InventoryManager));
-                    _instance = singletonObject.AddComponent<InventoryManager>();
-                }
-            }
-            return _instance;
-        } 
-    }
-    
     //key : 챕터 숫자
     Dictionary<int, ChapterInventory> chapterInventories = new Dictionary<int, ChapterInventory>();
     
     //인벤토리 UI
     [Header("인벤토리 UI 오브젝트")]
-    [SerializeField] private GameObject _inventoryWindow;
     [SerializeField] private GameObject _realWorldInventory;
     [SerializeField] private GameObject _mentalWorldInventory;
     [SerializeField] private GameObject _inventorySlotPrefab;
@@ -63,18 +42,11 @@ public class InventoryManager : UIBase
     public List<GameObject> deselectedChapterUIList;
     public List<GameObject> selectedChapterUIList;
     public int currentViewChapter = 0;
-    
-    void Awake(){
-        
-        if (_instance != null && _instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
 
-        _instance = this;
-        DontDestroyOnLoad(gameObject); 
-    }
+    private InventoryNavigator _navigator;
+
+    [Space(5)] [Header("증거물 사용 정보")] [SerializeField]
+    private string usingEvidenceId;
     void Start()
     {
         //인벤토리 초기화
@@ -109,29 +81,6 @@ public class InventoryManager : UIBase
                 }
             }
         }
-    }
-
-    public override void OnOpen()
-    {
-        base.OnOpen();
-        UIManager.Instance.isInMap = false;
-        _inventoryWindow.SetActive(true);
-        //인벤토리 열었을 때, 현재 상태를 바탕으로 인벤토리 업데이트 진행
-        UpdateInventoryUI();
-    }
-
-    public override void OnClose()
-    {
-        base.OnClose();
-        UIManager.Instance.isInMap = true;
-        currentViewChapter = (int)EventManagerYKM.Instance.curStageInfo;
-        _inventoryWindow.SetActive(false);
-    }
-
-    public override void HandleKeyboardInput()
-    {
-        base.HandleKeyboardInput();
-        GetComponent<InventoryNavigator>().HandleKeyboardInput();
     }
     
     //인벤토리 초기화(맨 처음 실행 후, 다시 실행되지 않음)
@@ -251,6 +200,9 @@ public class InventoryManager : UIBase
         
         //인벤토리 네비게이션 업데이트
         GetComponent<InventoryNavigator>().InitNavigator(_realWorldInventory,_mentalWorldInventory);
+
+        yield return null;
+        _navigator = GetComponent<InventoryNavigator>();
     }
     
     //slot UI 업데이트 함수

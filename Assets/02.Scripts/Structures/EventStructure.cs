@@ -55,7 +55,13 @@ public class EventStructure
 
             if (canUse == 'Y')
             {
+                Debug.Log($"증거물 사용 여부 : {PlayerInteract.Instance.isUsingEvidence}");
                 //아이템을 사용했는지 체크
+                if (PlayerInteract.Instance.isUsingEvidence)
+                {
+                    isMet = true;
+                    PlayerInteract.Instance.InitUsingEvidence();
+                }
             }
             else if (canUse == 'N')
             {

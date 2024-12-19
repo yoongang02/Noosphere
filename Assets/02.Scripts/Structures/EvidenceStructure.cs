@@ -14,7 +14,7 @@ public class EvidenceStructure
     public string artresourceId;
     public string subEvidenceId;
     public string subEvidenceAcquisitionType;
-    public string acquisitionPageNum;
+    public int acquisitionPageNum;
     public string acquisitionPageResultId;
     
     //추가적으로 필요한 필드 값
