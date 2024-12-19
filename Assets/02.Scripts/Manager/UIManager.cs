@@ -16,6 +16,7 @@ public class UIManager : Singleton<UIManager>
     public UIBase evidenceDetailUI;
     public UIBase inventoryUI;
     public UIBase dialogueUI;
+    public UIBase inputFieldUI;
     
     public GameObject inventoryIcon;
     
