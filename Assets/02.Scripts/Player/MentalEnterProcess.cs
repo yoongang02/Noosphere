@@ -13,17 +13,20 @@ public class MentalEnterProcess : MonoBehaviour
     public bool isComplete = false;
     public MentalStructure mentalInfo;
     [SerializeField] private string _comebackEventId;
+    [SerializeField] private float _coolTime = 3f;
+    [SerializeField] private bool _canEnter = true;
     
     [Header("정신세계 진입 UI")]
     [SerializeField] private GameObject _progressBarUI;
     [SerializeField] private EnterProgressBar _progressBarFill;
+    
     
     void Update()
     {
         if (!UIManager.Instance.IsAnyUIOpen())
         {
             //현실세계 -> 정신세계 진입
-            if (!_startEnter && PlayerInteract.Instance.canInteract && PlayerInteract.Instance.mentalTrigger != null && Input.GetKeyDown(KeyCode.Space))
+            if (_canEnter && !_startEnter && PlayerInteract.Instance.canInteract && PlayerInteract.Instance.mentalTrigger != null && Input.GetKeyDown(KeyCode.Space))
             {
                 foreach (string eventID in PlayerInteract.Instance.mentalTrigger.GetComponent<EventTrigger>().eventIdList)
                 {
@@ -42,7 +45,7 @@ public class MentalEnterProcess : MonoBehaviour
             }
             
             //정신세계 -> 현실세계 진입
-            if (!_startEnter && PlayerInteract.Instance.canInteract && mentalInfo != null &&
+            if (_canEnter && !_startEnter && PlayerInteract.Instance.canInteract && mentalInfo != null &&
                 PlayerInteract.Instance.isInMental && Input.GetKeyDown(KeyCode.Space))
             {
                 if (PlayerInteract.Instance.CheckInteractionAvail(_comebackEventId))
@@ -165,7 +168,8 @@ public class MentalEnterProcess : MonoBehaviour
         //바 초기화
         InitProgressBar();
         
-        PlayerInteract.Instance.HideInteractionMark();
+        //성공적으로 도착한 경우, 쿨타임 시작
+        StartCoroutine(StartCoolTime());
     }
 
     void FailEnter()
@@ -203,5 +207,13 @@ public class MentalEnterProcess : MonoBehaviour
         {
             yield return null;
         }
+    }
+
+    IEnumerator StartCoolTime()
+    {
+        PlayerInteract.Instance.HideInteractionMark();
+        _canEnter = false;
+        yield return new WaitForSeconds(_coolTime);
+        _canEnter = true;
     }
 }

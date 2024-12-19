@@ -408,6 +408,7 @@ public class InventoryNavigator : UIBase
     protected void UseEvidence()
     {
         PlayerInteract.Instance.isUsingEvidence = true;
+        UIManager.Instance.CloseAllUI();
         StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(_evidenceUseEventId));
     }
 

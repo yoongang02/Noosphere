@@ -48,7 +48,6 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             Debug.Log("#현재 실행되어야 하는 이벤트는 " + nextEventID + "입니다.");
             yield break;
         }
-
         
         EventStructure eventStructure = DataManager.Instance._events[eventID];
         currentEventID = eventStructure.eventId;
@@ -102,10 +101,60 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         //결과의 실행 여부는 각 결과ID에 따라 처리
         CloseEventSuccess(eventStructure);
         
-        //4. evidenceID가 비어있지 않으면 증거물 습득
+        //4. 결과들 실행하기
+        int resultNum = 1;
+        foreach (var resultID in eventStructure.results)
+        {
+            if (!string.IsNullOrEmpty(resultID))
+            {
+                Debug.Log("#4 : "+eventStructure.eventId+"의 결과" + resultNum +" " + resultID +" 실행");
+                string resultType = resultID.Substring(0, resultID.IndexOf('_'));
+                if (resultType == "Dialogue")
+                {
+                    StartDialogue(resultID);
+                
+                    // 대화가 끝날 때까지 대기
+                    bool isDialogueEnd = false;
+                    DialogueManager.Instance.OnDialogueEnd += () => isDialogueEnd = true;
+                    yield return new WaitUntil(() => isDialogueEnd);
+                    Debug.Log("#4-2 : " + resultID + " 대화 끝");
+                }
+                else if (resultType == "Effect")
+                {
+                    StartEffect(resultID);
+                
+                    // 효과가 끝날 때까지 대기
+                    bool isEffectEnd = false;
+                    EffectManager.Instance.OnEffectEnd += () => isEffectEnd = true;
+                    yield return new WaitUntil(() => isEffectEnd);
+                    Debug.Log("#4-2 : " + resultID + " 효과 끝");
+                }
+                else if (resultType == "Input")
+                {
+                    StartInput(resultID);
+                
+                    // input이 끝날 때까지 기다리기
+                    bool isInputEnd = false;
+                    InputFieldManager.Instance.OnInputEnd += () => isInputEnd = true;
+                    yield return new WaitUntil(() => isInputEnd);
+                    Debug.Log("#4-2 : " + resultID + " input 끝");
+                }
+                else if (resultType == "Event")
+                {
+                    StartCoroutine(ExecuteEvent(resultID));
+                }
+                else if (resultType == "Mental")
+                {
+                    PlayerInteract.Instance.GetComponent<MentalEnterProcess>().StartEnter(resultID);
+                }
+
+                resultNum++;
+            }
+        }
+        //5. evidenceID가 비어있지 않으면 증거물 습득
         if (!string.IsNullOrEmpty(eventStructure.evidenceId) && DataManager.Instance._evidences.ContainsKey(eventStructure.evidenceId))
         {
-            Debug.Log("#4 : "+eventStructure.eventId+"의 증거물"+eventStructure.evidenceId+" 습득");
+            Debug.Log("#5 : "+eventStructure.eventId+"의 증거물"+eventStructure.evidenceId+" 습득");
             
             // 증거물 조사 UI 띄우기
             EvidenceStructure evidence = DataManager.Instance._evidences[eventStructure.evidenceId];
@@ -118,68 +167,22 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 isSelectEnd = true;
             };
             yield return new WaitUntil(() => isSelectEnd);
-            Debug.Log("#4-1 : "+eventStructure.eventId+"의 증거물"+eventStructure.evidenceId+" 선택 완료");
+            Debug.Log("#5-1 : "+eventStructure.eventId+"의 증거물"+eventStructure.evidenceId+" 선택 완료");
             
             if (!UIManager.Instance.IsAcquiredInInvestigateUI())
             {
                 eventStructure.isExecuted = false;
             }
-        }
         
-        //예외 이벤트 처리 코드
-        if (!UIManager.Instance.IsAcquiredInInvestigateUI() && currentEventID == "Event_A007")
-        {
-            nextEventID = "Event_A007";
-        }
-        
-        //5. 결과들 실행하기
-        int resultNum = 1;
-        foreach (var resultID in eventStructure.results)
-        {
-            if (!string.IsNullOrEmpty(resultID))
+            //예외 이벤트 처리 코드
+            if (!UIManager.Instance.IsAcquiredInInvestigateUI() && currentEventID == "Event_A007")
             {
-                Debug.Log("#5 : "+eventStructure.eventId+"의 결과" + resultNum +" " + resultID +" 실행");
-                string resultType = resultID.Substring(0, resultID.IndexOf('_'));
-                if (resultType == "Dialogue")
-                {
-                    StartDialogue(resultID);
-                
-                    // 대화가 끝날 때까지 대기
-                    bool isDialogueEnd = false;
-                    DialogueManager.Instance.OnDialogueEnd += () => isDialogueEnd = true;
-                    yield return new WaitUntil(() => isDialogueEnd);
-                    Debug.Log("#5-2 : " + resultID + " 대화 끝");
-                }
-                else if (resultType == "Effect")
-                {
-                    StartEffect(resultID);
-                
-                    // 효과가 끝날 때까지 대기
-                    bool isEffectEnd = false;
-                    EffectManager.Instance.OnEffectEnd += () => isEffectEnd = true;
-                    yield return new WaitUntil(() => isEffectEnd);
-                    Debug.Log("#5-2 : " + resultID + " 효과 끝");
-                }
-                else if (resultType == "Input")
-                {
-                    StartInput(resultID);
-                
-                    // input이 끝날 때까지 기다리기
-                    bool isInputEnd = false;
-                    InputFieldManager.Instance.OnInputEnd += () => isInputEnd = true;
-                    yield return new WaitUntil(() => isInputEnd);
-                    Debug.Log("#5-2 : " + resultID + " input 끝");
-                }
-                else if (resultType == "Event")
-                {
-                    StartCoroutine(ExecuteEvent(resultID));
-                }
-                else if (resultType == "Mental")
-                {
-                    PlayerInteract.Instance.GetComponent<MentalEnterProcess>().StartEnter(resultID);
-                }
-
-                resultNum++;
+                nextEventID = "Event_A007";
+            }
+            if (UIManager.Instance.IsAcquiredInInvestigateUI() && currentEventID == "Event_A018")
+            {
+                //일기 습득 성공하면 더이상 캐비넷에 접근할 수 없도록
+                DataManager.Instance._events["Event_A025"].repeatType = false;
             }
         }
     }
