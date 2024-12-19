@@ -6,6 +6,9 @@ using UnityEngine.EventSystems;
 
 public class EvidenceDetailUI : UIBase
 {
+    [Header("현재 상세보기 하고 있는 증거물")] [SerializeField]
+    private EvidenceStructure _curEvidence;
+    
     [Header("증거물 상세 UI GameObject")] [SerializeField]
     private GameObject _objectUI;
     [SerializeField] private GameObject _onePageUI;
@@ -22,7 +25,18 @@ public class EvidenceDetailUI : UIBase
     [SerializeField] private Image _secondPage;
     [SerializeField] private GameObject _prevPageBtn; //이전 페이지 버튼
     [SerializeField] private GameObject _nextPageBtn; //다음 페이지 버튼
+    [SerializeField] private bool isSubEvidence = false;
 
+
+    public void Update()
+    {
+        //서브 증거물이 있다면 체크 시작
+        if (IsTopUI() && isSubEvidence)
+        {
+            CheckSubEvidence();
+        }
+    }
+    
     public override void OnOpen(EvidenceStructure evidence)
     {
         base.OnOpen(evidence);
@@ -34,6 +48,7 @@ public class EvidenceDetailUI : UIBase
             return;
         }
         
+        _curEvidence = evidence;
         
         //인벤토리에서 증거물 상세사항을 오픈할 경우에는 UI 순서를 위해 아래의 설정이 필요함.
         if (!UIManager.Instance.isInMap)
@@ -75,6 +90,9 @@ public class EvidenceDetailUI : UIBase
         {
             StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(EventManagerYKM.Instance.nextEventID));
         }
+        
+        _curEvidence = null;
+        isSubEvidence = false;
     }
 
     public override void HandleKeyboardInput()
@@ -137,6 +155,11 @@ public class EvidenceDetailUI : UIBase
                 _twoPageUI.SetActive(true);
             }
             
+            //서브 증거물이 있는지 확인
+            if (!string.IsNullOrEmpty(evidence.subEvidenceId) && DataManager.Instance._evidences.ContainsKey(evidence.subEvidenceId))
+            {
+                isSubEvidence = true;
+            }
         }
         else
         {
@@ -349,5 +372,55 @@ public class EvidenceDetailUI : UIBase
     void SetBtnAble(GameObject btn)
     {
         btn.GetComponent<Image>().color = UnityExtension.HexColor(WhiteColor);
+    }
+
+    void CheckSubEvidence()
+    {
+        //이 함수가 실행된다는 것은 이미 subEvidenceID에 대한 검증 완료 -> 추가 검증 필요 X.
+        EvidenceStructure subEvidence = DataManager.Instance._evidences[_curEvidence.subEvidenceId];
+        string resultID;
+        //우선 페이지 타입 먼저 구현.
+        //한페이지이면 정확히 그 페이지여야 함.
+        //두페이지이면  { 현재 페이지 - 1 ~ 현재 페이지 } 로 계산해야 함.
+        if (_curEvidence.shapeType == "OnePage")
+        {
+            //현재 페이지가 서브 증거물이 위치하는 페이지라면
+            if (_curPage == _curEvidence.acquisitionPageNum)
+            {
+                resultID = _curEvidence.acquisitionPageResultId;
+                if (!string.IsNullOrEmpty(resultID))
+                {
+                    StartCoroutine(EventManagerYKM.Instance.DoResult(resultID));
+                }
+            }
+        }
+        else if (_curEvidence.shapeType == "TwoPage")
+        {
+            //현재 페이지가 서브 증거물이 위치하는 페이지라면
+            if (_curPage-1  <= _curEvidence.acquisitionPageNum && _curPage >= _curEvidence.acquisitionPageNum)
+            {
+                resultID = _curEvidence.acquisitionPageResultId;
+                if (!string.IsNullOrEmpty(resultID))
+                {
+                    //예외 처리 코드
+                    if (subEvidence.evidenceId == "Evidence_008")
+                    {
+                        //프롤로그에서만 보지 못하게
+                        if (EventManagerYKM.Instance.curStageInfo == EventManagerYKM.ChapterInfo.Prologue)
+                        {
+                            if(subEvidence.accessCnt >= 2) resultID = "Event_A024";
+                        }
+                        else
+                        {
+                            //프롤로그가 아닌 곳에서 열람한다면 볼 수 있어야 함.
+                            isSubEvidence = false;
+                            return;
+                        }
+                    }
+                    StartCoroutine(EventManagerYKM.Instance.DoResult(resultID));
+                }
+            }
+        }
+        isSubEvidence = false;
     }
 }
