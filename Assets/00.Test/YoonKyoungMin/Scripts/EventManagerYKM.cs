@@ -79,7 +79,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     foreach (var falseResult in eventStructure.conditionFalseResults)
                     {
                         Debug.Log("#3-3 : "+eventStructure.eventId+"의 falseCondition"+falseResultNum+" 실행");
-                        StartCoroutine(ExecuteEvent(falseResult));
+                        yield return StartCoroutine(DoResult(falseResult));
                         falseResultNum++;
                     }
                     yield break;
@@ -105,51 +105,9 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         int resultNum = 1;
         foreach (var resultID in eventStructure.results)
         {
-            if (!string.IsNullOrEmpty(resultID))
-            {
-                Debug.Log("#4 : "+eventStructure.eventId+"의 결과" + resultNum +" " + resultID +" 실행");
-                string resultType = resultID.Substring(0, resultID.IndexOf('_'));
-                if (resultType == "Dialogue")
-                {
-                    StartDialogue(resultID);
-                
-                    // 대화가 끝날 때까지 대기
-                    bool isDialogueEnd = false;
-                    DialogueManager.Instance.OnDialogueEnd += () => isDialogueEnd = true;
-                    yield return new WaitUntil(() => isDialogueEnd);
-                    Debug.Log("#4-2 : " + resultID + " 대화 끝");
-                }
-                else if (resultType == "Effect")
-                {
-                    StartEffect(resultID);
-                
-                    // 효과가 끝날 때까지 대기
-                    bool isEffectEnd = false;
-                    EffectManager.Instance.OnEffectEnd += () => isEffectEnd = true;
-                    yield return new WaitUntil(() => isEffectEnd);
-                    Debug.Log("#4-2 : " + resultID + " 효과 끝");
-                }
-                else if (resultType == "Input")
-                {
-                    StartInput(resultID);
-                
-                    // input이 끝날 때까지 기다리기
-                    bool isInputEnd = false;
-                    InputFieldManager.Instance.OnInputEnd += () => isInputEnd = true;
-                    yield return new WaitUntil(() => isInputEnd);
-                    Debug.Log("#4-2 : " + resultID + " input 끝");
-                }
-                else if (resultType == "Event")
-                {
-                    StartCoroutine(ExecuteEvent(resultID));
-                }
-                else if (resultType == "Mental")
-                {
-                    PlayerInteract.Instance.GetComponent<MentalEnterProcess>().StartEnter(resultID);
-                }
-
-                resultNum++;
-            }
+            Debug.Log("#4 : "+eventStructure.eventId+"의 결과" + resultNum +" " + resultID +" 실행");
+            yield return StartCoroutine(DoResult(resultID));
+            resultNum++;
         }
         //5. evidenceID가 비어있지 않으면 증거물 습득
         if (!string.IsNullOrEmpty(eventStructure.evidenceId) && DataManager.Instance._evidences.ContainsKey(eventStructure.evidenceId))
@@ -229,5 +187,51 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         }
         _event.isExecuted = true;
         nextEventID = _event.nextEventId;
+    }
+
+    public IEnumerator DoResult(string resultID)
+    {
+        if (!string.IsNullOrEmpty(resultID))
+        {
+            string resultType = resultID.Substring(0, resultID.IndexOf('_'));
+            if (resultType == "Dialogue")
+            {
+                StartDialogue(resultID);
+                
+                // 대화가 끝날 때까지 대기
+                bool isDialogueEnd = false;
+                DialogueManager.Instance.OnDialogueEnd += () => isDialogueEnd = true;
+                yield return new WaitUntil(() => isDialogueEnd);
+                Debug.Log("#4-2 : " + resultID + " 대화 끝");
+            }
+            else if (resultType == "Effect")
+            {
+                StartEffect(resultID);
+                
+                // 효과가 끝날 때까지 대기
+                bool isEffectEnd = false;
+                EffectManager.Instance.OnEffectEnd += () => isEffectEnd = true;
+                yield return new WaitUntil(() => isEffectEnd);
+                Debug.Log("#4-2 : " + resultID + " 효과 끝");
+            }
+            else if (resultType == "Input")
+            {
+                StartInput(resultID);
+                
+                // input이 끝날 때까지 기다리기
+                bool isInputEnd = false;
+                InputFieldManager.Instance.OnInputEnd += () => isInputEnd = true;
+                yield return new WaitUntil(() => isInputEnd);
+                Debug.Log("#4-2 : " + resultID + " input 끝");
+            }
+            else if (resultType == "Event")
+            {
+                StartCoroutine(ExecuteEvent(resultID));
+            }
+            else if (resultType == "Mental")
+            {
+                PlayerInteract.Instance.GetComponent<MentalEnterProcess>().StartEnter(resultID);
+            }
+        }
     }
 }
