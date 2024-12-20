@@ -51,6 +51,13 @@ public static class Define
     public const string Soundresource_045 = "ui_inventory_Select_3";
     public const string Soundresource_046 = "ui_inventory_Select_4";
     public const string Soundresource_047 = "ui_inventory_Select_5";
-    
+    public const string Soundresource_048 = "Radio_1";
+    public const string Soundresource_049 = "Radio_2";
+    public const string Soundresource_050 = "Radio_3";
+    public const string Soundresource_051 = "Radio_4";
+    public const string Soundresource_052 = "Radio_5";
+    public const string Soundresource_053 = "Radio_6";
+    public const string Soundresource_054 = "Window_Break";
+    public const string Soundresource_055 = "Password_incorrect";
     public const string porlogueBGM = "PrologueBGM";
 }
