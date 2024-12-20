@@ -216,4 +216,14 @@ public class MentalEnterProcess : MonoBehaviour
         yield return new WaitForSeconds(_coolTime);
         _canEnter = true;
     }
+
+    public void LockEnterProcess()
+    {
+        _canEnter = false;
+    }
+
+    public void UnLockEnterProcess()
+    {
+        _canEnter = true;
+    }
 }

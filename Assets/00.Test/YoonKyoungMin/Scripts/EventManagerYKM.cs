@@ -57,6 +57,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         string lockConditionID = eventStructure.lockConditionId;
         if (!string.IsNullOrEmpty(lockConditionID) && DataManager.Instance._lockConditions.ContainsKey(lockConditionID))
         {
+            Debug.Log("#1 : " + lockConditionID + "락 조건 실행");
             DataManager.Instance._lockConditions[lockConditionID].Lock();
         }
         
@@ -172,6 +173,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         if (!string.IsNullOrEmpty(_event.lockConditionId) &&
             DataManager.Instance._lockConditions.ContainsKey(_event.lockConditionId))
         {
+            Debug.Log("#7 : " + _event.lockConditionId + "락 조건 해제");
             DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();
         }
         //currentEventID = "";
@@ -183,6 +185,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         if (!string.IsNullOrEmpty(_event.lockConditionId) &&
             DataManager.Instance._lockConditions.ContainsKey(_event.lockConditionId))
         {
+            Debug.Log("#7 : " + _event.lockConditionId + "락 조건 해제");
             DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();   
         }
         _event.isExecuted = true;
