@@ -231,12 +231,11 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             else if (resultType == "Quiz")
             {
                 StartQuiz(resultID);
-                
                 // input이 끝날 때까지 기다리기
-                bool isInputEnd = false;
-                QuizManager.Instance.inputFieldManager.OnInputEnd += () => isInputEnd = true;
-                yield return new WaitUntil(() => isInputEnd);
-                Debug.Log("#4-2 : " + resultID + " input 끝");
+                bool isQuizEnd = false;
+                QuizManager.Instance.OnQuizEnd += () => isQuizEnd = true;
+                yield return new WaitUntil(() => isQuizEnd);
+                Debug.Log("#4-2 : " + resultID + " quiz 끝");
             }
             else if (resultType == "Event")
             {

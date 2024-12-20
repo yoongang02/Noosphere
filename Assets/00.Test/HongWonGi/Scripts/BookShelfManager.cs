@@ -2,12 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BookShelfManager : Singleton<BookShelfManager>
+public class BookShelfManager : UIBase
 {
     public bool isBookClear=false;
     [SerializeField] private List<int> _answer; // 정답 순서
     [SerializeField] private Transform _bookParent;
-    [SerializeField] private GameObject _bookShelfPanel;
+
+    public override void OnOpen()
+    {
+        base.OnOpen();
+        transform.GetChild(0).gameObject.SetActive(true);
+    }
+
+    public override void OnClose()
+    {
+        base.OnClose();
+        transform.GetChild(0).gameObject.SetActive(false);
+    }
+    
     public void CheckBookOrder()
     {
         List<int> currentOrder = new List<int>();
@@ -24,7 +36,7 @@ public class BookShelfManager : Singleton<BookShelfManager>
         // 정답 체크
         if(IsCorrectOrder(currentOrder))
         {
-            _bookShelfPanel.SetActive(false);
+            UIManager.Instance.CloseTopUI();
             MirrorPuzzleManager.Instance.GetMirrorPiece(1);
             //거울조각 얻기
         }

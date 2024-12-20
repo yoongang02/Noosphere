@@ -9,7 +9,6 @@ public class InputFieldManager : UIBase
 {
     [Header("Input Field 변수")]
     public bool isAnswer = false;
-    public Action OnInputEnd;
     [SerializeField] private GameObject _inputFieldUI;
     [SerializeField] private TextMeshProUGUI _questionText;
     [SerializeField] private TMP_InputField _inputText;
@@ -93,7 +92,7 @@ public class InputFieldManager : UIBase
                 isAnswer = false;
                 DataManager.Instance._quiz[_currentID].isSolved = false;
             }
-            OnInputEnd?.Invoke();
+            QuizManager.Instance.OnQuizEnd?.Invoke();
             
             //Input Field UI 종료
             UIManager.Instance.CloseTopUI();

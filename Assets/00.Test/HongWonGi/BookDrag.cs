@@ -20,12 +20,19 @@ public class BookDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     private float _minMoveDelta = 60f; // 최소 이동 거리 (픽셀)
     private float _proximityThreshold = 75f; // 다른 이미지와의 최소 감지 거리
 
+    private BookShelfManager _bookShelfManager;
+
     void Awake()
     {
         _rectTransform = GetComponent<RectTransform>();
         _canvas = GetComponentInParent<Canvas>();
         _originalParent = transform.parent;
         _layoutGroupRect = _originalParent.GetComponent<RectTransform>();
+    }
+
+    void Start()
+    {
+        _bookShelfManager = transform.GetComponentInParent<BookShelfManager>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -82,7 +89,7 @@ public class BookDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         }
 
         _placeholderObject.SetActive(false);
-        BookShelfManager.Instance.CheckBookOrder();
+        _bookShelfManager.CheckBookOrder();
     }
 
     private bool IsInsideLayoutGroup(Vector2 position)
