@@ -4,8 +4,40 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class MirrorPuzzleManager : Singleton<MirrorPuzzleManager>
+public class MirrorPuzzleManager : UIBase
 { 
+    //싱글톤
+    private static MirrorPuzzleManager _instance;
+    
+    public static MirrorPuzzleManager Instance 
+    { 
+        get 
+        { 
+            if (_instance == null) 
+            {
+                _instance = FindObjectOfType<MirrorPuzzleManager>();
+                if (_instance == null) 
+                {
+                    GameObject singletonObject = new GameObject(nameof(MirrorPuzzleManager));
+                    _instance = singletonObject.AddComponent<MirrorPuzzleManager>();
+                }
+            }
+            return _instance;
+        } 
+    }
+
+    void Awake(){
+        
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        _instance = this;
+        //DontDestroyOnLoad(gameObject); 
+    }
+    
     [SerializeField] private GameObject _mirrorPanel;
     [SerializeField] private List<GameObject> _mirrorPieces;
     [Header("World Mirror Object")]
@@ -17,6 +49,20 @@ public class MirrorPuzzleManager : Singleton<MirrorPuzzleManager>
     public bool isMirrorBroke = false;
 
 
+    public override void OnOpen()
+    {
+        base.OnOpen();
+        ResetAllPieces();
+        transform.GetChild(0).gameObject.SetActive(true);
+    }
+
+    public override void OnClose()
+    {
+        base.OnClose();
+        ResetAllPieces();
+        transform.GetChild(0).gameObject.SetActive(false);
+    }
+    
     public void GetMirrorPiece(int mirrorIdx)
     {
         if (!isMirrorBroke)
@@ -26,14 +72,6 @@ public class MirrorPuzzleManager : Singleton<MirrorPuzzleManager>
         }
 
         _mirrorPieces[mirrorIdx].SetActive(true);
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            ResetAllPieces();
-        }
     }
 
     public void CheckAnswer()
@@ -51,11 +89,16 @@ public class MirrorPuzzleManager : Singleton<MirrorPuzzleManager>
 
         if (allCorrect)
         {
+            Debug.Log("퍼즐 클리어!");
             isPuzzleClear = true;
-            _mirrorPanel.SetActive(false);
+            //거울 원상복구
             _mirror.SetActive(true);
             _brokeMirror.SetActive(false);
-            Debug.Log("퍼즐 클리어!");
+            //현실 세계로 돌아갈 수 있도록 변경
+            DataManager.Instance._lockConditions["Lock_condition_005"].UnLock();
+            PlayerInteract.Instance.GetComponent<MentalEnterProcess>().SetCombackEventId("Event_B059");
+            
+            UIManager.Instance.CloseTopUI();
         }
     }
 

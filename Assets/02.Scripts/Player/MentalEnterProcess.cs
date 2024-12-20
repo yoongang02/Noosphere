@@ -245,4 +245,9 @@ public class MentalEnterProcess : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         _isForceQuit = true;
     }
+
+    public void SetCombackEventId(string id)
+    {
+        _comebackEventId = id;
+    }
 }

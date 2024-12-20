@@ -95,6 +95,7 @@ public class RadioManager : UIBase
             {
                 //현실세계 정신세계 구분
                 ShowDialogue().Forget();
+                MirrorPuzzleManager.Instance.GetMirrorPiece(5);
             }
             else
             {

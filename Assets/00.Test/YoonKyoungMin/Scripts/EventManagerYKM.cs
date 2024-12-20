@@ -124,6 +124,16 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             {
                 evidence.AcquireEvidence();
             }
+            else if (evidence.evidenceId == "Evidence_022")
+            {
+                //스테이지1 침대 거울 조각
+                MirrorPuzzleManager.Instance.GetMirrorPiece(4);
+            }
+            else if (evidence.evidenceId == "Evidence_021")
+            {
+                //스테이지1 의자 거울 조각
+                MirrorPuzzleManager.Instance.GetMirrorPiece(3);
+            }
             else
             {
                 UIManager.Instance.OpenUI(UIManager.Instance.investigateUI, evidence);
