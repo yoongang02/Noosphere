@@ -7,38 +7,6 @@ using TMPro;
 
 public class InputFieldManager : UIBase
 {
-    //싱글톤
-    private static InputFieldManager _instance;
-    
-    public static InputFieldManager Instance 
-    { 
-        get 
-        { 
-            if (_instance == null) 
-            {
-                _instance = FindObjectOfType<InputFieldManager>();
-                if (_instance == null) 
-                {
-                    GameObject singletonObject = new GameObject(nameof(InputFieldManager));
-                    _instance = singletonObject.AddComponent<InputFieldManager>();
-                }
-            }
-            return _instance;
-        } 
-    }
-
-    void Awake(){
-        
-        if (_instance != null && _instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        _instance = this;
-        DontDestroyOnLoad(gameObject); 
-    }
-    
     [Header("Input Field 변수")]
     public bool isAnswer = false;
     public Action OnInputEnd;
@@ -89,7 +57,7 @@ public class InputFieldManager : UIBase
         _currentID = id;
         isAnswer = false;
         
-        if (!DataManager.Instance._input.TryGetValue(id, out InputFieldStructure structure))
+        if (!DataManager.Instance._quiz.TryGetValue(id, out QuizStructure structure))
         {
             Debug.LogWarning($"ID {id}에 해당하는 InputFieldStructure를 찾을 수 없습니다.");
             return;
@@ -117,13 +85,13 @@ public class InputFieldManager : UIBase
             {
                 Debug.Log("#input 정답 맞춤");
                 isAnswer = true;
-                DataManager.Instance._input[_currentID].isSolved = true;
+                DataManager.Instance._quiz[_currentID].isSolved = true;
             }
             else
             {
                 Debug.Log("#input 정답 못 맞춤");
                 isAnswer = false;
-                DataManager.Instance._input[_currentID].isSolved = false;
+                DataManager.Instance._quiz[_currentID].isSolved = false;
             }
             OnInputEnd?.Invoke();
             
@@ -139,14 +107,14 @@ public class InputFieldManager : UIBase
 
     IEnumerator DoCorrectResult()
     {
-        if (!string.IsNullOrEmpty(_currentID) && DataManager.Instance._input.ContainsKey(_currentID))
+        if (!string.IsNullOrEmpty(_currentID) && DataManager.Instance._quiz.ContainsKey(_currentID))
         {
-            InputFieldStructure input = DataManager.Instance._input[_currentID];
-            string resultType = input.inputCorrect.Substring(0, input.inputCorrect.IndexOf("_"));
+            QuizStructure input = DataManager.Instance._quiz[_currentID];
+            string resultType = input.quizCorrects[0].Substring(0, input.quizCorrects[0].IndexOf("_"));
 
             if (resultType == "Dialogue")
             {
-                DialogueManager.Instance.SetDialogue(input.inputCorrect);
+                DialogueManager.Instance.SetDialogue(input.quizCorrects[0]);
                 
                 bool isDialogueEnd = false;
                 DialogueManager.Instance.OnDialogueEnd += () => isDialogueEnd = true;
@@ -157,14 +125,14 @@ public class InputFieldManager : UIBase
 
     IEnumerator DoWrongResult()
     {
-        if (!string.IsNullOrEmpty(_currentID) && DataManager.Instance._input.ContainsKey(_currentID))
+        if (!string.IsNullOrEmpty(_currentID) && DataManager.Instance._quiz.ContainsKey(_currentID))
         {
-            InputFieldStructure input = DataManager.Instance._input[_currentID];
-            string resultType = input.inputWrong.Substring(0, input.inputWrong.IndexOf("_"));
+            QuizStructure input = DataManager.Instance._quiz[_currentID];
+            string resultType = input.quizWrong.Substring(0, input.quizWrong.IndexOf("_"));
 
             if (resultType == "Dialogue")
             {
-                DialogueManager.Instance.SetDialogue(input.inputWrong);
+                DialogueManager.Instance.SetDialogue(input.quizWrong);
                 
                 bool isDialogueEnd = false;
                 DialogueManager.Instance.OnDialogueEnd += () => isDialogueEnd = true;

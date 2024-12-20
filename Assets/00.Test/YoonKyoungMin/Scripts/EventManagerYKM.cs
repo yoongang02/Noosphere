@@ -167,11 +167,11 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         EffectManager.Instance.SetEffect(effectID);
     }
     
-    //Input 시작
-    void StartInput(string inputID)
+    //Quiz 시작
+    void StartQuiz(string quizID)
     {
-        Debug.Log("#5-1 : " + inputID + " input 시작");
-        InputFieldManager.Instance.SetQuestionField(inputID);
+        Debug.Log("#5-1 : " + quizID + " input 시작");
+        QuizManager.Instance.SetQuiz(quizID);
     }
     
     public void CloseEventFailure(EventStructure _event)
@@ -224,13 +224,13 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 yield return new WaitUntil(() => isEffectEnd);
                 Debug.Log("#4-2 : " + resultID + " 효과 끝");
             }
-            else if (resultType == "Input")
+            else if (resultType == "Quiz")
             {
-                StartInput(resultID);
+                StartQuiz(resultID);
                 
                 // input이 끝날 때까지 기다리기
                 bool isInputEnd = false;
-                InputFieldManager.Instance.OnInputEnd += () => isInputEnd = true;
+                QuizManager.Instance.inputFieldManager.OnInputEnd += () => isInputEnd = true;
                 yield return new WaitUntil(() => isInputEnd);
                 Debug.Log("#4-2 : " + resultID + " input 끝");
             }
