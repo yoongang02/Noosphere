@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class MirrorPuzzleManager : UIBase
 { 
+    [SerializeField] private string _curQuizID;
+    private QuizStructure _curQuiz;
     //싱글톤
     private static MirrorPuzzleManager _instance;
     
@@ -59,9 +61,13 @@ public class MirrorPuzzleManager : UIBase
     public bool isMirrorBroke = false;
 
 
-    public override void OnOpen()
+    public override void OnOpen(string quizID)
     {
-        base.OnOpen();
+        base.OnOpen(quizID);
+        _curQuizID = quizID;
+        _curQuiz = DataManager.Instance._quiz[_curQuizID];
+        Debug.Log($"# quiz id : {quizID}, _curQuiz : {_curQuiz}");
+        
         ResetAllPieces();
         transform.GetChild(0).gameObject.SetActive(true);
     }
@@ -71,6 +77,28 @@ public class MirrorPuzzleManager : UIBase
         base.OnClose();
         ResetAllPieces();
         transform.GetChild(0).gameObject.SetActive(false);
+        
+        //결과에 따라 실행
+        if (_curQuiz.isSolved)
+        {
+            DataManager.Instance._events[EventManagerYKM.Instance.currentEventID].repeatType = false;
+            
+            //거울 원상복구
+            _mirror.SetActive(true);
+            _brokeMirror.SetActive(false);
+            //현실 세계로 돌아갈 수 있도록 변경
+            DataManager.Instance._lockConditions["Lock_condition_005"].UnLock();
+            PlayerInteract.Instance.GetComponent<MentalEnterProcess>().SetCombackEventId("Event_B059");
+            
+            DoCorrectResult();
+        }
+        else
+        {
+            DoWrongResult();
+        }
+        
+        _curQuizID = "";
+        _curQuiz = null;
     }
     
     public void GetMirrorPiece(string evidenceID)
@@ -101,13 +129,9 @@ public class MirrorPuzzleManager : UIBase
         {
             Debug.Log("퍼즐 클리어!");
             isPuzzleClear = true;
-            //거울 원상복구
-            _mirror.SetActive(true);
-            _brokeMirror.SetActive(false);
-            //현실 세계로 돌아갈 수 있도록 변경
-            DataManager.Instance._lockConditions["Lock_condition_005"].UnLock();
-            PlayerInteract.Instance.GetComponent<MentalEnterProcess>().SetCombackEventId("Event_B059");
             
+            //퀴즈 해결되었다고 표시
+            _curQuiz.isSolved = true;
             UIManager.Instance.CloseTopUI();
         }
     }
@@ -115,5 +139,24 @@ public class MirrorPuzzleManager : UIBase
     public void ResetAllPieces() //거울 퍼즐 초기화
     {
         OnResetPuzzle?.Invoke();
+    }
+    
+    void DoCorrectResult()
+    {
+        foreach (var resultID in _curQuiz.quizCorrects)
+        {
+            if (!string.IsNullOrEmpty(resultID))
+            {
+                StartCoroutine(EventManagerYKM.Instance.DoResult(resultID));
+            }
+        }
+    }
+
+    void DoWrongResult()
+    {
+        if (!string.IsNullOrEmpty(_curQuiz.quizWrong))
+        {
+            StartCoroutine(EventManagerYKM.Instance.DoResult(_curQuiz.quizWrong));
+        }
     }
 }
