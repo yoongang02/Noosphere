@@ -4,13 +4,29 @@ using UnityEngine;
 
 public class BookShelfManager : UIBase
 {
+    [SerializeField] private string _curQuizID;
+    private QuizStructure _curQuiz;
     public bool isBookClear=false;
     [SerializeField] private List<int> _answer; // 정답 순서
     [SerializeField] private Transform _bookParent;
 
-    public override void OnOpen()
+    public override void OnOpen(string quizID)
     {
-        base.OnOpen();
+        base.OnOpen(quizID);
+        _curQuizID = quizID;
+        _curQuiz = DataManager.Instance._quiz[_curQuizID];
+        Debug.Log($"# quiz id : {quizID}, _curQuiz : {_curQuiz}");
+        //만약 거울이 깨졌는데 기믹을 미리 성공했다면
+        if (MirrorPuzzleManager.Instance.isMirrorBroke)
+        {
+            if (_curQuiz.isSolved)
+            {
+                //바로 증거물 습득하기
+                UIManager.Instance.CloseTopUI();
+                return;
+            }
+        }
+        
         transform.GetChild(0).gameObject.SetActive(true);
     }
 
@@ -18,6 +34,20 @@ public class BookShelfManager : UIBase
     {
         base.OnClose();
         transform.GetChild(0).gameObject.SetActive(false);
+        
+        //결과에 따라 실행
+        if (_curQuiz.isSolved)
+        {
+            DataManager.Instance._events[EventManagerYKM.Instance.currentEventID].repeatType = false;
+            DoCorrectResult();
+        }
+        else
+        {
+            DoWrongResult();
+        }
+        
+        _curQuizID = "";
+        _curQuiz = null;
     }
     
     public void CheckBookOrder()
@@ -33,9 +63,12 @@ public class BookShelfManager : UIBase
             }
         }
 
+        
         // 정답 체크
         if(IsCorrectOrder(currentOrder))
         {
+            //퀴즈 해결되었다고 표시
+            _curQuiz.isSolved = true;
             UIManager.Instance.CloseTopUI();
         }
     }
@@ -51,5 +84,24 @@ public class BookShelfManager : UIBase
                 return false;
         }
         return true;
+    }
+    
+    void DoCorrectResult()
+    {
+        foreach (var resultID in _curQuiz.quizCorrects)
+        {
+            if (!string.IsNullOrEmpty(resultID))
+            {
+                StartCoroutine(EventManagerYKM.Instance.DoResult(resultID));
+            }
+        }
+    }
+
+    void DoWrongResult()
+    {
+        if (!string.IsNullOrEmpty(_curQuiz.quizWrong))
+        {
+            StartCoroutine(EventManagerYKM.Instance.DoResult(_curQuiz.quizWrong));
+        }
     }
 }

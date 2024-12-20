@@ -170,19 +170,19 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     string id = "";
                     switch (eventStructure.evidenceId)
                     {
-                        case ("Evidence_019"):
-                            id = "";
+                        case ("Evidence_019"): //책장
+                            id = "Event_B064";
                             break;
-                        case ("Evidence_020"):
-                            id = "";
+                        case ("Evidence_020"): //파일철
+                            //id = "";
                             break;
-                        case ("Evidence_021"):
-                            id = "";
+                        case ("Evidence_021"): //의자
+                            id = "Event_B050";
                             break;
-                        case ("Evidence_022"):
-                            id = "";
+                        case ("Evidence_022"): //침대
+                            id = "Event_B051";
                             break;
-                        case ("Evidence_023"):
+                        case ("Evidence_023"): //라디오
                             id = "Event_B063";
                             break;
                     }
