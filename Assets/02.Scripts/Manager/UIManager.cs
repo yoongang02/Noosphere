@@ -77,7 +77,23 @@ public class UIManager : Singleton<UIManager>
         topUI = ui;
         ui.OnOpen(evidence);
     }
-    
+
+    public void OpenUI(UIBase ui, string quizID)
+    {
+        if (ui == null) return;
+        
+        if (string.IsNullOrEmpty(quizID) || !DataManager.Instance._quiz.ContainsKey(quizID))
+        {
+            Debug.LogError("🔥 quiz가 올바르지 않아 OpenUI()를 호출할 수 없습니다.");
+            return;
+        }
+        // 스택에 추가하고 UI를 활성화
+        // 상호작용 금지
+        LockPlayer();
+        uiStack.Push(ui);
+        topUI = ui;
+        ui.OnOpen(quizID);
+    }
     public void CloseTopUI()
     {
         if (uiStack.Count == 0) return;

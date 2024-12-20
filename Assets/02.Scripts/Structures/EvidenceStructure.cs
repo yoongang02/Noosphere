@@ -51,6 +51,16 @@ public class EvidenceStructure
         }
     }
 
+    public bool CanAcquireEvidence()
+    {
+        if (!IsUnLockConditionMet())
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     bool IsUnLockConditionMet()
     {
         foreach (var unlockCondition in unlockConditions)
