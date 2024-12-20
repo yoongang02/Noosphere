@@ -79,6 +79,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     int falseResultNum = 1;
                     foreach (var falseResult in eventStructure.conditionFalseResults)
                     {
+                        Debug.Log($"FalseResult : {falseResult}");
                         Debug.Log("#3-3 : "+eventStructure.eventId+"의 falseCondition"+falseResultNum+ " "+ falseResult+ " 실행"); 
                         yield return StartCoroutine(DoResult(falseResult));
                         falseResultNum++;
@@ -117,12 +118,15 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             
             // 증거물 조사 UI 띄우기
             EvidenceStructure evidence = DataManager.Instance._evidences[eventStructure.evidenceId];
-            UIManager.Instance.OpenUI(UIManager.Instance.investigateUI, evidence);
             
             //임시로 사진만 예외처리 함. 기획과 논의 필요!!
             if (evidence.evidenceId == "Evidence_008")
             {
                 evidence.AcquireEvidence();
+            }
+            else
+            {
+                UIManager.Instance.OpenUI(UIManager.Instance.investigateUI, evidence);
             }
             
 
@@ -167,11 +171,11 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         EffectManager.Instance.SetEffect(effectID);
     }
     
-    //Input 시작
-    void StartInput(string inputID)
+    //Quiz 시작
+    void StartQuiz(string quizID)
     {
-        Debug.Log("#5-1 : " + inputID + " input 시작");
-        InputFieldManager.Instance.SetQuestionField(inputID);
+        Debug.Log("#5-1 : " + quizID + " input 시작");
+        QuizManager.Instance.SetQuiz(quizID);
     }
     
     public void CloseEventFailure(EventStructure _event)
@@ -224,13 +228,13 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 yield return new WaitUntil(() => isEffectEnd);
                 Debug.Log("#4-2 : " + resultID + " 효과 끝");
             }
-            else if (resultType == "Input")
+            else if (resultType == "Quiz")
             {
-                StartInput(resultID);
+                StartQuiz(resultID);
                 
                 // input이 끝날 때까지 기다리기
                 bool isInputEnd = false;
-                InputFieldManager.Instance.OnInputEnd += () => isInputEnd = true;
+                QuizManager.Instance.inputFieldManager.OnInputEnd += () => isInputEnd = true;
                 yield return new WaitUntil(() => isInputEnd);
                 Debug.Log("#4-2 : " + resultID + " input 끝");
             }

@@ -90,9 +90,9 @@ public class EventStructure
                 isMet = true;
             }
         }
-        else if (conditionType == "Input")
+        else if (conditionType == "Quiz")
         {
-            if (DataManager.Instance._input.ContainsKey(id) && DataManager.Instance._input[id].isSolved)
+            if (DataManager.Instance._quiz.ContainsKey(id) && DataManager.Instance._quiz[id].isSolved)
             {
                 isMet = true;
             }
