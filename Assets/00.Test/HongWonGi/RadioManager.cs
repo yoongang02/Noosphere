@@ -10,13 +10,13 @@ using DG.Tweening;
 public class RadioManager : MonoBehaviour
 {
     [SerializeField] private GameObject _radioPanel;
-    [Header("RadioUI")] [SerializeField] private List<DialBtn> _dialBtn;
+    [Header("RadioUI")] 
+    [SerializeField] private List<DialBtn> _dialBtn;
     [SerializeField] private TextMeshProUGUI _radioText;
     [SerializeField] private Button _powerBtn;
 
-    [Header("WorldDialogueUI")] [SerializeField]
-    private TextMeshProUGUI _realText;
-
+    [Header("WorldDialogueUI")] 
+    [SerializeField] private TextMeshProUGUI _realText;
     [SerializeField] private TextMeshProUGUI _mirrorText;
 
     [SerializeField] private string radioAnswer;
@@ -90,7 +90,15 @@ public class RadioManager : MonoBehaviour
         if (_radioText.text == radioAnswer)
         {
             gameObject.SetActive(false);
-            ShowDialogue().Forget();
+            if (PlayerInteract.Instance.isInMental)
+            {
+                //현실세계 정신세계 구분
+                ShowDialogue().Forget();
+            }
+            else
+            {
+                ShowRealDialogue().Forget();
+            }
         }
         else
         {
@@ -98,10 +106,41 @@ public class RadioManager : MonoBehaviour
         }
     }
 
+    private async UniTask ShowRealDialogue()
+    {
+        DialogueStructure mirrorDialogue = DataManager.Instance._dialogue["Dialogue_0024"];
+        // DialogueStructure mirrorDialogue = _testDialogue["Dialogue_0024"];
+        _realText.gameObject.SetActive(true);
+
+        for (int i = 0; i < mirrorDialogue.Dialogue_Text_List.Count; i++)
+        {
+            _realText.text = $"<mark=#00000055>{mirrorDialogue.Dialogue_Text_List[i]}</mark>";
+
+            // 페이드 인
+            await _realText.DOFade(1f, _fadeDuration).AsyncWaitForCompletion();
+
+            // 표시 시간 대기
+            await UniTask.Delay(TimeSpan.FromSeconds(_displayDuration));
+
+            // 페이드 아웃
+            await _realText.DOFade(0f, _fadeDuration).AsyncWaitForCompletion();
+
+            // 마지막이 아니면 잠시 대기
+            if (i < mirrorDialogue.Dialogue_Text_List.Count - 1)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
+            }
+        }
+
+        _realText.gameObject.SetActive(false);
+    }
+
     private async UniTaskVoid ShowDialogue()
     {
-        DialogueStructure realDialogue = _testDialogue["Dialogue_0027"];
-        DialogueStructure mirrorDialogue = _testDialogue["Dialogue_0028"];
+        // DialogueStructure realDialogue = _testDialogue["Dialogue_0027"];
+        // DialogueStructure mirrorDialogue = _testDialogue["Dialogue_0028"];
+        DialogueStructure realDialogue = DataManager.Instance._dialogue["Dialogue_0027"];
+        DialogueStructure mirrorDialogue = DataManager.Instance._dialogue["Dialogue_0028"];
 
         _realText.gameObject.SetActive(true);
         _mirrorText.gameObject.SetActive(true);
