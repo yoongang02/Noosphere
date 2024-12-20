@@ -37,8 +37,9 @@ public class BookShelfManager : UIBase
         if(IsCorrectOrder(currentOrder))
         {
             UIManager.Instance.CloseTopUI();
-            MirrorPuzzleManager.Instance.GetMirrorPiece(1);
+            
             //거울조각 얻기
+            MirrorPuzzleManager.Instance.GetMirrorPiece(1);
         }
     }
 
