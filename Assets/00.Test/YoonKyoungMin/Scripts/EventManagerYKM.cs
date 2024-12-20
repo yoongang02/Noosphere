@@ -57,6 +57,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         string lockConditionID = eventStructure.lockConditionId;
         if (!string.IsNullOrEmpty(lockConditionID) && DataManager.Instance._lockConditions.ContainsKey(lockConditionID))
         {
+            Debug.Log("#1 : " + lockConditionID + "락 조건 실행");
             DataManager.Instance._lockConditions[lockConditionID].Lock();
         }
         
@@ -78,7 +79,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     int falseResultNum = 1;
                     foreach (var falseResult in eventStructure.conditionFalseResults)
                     {
-                        Debug.Log("#3-3 : "+eventStructure.eventId+"의 falseCondition"+falseResultNum+" 실행");
+                        Debug.Log("#3-3 : "+eventStructure.eventId+"의 falseCondition"+falseResultNum+ " "+ falseResult+ " 실행"); 
                         yield return StartCoroutine(DoResult(falseResult));
                         falseResultNum++;
                     }
@@ -117,6 +118,13 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             // 증거물 조사 UI 띄우기
             EvidenceStructure evidence = DataManager.Instance._evidences[eventStructure.evidenceId];
             UIManager.Instance.OpenUI(UIManager.Instance.investigateUI, evidence);
+            
+            //임시로 사진만 예외처리 함. 기획과 논의 필요!!
+            if (evidence.evidenceId == "Evidence_008")
+            {
+                evidence.AcquireEvidence();
+            }
+            
 
             // UI에서 입력을 기다림
             bool isSelectEnd = false;
@@ -172,6 +180,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         if (!string.IsNullOrEmpty(_event.lockConditionId) &&
             DataManager.Instance._lockConditions.ContainsKey(_event.lockConditionId))
         {
+            Debug.Log("#7 : " + _event.lockConditionId + "락 조건 해제");
             DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();
         }
         //currentEventID = "";
@@ -183,6 +192,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         if (!string.IsNullOrEmpty(_event.lockConditionId) &&
             DataManager.Instance._lockConditions.ContainsKey(_event.lockConditionId))
         {
+            Debug.Log("#7 : " + _event.lockConditionId + "락 조건 해제");
             DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();   
         }
         _event.isExecuted = true;

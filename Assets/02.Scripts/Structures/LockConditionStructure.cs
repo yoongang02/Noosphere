@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class LockConditionStructure
@@ -8,23 +9,23 @@ public class LockConditionStructure
     {
         switch (lockConditionId)
         {
-            case "lock_condition_001":
+            case "Lock_condition_001":
                 LockPlayerMove();
                 LockAllInteraction();
                 break;
-            case "lock_condition_002":
+            case "Lock_condition_002":
                 LockPlayerMove();
                 break;
-            case "lock_condition_003":
+            case "Lock_condition_003":
                 LockAllInteraction();
                 break;
-            case "lock_condition_004":
+            case "Lock_condition_004":
                 LockEnterMentalWorld();
                 break;
-            case "lock_condition_005":
+            case "Lock_condition_005":
                 LockComeBackToRealWorld();
                 break;
-            case "lock_condition_006":
+            case "Lock_condition_006":
                 ForceQuitInteraction();
                 break;
         }
@@ -34,15 +35,23 @@ public class LockConditionStructure
     {
         switch (lockConditionId)
         {
-            case "lock_condition_001":
+            case "Lock_condition_001":
                 UnLockPlayerMove();
                 UnLockAllInteraction();
                 break;
-            case "lock_condition_002":
+            case "Lock_condition_002":
                 UnLockPlayerMove();
                 break;
-            case "lock_condition_003":
+            case "Lock_condition_003":
                 UnLockAllInteraction();
+                break;
+            case "Lock_condition_004":
+                UnLockEnterMentalWorld();
+                break;
+            case "Lock_condition_005":
+                UnLockComeBackToRealWorld();
+                break;
+            case "Lock_condition_006":
                 break;
         }
     }
@@ -73,12 +82,28 @@ public class LockConditionStructure
 
     void LockEnterMentalWorld()
     {
+        MentalEnterProcess mentalEnterProcess = PlayerInteract.Instance.GetComponent<MentalEnterProcess>();
+        mentalEnterProcess.LockEnterProcess();
         Debug.Log("정신세계 입장 Lock");
+    }
+    
+    void UnLockEnterMentalWorld()
+    {
+        MentalEnterProcess mentalEnterProcess = PlayerInteract.Instance.GetComponent<MentalEnterProcess>();
+        mentalEnterProcess.UnLockEnterProcess();
+        Debug.Log("정신세계 입장 UnLock");
     }
 
     void LockComeBackToRealWorld()
     {
         Debug.Log("현실 세계 돌아오기 Lock");
+        LockEnterMentalWorld();
+    }
+    
+    void UnLockComeBackToRealWorld()
+    {
+        Debug.Log("현실 세계 돌아오기 Lock");
+        UnLockEnterMentalWorld();
     }
 
     void ForceQuitInteraction()
