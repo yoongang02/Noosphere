@@ -40,6 +40,11 @@ public class UIBase : MonoBehaviour
         }
         Debug.Log($"#{gameObject.name}이(가) 열렸습니다.");
     }
+
+    public virtual void OnOpen(string quizID)
+    {
+        Debug.Log($"#{gameObject.name}이(가) 열렸습니다.");
+    }
     
     public virtual void OnClose()
     {

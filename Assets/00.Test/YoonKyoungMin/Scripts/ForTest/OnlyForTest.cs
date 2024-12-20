@@ -52,7 +52,9 @@ public class OnlyForTest : MonoBehaviour
         DataManager.Instance._quiz["Quiz_001"].isSolved = true;
         //서브 증거물
         DataManager.Instance._evidences["Evidence_008"].accessCnt = 3;
-
+        
+        UIManager.Instance.CloseAllUI();
+        
         //씬 스테이지1로 이동
         SceneManager.LoadScene("Stage1Map_real");
         //현재 스테이지 변경

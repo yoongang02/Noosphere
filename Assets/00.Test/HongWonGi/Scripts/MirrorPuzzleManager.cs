@@ -37,9 +37,19 @@ public class MirrorPuzzleManager : UIBase
         _instance = this;
         //DontDestroyOnLoad(gameObject); 
     }
+
+    void Start()
+    {
+        _mirrorPiecesDictionary.Add("Evidence_019",_mirrorPieces[0]);
+        _mirrorPiecesDictionary.Add("Evidence_020",_mirrorPieces[1]);
+        _mirrorPiecesDictionary.Add("Evidence_021",_mirrorPieces[2]);
+        _mirrorPiecesDictionary.Add("Evidence_022",_mirrorPieces[3]);
+        _mirrorPiecesDictionary.Add("Evidence_023",_mirrorPieces[4]);
+    }
     
     [SerializeField] private GameObject _mirrorPanel;
     [SerializeField] private List<GameObject> _mirrorPieces;
+    private Dictionary<string, GameObject> _mirrorPiecesDictionary = new Dictionary<string, GameObject>();
     [Header("World Mirror Object")]
     [SerializeField] private GameObject _mirror;
     [SerializeField] private GameObject _brokeMirror;
@@ -63,7 +73,7 @@ public class MirrorPuzzleManager : UIBase
         transform.GetChild(0).gameObject.SetActive(false);
     }
     
-    public void GetMirrorPiece(int mirrorIdx)
+    public void GetMirrorPiece(string evidenceID)
     {
         if (!isMirrorBroke)
         {
@@ -71,7 +81,7 @@ public class MirrorPuzzleManager : UIBase
             return;
         }
 
-        _mirrorPieces[mirrorIdx].SetActive(true);
+        _mirrorPiecesDictionary[evidenceID].SetActive(true);
     }
 
     public void CheckAnswer()

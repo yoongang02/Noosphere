@@ -27,7 +27,7 @@ public class QuizManager : Singleton<QuizManager>
             GameObject quizObject = GameObject.Find(_curQuiz.quizId);
             Debug.Log($"quiz obejct : {quizObject}, 아이디 : {_curQuiz.quizId}");
             UIBase script = quizObject.GetComponent<UIBase>();
-            UIManager.Instance.OpenUI(script);
+            UIManager.Instance.OpenUI(script,_curQuiz.quizId);
         }
     }
 }
