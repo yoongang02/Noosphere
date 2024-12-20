@@ -11,17 +11,23 @@ public class MentalEnterProcess : MonoBehaviour
     [SerializeField] bool _startEnter = false;
     [SerializeField] float _timer = 0f;
     public bool isComplete = false;
-    [SerializeField] private MentalStructure _mentalInfo;
+    public MentalStructure mentalInfo;
+    [SerializeField] private string _comebackEventId;
+    [SerializeField] private float _coolTime = 3f;
+    [SerializeField] private bool _canEnter = true;
+    [SerializeField] private bool _isForceQuit = false;
     
     [Header("정신세계 진입 UI")]
     [SerializeField] private GameObject _progressBarUI;
     [SerializeField] private EnterProgressBar _progressBarFill;
     
+    
     void Update()
     {
         if (!UIManager.Instance.IsAnyUIOpen())
         {
-            if (!_startEnter && PlayerInteract.Instance.canInteract && PlayerInteract.Instance.mentalTrigger != null && Input.GetKeyDown(KeyCode.Space))
+            //현실세계 -> 정신세계 진입
+            if (_canEnter && !_startEnter && PlayerInteract.Instance.canInteract && PlayerInteract.Instance.mentalTrigger != null && Input.GetKeyDown(KeyCode.Space))
             {
                 foreach (string eventID in PlayerInteract.Instance.mentalTrigger.GetComponent<EventTrigger>().eventIdList)
                 {
@@ -39,14 +45,31 @@ public class MentalEnterProcess : MonoBehaviour
                 }
             }
             
+            //정신세계 -> 현실세계 진입
+            if (_canEnter && !_startEnter && PlayerInteract.Instance.canInteract && mentalInfo != null &&
+                PlayerInteract.Instance.isInMental && Input.GetKeyDown(KeyCode.Space))
+            {
+                if (PlayerInteract.Instance.CheckInteractionAvail(_comebackEventId))
+                {
+                    //이벤트 실행 가능하다면 실행
+                    StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(_comebackEventId));
+                    return;
+                }
+                else
+                {
+                    Debug.Log($"{mentalInfo.combackEventId} 는 현재 현실세계 진입이 불가능함.");
+                }
+            }
+            
             //진입시작했고, 완료되지 않았고, 스페이스를 계속 누르고 있다면
             if (_startEnter && !isComplete)
             {
+                PlayerInteract.Instance.HideInteractionMark();
                 if (Input.GetKey(KeyCode.Space))
                 {
                     float value = _progressBarFill.FillAmount();
                     EffectManager.Instance.StartMentalEffect(value);
-                
+                    
                     if (value >= 1f)
                     {
                         isComplete = true;
@@ -76,14 +99,14 @@ public class MentalEnterProcess : MonoBehaviour
 
             if (isComplete)
             {
-                Debug.Log($"#{_mentalInfo.mentalId} 시간 내에 진입 완료.");
+                Debug.Log($"#{mentalInfo.mentalId} 시간 내에 진입 완료.");
                 CompleteEnter();
             }
 
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
                 Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
             {
-                Debug.Log($"#{_mentalInfo.mentalId} 진입 중에 움직여서 초기화 됨.");
+                Debug.Log($"#{mentalInfo.mentalId} 진입 중에 움직여서 초기화 됨.");
                 FailEnter();
             }
 
@@ -91,9 +114,15 @@ public class MentalEnterProcess : MonoBehaviour
             {
                 if (!isComplete)
                 {
-                    Debug.Log($"#{_mentalInfo.mentalId} 시간 내에 진입하지 못함.");
+                    Debug.Log($"#{mentalInfo.mentalId} 시간 내에 진입하지 못함.");
                     FailEnter();
                 }
+            }
+
+            if (_isForceQuit)
+            {
+                Debug.Log($"#{mentalInfo.mentalId} 진입 강제 종료");
+                FailEnter();
             }
         }
     }
@@ -105,50 +134,76 @@ public class MentalEnterProcess : MonoBehaviour
         
         _timer = 0f;
         _progressBarFill.InitFillAmount();
+        isComplete = false;
         _startEnter = false;
-
-        _mentalInfo = null;
+        _isForceQuit = false;
     }
 
-    public void StartEnter(MentalStructure mentalStructure)
+    public void StartEnter(string mentalId)
     {
-        _mentalInfo = mentalStructure;
-        _startEnter = true;
-        _progressBarUI.SetActive(true);
+        if (DataManager.Instance._mental.ContainsKey(mentalId))
+        {
+            mentalInfo = DataManager.Instance._mental[mentalId];
+            if (!PlayerInteract.Instance.isInMental) _comebackEventId = mentalInfo.combackEventId;
+            _startEnter = true;
+            _progressBarUI.SetActive(true);
+        }
+        else
+        {
+            Debug.Log($"${mentalId} 키의 MentalStructure이 존재하지 않습니다.");
+        }
+       
     }
 
     void CompleteEnter()
     {
-        //씬 이동
-        StartCoroutine(LoadSceneAsync(_mentalInfo.destination));
-        
-        //이동 성공 시 결과가 있다면 실행
-        if (!string.IsNullOrEmpty(_mentalInfo.mentalTrueResult))
-        {
-            StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(_mentalInfo.mentalTrueResult));
-        }
-        
         //바 초기화
         InitProgressBar();
+        
+        //씬 이동
+        StartCoroutine(LoadSceneAsync(mentalInfo.destination));
+        PlayerInteract.Instance.isInMental = !PlayerInteract.Instance.isInMental;
+        
+        //이동 성공 시 결과가 있다면 실행
+        if (!string.IsNullOrEmpty(mentalInfo.mentalTrueResult))
+        {
+            StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(mentalInfo.mentalTrueResult));
+        }
+
+        if (!PlayerInteract.Instance.isInMental)
+        {
+            mentalInfo = null;
+            _comebackEventId = "";
+        }
+        
+        //성공적으로 도착한 경우, 쿨타임 시작
+        StartCoroutine(StartCoolTime());
     }
 
     void FailEnter()
     {
+        //바 초기화
+        InitProgressBar();
+        
         //이동 실패 시 결과가 있다면 실행
-        foreach (var result in _mentalInfo.mentalFalseResults)
+        foreach (var result in mentalInfo.mentalFalseResults)
         {
             if (!string.IsNullOrEmpty(result))
             {
-                StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(result));
+                StartCoroutine(EventManagerYKM.Instance.DoResult(result));
             }
         }
-        
-        //바 초기화
-        InitProgressBar();
 
         if (EventManagerYKM.Instance.currentEventID == "Event_A026")
         {
             EventManagerYKM.Instance.nextEventID = "Event_A026";
+            DataManager.Instance._events["Event_A026"].isExecuted = false;
+        }
+
+        if (EventManagerYKM.Instance.currentEventID == "Event_A009")
+        {
+            EventManagerYKM.Instance.nextEventID = "Event_A009";
+            DataManager.Instance._events["Event_A009"].isExecuted = false;
         }
     }
     
@@ -160,5 +215,39 @@ public class MentalEnterProcess : MonoBehaviour
         {
             yield return null;
         }
+    }
+
+    IEnumerator StartCoolTime()
+    {
+        PlayerInteract.Instance.HideInteractionMark();
+        _canEnter = false;
+        yield return new WaitForSeconds(_coolTime);
+        _canEnter = true;
+    }
+
+    public void LockEnterProcess()
+    {
+        _canEnter = false;
+    }
+
+    public void UnLockEnterProcess()
+    {
+        _canEnter = true;
+    }
+
+    public void ForceQuitMentalProcess()
+    {
+        StartCoroutine(BreakMirror());
+    }
+
+    IEnumerator BreakMirror()
+    {
+        yield return new WaitForSeconds(1.0f);
+        _isForceQuit = true;
+    }
+
+    public void SetCombackEventId(string id)
+    {
+        _comebackEventId = id;
     }
 }

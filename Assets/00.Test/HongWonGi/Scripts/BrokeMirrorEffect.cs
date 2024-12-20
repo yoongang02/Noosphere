@@ -7,15 +7,12 @@ public class BrokeMirrorEffect : MonoBehaviour
 {
     [SerializeField] private GameObject _brokeMirror;
     [SerializeField] private GameObject _mirror;
-    [SerializeField] private List<GameObject> _pointEffects;
+    [SerializeField] private GameObject _pointEffects;
 
     private void OnEnable()
     {
         MirrorPuzzleManager.Instance.isMirrorBroke = true;
-        foreach(GameObject obj in _pointEffects)
-        {
-            obj.SetActive(true);
-        }
+        _pointEffects.SetActive(true);
         _mirror.SetActive(false);
         _brokeMirror.SetActive(true);
     }

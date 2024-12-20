@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -25,56 +26,27 @@ public class ChapterInventory
     public List<InventorySlot> realWorldEvidences { get; set; } = new List<InventorySlot>();
     public List<InventorySlot> mentalWorldEvidences { get; set; } = new List<InventorySlot>();
 }
-public class InventoryManager : UIBase
+public class InventoryManager : Singleton<InventoryManager>
 {
-    //싱글톤
-    private static InventoryManager _instance;
-    
-    public static InventoryManager Instance 
-    { 
-        get 
-        { 
-            if (_instance == null) 
-            {
-                _instance = FindObjectOfType<InventoryManager>();
-                if (_instance == null) 
-                {
-                    GameObject singletonObject = new GameObject(nameof(InventoryManager));
-                    _instance = singletonObject.AddComponent<InventoryManager>();
-                }
-            }
-            return _instance;
-        } 
-    }
-    
     //key : 챕터 숫자
     Dictionary<int, ChapterInventory> chapterInventories = new Dictionary<int, ChapterInventory>();
     
     //인벤토리 UI
     [Header("인벤토리 UI 오브젝트")]
-    [SerializeField] private GameObject _inventoryWindow;
     [SerializeField] private GameObject _realWorldInventory;
     [SerializeField] private GameObject _mentalWorldInventory;
     [SerializeField] private GameObject _inventorySlotPrefab;
-    [SerializeField] private GameObject _inventoryIcon;
     
     [Space(5)][Header("인벤토리 정보")]
     //챕터 관련
     public List<GameObject> deselectedChapterUIList;
     public List<GameObject> selectedChapterUIList;
     public int currentViewChapter = 0;
-    
-    void Awake(){
-        
-        if (_instance != null && _instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
 
-        _instance = this;
-        DontDestroyOnLoad(gameObject); 
-    }
+    private InventoryNavigator _navigator;
+
+    [Space(5)] [Header("증거물 사용 정보")] [SerializeField]
+    private string usingEvidenceId;
     void Start()
     {
         //인벤토리 초기화
@@ -103,32 +75,12 @@ public class InventoryManager : UIBase
 
             foreach (var result in results)
             {
-                if (result.gameObject == _inventoryIcon && Input.GetMouseButtonDown(0))
+                if (result.gameObject == UIManager.Instance.inventoryIcon && Input.GetMouseButtonDown(0))
                 {
                     UIManager.Instance.OpenUI(UIManager.Instance.inventoryUI);
                 }
             }
         }
-    }
-
-    public override void OnOpen()
-    {
-        base.OnOpen();
-        _inventoryWindow.SetActive(true);
-        //인벤토리 열었을 때, 현재 상태를 바탕으로 인벤토리 업데이트 진행
-        UpdateInventoryUI();
-    }
-
-    public override void OnClose()
-    {
-        base.OnClose();
-        _inventoryWindow.SetActive(false);
-    }
-
-    public override void HandleKeyboardInput()
-    {
-        base.HandleKeyboardInput();
-        GetComponent<InventoryNavigator>().HandleKeyboardInput();
     }
     
     //인벤토리 초기화(맨 처음 실행 후, 다시 실행되지 않음)
@@ -167,9 +119,6 @@ public class InventoryManager : UIBase
             _chapterInventory.realWorldEvidences.Add(newSlot);
         }
         
-        //인벤토리 UI 업데이트하기
-        UpdateInventoryUI();
-        
         //맵에서 증거 오브젝트 파괴하기 - 현재 오류 존재. 다시 씬으로 이동해오면 원상복구 됨. 아예 삭제 해 버려야 함.
         /*
         if (PlayerInteract.Instance._evidenceObjectInScene != null)
@@ -184,45 +133,76 @@ public class InventoryManager : UIBase
     public void UpdateInventoryUI()
     {
         //현실 세계, 정신 세계 인벤토리 초기화
-        ClearInventoryUI(_realWorldInventory);
-        ClearInventoryUI(_mentalWorldInventory);
+        StartCoroutine(ClearInventoryUI());
+    }
+    
+    //인벤토리 슬롯 초기화
+    IEnumerator ClearInventoryUI()
+    {
+        int childCount = _realWorldInventory.transform.childCount;
+        Debug.Log($"{_realWorldInventory.name}의 자식은 {childCount}개 입니다.");
+
+        if (childCount > 0)
+        {
+            for (int i = childCount - 1; i >= 0; i--)
+            {
+                Transform child = _realWorldInventory.transform.GetChild(i);
+                if (child != null)
+                {
+                    Debug.Log($"{_realWorldInventory.name}의 자식 {child.name}을 제거");
+                    Destroy(child.gameObject);
+                }
+            }
+        }
+        
+        childCount = _mentalWorldInventory.transform.childCount;
+        Debug.Log($"{_mentalWorldInventory.name}의 자식은 {childCount}개 입니다.");
+
+        if (childCount > 0)
+        {
+            for (int i = childCount - 1; i >= 0; i--)
+            {
+                Transform child = _mentalWorldInventory.transform.GetChild(i);
+                if (child != null)
+                {
+                    Debug.Log($"{_mentalWorldInventory.name}의 자식 {child.name}을 제거");
+                    Destroy(child.gameObject);
+                }
+            }
+        }
+        yield return null;
         
         //현재 챕터에 따른 인벤토리 가져오기
         ChapterInventory currentInventory = chapterInventories[currentViewChapter];
 
         // 현실 세계 증거물 추가
-        foreach (var evidence in currentInventory.realWorldEvidences)
+        if (currentInventory.realWorldEvidences.Count != 0)
         {
-            GameObject slot = Instantiate(_inventorySlotPrefab, _realWorldInventory.transform);
-            slot.GetComponent<InventorySlotInfo>().evidenceId = evidence.evidenceId;
-            UpdateSlotUI(slot, evidence);
-        }
-
-        // 정신 세계 증거물 추가
-        foreach (var evidence in currentInventory.mentalWorldEvidences)
-        {
-            GameObject slot = Instantiate(_inventorySlotPrefab, _mentalWorldInventory.transform);
-            slot.GetComponent<InventorySlotInfo>().evidenceId = evidence.evidenceId;
-            UpdateSlotUI(slot, evidence);
-        }
-        
-        //인벤토리 네비게이션 업데이트
-        GetComponent<InventoryNavigator>().InitNavigator(_realWorldInventory.transform,_mentalWorldInventory.transform);
-    }
-    
-    //인벤토리 슬롯 초기화
-    void ClearInventoryUI(GameObject inventoryParent)
-    {
-        int childCount = inventoryParent.transform.childCount;
-        
-        for (int i = childCount - 1; i >= 0; i--)
-        {
-            Transform child = inventoryParent.transform.GetChild(i);
-            if (child != null)
+            foreach (var evidence in currentInventory.realWorldEvidences)
             {
-                Destroy(child.gameObject);
+                GameObject slot = Instantiate(_inventorySlotPrefab, _realWorldInventory.transform);
+                slot.GetComponent<InventorySlotInfo>().evidenceId = evidence.evidenceId;
+                UpdateSlotUI(slot, evidence);
             }
         }
+
+        if (currentInventory.mentalWorldEvidences.Count != 0)
+        {
+            // 정신 세계 증거물 추가
+            foreach (var evidence in currentInventory.mentalWorldEvidences)
+            {
+                GameObject slot = Instantiate(_inventorySlotPrefab, _mentalWorldInventory.transform);
+                slot.GetComponent<InventorySlotInfo>().evidenceId = evidence.evidenceId;
+                UpdateSlotUI(slot, evidence);
+            }
+        }
+        yield return null;
+        
+        //인벤토리 네비게이션 업데이트
+        GetComponent<InventoryNavigator>().InitNavigator(_realWorldInventory,_mentalWorldInventory);
+
+        yield return null;
+        _navigator = GetComponent<InventoryNavigator>();
     }
     
     //slot UI 업데이트 함수

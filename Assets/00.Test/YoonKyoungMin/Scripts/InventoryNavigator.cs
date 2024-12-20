@@ -7,13 +7,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class InventoryNavigator : MonoBehaviour
+public class InventoryNavigator : UIBase
 {
+    [SerializeField] private GameObject _inventoryWindow;
     [Header("인벤토리 네비게이션 정보")]
-    protected GameObject _curSelectedSlot;
+    [SerializeField] protected GameObject _curSelectedSlot;
     public int currentIndex = 0;
     public bool isBothInventory = false; //정신세계 증거물과 현실세계 증거물이 모두 있을 때
-    public bool canEvidenceUse = false;
     
     [Space(5)][Header("인벤토리 네비게이션 UI")]
     public List<GameObject> inventorySlots = new List<GameObject>();
@@ -23,7 +23,63 @@ public class InventoryNavigator : MonoBehaviour
     [SerializeField] private Sprite _deselectedSprite;
     [SerializeField] private TextMeshProUGUI _slotUseBtn;
     
-    public void InitNavigator(Transform realWorld, Transform mentalWorld)
+    [Space(5)][Header("증거물 사용 정보")]
+    public bool canEvidenceUse = false;
+    [SerializeField] private string _evidenceUseEventId;
+    
+    public override void OnOpen()
+    {
+        base.OnOpen();
+        UIManager.Instance.isInMap = false;
+        _inventoryWindow.SetActive(true);
+        //인벤토리 열었을 때, 현재 상태를 바탕으로 인벤토리 업데이트 진행
+        InventoryManager.Instance.UpdateInventoryUI();
+    }
+
+    public override void OnClose()
+    {
+        base.OnClose();
+        UIManager.Instance.isInMap = true;
+        InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curStageInfo;
+        _inventoryWindow.SetActive(false);
+    }
+
+    public override void HandleKeyboardInput()
+    {
+        if (_curSelectedSlot != null)
+        {
+            //슬롯 상하좌우 이동 - 키보드 WASD
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                MoveUp();
+            }
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                MoveLeft();
+            }
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                MoveDown();
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                MoveRight();
+            }
+                
+            //증거물 상세 정보 열기 - 키보드 E
+            if (Input.GetKeyDown(KeyCode.E))
+            { 
+                OpenEvidenceDetailUI();
+            }
+            
+            //Space 버튼을 누르면 증거물 사용하기
+            if (canEvidenceUse && Input.GetKeyDown(KeyCode.Space))
+            {
+                UseEvidence();
+            }
+        }
+    }
+    public void InitNavigator(GameObject realWorld, GameObject mentalWorld)
     {
         //초기화
         realWorldSlots.Clear();
@@ -31,34 +87,37 @@ public class InventoryNavigator : MonoBehaviour
         inventorySlots.Clear();
         
         //현재 인벤토리 기준으로 재설정
-        realWorldSlots = GetChildSlots(realWorld);
-        mentalWorldSlots = GetChildSlots(mentalWorld);
+        realWorldSlots = GetChildSlots(realWorld.transform);
+        mentalWorldSlots = GetChildSlots(mentalWorld.transform);
+        
         
         //실제 이동에 사용할 슬롯 리스트
         if (realWorldSlots.Count > 0 && mentalWorldSlots.Count > 0)
         {
             //현실세계 증거물과 정신세계 증거물을 교차로 넣기
+            Debug.Log("현실 증거물 정신 증거물 둘 다 존재?");
             AddSlotsPerRow();
             isBothInventory = true;
         }
         else if(realWorldSlots.Count > 0)
         {
+            Debug.Log($"현실 증거물 {realWorldSlots.Count}개 만 존재");
             inventorySlots = realWorldSlots;
         }
         else if (mentalWorldSlots.Count > 0)
         {
+            Debug.Log($"정신 증거물 {mentalWorldSlots.Count}개 만 존재");
             inventorySlots = mentalWorldSlots;
         }
 
         if (inventorySlots.Count == 0)
         {
+            Debug.Log("증거물이 아무것도 존재하지 않아");
             _curSelectedSlot = null;
             return;
         }
 
         //챕터 및 선택 초기화
-        int chapterIndex = InventoryManager.Instance.currentViewChapter;
-        SetChapterSelected(chapterIndex);
         currentIndex = 0;
         UpdateSelection();
     }
@@ -89,9 +148,15 @@ public class InventoryNavigator : MonoBehaviour
     List<GameObject> GetChildSlots(Transform parent)
     {
         List<GameObject> childSlots = new List<GameObject>();
-        foreach (Transform child in parent)
+
+        if (parent.childCount > 0)
         {
-            childSlots.Add(child.gameObject);
+            Debug.Log($"{parent.name}의 자식 개수는 {parent.childCount}개 입니다.");
+            foreach (Transform child in parent)
+            {
+                Debug.Log($"{parent.name}의 자식 {child.name} 을 ChildSlot에 추가");
+                childSlots.Add(child.gameObject);
+            }
         }
         return childSlots;
     }
@@ -224,6 +289,8 @@ public class InventoryNavigator : MonoBehaviour
     //챕터 선택
     protected void SetChapterSelected(int index)
     {
+        InventoryManager.Instance.currentViewChapter = index;
+        
         GameObject selectedChapter = InventoryManager.Instance.selectedChapterUIList[index];
         GameObject deselectedChapter = InventoryManager.Instance.deselectedChapterUIList[index];
         selectedChapter.SetActive(true);
@@ -245,19 +312,35 @@ public class InventoryNavigator : MonoBehaviour
     //챕터 호버 enter
     protected void HoverEnterOnChapter(int index)
     {
-        GameObject hoverObject = InventoryManager.Instance.selectedChapterUIList[index];
-        if (!hoverObject.activeSelf)
+        //호버를 한 챕터의 선택 버전과 비선택 버전을 할당하기
+        GameObject selectedChapterUI = InventoryManager.Instance.selectedChapterUIList[index];
+        GameObject deselectedChapterUI = InventoryManager.Instance.deselectedChapterUIList[index];
+        
+        //호버한 챕터가 비활성화 되어 있다면
+        if (!selectedChapterUI.activeSelf)
         {
-            hoverObject.SetActive(true);
-        }
-    }
-    //챕터 호버 exit
-    protected void HoverExitOnChapter(int index)
-    {
-        GameObject hoverObject = InventoryManager.Instance.selectedChapterUIList[index];
-        if (hoverObject.activeSelf)
-        {
-            hoverObject.SetActive(false);
+            //선택 버전이 활성화되고
+            selectedChapterUI.SetActive(true);
+            //비선택 버전이 비활성화 되기
+            deselectedChapterUI.SetActive(false);
+
+            //선택 버전의 나머지 애들 비활성화
+            foreach (var chapter in InventoryManager.Instance.selectedChapterUIList)
+            {
+                if (chapter != selectedChapterUI)
+                {
+                    chapter.SetActive(false);
+                }
+            }
+            
+            //비선택 버전의 나머지 애들 활성화
+            foreach (var chapter in InventoryManager.Instance.deselectedChapterUIList)
+            {
+                if (chapter != deselectedChapterUI)
+                {
+                    chapter.SetActive(true);
+                }
+            }
         }
     }
     //현실 세계 항목에 있는 슷롯인지 확인
@@ -279,76 +362,59 @@ public class InventoryNavigator : MonoBehaviour
         
         if (canUse == 'Y')
         {
-            //플레이어가 현재 상황에서 사용할 수 있는 증거물 아이디를 가져오기
-            PlayerInteract playerInteract = PlayerController.Instance.GetComponent<PlayerInteract>();
-            //현재 선택한 슬롯의 증거물 아이디 가져오기
-            string slotId = _curSelectedSlot.GetComponent<InventorySlotInfo>().evidenceId;
-            
-            foreach (var key in playerInteract.GetPlayeCanUseEvidenceID().Keys)
+            //플레이어가 현재 이벤트 트리거 내에 있다면 이벤트 가져오기
+            if (PlayerInteract.Instance.interactionTrigger != null)
             {
-                /*
-                //두 증거물 아이디 값 비교하기, 같으면 사용할 수 있음.
-                if (slotId == playerInteract.GetPlayeCanUseEvidenceID()[key])
+                EventTrigger trigger = PlayerInteract.Instance.interactionTrigger.GetComponent<EventTrigger>();
+                //상호작용 할 수 있는 이벤트가 있는지 확인
+                foreach (var _eventID in trigger.eventIdList)
                 {
-                    _slotUseBtn.color = UnityExtension.HexColor(UIManager.BlackColor);
-                    canEvidenceUse = true;
-                    return;
+                    if (!string.IsNullOrEmpty(_eventID) && DataManager.Instance._events.ContainsKey(_eventID))
+                    {
+                        //상호작용 가능하다면
+                        if (PlayerInteract.Instance.CheckInteractionAvail(_eventID))
+                        {
+                            EventStructure _event = DataManager.Instance._events[_eventID];
+                            //해당 이벤트의 조건에 증거물이 있는지 체크
+                            foreach (var condition in _event.conditions)
+                            {
+                                if (evidenceId == condition)
+                                {
+                                    _slotUseBtn.color = UnityExtension.HexColor(BlackColor);
+                                    _evidenceUseEventId = _eventID;
+                                    canEvidenceUse = true;
+                                    return;
+                                }
+                            }
+                        }
+                    }
                 }
-                */
             }
         }
         _slotUseBtn.color = UnityExtension.HexColor("#B3B3B3");
         canEvidenceUse = false;
     }
-
-    //인벤토리 네비게이션 - 키보드 입력
-    public void HandleKeyboardInput()
-    {
-        if (_curSelectedSlot != null)
-        {
-            //슬롯 상하좌우 이동 - 키보드 WASD
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                MoveUp();
-            }
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                MoveLeft();
-            }
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                MoveDown();
-            }
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                MoveRight();
-            }
-                
-            //증거물 상세 정보 열기 - 키보드 E
-            if (Input.GetKeyDown(KeyCode.E))
-            { 
-                OpenEvidenceDetailUI();
-            }
-            
-            //Space 버튼을 누르면 증거물 사용하기
-            if (canEvidenceUse && Input.GetKeyDown(KeyCode.Space))
-            {
-                UseEvidence();
-            }
-        }
-    }
-
+    
     //증거물 상세 내용 UI 열기
     protected void OpenEvidenceDetailUI()
     {
+        Debug.Log("인벤토리에서 상세 내용 오픈");
         string id = _curSelectedSlot.GetComponent<InventorySlotInfo>().evidenceId;
         EvidenceStructure evidence = DataManager.Instance._evidences[id];
-        UIManager.Instance.OpenUI(UIManager.Instance.evidenceDetailUI,evidence);
+        if(evidence != null) UIManager.Instance.OpenUI(UIManager.Instance.evidenceDetailUI,evidence);
     }
 
     //증거물 사용하기
     protected void UseEvidence()
     {
-        
+        PlayerInteract.Instance.isUsingEvidence = true;
+        UIManager.Instance.CloseAllUI();
+        StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(_evidenceUseEventId));
+    }
+
+    public void InitUsingEvidence()
+    {
+        canEvidenceUse = false;
+        _evidenceUseEventId = "";
     }
 }

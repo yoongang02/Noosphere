@@ -10,10 +10,11 @@ public class PlayerInteract : Singleton<PlayerInteract>
     public GameObject interactionTrigger;
     [SerializeField] private GameObject _interactionMark;
     [SerializeField] private GameObject _evidenceObjectInScene;
-    
-    [Space(5)][Header("정신세계 진입")] 
+
+    [Space(5)] [Header("정신세계 진입")] public bool isInMental = false;
     public GameObject mentalTrigger;
-    
+
+    [Space(5)] [Header("증거물 사용")] public bool isUsingEvidence = false;
     void Update()
     {
         if (!UIManager.Instance.IsAnyUIOpen())
@@ -48,14 +49,14 @@ public class PlayerInteract : Singleton<PlayerInteract>
  
 
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         //진입 시 바로 이벤트 실행되는 트리거에 진행하면
         if (other.CompareTag("EventTrigger"))
         {
             foreach (string eventID in other.GetComponent<EventTrigger>().eventIdList)
             {
-                if (CheckInteractionAvail(eventID))
+                if (CheckInteractionAvail(eventID) && canInteract)
                 {
                     StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
                     break;
@@ -68,7 +69,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
             interactionTrigger = other.gameObject;
             foreach (string eventID in other.GetComponent<EventTrigger>().eventIdList)
             {
-                if (CheckInteractionAvail(eventID))
+                if (CheckInteractionAvail(eventID) && canInteract)
                 {
                     ShowInteractionMark();
                     break;
@@ -81,7 +82,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
             mentalTrigger = other.gameObject;
             foreach (string eventID in other.GetComponent<EventTrigger>().eventIdList)
             {
-                if (CheckInteractionAvail(eventID))
+                if (CheckInteractionAvail(eventID) && canInteract)
                 {
                     ShowInteractionMark();
                     break;
@@ -124,37 +125,33 @@ public class PlayerInteract : Singleton<PlayerInteract>
     {
         if (DataManager.Instance._events.ContainsKey(id))
         {
+            EventStructure eventStructure = DataManager.Instance._events[id];
             if (String.IsNullOrEmpty(EventManagerYKM.Instance.nextEventID) || EventManagerYKM.Instance.nextEventID == id)
             {
+                //반복 가능한 이벤트인지 체크
+                //반복 불가능인데 이미 실행된 이벤트라면 실행 불가능
+                if (!eventStructure.repeatType && eventStructure.isExecuted)
+                {
+                    Debug.Log("#" + id + "는 이미 실행된 이벤트이며, 반복 불가능한 이벤트입니다.");
+                    //반복 불가능할 경우의 결과 출력
+                    if (!string.IsNullOrEmpty(eventStructure.repeatFalseResult))
+                    {
+                        //repeatFalseResult 실행
+                        Debug.Log("#" + eventStructure.repeatFalseResult + "RepeatFalseResult 실행");
+                        StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventStructure.repeatFalseResult));
+                    }
+
+                    return false;
+                }
                 return true;
             }
         }
         return false;
     }
-
-    public Dictionary<string,string> GetPlayeCanUseEvidenceID()
+    
+    public void InitUsingEvidence()
     {
-        Dictionary<string, string> data = new Dictionary<string, string>();
-       
-        //플레이어가 현재 상호작용 중인 트리거가 있어야 함.
-        if (interactionTrigger != null)
-        {
-            //해당 트리거에서 이벤트 아이디 가져오기
-            foreach (string eventID in interactionTrigger.GetComponent<EventTrigger>().eventIdList)
-            {
-                data.Add("eventID",eventID);
-                EventStructure eventStructure = DataManager.Instance._events[eventID];
-            
-                /*
-                //해당 이벤트가 분기점이 있는지 체크
-                if (eventStructure.branch_Type)
-                {
-                    data[eventID] = eventStructure.branch_Element;
-                }
-                */
-            }
-            return data;
-        }
-        return data;
+        isUsingEvidence = false;
+        InventoryManager.Instance.GetComponent<InventoryNavigator>().InitUsingEvidence();
     }
 }

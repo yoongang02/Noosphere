@@ -6,6 +6,10 @@ using UnityEngine.EventSystems;
 
 public class EvidenceDetailUI : UIBase
 {
+    [Header("현재 보고 있는 증거물")] 
+    [SerializeField] private string _curEvidenceID;
+    private EvidenceStructure _curEvidence;
+    
     [Header("증거물 상세 UI GameObject")] [SerializeField]
     private GameObject _objectUI;
     [SerializeField] private GameObject _onePageUI;
@@ -23,6 +27,8 @@ public class EvidenceDetailUI : UIBase
     [SerializeField] private GameObject _prevPageBtn; //이전 페이지 버튼
     [SerializeField] private GameObject _nextPageBtn; //다음 페이지 버튼
 
+    [Header("서브 증거물")] [SerializeField] private bool isSubEvidence = false;
+    
     public override void OnOpen(EvidenceStructure evidence)
     {
         base.OnOpen(evidence);
@@ -44,11 +50,11 @@ public class EvidenceDetailUI : UIBase
         else
         {
             //맵에서 증거물 상세사항이 오픈된 경우에는 해당 증거물을 습득함.
-            Debug.Log($"Evidence Detail UI {evidence} 확인");
             evidence.AcquireEvidence();
         }
         
         SetDetailEvidence(evidence);
+        _curEvidenceID = evidence.evidenceId;
         
         if (transform.childCount > 0)
         {
@@ -70,6 +76,16 @@ public class EvidenceDetailUI : UIBase
         _twoPageUI.SetActive(false);
         
         transform.GetChild(0).gameObject.SetActive(false);
+        
+        //예외 이벤트 처리 코드 - 정신세계 첫 진입 시, 인벤토리 관련 다이얼로그
+        if (EventManagerYKM.Instance.currentEventID == "Event_A007")
+        {
+            StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(EventManagerYKM.Instance.nextEventID));
+        }
+
+        _curEvidenceID = "";
+        _curEvidence = null;
+        isSubEvidence = false;
     }
 
     public override void HandleKeyboardInput()
@@ -132,6 +148,15 @@ public class EvidenceDetailUI : UIBase
                 _twoPageUI.SetActive(true);
             }
             
+            
+            //세부 증거물이 있는지 체크
+            if (!string.IsNullOrEmpty(evidence.subEvidenceId) &&
+                DataManager.Instance._evidences.ContainsKey(evidence.subEvidenceId))
+            {
+                isSubEvidence = true;
+                _curEvidence = DataManager.Instance._evidences[evidence.evidenceId];
+            }
+            
         }
         else
         {
@@ -180,9 +205,6 @@ public class EvidenceDetailUI : UIBase
             Sprite pageImg = artResource.GetSpriteFromFilePath(modifiedString);
             _pages.Add(pageImg);
         }
-        //버튼 참조하기
-        _prevPageBtn = _onePageUI.transform.Find("PageBtns").GetChild(0).gameObject;
-        _nextPageBtn = _onePageUI.transform.Find("PageBtns").GetChild(1).gameObject;
         //이미지 null로 초기화
         _firstPage = null;
         _secondPage = null;
@@ -196,6 +218,11 @@ public class EvidenceDetailUI : UIBase
         //페이지가 1개인 경우 vs 1개 이상인 경우
         //1개인 경우 : 좌우이동 버튼 비활성화
         //1개 이상인 경우 : 좌우이동 버튼 활성화
+        
+        //버튼 참조하기
+        _prevPageBtn = _onePageUI.transform.Find("PageBtns").GetChild(0).gameObject;
+        _nextPageBtn = _onePageUI.transform.Find("PageBtns").GetChild(1).gameObject;
+        
         if (_totalPage == 1)
         {
             _prevPageBtn.SetActive(false);
@@ -203,7 +230,7 @@ public class EvidenceDetailUI : UIBase
         }
         else if (_totalPage > 1)
         {
-            _prevPageBtn.SetActive(false);
+            _prevPageBtn.SetActive(true);
             _nextPageBtn.SetActive(true);
         }
         else
@@ -213,7 +240,7 @@ public class EvidenceDetailUI : UIBase
         
         //이미지 설정하기
         _firstPage = _onePageUI.transform.Find("Pages").GetChild(0).gameObject.GetComponent<Image>();
-        _firstPage.sprite = _pages[0];
+        UpdateOnePage();
     }
     
     // shapeType이 twoPage인 증거물인 경우
@@ -221,6 +248,11 @@ public class EvidenceDetailUI : UIBase
     {
         //페이지 초기화
         _curPage = 2;
+        
+        //버튼 참조하기
+        _prevPageBtn = _twoPageUI.transform.Find("PageBtns").GetChild(0).gameObject;
+        _nextPageBtn = _twoPageUI.transform.Find("PageBtns").GetChild(1).gameObject;
+        
         //페이지가 2개인 경우, 2개 이상인 경우
         if (_totalPage == 2)
         {
@@ -229,7 +261,7 @@ public class EvidenceDetailUI : UIBase
         }
         else if (_totalPage > 2)
         {
-            _prevPageBtn.SetActive(false);
+            _prevPageBtn.SetActive(true);
             _nextPageBtn.SetActive(true);
         }
         else
@@ -238,22 +270,40 @@ public class EvidenceDetailUI : UIBase
         }
         
         //이미지 설정하기
+        _twoPageUI.GetComponent<Image>().sprite = artResource.GetSpriteFromFilePath(artResource.filePathContentBackground);
         _firstPage = _twoPageUI.transform.Find("Pages").GetChild(0).gameObject.GetComponent<Image>();
         _secondPage = _twoPageUI.transform.Find("Pages").GetChild(1).gameObject.GetComponent<Image>();
-        _firstPage.sprite = _pages[0];
-        _secondPage.sprite = _pages[1];
+        UpdateTwoPage();
     }
 
     void UpdateOnePage()
     {
         //이미지 업데이트
         _firstPage.sprite = _pages[_curPage - 1];
-        //버튼 업데이트
-        bool prev = _curPage != 1;
-        bool next = _curPage != _totalPage;
         
-        _prevPageBtn.SetActive(prev);
-        _nextPageBtn.SetActive(next);
+        //서브 증거물 체크
+        if (isSubEvidence)
+        {
+            CheckSubEvidence();
+        }
+        
+        //버튼 업데이트
+        if (_curPage == 1)
+        {
+            SetBtnAble(_nextPageBtn);
+            SetBtnDisable(_prevPageBtn);
+            return;
+        }
+
+        if (_curPage == _totalPage)
+        {
+            SetBtnAble(_prevPageBtn);
+            SetBtnDisable(_nextPageBtn);
+            return;
+        }
+        
+        SetBtnAble(_prevPageBtn);
+        SetBtnAble(_nextPageBtn);
     }
     
     void UpdateTwoPage()
@@ -261,32 +311,46 @@ public class EvidenceDetailUI : UIBase
         //이미지 업데이트
         _firstPage.sprite = _pages[_curPage - 2];
         _secondPage.sprite = _pages[_curPage - 1];
-        //버튼 업데이트
-        bool prev = _curPage != 2;
-        bool next = _curPage != _totalPage;
         
-        _prevPageBtn.SetActive(prev);
-        _nextPageBtn.SetActive(next);
+        //서브 증거물 체크
+        if (isSubEvidence)
+        {
+            CheckSubEvidence();
+        }
+        
+        //버튼 업데이트
+        if (_curPage == 2)
+        {
+            SetBtnAble(_nextPageBtn);
+            SetBtnDisable(_prevPageBtn);
+            return;
+        }
+
+        if (_curPage == _totalPage)
+        {
+            SetBtnAble(_prevPageBtn);
+            SetBtnDisable(_nextPageBtn);
+            return;
+        }
+        
+        SetBtnAble(_prevPageBtn);
+        SetBtnAble(_nextPageBtn);
     }
 
     void ClickNextPageEvent()
     {
         if (_secondPage == null)
         {
+            if(_curPage >= _totalPage) return;
+            
             _curPage++;
-            if (_curPage > _totalPage)
-            {
-                _curPage = _totalPage;
-            }
             UpdateOnePage();
         }
         else
         {
+            if(_curPage >= _totalPage) return;
+            
             _curPage += 2;
-            if (_curPage > _totalPage)
-            {
-                _curPage = _totalPage;
-            }
             UpdateTwoPage();
         }
     }
@@ -295,13 +359,72 @@ public class EvidenceDetailUI : UIBase
     {
         if (_secondPage == null)
         {
+            if(_curPage <= 1) return;
+            
             _curPage--;
             UpdateOnePage();
         }
         else
         {
+            if(_curPage <= 2) return;
+            
             _curPage -= 2;
             UpdateTwoPage();
+        }
+    }
+
+    void SetBtnDisable(GameObject btn)
+    {
+        btn.GetComponent<Image>().color = UnityExtension.HexColor(GrayColor);
+    }
+
+    void SetBtnAble(GameObject btn)
+    {
+        btn.GetComponent<Image>().color = UnityExtension.HexColor(WhiteColor);
+    }
+
+    void CheckSubEvidence()
+    {
+        //우선은 OnePage, TwoPage에 대해서만 작성
+        //OnePage에서는 _curPage와 바로 비교
+        //TwoPage에서는 _curPage - 1 ~ _curPage와 비교
+        Debug.Log($"CheckSubEvidence 실행 중인지 확인. 현재 증거물 {_curEvidence.evidenceId} , 서브 증거물 {_curEvidence.subEvidenceId}");
+        if (_curEvidence.subEvidenceAcquisitionType == "Page" && _curEvidence.acquisitionPageNum > 0)
+        {
+            Debug.Log($"현재 페이지 {_curPage} , 목표 페이지 {_curEvidence.acquisitionPageNum}");
+            if (_curEvidence.shapeType == "OnePage")
+            {
+                if (_curPage == _curEvidence.acquisitionPageNum)
+                {
+                    Debug.Log($"#{_curEvidence.evidenceId}의 서브 증거물 {_curEvidence.subEvidenceId}을 {_curPage}({_curEvidence.acquisitionPageNum})에서 발견");
+                }
+            }
+            else if (_curEvidence.shapeType == "TwoPage")
+            {
+                if (_curEvidence.acquisitionPageNum >= _curPage-1 && _curEvidence.acquisitionPageNum <= _curPage)
+                {
+                    EvidenceStructure _subEvidence = DataManager.Instance._evidences[_curEvidence.subEvidenceId];
+                    Debug.Log($"#{_curEvidence.evidenceId}의 서브 증거물 {_curEvidence.subEvidenceId}을 {_curPage}({_curEvidence.acquisitionPageNum})에서 발견");
+                    Debug.Log($"#{_curEvidence.subEvidenceId} 증거물에 대한 접근 횟수는 {_subEvidence.accessCnt}입니다.");
+
+                    string resultID = _curEvidence.acquisitionPageResultId;
+                    
+                    //예외 처리 코드
+                    if (_subEvidence.evidenceId == "Evidence_008" && EventManagerYKM.Instance.curStageInfo !=
+                        EventManagerYKM.ChapterInfo.Prologue)
+                    {
+                        //프롤로그에서만 볼 수 없는 이벤트이기 때문에, 프롤로그가 아니면 강제 종료 이벤트 실행되지 않도록 이른 리턴
+                        return;
+                    }
+                    
+                    if (_subEvidence.evidenceId == "Evidence_008" && _subEvidence.accessCnt >= 1)
+                    {
+                        resultID = "Event_A024";
+                    }
+                    
+                    StartCoroutine(EventManagerYKM.Instance.DoResult(resultID));
+                }
+            }   
         }
     }
 }

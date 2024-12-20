@@ -7,18 +7,19 @@ using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 
-public class RadioManager : MonoBehaviour
+public class RadioManager : UIBase
 {
     [SerializeField] private GameObject _radioPanel;
-    [Header("RadioUI")]
+    [Header("RadioUI")] 
     [SerializeField] private List<DialBtn> _dialBtn;
     [SerializeField] private TextMeshProUGUI _radioText;
     [SerializeField] private Button _powerBtn;
 
-    [Header("WorldDialogueUI")]
+    [Header("WorldDialogueUI")] 
     [SerializeField] private TextMeshProUGUI _realText;
     [SerializeField] private TextMeshProUGUI _mirrorText;
 
+    [SerializeField] private string radioAnswer;
     private float _fadeDuration = 1f;
     private float _displayDuration = 2f;
     private int _tenDigit = 0;
@@ -30,20 +31,9 @@ public class RadioManager : MonoBehaviour
 
     private bool isDataLoaded = false;
 
-    //삭제
-    private async void Awake()
+    public override void OnOpen()
     {
-        await LoadTestDialogue();
-    }
-
-
-    private void Start()
-    {
-        _powerBtn.onClick.AddListener(CheckAnswer);
-    }
-
-    private void OnEnable()
-    {
+        base.OnOpen();
         ResetText();
         if (_dialBtn != null && _dialBtn.Count >= 3)
         {
@@ -51,17 +41,30 @@ public class RadioManager : MonoBehaviour
             _dialBtn[1].OnValueChanged += OnOneDigitChanged;
             _dialBtn[2].OnValueChanged += OnDecimalDigitChanged;
         }
+        
+        _powerBtn.onClick.AddListener(CheckAnswer);
+        transform.GetChild(0).gameObject.SetActive(true);
+        
     }
-
-    private void OnDisable()
+    
+    public override void OnClose()
     {
+        base.OnClose();
         if (_dialBtn != null && _dialBtn.Count >= 3)
         {
             _dialBtn[0].OnValueChanged -= OnTenDigitChanged;
             _dialBtn[1].OnValueChanged -= OnOneDigitChanged;
             _dialBtn[2].OnValueChanged -= OnDecimalDigitChanged;
         }
+        transform.GetChild(0).gameObject.SetActive(false);
     }
+    /*
+    //삭제
+    private async void Awake()
+    {
+        await LoadTestDialogue();
+    }
+    
 
     /// <summary>
     /// ////////////////////
@@ -80,17 +83,25 @@ public class RadioManager : MonoBehaviour
             Debug.LogError($"대화 데이터 로드 실패: {e.Message}");
         }
     }
-
+*/
     /// <summary>
     /// //////
     /// </summary>
     private void CheckAnswer()
     {
-        // if (_radioText.text == "95.3MHz")
-        if (_radioText.text == "00.0MHz")
+        if (_radioText.text == radioAnswer)
         {
-            gameObject.SetActive(false);
-            ShowDialogue().Forget();
+            if (PlayerInteract.Instance.isInMental)
+            {
+                //현실세계 정신세계 구분
+                ShowDialogue().Forget();
+                MirrorPuzzleManager.Instance.GetMirrorPiece(5);
+            }
+            else
+            {
+                ShowRealDialogue().Forget();
+            }
+            UIManager.Instance.CloseTopUI();
         }
         else
         {
@@ -98,34 +109,106 @@ public class RadioManager : MonoBehaviour
         }
     }
 
+    private async UniTask ShowRealDialogue()
+    {
+        DialogueStructure mirrorDialogue = DataManager.Instance._dialogue["Dialogue_0024"];
+        // DialogueStructure mirrorDialogue = _testDialogue["Dialogue_0024"];
+        _realText.gameObject.SetActive(true);
+        
+        for (int i = 0; i < mirrorDialogue.Dialogue_Text_List.Count; i++)
+        {
+            DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
+            _realText.text = $"<mark=#00000055>{mirrorDialogue.Dialogue_Text_List[i]}</mark>";
+
+            // 페이드 인
+            await _realText.DOFade(1f, _fadeDuration).AsyncWaitForCompletion();
+
+            // 표시 시간 대기
+            await UniTask.Delay(TimeSpan.FromSeconds(_displayDuration));
+
+            // 페이드 아웃
+            await _realText.DOFade(0f, _fadeDuration).AsyncWaitForCompletion();
+
+            // 마지막이 아니면 잠시 대기
+            if (i < mirrorDialogue.Dialogue_Text_List.Count - 1)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
+            }
+        }
+        
+        _realText.gameObject.SetActive(false);
+        DataManager.Instance._lockConditions["Lock_condition_003"].UnLock();
+        QuizManager.Instance.OnQuizEnd?.Invoke();
+    }
+
     private async UniTaskVoid ShowDialogue()
     {
-        // _realText.text = $"<mark=#00000055>{DataManager.Instance._dialogue["Dialogue_0027"].dialogueText}</mark>";
-        //_mirrorText.text=$"<mark=#00000055>{DataManager.Instance._dialogue["Dialogue_0028"].dialogueText}</mark>";
-        _realText.text = $"<mark=#00000055>{_testDialogue["Dialogue_0027"].dialogueText}</mark>";
-        _mirrorText.text = $"<mark=#00000055>{_testDialogue["Dialogue_0028"].dialogueText}</mark>";
-        // 페이드 인 애니메이션
-        var fadeInReal = _realText.DOFade(1f, _fadeDuration);
-        var fadeInMirror = _mirrorText.DOFade(1f, _fadeDuration);
+        // DialogueStructure realDialogue = _testDialogue["Dialogue_0027"];
+        // DialogueStructure mirrorDialogue = _testDialogue["Dialogue_0028"];
+        DialogueStructure realDialogue = DataManager.Instance._dialogue["Dialogue_0027"];
+        DialogueStructure mirrorDialogue = DataManager.Instance._dialogue["Dialogue_0028"];
 
-        await UniTask.WhenAll(
-            fadeInReal.AsyncWaitForCompletion().AsUniTask(),
-            fadeInMirror.AsyncWaitForCompletion().AsUniTask()
-        );
+        _realText.gameObject.SetActive(true);
+        _mirrorText.gameObject.SetActive(true);
+        // 더 긴 리스트의 길이만큼 반복
+        int maxLength = Mathf.Max(realDialogue.Dialogue_Text_List.Count, mirrorDialogue.Dialogue_Text_List.Count);
 
-        await UniTask.Delay(TimeSpan.FromSeconds(_displayDuration));
+        for (int i = 0; i < maxLength; i++)
+        {
+            DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
+            // 각 텍스트가 있을 경우에만 표시
+            if (i < realDialogue.Dialogue_Text_List.Count)
+            {
+                _realText.text = $"<mark=#00000055>{realDialogue.Dialogue_Text_List[i]}</mark>";
+            }
 
+            if (i < mirrorDialogue.Dialogue_Text_List.Count)
+            {
+                _mirrorText.text = $"<mark=#00000055>{mirrorDialogue.Dialogue_Text_List[i]}</mark>";
+            }
 
-        var fadeOutReal = _realText.DOFade(0f, _fadeDuration);
-        var fadeOutMirror = _mirrorText.DOFade(0f, _fadeDuration);
+            // 동시에 페이드 인
+            var fadeInTasks = new List<UniTask>();
+            if (i < realDialogue.Dialogue_Text_List.Count)
+            {
+                fadeInTasks.Add(_realText.DOFade(1f, _fadeDuration).AsyncWaitForCompletion().AsUniTask());
+            }
 
-        await UniTask.WhenAll(
-            fadeOutReal.AsyncWaitForCompletion().AsUniTask(),
-            fadeOutMirror.AsyncWaitForCompletion().AsUniTask()
-        );
+            if (i < mirrorDialogue.Dialogue_Text_List.Count)
+            {
+                fadeInTasks.Add(_mirrorText.DOFade(1f, _fadeDuration).AsyncWaitForCompletion().AsUniTask());
+            }
+
+            await UniTask.WhenAll(fadeInTasks);
+
+            // 표시 시간 대기
+            await UniTask.Delay(TimeSpan.FromSeconds(_displayDuration));
+
+            // 동시에 페이드 아웃
+            var fadeOutTasks = new List<UniTask>();
+            if (i < realDialogue.Dialogue_Text_List.Count)
+            {
+                fadeOutTasks.Add(_realText.DOFade(0f, _fadeDuration).AsyncWaitForCompletion().AsUniTask());
+            }
+
+            if (i < mirrorDialogue.Dialogue_Text_List.Count)
+            {
+                fadeOutTasks.Add(_mirrorText.DOFade(0f, _fadeDuration).AsyncWaitForCompletion().AsUniTask());
+            }
+
+            await UniTask.WhenAll(fadeOutTasks);
+
+            // 마지막이 아니면 잠시 대기
+            if (i < maxLength - 1)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
+            }
+        }
 
         _realText.gameObject.SetActive(false);
         _mirrorText.gameObject.SetActive(false);
+        DataManager.Instance._lockConditions["Lock_condition_003"].UnLock();
+        QuizManager.Instance.OnQuizEnd?.Invoke();
     }
 
     private void ResetText()

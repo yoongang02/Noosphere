@@ -12,8 +12,8 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<string, LockConditionStructure> _lockConditions = new Dictionary<string, LockConditionStructure>();
     public Dictionary<string, EvidenceStructure> _evidences = new Dictionary<string, EvidenceStructure>();
     public Dictionary<string, ArtResourceStructure> _artResources = new Dictionary<string, ArtResourceStructure>();
-     public Dictionary<string, DialogueStructure> _dialogue = new Dictionary<string, DialogueStructure>();
-    public Dictionary<string, InputFieldStructure> _input = new Dictionary<string, InputFieldStructure>();
+    public Dictionary<string, DialogueStructure> _dialogue = new Dictionary<string, DialogueStructure>();
+    public Dictionary<string, QuizStructure> _quiz = new Dictionary<string, QuizStructure>();
     public Dictionary<string, EffectStructure> _effect = new Dictionary<string, EffectStructure>();
     public Dictionary<string, SoundResourceStructure> _sound = new Dictionary<string, SoundResourceStructure>();
     public Dictionary<string, MentalStructure> _mental = new Dictionary<string, MentalStructure>();
@@ -26,7 +26,7 @@ public class DataManager : Singleton<DataManager>
             async () => { _lockConditions = await LoadData<LockConditionStructure>("LockCondition"); },
             async () => { _evidences = await LoadData<EvidenceStructure>("Evidence"); },
             async () => { _artResources = await LoadData<ArtResourceStructure>("ArtResource"); },
-            async () => { _input = await LoadData<InputFieldStructure>("Input"); },
+            async () => { _quiz = await LoadData<QuizStructure>("Quiz"); },
             async () => { _effect = await LoadData<EffectStructure>("Effect"); },
             async () => { _dialogue = await LoadDialogueData(); },
             async () => { _sound = await LoadData<SoundResourceStructure>("SoundResource"); },

@@ -53,6 +53,7 @@ public class CSVParserYKM
             List<string> conditionFalseResultsList = new List<string>();
             List<string> mentalFalseResults = new List<string>();
             List<string> unlockConditions = new List<string>();
+            List<string> quizCorrects = new List<string>();
     
             for (int j = 0; j < headers.Length && j < values.Length; j++)
             {
@@ -65,7 +66,7 @@ public class CSVParserYKM
                 string value = values[j].Trim().Replace("\"", "");
                 //Debug.Log(header + " : " + value);
                 FieldInfo field = typeof(T).GetField(header, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-
+                
                 if (field != null)
                 {
                     try
@@ -101,6 +102,10 @@ public class CSVParserYKM
                     {
                         unlockConditions.Add(value);
                     }
+                    else if (header.StartsWith("quizCorrect"))
+                    {
+                        quizCorrects.Add(value);
+                    }
                 }
             }
             FieldInfo conditionsField = typeof(T).GetField("conditions", BindingFlags.Public | BindingFlags.Instance);
@@ -108,6 +113,7 @@ public class CSVParserYKM
             FieldInfo conditionFalseResultField = typeof(T).GetField("conditionFalseResults", BindingFlags.Public | BindingFlags.Instance);
             FieldInfo mentalFalseResultField = typeof(T).GetField("mentalFalseResults", BindingFlags.Public | BindingFlags.Instance);
             FieldInfo unlockConditionField = typeof(T).GetField("unlockConditions", BindingFlags.Public | BindingFlags.Instance);
+            FieldInfo quizCorrectField = typeof(T).GetField("quizCorrects", BindingFlags.Public | BindingFlags.Instance);
             
             if (conditionsField != null && conditionsField.FieldType == typeof(string[]))
             {
@@ -132,6 +138,11 @@ public class CSVParserYKM
             if (unlockConditionField != null && unlockConditionField.FieldType == typeof(string[]))
             {
                 unlockConditionField.SetValue(entry, unlockConditions.ToArray());
+            }
+            
+            if (quizCorrectField != null && quizCorrectField.FieldType == typeof(string[]))
+            {
+                quizCorrectField.SetValue(entry, quizCorrects.ToArray());
             }
             
             dictionary[key] = entry;

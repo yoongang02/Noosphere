@@ -10,12 +10,15 @@ public class UIManager : Singleton<UIManager>
 {
     //여러 UI 창을 관리하기 위해 스택 이용
     private Stack<UIBase> uiStack = new Stack<UIBase>();
-
+    public UIBase topUI;
+    
     public UIBase investigateUI;
     public UIBase evidenceDetailUI;
     public UIBase inventoryUI;
+    public UIBase dialogueUI;
+    public UIBase inputFieldUI;
     
-    public TextMeshProUGUI dialogueUI;
+    public GameObject inventoryIcon;
     
     public bool isInMap = true;
     
@@ -31,7 +34,18 @@ public class UIManager : Singleton<UIManager>
         // ESC 버튼 입력 처리
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            if(IsUIOpen(dialogueUI)) return;
             CloseTopUI();
+        }
+
+        if (IsAnyUIOpen())
+        {
+            inventoryIcon.SetActive(false);
+            LockPlayer();
+        }
+        else
+        {
+            inventoryIcon.SetActive(true);
         }
     }
     
@@ -41,7 +55,9 @@ public class UIManager : Singleton<UIManager>
 
         // 스택에 추가하고 UI를 활성화
         // 상호작용 금지
+        LockPlayer();
         uiStack.Push(ui);
+        topUI = ui;
         ui.OnOpen();
     }
 
@@ -56,7 +72,9 @@ public class UIManager : Singleton<UIManager>
         }
         // 스택에 추가하고 UI를 활성화
         // 상호작용 금지
+        LockPlayer();
         uiStack.Push(ui);
+        topUI = ui;
         ui.OnOpen(evidence);
     }
     
@@ -65,11 +83,18 @@ public class UIManager : Singleton<UIManager>
         if (uiStack.Count == 0) return;
 
         UIBase topUI = uiStack.Pop();
+        
         topUI.OnClose();
 
-        if (!IsAnyUIOpen())
+        if (uiStack.Count > 0)
         {
-            //상호작용 금지 해제
+            this.topUI = uiStack.Peek();
+            LockPlayer();
+        }
+        else
+        {
+            this.topUI = null;
+            UnLockPlayer();
         }
     }
     
@@ -100,5 +125,20 @@ public class UIManager : Singleton<UIManager>
     public bool IsAcquiredInInvestigateUI()
     {
         return investigateUI.GetComponent<InvestigateUI>().isAquired;
+    }
+    
+    public void LockPlayer()
+    {
+        //Debug.Log("UI 열 때 LockPlayer 실행되나?");
+        PlayerController.Instance.canMove = false;
+        PlayerInteract.Instance.canInteract = false;
+        PlayerInteract.Instance.HideInteractionMark();
+    }
+
+    public void UnLockPlayer()
+    {
+        //Debug.Log("UI 모두 닫히면 UnLockPlayer 실행되나?");
+        PlayerController.Instance.canMove = true;
+        PlayerInteract.Instance.canInteract = true;
     }
 }

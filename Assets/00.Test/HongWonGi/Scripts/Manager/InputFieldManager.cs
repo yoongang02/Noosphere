@@ -5,33 +5,58 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using TMPro;
 
-public class InputFieldManager : Singleton<InputFieldManager>
+public class InputFieldManager : UIBase
 {
+    [Header("Input Field 변수")]
     public bool isAnswer = false;
-    [SerializeField] public TextMeshProUGUI _questionText;
+    [SerializeField] private GameObject _inputFieldUI;
+    [SerializeField] private TextMeshProUGUI _questionText;
     [SerializeField] private TMP_InputField _inputText;
     private string _currentAnswer;
     private string _currentID;
-    public Action OnInputEnd;
+    
 
     private void Start()
     {
         _inputText.onEndEdit.AddListener(OnInputFieldEndEdit);
-        InputManager.Instance.exitBtnAction += CloseInputField;
     }
+
+    public override void OnOpen()
+    {
+        base.OnOpen();
+        _inputFieldUI.SetActive(true);
+    }
+    
+    public override void OnClose()
+    {
+        base.OnClose();
+        _inputFieldUI.SetActive(false);
+
+        if (isAnswer)
+        {
+            //맞았을 때 결과가 있다면 결과 실행
+            StartCoroutine(DoCorrectResult());
+        }
+        else
+        {
+            //틀렸을 때 결과가 있다면 결과 실행
+            StartCoroutine(DoWrongResult());
+        }
+        
+        InitInputField();
+        _currentID = "";
+    }
+    
     /// <summary>
     // inputfield 활성화 되고 inputfield 활성화
     /// </summary>
     /// <param name="id"> input_id 값</param>
     public void SetQuestionField(string id)
     {
-        _questionText.transform.parent.gameObject.SetActive(true);
-
-        PlayerController.Instance.isDialogueOn = true;
         _currentID = id;
         isAnswer = false;
         
-        if (!DataManager.Instance._input.TryGetValue(id, out InputFieldStructure structure))
+        if (!DataManager.Instance._quiz.TryGetValue(id, out QuizStructure structure))
         {
             Debug.LogWarning($"ID {id}에 해당하는 InputFieldStructure를 찾을 수 없습니다.");
             return;
@@ -39,8 +64,12 @@ public class InputFieldManager : Singleton<InputFieldManager>
 
         _questionText.text = structure.questionText;
         _currentAnswer = structure.correctAnswer;
-        _inputText.text = "";
+        InitInputField();
         
+        //input 입력창 열기
+        UIManager.Instance.OpenUI(UIManager.Instance.inputFieldUI);
+        
+        //input 입력창 활성화
         _inputText.Select();
         _inputText.ActivateInputField();
     }
@@ -53,56 +82,61 @@ public class InputFieldManager : Singleton<InputFieldManager>
 
             if (formattedValue == formattedAnswer)
             {
-                DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].inputCorrect);
-                isAnswer = true;
                 Debug.Log("#input 정답 맞춤");
-                DataManager.Instance._input[_currentID].isSolved = true;
-                if (PlayerController.Instance._currentNPC != null)
-                {
-                    PlayerController.Instance._currentNPC.GetComponent<NpcDialogue>().dialogueId = string.Empty;
-                }
+                isAnswer = true;
+                DataManager.Instance._quiz[_currentID].isSolved = true;
             }
             else
             {
-                DialogueManager.Instance.SetDialogue(DataManager.Instance._input[_currentID].inputWrong);
                 Debug.Log("#input 정답 못 맞춤");
                 isAnswer = false;
-                DataManager.Instance._input[_currentID].isSolved = false;
+                DataManager.Instance._quiz[_currentID].isSolved = false;
             }
-            OnInputEnd?.Invoke();
-            CloseInput();
+            QuizManager.Instance.OnQuizEnd?.Invoke();
+            
+            //Input Field UI 종료
+            UIManager.Instance.CloseTopUI();
         }
     }
 
-    private void CloseInput()
+    private void InitInputField()
     {
-        if (_questionText.transform.parent.gameObject.activeSelf)
+        _inputText.text = "";
+    }
+
+    IEnumerator DoCorrectResult()
+    {
+        if (!string.IsNullOrEmpty(_currentID) && DataManager.Instance._quiz.ContainsKey(_currentID))
         {
-            _questionText.transform.parent.gameObject.SetActive(false);
-            _inputText.text = "";
-            if (PlayerController.Instance._currentNPC != null)
+            QuizStructure input = DataManager.Instance._quiz[_currentID];
+            string resultType = input.quizCorrects[0].Substring(0, input.quizCorrects[0].IndexOf("_"));
+
+            if (resultType == "Dialogue")
             {
-                PlayerController.Instance.ResetCamera();
+                DialogueManager.Instance.SetDialogue(input.quizCorrects[0]);
+                
+                bool isDialogueEnd = false;
+                DialogueManager.Instance.OnDialogueEnd += () => isDialogueEnd = true;
+                yield return new WaitUntil(() => isDialogueEnd);
             }
         }
     }
 
-    private void CloseInputField()
+    IEnumerator DoWrongResult()
     {
-        if (_questionText.transform.parent.gameObject.activeSelf)
+        if (!string.IsNullOrEmpty(_currentID) && DataManager.Instance._quiz.ContainsKey(_currentID))
         {
-            isAnswer = false;
-            PlayerController.Instance.isDialogueOn = false;
-            _questionText.transform.parent.gameObject.SetActive(false);
-            _inputText.text = ""; 
-        }
-    }
+            QuizStructure input = DataManager.Instance._quiz[_currentID];
+            string resultType = input.quizWrong.Substring(0, input.quizWrong.IndexOf("_"));
 
-    private void OnDestroy()
-    {
-        if (InputManager.Instance != null)
-        {
-            InputManager.Instance.exitBtnAction -= CloseInputField;
+            if (resultType == "Dialogue")
+            {
+                DialogueManager.Instance.SetDialogue(input.quizWrong);
+                
+                bool isDialogueEnd = false;
+                DialogueManager.Instance.OnDialogueEnd += () => isDialogueEnd = true;
+                yield return new WaitUntil(() => isDialogueEnd);
+            }
         }
     }
 }

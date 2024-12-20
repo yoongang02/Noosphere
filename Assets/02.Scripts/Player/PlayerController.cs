@@ -26,7 +26,7 @@ public class PlayerController : Singleton<PlayerController>
     private Vector3 _moveDirection;
     private Animator _animator;
     private float _defaultSpeed;
-    public bool isDialogueOn = false; //대화시작
+    public bool canMove = false; //대화시작
     public bool isPlayerNearNPC = false; //플레이어 NPC가까이있나?
     // public bool isNpcRayOn=false;
     public GameObject _currentNPC;
@@ -63,7 +63,7 @@ public class PlayerController : Singleton<PlayerController>
 
     public void SetInteract(bool state)
     {
-        isDialogueOn = state;
+        canMove = !state;
         _animator.SetBool("Interact", state);
     }
     public void NpcCameraOn()
@@ -86,7 +86,7 @@ public class PlayerController : Singleton<PlayerController>
     } 
     private void HandleInput()
     {
-        if (isDialogueOn)
+        if (!canMove)
         {
             _animator.SetFloat("MoveSpeed", 0f);
             return;
