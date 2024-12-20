@@ -11,13 +11,14 @@ GameObject:
   - component: {fileID: 4170163041631570582}
   - component: {fileID: 4821917097376705321}
   - component: {fileID: 3400636931042705167}
+  - component: {fileID: 6202401000882157798}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4170163041631570582
 RectTransform:
   m_ObjectHideFlags: 0
@@ -76,6 +77,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6202401000882157798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6701386848896886574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e78df4796edf543a0e3ce591790f3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6717356755477384239
 GameObject:
   m_ObjectHideFlags: 0
@@ -87,7 +100,6 @@ GameObject:
   - component: {fileID: 2488687270090561266}
   - component: {fileID: 7613584871019313076}
   - component: {fileID: 7402870903387153086}
-  - component: {fileID: 7098938000724006848}
   m_Layer: 5
   m_Name: HintImage
   m_TagString: Untagged
@@ -152,18 +164,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7098938000724006848
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6717356755477384239}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45e78df4796edf543a0e3ce591790f3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7443377517993685336
 GameObject:
   m_ObjectHideFlags: 0
