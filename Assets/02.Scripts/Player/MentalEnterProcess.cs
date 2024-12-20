@@ -15,6 +15,7 @@ public class MentalEnterProcess : MonoBehaviour
     [SerializeField] private string _comebackEventId;
     [SerializeField] private float _coolTime = 3f;
     [SerializeField] private bool _canEnter = true;
+    [SerializeField] private bool _isForceQuit = false;
     
     [Header("정신세계 진입 UI")]
     [SerializeField] private GameObject _progressBarUI;
@@ -117,6 +118,12 @@ public class MentalEnterProcess : MonoBehaviour
                     FailEnter();
                 }
             }
+
+            if (_isForceQuit)
+            {
+                Debug.Log($"#{mentalInfo.mentalId} 진입 강제 종료");
+                FailEnter();
+            }
         }
     }
     
@@ -129,6 +136,7 @@ public class MentalEnterProcess : MonoBehaviour
         _progressBarFill.InitFillAmount();
         isComplete = false;
         _startEnter = false;
+        _isForceQuit = false;
     }
 
     public void StartEnter(string mentalId)
@@ -149,6 +157,9 @@ public class MentalEnterProcess : MonoBehaviour
 
     void CompleteEnter()
     {
+        //바 초기화
+        InitProgressBar();
+        
         //씬 이동
         StartCoroutine(LoadSceneAsync(mentalInfo.destination));
         PlayerInteract.Instance.isInMental = !PlayerInteract.Instance.isInMental;
@@ -165,26 +176,23 @@ public class MentalEnterProcess : MonoBehaviour
             _comebackEventId = "";
         }
         
-        //바 초기화
-        InitProgressBar();
-        
         //성공적으로 도착한 경우, 쿨타임 시작
         StartCoroutine(StartCoolTime());
     }
 
     void FailEnter()
     {
+        //바 초기화
+        InitProgressBar();
+        
         //이동 실패 시 결과가 있다면 실행
         foreach (var result in mentalInfo.mentalFalseResults)
         {
             if (!string.IsNullOrEmpty(result))
             {
-                StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(result));
+                StartCoroutine(EventManagerYKM.Instance.DoResult(result));
             }
         }
-        
-        //바 초기화
-        InitProgressBar();
 
         if (EventManagerYKM.Instance.currentEventID == "Event_A026")
         {
@@ -225,5 +233,16 @@ public class MentalEnterProcess : MonoBehaviour
     public void UnLockEnterProcess()
     {
         _canEnter = true;
+    }
+
+    public void ForceQuitMentalProcess()
+    {
+        StartCoroutine(BreakMirror());
+    }
+
+    IEnumerator BreakMirror()
+    {
+        yield return new WaitForSeconds(1.0f);
+        _isForceQuit = true;
     }
 }

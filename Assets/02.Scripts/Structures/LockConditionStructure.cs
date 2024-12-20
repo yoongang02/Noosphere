@@ -1,3 +1,4 @@
+using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 
@@ -27,6 +28,9 @@ public class LockConditionStructure
                 break;
             case "Lock_condition_006":
                 ForceQuitInteraction();
+                break;
+            case "Lock_condition_007":
+                BreakMirror();
                 break;
         }
     }
@@ -71,7 +75,6 @@ public class LockConditionStructure
     void LockAllInteraction()
     {
         PlayerInteract.Instance.canInteract = false;
-        PlayerInteract.Instance.HideInteractionMark();
         Debug.Log("모든 물체 및 캐릭터 상호작용 Lock");
     }
     
@@ -111,5 +114,10 @@ public class LockConditionStructure
     {
         Debug.Log("상호작용 강제 종료");
         UIManager.Instance.CloseAllUI();
+    }
+
+    void BreakMirror()
+    {
+        PlayerInteract.Instance.GetComponent<MentalEnterProcess>().ForceQuitMentalProcess();
     }
 }
