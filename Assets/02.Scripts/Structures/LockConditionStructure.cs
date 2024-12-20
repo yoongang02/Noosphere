@@ -9,23 +9,23 @@ public class LockConditionStructure
     {
         switch (lockConditionId)
         {
-            case "lock_condition_001":
+            case "Lock_condition_001":
                 LockPlayerMove();
                 LockAllInteraction();
                 break;
-            case "lock_condition_002":
+            case "Lock_condition_002":
                 LockPlayerMove();
                 break;
-            case "lock_condition_003":
+            case "Lock_condition_003":
                 LockAllInteraction();
                 break;
-            case "lock_condition_004":
+            case "Lock_condition_004":
                 LockEnterMentalWorld();
                 break;
-            case "lock_condition_005":
+            case "Lock_condition_005":
                 LockComeBackToRealWorld();
                 break;
-            case "lock_condition_006":
+            case "Lock_condition_006":
                 ForceQuitInteraction();
                 break;
         }
@@ -35,23 +35,23 @@ public class LockConditionStructure
     {
         switch (lockConditionId)
         {
-            case "lock_condition_001":
+            case "Lock_condition_001":
                 UnLockPlayerMove();
                 UnLockAllInteraction();
                 break;
-            case "lock_condition_002":
+            case "Lock_condition_002":
                 UnLockPlayerMove();
                 break;
-            case "lock_condition_003":
+            case "Lock_condition_003":
                 UnLockAllInteraction();
                 break;
-            case "lock_condition_004":
+            case "Lock_condition_004":
                 UnLockEnterMentalWorld();
                 break;
-            case "lock_condition_005":
+            case "Lock_condition_005":
                 UnLockComeBackToRealWorld();
                 break;
-            case "lock_condition_006":
+            case "Lock_condition_006":
                 break;
         }
     }
