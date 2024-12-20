@@ -32,19 +32,9 @@ public class LockConditionStructure
 
     public void UnLock()
     {
-        switch (lockConditionId)
-        {
-            case "lock_condition_001":
-                UnLockPlayerMove();
-                UnLockAllInteraction();
-                break;
-            case "lock_condition_002":
-                UnLockPlayerMove();
-                break;
-            case "lock_condition_003":
-                UnLockAllInteraction();
-                break;
-        }
+        Debug.Log("lock condition 해제");
+        PlayerController.Instance.canMove = true;
+        PlayerInteract.Instance.canInteract = true;
     }
 
     void LockPlayerMove()
@@ -53,22 +43,10 @@ public class LockConditionStructure
         Debug.Log("플레이어 움직임 Lock");
     }
 
-    void UnLockPlayerMove()
-    {
-        PlayerController.Instance.canMove = true;
-        Debug.Log("플레이어 움직임 UnLock");
-    }
-
     void LockAllInteraction()
     {
         PlayerInteract.Instance.canInteract = false;
         Debug.Log("모든 물체 및 캐릭터 상호작용 Lock");
-    }
-    
-    void UnLockAllInteraction()
-    {
-        PlayerInteract.Instance.canInteract = true;
-        Debug.Log("모든 물체 및 캐릭터 상호작용 UnLock");
     }
 
     void LockEnterMentalWorld()
@@ -84,6 +62,5 @@ public class LockConditionStructure
     void ForceQuitInteraction()
     {
         Debug.Log("상호작용 강제 종료");
-        UIManager.Instance.CloseAllUI();
     }
 }
