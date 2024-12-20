@@ -57,7 +57,7 @@ public class EffectManager : Singleton<EffectManager>
             if (!string.IsNullOrEmpty(effect.soundresourceId))
             {
                 SoundResourceStructure sound = DataManager.Instance._sound[effect.soundresourceId];
-                if (sound.soundresourceId == "Sound")
+                if (sound.soundresourceType == "Sound")
                 {
                     SoundManager.Instance.PlaySound(effect.soundresourceId, sound.loopCount);
                 }
