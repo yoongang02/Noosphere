@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 
-public class RadioManager : MonoBehaviour
+public class RadioManager : UIBase
 {
     [SerializeField] private GameObject _radioPanel;
     [Header("RadioUI")] 
@@ -31,20 +31,9 @@ public class RadioManager : MonoBehaviour
 
     private bool isDataLoaded = false;
 
-    //삭제
-    private async void Awake()
+    public override void OnOpen()
     {
-        await LoadTestDialogue();
-    }
-
-
-    private void Start()
-    {
-        _powerBtn.onClick.AddListener(CheckAnswer);
-    }
-
-    private void OnEnable()
-    {
+        base.OnOpen();
         ResetText();
         if (_dialBtn != null && _dialBtn.Count >= 3)
         {
@@ -52,17 +41,30 @@ public class RadioManager : MonoBehaviour
             _dialBtn[1].OnValueChanged += OnOneDigitChanged;
             _dialBtn[2].OnValueChanged += OnDecimalDigitChanged;
         }
+        
+        _powerBtn.onClick.AddListener(CheckAnswer);
+        transform.GetChild(0).gameObject.SetActive(true);
+        
     }
-
-    private void OnDisable()
+    
+    public override void OnClose()
     {
+        base.OnClose();
         if (_dialBtn != null && _dialBtn.Count >= 3)
         {
             _dialBtn[0].OnValueChanged -= OnTenDigitChanged;
             _dialBtn[1].OnValueChanged -= OnOneDigitChanged;
             _dialBtn[2].OnValueChanged -= OnDecimalDigitChanged;
         }
+        transform.GetChild(0).gameObject.SetActive(false);
     }
+    /*
+    //삭제
+    private async void Awake()
+    {
+        await LoadTestDialogue();
+    }
+    
 
     /// <summary>
     /// ////////////////////
@@ -81,7 +83,7 @@ public class RadioManager : MonoBehaviour
             Debug.LogError($"대화 데이터 로드 실패: {e.Message}");
         }
     }
-
+*/
     /// <summary>
     /// //////
     /// </summary>
@@ -89,7 +91,6 @@ public class RadioManager : MonoBehaviour
     {
         if (_radioText.text == radioAnswer)
         {
-            gameObject.SetActive(false);
             if (PlayerInteract.Instance.isInMental)
             {
                 //현실세계 정신세계 구분
@@ -99,6 +100,7 @@ public class RadioManager : MonoBehaviour
             {
                 ShowRealDialogue().Forget();
             }
+            UIManager.Instance.CloseTopUI();
         }
         else
         {
@@ -111,9 +113,10 @@ public class RadioManager : MonoBehaviour
         DialogueStructure mirrorDialogue = DataManager.Instance._dialogue["Dialogue_0024"];
         // DialogueStructure mirrorDialogue = _testDialogue["Dialogue_0024"];
         _realText.gameObject.SetActive(true);
-
+        
         for (int i = 0; i < mirrorDialogue.Dialogue_Text_List.Count; i++)
         {
+            DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
             _realText.text = $"<mark=#00000055>{mirrorDialogue.Dialogue_Text_List[i]}</mark>";
 
             // 페이드 인
@@ -131,8 +134,10 @@ public class RadioManager : MonoBehaviour
                 await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
             }
         }
-
+        
         _realText.gameObject.SetActive(false);
+        DataManager.Instance._lockConditions["Lock_condition_003"].UnLock();
+        QuizManager.Instance.OnQuizEnd?.Invoke();
     }
 
     private async UniTaskVoid ShowDialogue()
@@ -144,12 +149,12 @@ public class RadioManager : MonoBehaviour
 
         _realText.gameObject.SetActive(true);
         _mirrorText.gameObject.SetActive(true);
-
         // 더 긴 리스트의 길이만큼 반복
         int maxLength = Mathf.Max(realDialogue.Dialogue_Text_List.Count, mirrorDialogue.Dialogue_Text_List.Count);
 
         for (int i = 0; i < maxLength; i++)
         {
+            DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
             // 각 텍스트가 있을 경우에만 표시
             if (i < realDialogue.Dialogue_Text_List.Count)
             {
@@ -201,6 +206,8 @@ public class RadioManager : MonoBehaviour
 
         _realText.gameObject.SetActive(false);
         _mirrorText.gameObject.SetActive(false);
+        DataManager.Instance._lockConditions["Lock_condition_003"].UnLock();
+        QuizManager.Instance.OnQuizEnd?.Invoke();
     }
 
     private void ResetText()
