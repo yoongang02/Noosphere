@@ -397,6 +397,12 @@ public class EvidenceDetailUI : UIBase
                 if (_curPage == _curEvidence.acquisitionPageNum)
                 {
                     Debug.Log($"#{_curEvidence.evidenceId}의 서브 증거물 {_curEvidence.subEvidenceId}을 {_curPage}({_curEvidence.acquisitionPageNum})에서 발견");
+                    string resultID = _curEvidence.acquisitionPageResultId;
+                    //예외 처리 코드
+                    if (_curEvidence.evidenceId == "Evidence_018")
+                    {
+                        StartCoroutine(EventManagerYKM.Instance.DoResult(resultID));
+                    }
                 }
             }
             else if (_curEvidence.shapeType == "TwoPage")
