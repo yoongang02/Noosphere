@@ -323,7 +323,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4895464230637095938
 RectTransform:
   m_ObjectHideFlags: 0
@@ -969,14 +969,13 @@ GameObject:
   - component: {fileID: 7436084224354064543}
   - component: {fileID: 84551403863204207}
   - component: {fileID: 4429312962772219388}
-  - component: {fileID: 8773713240749983127}
   m_Layer: 5
   m_Name: RadioPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7436084224354064543
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1018,7 +1017,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.38039216}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.85882354}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1035,28 +1034,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8773713240749983127
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8685231368238453158}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 301878ee73fc4964d8c4186187e00b7f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _radioPanel: {fileID: 8685231368238453158}
-  _dialBtn:
-  - {fileID: 5985476104171149510}
-  - {fileID: 4483571206629710858}
-  - {fileID: 485546010732942788}
-  _radioText: {fileID: 4575209980965849571}
-  _powerBtn: {fileID: 804209986165576483}
-  _realText: {fileID: 0}
-  _mirrorText: {fileID: 0}
-  radioAnswer: 00.0MHz
 --- !u!1 &8722925798568961689
 GameObject:
   m_ObjectHideFlags: 0
