@@ -79,6 +79,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     int falseResultNum = 1;
                     foreach (var falseResult in eventStructure.conditionFalseResults)
                     {
+                        Debug.Log($"FalseResult : {falseResult}");
                         Debug.Log("#3-3 : "+eventStructure.eventId+"의 falseCondition"+falseResultNum+ " "+ falseResult+ " 실행"); 
                         yield return StartCoroutine(DoResult(falseResult));
                         falseResultNum++;
@@ -117,12 +118,15 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             
             // 증거물 조사 UI 띄우기
             EvidenceStructure evidence = DataManager.Instance._evidences[eventStructure.evidenceId];
-            UIManager.Instance.OpenUI(UIManager.Instance.investigateUI, evidence);
             
             //임시로 사진만 예외처리 함. 기획과 논의 필요!!
             if (evidence.evidenceId == "Evidence_008")
             {
                 evidence.AcquireEvidence();
+            }
+            else
+            {
+                UIManager.Instance.OpenUI(UIManager.Instance.investigateUI, evidence);
             }
             
 
