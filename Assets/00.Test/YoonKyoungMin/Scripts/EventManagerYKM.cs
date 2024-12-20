@@ -119,20 +119,12 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             // 증거물 조사 UI 띄우기
             EvidenceStructure evidence = DataManager.Instance._evidences[eventStructure.evidenceId];
             
+            if(!evidence.CanAcquireEvidence()) yield break;
+            
             //임시로 사진만 예외처리 함. 기획과 논의 필요!!
             if (evidence.evidenceId == "Evidence_008")
             {
                 evidence.AcquireEvidence();
-            }
-            else if (evidence.evidenceId == "Evidence_022")
-            {
-                //스테이지1 침대 거울 조각
-                MirrorPuzzleManager.Instance.GetMirrorPiece(4);
-            }
-            else if (evidence.evidenceId == "Evidence_021")
-            {
-                //스테이지1 의자 거울 조각
-                MirrorPuzzleManager.Instance.GetMirrorPiece(3);
             }
             else
             {
@@ -163,6 +155,46 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             {
                 //일기 습득 성공하면 더이상 캐비넷에 접근할 수 없도록
                 DataManager.Instance._events["Event_A025"].repeatType = false;
+            }
+            
+            if (eventStructure.evidenceId == "Evidence_019"
+                || eventStructure.evidenceId == "Evidence_020"
+                || eventStructure.evidenceId == "Evidence_021"
+                || eventStructure.evidenceId == "Evidence_022"
+                || eventStructure.evidenceId == "Evidence_023")
+            {
+                Debug.Log($"#현재 증거물 아이디 : {eventStructure.evidenceId}, 습득 여부 : {UIManager.Instance.IsAcquiredInInvestigateUI()}");
+                if (!UIManager.Instance.IsAcquiredInInvestigateUI())
+                {
+                    //깨진 거울조각 증거물 조사 UI에서 NO를 눌렀을 경우
+                    string id = "";
+                    switch (eventStructure.evidenceId)
+                    {
+                        case ("Evidence_019"):
+                            id = "";
+                            break;
+                        case ("Evidence_020"):
+                            id = "";
+                            break;
+                        case ("Evidence_021"):
+                            id = "";
+                            break;
+                        case ("Evidence_022"):
+                            id = "";
+                            break;
+                        case ("Evidence_023"):
+                            id = "Event_B063";
+                            break;
+                    }
+                    Debug.Log($"#{id} repeatType 변경 전 : {DataManager.Instance._events[id].repeatType}");
+                    DataManager.Instance._events[id].repeatType = true;
+                    Debug.Log($"#{id} repeatType 변경 후 : {DataManager.Instance._events[id].repeatType}");
+                }
+                else
+                {
+                    //깨진 거울조각 증거물 조사 UI에서 YES를 눌렀을 경우
+                    MirrorPuzzleManager.Instance.GetMirrorPiece(eventStructure.evidenceId);
+                }
             }
         }
     }
@@ -220,6 +252,12 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             string resultType = resultID.Substring(0, resultID.IndexOf('_'));
             if (resultType == "Dialogue")
             {
+                //라디오 다이얼로그 예외처리
+                if (resultID == "Dialogue_0027" || resultID == "Dialogue_0028" || resultID == "Dialogue_0024")
+                {
+                    yield break;
+                }
+
                 StartDialogue(resultID);
                 
                 // 대화가 끝날 때까지 대기

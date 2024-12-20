@@ -9,6 +9,9 @@ using DG.Tweening;
 
 public class RadioManager : UIBase
 {
+    [SerializeField] private string _curQuizID;
+    private QuizStructure _curQuiz;
+    
     [SerializeField] private GameObject _radioPanel;
     [Header("RadioUI")] 
     [SerializeField] private List<DialBtn> _dialBtn;
@@ -31,9 +34,24 @@ public class RadioManager : UIBase
 
     private bool isDataLoaded = false;
 
-    public override void OnOpen()
+    public override void OnOpen(string quizID)
     {
-        base.OnOpen();
+        base.OnOpen(quizID);
+        _curQuizID = quizID;
+        _curQuiz = DataManager.Instance._quiz[_curQuizID];
+        Debug.Log($"# quiz id : {quizID}, _curQuiz : {_curQuiz}");
+        //만약 거울이 깨졌는데 기믹을 미리 성공했다면
+        if (MirrorPuzzleManager.Instance.isMirrorBroke)
+        {
+            if (_curQuiz.isSolved)
+            {
+                //바로 증거물 습득하기
+                UIManager.Instance.CloseTopUI();
+                return;
+            }
+        }
+        
+        
         ResetText();
         if (_dialBtn != null && _dialBtn.Count >= 3)
         {
@@ -57,6 +75,19 @@ public class RadioManager : UIBase
             _dialBtn[2].OnValueChanged -= OnDecimalDigitChanged;
         }
         transform.GetChild(0).gameObject.SetActive(false);
+        //결과에 따라 실행
+        if (_curQuiz.isSolved)
+        {
+            DataManager.Instance._events[EventManagerYKM.Instance.currentEventID].repeatType = false;
+            DoCorrectResult();
+        }
+        else
+        {
+            DoWrongResult();
+        }
+        
+        _curQuizID = "";
+        _curQuiz = null;
     }
     /*
     //삭제
@@ -95,12 +126,13 @@ public class RadioManager : UIBase
             {
                 //현실세계 정신세계 구분
                 ShowDialogue().Forget();
-                MirrorPuzzleManager.Instance.GetMirrorPiece(5);
             }
             else
             {
                 ShowRealDialogue().Forget();
             }
+            //퀴즈 해결되었다고 표시
+            _curQuiz.isSolved = true;
             UIManager.Instance.CloseTopUI();
         }
         else
@@ -114,7 +146,7 @@ public class RadioManager : UIBase
         DialogueStructure mirrorDialogue = DataManager.Instance._dialogue["Dialogue_0024"];
         // DialogueStructure mirrorDialogue = _testDialogue["Dialogue_0024"];
         _realText.gameObject.SetActive(true);
-        
+        PlayerInteract.Instance.HideInteractionMark();
         for (int i = 0; i < mirrorDialogue.Dialogue_Text_List.Count; i++)
         {
             DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
@@ -240,5 +272,24 @@ public class RadioManager : UIBase
     private void UpdateRadioText()
     {
         _radioText.text = $"{_tenDigit}{_oneDigit}.{_decimalDigit}MHz";
+    }
+
+    void DoCorrectResult()
+    {
+        foreach (var resultID in _curQuiz.quizCorrects)
+        {
+            if (!string.IsNullOrEmpty(resultID))
+            {
+                StartCoroutine(EventManagerYKM.Instance.DoResult(resultID));
+            }
+        }
+    }
+
+    void DoWrongResult()
+    {
+        if (!string.IsNullOrEmpty(_curQuiz.quizWrong))
+        {
+            StartCoroutine(EventManagerYKM.Instance.DoResult(_curQuiz.quizWrong));
+        }
     }
 }
