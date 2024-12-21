@@ -50,8 +50,8 @@ public class RadioManager : UIBase
                 if (MirrorPuzzleManager.Instance.isMirrorBroke)
                 {
                     //바로 증거물 습득하기
+                    UIManager.Instance.CloseTopUI();
                     QuizManager.Instance.OnQuizEnd?.Invoke();
-                    UIManager.Instance.CloseAllUI();
                     return;
                 }
                 UIManager.Instance.CloseTopUI();
