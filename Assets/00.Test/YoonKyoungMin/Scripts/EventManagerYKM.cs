@@ -291,6 +291,9 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 yield return new WaitUntil(() => isQuizEnd);
                 Debug.Log("#4-2 : " + resultID + " quiz 끝");
                 QuizStructure quizStructure = DataManager.Instance._quiz[resultID];
+
+                if (quizStructure.quizId == "Quiz_001") yield break;
+                
                 if (quizStructure.isSolved)
                 {
                     foreach (var id in quizStructure.quizCorrects)

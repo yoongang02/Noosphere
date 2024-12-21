@@ -40,12 +40,20 @@ public class RadioManager : UIBase
         _curQuizID = quizID;
         _curQuiz = DataManager.Instance._quiz[_curQuizID];
         Debug.Log($"# quiz id : {quizID}, _curQuiz : {_curQuiz}");
+        
+        //정신세계인데
         //만약 거울이 깨졌는데 기믹을 미리 성공했다면
         if (PlayerInteract.Instance.isInMental)
         {
-            if (MirrorPuzzleManager.Instance.isMirrorBroke && _curQuiz.isSolved)
+            if (_curQuiz.isSolved)
             {
-                //바로 증거물 습득하기
+                if (MirrorPuzzleManager.Instance.isMirrorBroke)
+                {
+                    //바로 증거물 습득하기
+                    QuizManager.Instance.OnQuizEnd?.Invoke();
+                    UIManager.Instance.CloseAllUI();
+                    return;
+                }
                 UIManager.Instance.CloseTopUI();
                 return;
             }
@@ -75,18 +83,6 @@ public class RadioManager : UIBase
             _dialBtn[2].OnValueChanged -= OnDecimalDigitChanged;
         }
         transform.GetChild(0).gameObject.SetActive(false);
-
-        if (_curQuiz.isSolved)
-        {
-            if (_curQuiz.quizId == "Quiz_004" && DataManager.Instance._events["Event_B055"].isExecuted)
-            {
-                EvidenceStructure evidenceStructure = DataManager.Instance._evidences["Evidence_023"];
-                if (!InventoryManager.Instance.IsAcquiredEvidence(evidenceStructure.evidenceId))
-                {
-                    QuizManager.Instance.OnQuizEnd?.Invoke();
-                }
-            }
-        }
         
         _curQuizID = "";
         _curQuiz = null;
@@ -132,6 +128,8 @@ public class RadioManager : UIBase
             else
             {
                 ShowRealDialogue().Forget();
+                Debug.Log($"정답 맞췄으니 {EventManagerYKM.Instance.currentEventID} 리핏 타입 false로");
+                DataManager.Instance._events[EventManagerYKM.Instance.currentEventID].repeatType = false;
             }
             //퀴즈 해결되었다고 표시
             _curQuiz.isSolved = true;
