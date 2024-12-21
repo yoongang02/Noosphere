@@ -128,6 +128,13 @@ public class EvidenceDetailUI : UIBase
                 _bgImg.sprite = artResource.GetSpriteFromFilePath(artResource.filePathMapBackground);
             }
             
+            //세부 증거물이 있는지 체크
+            if (!string.IsNullOrEmpty(evidence.subEvidenceId) &&
+                DataManager.Instance._evidences.ContainsKey(evidence.subEvidenceId))
+            {
+                isSubEvidence = true;
+                _curEvidence = DataManager.Instance._evidences[evidence.evidenceId];
+            }
             
             //evidence 성질에 따라 프리팹인지 UI인지 결정
             if (evidence.shapeType == "Object")
@@ -147,16 +154,6 @@ public class EvidenceDetailUI : UIBase
                 SetTwoPageDetail(artResource);
                 _twoPageUI.SetActive(true);
             }
-            
-            
-            //세부 증거물이 있는지 체크
-            if (!string.IsNullOrEmpty(evidence.subEvidenceId) &&
-                DataManager.Instance._evidences.ContainsKey(evidence.subEvidenceId))
-            {
-                isSubEvidence = true;
-                _curEvidence = DataManager.Instance._evidences[evidence.evidenceId];
-            }
-            
         }
         else
         {
@@ -256,8 +253,8 @@ public class EvidenceDetailUI : UIBase
         //페이지가 2개인 경우, 2개 이상인 경우
         if (_totalPage == 2)
         {
-            _prevPageBtn.SetActive(false);
-            _nextPageBtn.SetActive(false);
+            _prevPageBtn.SetActive(true);
+            _nextPageBtn.SetActive(true);
         }
         else if (_totalPage > 2)
         {
@@ -317,24 +314,31 @@ public class EvidenceDetailUI : UIBase
         {
             CheckSubEvidence();
         }
-        
-        //버튼 업데이트
-        if (_curPage == 2)
-        {
-            SetBtnAble(_nextPageBtn);
-            SetBtnDisable(_prevPageBtn);
-            return;
-        }
 
-        if (_curPage == _totalPage)
+        //버튼 업데이트
+        if (_totalPage > 2)
         {
+            if (_curPage == 2)
+            {
+                SetBtnAble(_nextPageBtn);
+                SetBtnDisable(_prevPageBtn);
+                return;
+            }
+
+            if (_curPage == _totalPage)
+            {
+                SetBtnAble(_prevPageBtn);
+                SetBtnDisable(_nextPageBtn);
+                return;
+            }
             SetBtnAble(_prevPageBtn);
-            SetBtnDisable(_nextPageBtn);
-            return;
+            SetBtnAble(_nextPageBtn);
         }
-        
-        SetBtnAble(_prevPageBtn);
-        SetBtnAble(_nextPageBtn);
+        else
+        {
+            SetBtnDisable(_prevPageBtn);
+            SetBtnDisable(_nextPageBtn);
+        }
     }
 
     void ClickNextPageEvent()
@@ -399,10 +403,6 @@ public class EvidenceDetailUI : UIBase
                     Debug.Log($"#{_curEvidence.evidenceId}의 서브 증거물 {_curEvidence.subEvidenceId}을 {_curPage}({_curEvidence.acquisitionPageNum})에서 발견");
                     string resultID = _curEvidence.acquisitionPageResultId;
                     //예외 처리 코드
-                    if (_curEvidence.evidenceId == "Evidence_018")
-                    {
-                        StartCoroutine(EventManagerYKM.Instance.DoResult(resultID));
-                    }
                 }
             }
             else if (_curEvidence.shapeType == "TwoPage")

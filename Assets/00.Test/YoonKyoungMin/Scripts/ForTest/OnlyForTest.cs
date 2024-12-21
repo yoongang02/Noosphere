@@ -53,6 +53,7 @@ public class OnlyForTest : MonoBehaviour
         //서브 증거물
         DataManager.Instance._evidences["Evidence_008"].accessCnt = 3;
         
+        DialogueManager.Instance.OnDialogueEnd?.Invoke();
         UIManager.Instance.CloseAllUI();
         
         //씬 스테이지1로 이동

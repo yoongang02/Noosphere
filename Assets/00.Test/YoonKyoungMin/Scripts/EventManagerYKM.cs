@@ -158,9 +158,6 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             }
             
             if (eventStructure.evidenceId == "Evidence_019"
-                || eventStructure.evidenceId == "Evidence_020"
-                || eventStructure.evidenceId == "Evidence_021"
-                || eventStructure.evidenceId == "Evidence_022"
                 || eventStructure.evidenceId == "Evidence_023")
             {
                 Debug.Log($"#현재 증거물 아이디 : {eventStructure.evidenceId}, 습득 여부 : {UIManager.Instance.IsAcquiredInInvestigateUI()}");
@@ -173,15 +170,6 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                         case ("Evidence_019"): //책장
                             id = "Event_B064";
                             break;
-                        case ("Evidence_020"): //파일철
-                            //id = "";
-                            break;
-                        case ("Evidence_021"): //의자
-                            id = "Event_B050";
-                            break;
-                        case ("Evidence_022"): //침대
-                            id = "Event_B051";
-                            break;
                         case ("Evidence_023"): //라디오
                             id = "Event_B063";
                             break;
@@ -191,6 +179,17 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     Debug.Log($"#{id} repeatType 변경 후 : {DataManager.Instance._events[id].repeatType}");
                 }
                 else
+                {
+                    //깨진 거울조각 증거물 조사 UI에서 YES를 눌렀을 경우
+                    MirrorPuzzleManager.Instance.GetMirrorPiece(eventStructure.evidenceId);
+                }
+            }
+
+            if (eventStructure.evidenceId == "Evidence_020"
+                || eventStructure.evidenceId == "Evidence_021"
+                || eventStructure.evidenceId == "Evidence_022")
+            {
+                if (UIManager.Instance.IsAcquiredInInvestigateUI())
                 {
                     //깨진 거울조각 증거물 조사 UI에서 YES를 눌렀을 경우
                     MirrorPuzzleManager.Instance.GetMirrorPiece(eventStructure.evidenceId);
