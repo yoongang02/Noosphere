@@ -24,6 +24,11 @@ public class InvestigateUI : UIBase
     {
         base.OnOpen(evidence);
         //조사하는 증거물에 대한 정보 반영
+        if (!UIManager.Instance.isInMap)
+        {
+            //증거물 상세보기가 열려있는 경우, 조사 UI는 열려도, 위에 보이지 않기 때문에
+            UIManager.Instance.CloseAllUI();
+        }
         SetInvestigateUI(evidence);
         _curEvidence = evidence;
         isAquired = false;
