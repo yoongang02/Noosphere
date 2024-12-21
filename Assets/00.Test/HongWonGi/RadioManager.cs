@@ -23,8 +23,8 @@ public class RadioManager : UIBase
     [SerializeField] private TextMeshProUGUI _mirrorText;
 
     [SerializeField] private string radioAnswer;
-    private float _fadeDuration = 1f;
-    private float _displayDuration = 2f;
+    private float _fadeDuration = 0.5f;
+    private float _displayDuration = 1f;
     private int _tenDigit = 0;
     private int _oneDigit = 0;
     private int _decimalDigit = 0;
