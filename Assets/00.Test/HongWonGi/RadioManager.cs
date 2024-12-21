@@ -41,9 +41,9 @@ public class RadioManager : UIBase
         _curQuiz = DataManager.Instance._quiz[_curQuizID];
         Debug.Log($"# quiz id : {quizID}, _curQuiz : {_curQuiz}");
         //만약 거울이 깨졌는데 기믹을 미리 성공했다면
-        if (MirrorPuzzleManager.Instance.isMirrorBroke)
+        if (PlayerInteract.Instance.isInMental)
         {
-            if (_curQuiz.isSolved)
+            if (MirrorPuzzleManager.Instance.isMirrorBroke && _curQuiz.isSolved)
             {
                 //바로 증거물 습득하기
                 UIManager.Instance.CloseTopUI();
