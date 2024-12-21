@@ -60,4 +60,5 @@ public static class Define
     public const string Soundresource_054 = "Window_Break";
     public const string Soundresource_055 = "Password_incorrect";
     public const string porlogueBGM = "PrologueBGM";
+    public const string stage1BGM="Stage1";
 }

@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class bgmstart : MonoBehaviour
 {
+    [SerializeField] private string bgmName;
     private void Start()
     {
-        SoundManager.Instance.PlayBGM(Define.porlogueBGM);
+        SoundManager.Instance.PlayBGM(bgmName);
     }
 }
