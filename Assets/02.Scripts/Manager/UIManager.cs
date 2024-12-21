@@ -70,6 +70,14 @@ public class UIManager : Singleton<UIManager>
             Debug.LogError("🔥 evidence가 null이므로 OpenUI()를 호출할 수 없습니다.");
             return;
         }
+
+        if (ui == investigateUI && evidenceDetailUI.IsTopUI())
+        {
+            //증거물 상세보기가 열려있는 경우, 조사 UI는 열려도, 위에 보이지 않기 때문에
+            CloseTopUI();
+        }
+        
+        
         // 스택에 추가하고 UI를 활성화
         // 상호작용 금지
         LockPlayer();
