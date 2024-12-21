@@ -143,6 +143,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             
             if (!UIManager.Instance.IsAcquiredInInvestigateUI())
             {
+                Debug.Log($"No 버튼을 눌렀으니 {eventStructure} 실행 false");
                 eventStructure.isExecuted = false;
             }
         
@@ -181,6 +182,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 else
                 {
                     //깨진 거울조각 증거물 조사 UI에서 YES를 눌렀을 경우
+                    Debug.Log($"YES 버튼을 눌렀으니 {eventStructure.evidenceId} 거울 조각 얻음");
                     MirrorPuzzleManager.Instance.GetMirrorPiece(eventStructure.evidenceId);
                 }
             }
@@ -192,7 +194,12 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 if (UIManager.Instance.IsAcquiredInInvestigateUI())
                 {
                     //깨진 거울조각 증거물 조사 UI에서 YES를 눌렀을 경우
+                    Debug.Log($"YES 버튼을 눌렀으니 {eventStructure.evidenceId} 거울 조각 얻음");
                     MirrorPuzzleManager.Instance.GetMirrorPiece(eventStructure.evidenceId);
+                    if (eventStructure.evidenceId == "Evidence_020")
+                    {
+                        
+                    }
                 }
             }
         }
@@ -283,6 +290,18 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 QuizManager.Instance.OnQuizEnd += () => isQuizEnd = true;
                 yield return new WaitUntil(() => isQuizEnd);
                 Debug.Log("#4-2 : " + resultID + " quiz 끝");
+                QuizStructure quizStructure = DataManager.Instance._quiz[resultID];
+                if (quizStructure.isSolved)
+                {
+                    foreach (var id in quizStructure.quizCorrects)
+                    {
+                        yield return StartCoroutine(DoResult(id));
+                    }
+                }
+                else
+                {
+                    yield return StartCoroutine(DoResult(quizStructure.quizWrong));
+                }
             }
             else if (resultType == "Event")
             {

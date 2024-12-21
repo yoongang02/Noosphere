@@ -46,6 +46,12 @@ public class EvidenceDetailUI : UIBase
         {
             PlayerController.Instance._uiCanvas.renderMode = RenderMode.ScreenSpaceCamera;
             PlayerController.Instance._uiCanvas.worldCamera = PlayerController.Instance._mainCamera;
+
+            if (evidence.evidenceId == "Evidence_020")
+            {
+                evidence.AcquireEvidence();
+                InventoryManager.Instance.UpdateInventoryUI();
+            }
         }
         else
         {
@@ -427,8 +433,13 @@ public class EvidenceDetailUI : UIBase
                     {
                         resultID = "Event_A024";
                     }
+
+                    if (InventoryManager.Instance.IsAcquiredEvidence("Evidence_020"))
+                    {
+                        return;
+                    }
                     
-                    StartCoroutine(EventManagerYKM.Instance.DoResult(resultID));
+                    StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(resultID));
                 }
             }   
         }

@@ -75,15 +75,17 @@ public class RadioManager : UIBase
             _dialBtn[2].OnValueChanged -= OnDecimalDigitChanged;
         }
         transform.GetChild(0).gameObject.SetActive(false);
-        //결과에 따라 실행
+
         if (_curQuiz.isSolved)
         {
-            DataManager.Instance._events[EventManagerYKM.Instance.currentEventID].repeatType = false;
-            DoCorrectResult();
-        }
-        else
-        {
-            DoWrongResult();
+            if (_curQuiz.quizId == "Quiz_004" && DataManager.Instance._events["Event_B055"].isExecuted)
+            {
+                EvidenceStructure evidenceStructure = DataManager.Instance._evidences["Evidence_023"];
+                if (!InventoryManager.Instance.IsAcquiredEvidence(evidenceStructure.evidenceId))
+                {
+                    QuizManager.Instance.OnQuizEnd?.Invoke();
+                }
+            }
         }
         
         _curQuizID = "";
