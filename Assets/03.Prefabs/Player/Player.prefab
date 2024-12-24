@@ -1383,12 +1383,12 @@ MonoBehaviour:
   footstepSource: {fileID: 8517289265125909748}
   stepInterval: 0.5
   runInterval: 0.4
-  isDialogueOn: 0
-  isPlayerNearNPC: 0
+  canMove: 0
   _currentNPC: {fileID: 0}
   _swapNpc: {fileID: 0}
   _rayDistance: 0.68
   _rayHeight: 0.79
+  npcState: {fileID: 0}
 --- !u!54 &5763481761334650358
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1398,7 +1398,7 @@ Rigidbody:
   m_GameObject: {fileID: 5226925772450090396}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 1
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -1474,19 +1474,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dontDestroy: 1
   canInteract: 1
-  curInteractableTrigger: {fileID: 0}
+  interactionTrigger: {fileID: 0}
   _interactionMark: {fileID: 4027558490432177639}
-  _evidenceGameObject: {fileID: 0}
-  isPlayerInMetanlWorld: 0
-  _enterTime: 15
-  curEnterNPCTrigger: {fileID: 0}
-  _canEnter: 0
-  _startEnter: 0
-  _isComplete: 0
-  _timer: 0
-  _progressBarUI: {fileID: 0}
-  _progressBarFill: {fileID: 0}
-  isEnd: 0
+  _evidenceObjectInScene: {fileID: 0}
+  isInMental: 0
+  mentalTrigger: {fileID: 0}
+  isUsingEvidence: 0
 --- !u!82 &8517289265125909748
 AudioSource:
   m_ObjectHideFlags: 0
