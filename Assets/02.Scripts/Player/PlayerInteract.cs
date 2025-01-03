@@ -10,6 +10,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
     public GameObject interactionTrigger;
     [SerializeField] private GameObject _interactionMark;
     [SerializeField] private GameObject _evidenceObjectInScene;
+    private bool _isRepeatFalseCondition = false;
 
     [Space(5)] [Header("정신세계 진입")] public bool isInMental = false;
     public GameObject mentalTrigger;
@@ -24,6 +25,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
             { 
                 //이벤트 실행
                 EventTrigger trigger = interactionTrigger.GetComponent<EventTrigger>();
+                _isRepeatFalseCondition = false;
                 foreach (string eventID in trigger.eventIdList)
                 {
                     if (trigger.destroyEvidence)
@@ -37,8 +39,23 @@ public class PlayerInteract : Singleton<PlayerInteract>
                     
                     if (CheckInteractionAvail(eventID))
                     {
-                        StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
                         HideInteractionMark();
+                        
+                        if (_isRepeatFalseCondition)
+                        {
+                            //반복 불가능할 경우의 결과 출력
+                            EventStructure eventStructure = DataManager.Instance._events[eventID];
+                            if (!string.IsNullOrEmpty(eventStructure.repeatFalseResult))
+                            {
+                                //repeatFalseResult 실행
+                                Debug.Log("#" + eventStructure.repeatFalseResult + "RepeatFalseResult 실행");
+                                StartCoroutine(EventManagerYKM.Instance.DoResult(eventStructure.repeatFalseResult));
+                            }
+                        }
+                        else
+                        {
+                            StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
+                        }
                         break;
                     }
                 }
@@ -129,21 +146,21 @@ public class PlayerInteract : Singleton<PlayerInteract>
             if (String.IsNullOrEmpty(EventManagerYKM.Instance.nextEventID) || EventManagerYKM.Instance.nextEventID == id)
             {
                 //반복 가능한 이벤트인지 체크
-                //반복 불가능인데 이미 실행된 이벤트라면 실행 불가능
+                //반복 불가능인데 이미 실행된 이벤트라면 반복실행 이벤트 실행
                 if (!eventStructure.repeatType && eventStructure.isExecuted)
                 {
                     Debug.Log("#" + id + "는 이미 실행된 이벤트이며, 반복 불가능한 이벤트입니다.");
-                    //반복 불가능할 경우의 결과 출력
                     if (!string.IsNullOrEmpty(eventStructure.repeatFalseResult))
                     {
-                        //repeatFalseResult 실행
-                        Debug.Log("#" + eventStructure.repeatFalseResult + "RepeatFalseResult 실행");
-                        StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventStructure.repeatFalseResult));
+                        Debug.Log("#" + id + "는 반복 실패 실행 이벤트가 존재합니다.");
+                        _isRepeatFalseCondition = true;
+                        return true;
                     }
-
+                    _isRepeatFalseCondition = false;
                     return false;
                 }
 
+                /*
                 //예외 코드
                 if ((eventStructure.results[0] == "Quiz_004" || eventStructure.results[0] == "Quiz_005" 
                                                              || eventStructure.results[0] == "Quiz_006"
@@ -156,6 +173,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
                         if (!eventStructure.IsConditionMet(conditionID)) return false;
                     }
                 }
+                */
                 return true;
             }
         }
