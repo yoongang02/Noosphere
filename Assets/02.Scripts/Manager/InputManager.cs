@@ -9,15 +9,21 @@ public class InputManager : Singleton<InputManager>
 
     public void OnUpdate()
     {
-        if(Input.anyKey==false)
-            return;
-        moveAction?.Invoke();
+        // if(Input.anyKey==false)
+        //     return;
+        // moveAction?.Invoke();
 
         if (Input.GetKeyDown(KeyCode.Escape))
             exitBtnAction?.Invoke();
 
         if (Input.GetKeyDown(KeyCode.E))
             selectBtnAction?.Invoke();
+    }
+    public void FixedUpdate()
+    {
+        if(Input.anyKey==false)
+            return;
+        moveAction?.Invoke();
     }
 }
 
