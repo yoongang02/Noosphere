@@ -55,8 +55,8 @@ public class PlayerInteract : Singleton<PlayerInteract>
                         else
                         {
                             StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
+                            break;
                         }
-                        break;
                     }
                 }
             }
@@ -160,12 +160,10 @@ public class PlayerInteract : Singleton<PlayerInteract>
                     return false;
                 }
 
-                /*
+                
                 //예외 코드
-                if ((eventStructure.results[0] == "Quiz_004" || eventStructure.results[0] == "Quiz_005" 
-                                                             || eventStructure.results[0] == "Quiz_006"
-                                                             || id == "Event_B050"
-                                                             || id == "Event_B051")
+                if ((eventStructure.results[0] == "Quiz_004" || eventStructure.results[0] == "Quiz_005" ||
+                     eventStructure.results[0] == "Quiz_006" || id == "Event_B050" || id == "Event_B051")
                     && eventStructure.conditionType == "and")
                 {
                     foreach (var conditionID in eventStructure.conditions)
@@ -173,7 +171,6 @@ public class PlayerInteract : Singleton<PlayerInteract>
                         if (!eventStructure.IsConditionMet(conditionID)) return false;
                     }
                 }
-                */
                 return true;
             }
         }

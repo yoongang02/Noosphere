@@ -51,6 +51,8 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             yield break;
         }
         
+        PlayerInteract.Instance.HideInteractionMark();
+        
         EventStructure eventStructure = DataManager.Instance._events[eventID];
         currentEventID = eventStructure.eventId;
         _isEventSuccess = false;
@@ -130,6 +132,24 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             {
                 evidence.AcquireEvidence();
             }
+            else if (evidence.evidenceId == "Evidence_019" || evidence.evidenceId == "Evidence_020" || evidence.evidenceId == "Evidence_021" ||
+                     evidence.evidenceId == "Evidence_022" || evidence.evidenceId == "Evidence_023")
+            {
+                //거울 조각이고
+                //인벤토리에 거울조각이 없다면 습득 시도
+                if (!InventoryManager.Instance.IsAcquiredEvidence(evidence.evidenceId))
+                {
+                    Debug.Log($"#{evidence.evidenceId}가 인벤토리에 없기에 거울조각 습득 시도");
+                    
+                    //Investigate UI 창 열기
+                    UIManager.Instance.OpenUI(UIManager.Instance.investigateUI,evidence);
+                }
+                else
+                {
+                    CloseEventSuccess(eventStructure);
+                    yield break;
+                }
+            }
             else
             {
                 UIManager.Instance.OpenUI(UIManager.Instance.investigateUI, evidence);
@@ -170,6 +190,14 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 DataManager.Instance._events["Event_A025"].isExecuted = true;
                 DataManager.Instance._events["Event_A017"].isExecuted = true;
                 DataManager.Instance._events["Event_A017"].repeatType = false;
+            }
+            else if (evidence.evidenceId == "Evidence_019" || evidence.evidenceId == "Evidence_020" ||
+                     evidence.evidenceId == "Evidence_021" ||
+                     evidence.evidenceId == "Evidence_022" || evidence.evidenceId == "Evidence_023")
+            {
+                MirrorPuzzleManager.Instance.GetMirrorPiece(evidence.evidenceId);
+                //책장 UI에 ? 안 뜨도록
+                DataManager.Instance._events["Event_B064"].repeatType = false;
             }
         }
 
@@ -265,10 +293,17 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 yield return new WaitUntil(() => isQuizEnd);
                 Debug.Log("#4-2 : " + resultID + " quiz 끝");
                 QuizStructure quizStructure = DataManager.Instance._quiz[resultID];
-                
-                //퀴즈가 풀리지 않았다면
-                if (quizStructure.isSolved) _isEventSuccess = true;
-                else _isEventSuccess = false;
+
+                if (quizStructure.isSolved)
+                {
+                    yield return StartCoroutine(QuizManager.Instance.DoCorrectResult(quizStructure));
+                    _isEventSuccess = true;
+                }
+                else
+                {
+                    yield return StartCoroutine(QuizManager.Instance.DoWrongResult(quizStructure));
+                    _isEventSuccess = false;
+                }
             }
             else if (resultType == "Event")
             {

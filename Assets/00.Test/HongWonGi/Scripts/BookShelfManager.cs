@@ -16,15 +16,14 @@ public class BookShelfManager : UIBase
         _curQuizID = quizID;
         _curQuiz = DataManager.Instance._quiz[_curQuizID];
         Debug.Log($"# quiz id : {quizID}, _curQuiz : {_curQuiz}");
+        
         //만약 거울이 깨졌는데 기믹을 미리 성공했다면
-        if (MirrorPuzzleManager.Instance.isMirrorBroke)
+        if (_curQuiz.isSolved)
         {
-            if (_curQuiz.isSolved)
-            {
-                //바로 증거물 습득하기
-                UIManager.Instance.CloseTopUI();
-                return;
-            }
+            //퀴즈 실행되지 않음
+            UIManager.Instance.CloseTopUI();
+            QuizManager.Instance.OnQuizEnd?.Invoke();
+            return;
         }
         
         transform.GetChild(0).gameObject.SetActive(true);
@@ -34,17 +33,6 @@ public class BookShelfManager : UIBase
     {
         base.OnClose();
         transform.GetChild(0).gameObject.SetActive(false);
-        
-        //결과에 따라 실행
-        if (_curQuiz.isSolved)
-        {
-            DataManager.Instance._events[EventManagerYKM.Instance.currentEventID].repeatType = false;
-            DoCorrectResult();
-        }
-        else
-        {
-            DoWrongResult();
-        }
         
         _curQuizID = "";
         _curQuiz = null;
@@ -70,6 +58,7 @@ public class BookShelfManager : UIBase
             //퀴즈 해결되었다고 표시
             _curQuiz.isSolved = true;
             UIManager.Instance.CloseTopUI();
+            QuizManager.Instance.OnQuizEnd?.Invoke();
         }
     }
 
@@ -84,24 +73,5 @@ public class BookShelfManager : UIBase
                 return false;
         }
         return true;
-    }
-    
-    void DoCorrectResult()
-    {
-        foreach (var resultID in _curQuiz.quizCorrects)
-        {
-            if (!string.IsNullOrEmpty(resultID))
-            {
-                StartCoroutine(EventManagerYKM.Instance.DoResult(resultID));
-            }
-        }
-    }
-
-    void DoWrongResult()
-    {
-        if (!string.IsNullOrEmpty(_curQuiz.quizWrong))
-        {
-            StartCoroutine(EventManagerYKM.Instance.DoResult(_curQuiz.quizWrong));
-        }
     }
 }

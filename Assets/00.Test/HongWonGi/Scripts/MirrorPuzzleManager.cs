@@ -89,12 +89,6 @@ public class MirrorPuzzleManager : UIBase
             //현실 세계로 돌아갈 수 있도록 변경
             DataManager.Instance._lockConditions["Lock_condition_005"].UnLock();
             PlayerInteract.Instance.GetComponent<MentalEnterProcess>().SetCombackEventId("Event_B059");
-            
-            DoCorrectResult();
-        }
-        else
-        {
-            DoWrongResult();
         }
         
         _curQuizID = "";
@@ -109,6 +103,8 @@ public class MirrorPuzzleManager : UIBase
             return;
         }
 
+        Debug.Log("거울이 깨져있으니 습득하기");
+        //거울조각 획득
         _mirrorPiecesDictionary[evidenceID].SetActive(true);
     }
 
@@ -133,30 +129,12 @@ public class MirrorPuzzleManager : UIBase
             //퀴즈 해결되었다고 표시
             _curQuiz.isSolved = true;
             UIManager.Instance.CloseTopUI();
+            QuizManager.Instance.OnQuizEnd?.Invoke();
         }
     }
 
     public void ResetAllPieces() //거울 퍼즐 초기화
     {
         OnResetPuzzle?.Invoke();
-    }
-    
-    void DoCorrectResult()
-    {
-        foreach (var resultID in _curQuiz.quizCorrects)
-        {
-            if (!string.IsNullOrEmpty(resultID))
-            {
-                StartCoroutine(EventManagerYKM.Instance.DoResult(resultID));
-            }
-        }
-    }
-
-    void DoWrongResult()
-    {
-        if (!string.IsNullOrEmpty(_curQuiz.quizWrong))
-        {
-            StartCoroutine(EventManagerYKM.Instance.DoResult(_curQuiz.quizWrong));
-        }
     }
 }

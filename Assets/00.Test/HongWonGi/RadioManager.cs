@@ -43,22 +43,28 @@ public class RadioManager : UIBase
         
         //정신세계인데
         //만약 거울이 깨졌는데 기믹을 미리 성공했다면
-        if (PlayerInteract.Instance.isInMental)
+        if (_curQuiz.isSolved)
         {
-            if (_curQuiz.isSolved)
+            if (PlayerInteract.Instance.isInMental)
             {
-                if (MirrorPuzzleManager.Instance.isMirrorBroke)
+                //조각을 이미 습득했다면 -> 라디오 켜기
+                if (InventoryManager.Instance.IsAcquiredEvidence("Evidence_023") || !MirrorPuzzleManager.Instance.isMirrorBroke)
                 {
-                    //바로 증거물 습득하기
-                    UIManager.Instance.CloseTopUI();
-                    QuizManager.Instance.OnQuizEnd?.Invoke();
-                    return;
+                    DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
+                    ShowDialogue().Forget();
                 }
-                UIManager.Instance.CloseTopUI();
-                return;
             }
+            else
+            {
+                DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
+                ShowRealDialogue().Forget();
+            }
+            
+            //퀴즈 실행되지 않음
+            UIManager.Instance.CloseTopUI();
+            QuizManager.Instance.OnQuizEnd?.Invoke();
+            return;
         }
-        
         
         ResetText();
         if (_dialBtn != null && _dialBtn.Count >= 3)
@@ -128,8 +134,6 @@ public class RadioManager : UIBase
             else
             {
                 ShowRealDialogue().Forget();
-                Debug.Log($"정답 맞췄으니 {EventManagerYKM.Instance.currentEventID} 리핏 타입 false로");
-                DataManager.Instance._events[EventManagerYKM.Instance.currentEventID].repeatType = false;
             }
             //퀴즈 해결되었다고 표시
             _curQuiz.isSolved = true;
@@ -145,6 +149,7 @@ public class RadioManager : UIBase
     {
         DialogueStructure mirrorDialogue = DataManager.Instance._dialogue["Dialogue_0024"];
         // DialogueStructure mirrorDialogue = _testDialogue["Dialogue_0024"];
+        
         _realText.gameObject.SetActive(true);
         PlayerInteract.Instance.HideInteractionMark();
         for (int i = 0; i < mirrorDialogue.Dialogue_Text_List.Count; i++)
@@ -180,6 +185,8 @@ public class RadioManager : UIBase
         DialogueStructure realDialogue = DataManager.Instance._dialogue["Dialogue_0027"];
         DialogueStructure mirrorDialogue = DataManager.Instance._dialogue["Dialogue_0028"];
 
+        DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
+        
         _realText.gameObject.SetActive(true);
         _mirrorText.gameObject.SetActive(true);
         // 더 긴 리스트의 길이만큼 반복
