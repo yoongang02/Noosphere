@@ -31,4 +31,23 @@ public class QuizManager : Singleton<QuizManager>
             UIManager.Instance.OpenUI(script,_curQuiz.quizId);
         }
     }
+    
+    public IEnumerator DoCorrectResult(QuizStructure quiz)
+    {
+        foreach (var resultID in quiz.quizCorrects)
+        {
+            if (!string.IsNullOrEmpty(resultID))
+            {
+                yield return StartCoroutine(EventManagerYKM.Instance.DoResult(resultID));
+            }
+        }
+    }
+
+    public IEnumerator DoWrongResult(QuizStructure quiz)
+    {
+        if (!string.IsNullOrEmpty(quiz.quizWrong))
+        {
+            yield return StartCoroutine(EventManagerYKM.Instance.DoResult(quiz.quizWrong));
+        }
+    }
 }

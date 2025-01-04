@@ -19,6 +19,8 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     public string currentEventID;
     public string nextEventID = "";
     
+    //이벤트 성공 여부 
+    private bool _isEventSuccess = false;
     
     void Awake()
     {
@@ -49,8 +51,11 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             yield break;
         }
         
+        PlayerInteract.Instance.HideInteractionMark();
+        
         EventStructure eventStructure = DataManager.Instance._events[eventID];
         currentEventID = eventStructure.eventId;
+        _isEventSuccess = false;
         Debug.Log("#0 : " + eventID + "이벤트 실행");
         
         //1. LockCondition 실행
@@ -91,6 +96,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
 
                 conditionNum++;
             }
+            _isEventSuccess = true;
         }
         else if(eventStructure.conditionType != "or")
         {
@@ -99,9 +105,8 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             yield break;
         }
         
-        //일단 결과까지 왔다면 이벤트가 성공적으로 실행된 것.
-        //결과의 실행 여부는 각 결과ID에 따라 처리
-        CloseEventSuccess(eventStructure);
+        //or 이면 우선 성공으로 flag 변경
+        _isEventSuccess = true;
         
         //4. 결과들 실행하기
         int resultNum = 1;
@@ -111,6 +116,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             yield return StartCoroutine(DoResult(resultID));
             resultNum++;
         }
+        
         //5. evidenceID가 비어있지 않으면 증거물 습득
         if (!string.IsNullOrEmpty(eventStructure.evidenceId) && DataManager.Instance._evidences.ContainsKey(eventStructure.evidenceId))
         {
@@ -125,6 +131,24 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             if (evidence.evidenceId == "Evidence_008")
             {
                 evidence.AcquireEvidence();
+            }
+            else if (evidence.evidenceId == "Evidence_019" || evidence.evidenceId == "Evidence_020" || evidence.evidenceId == "Evidence_021" ||
+                     evidence.evidenceId == "Evidence_022" || evidence.evidenceId == "Evidence_023")
+            {
+                //거울 조각이고
+                //인벤토리에 거울조각이 없다면 습득 시도
+                if (!InventoryManager.Instance.IsAcquiredEvidence(evidence.evidenceId))
+                {
+                    Debug.Log($"#{evidence.evidenceId}가 인벤토리에 없기에 거울조각 습득 시도");
+                    
+                    //Investigate UI 창 열기
+                    UIManager.Instance.OpenUI(UIManager.Instance.investigateUI,evidence);
+                }
+                else
+                {
+                    CloseEventSuccess(eventStructure);
+                    yield break;
+                }
             }
             else
             {
@@ -141,68 +165,44 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             yield return new WaitUntil(() => isSelectEnd);
             Debug.Log("#5-1 : "+eventStructure.eventId+"의 증거물"+eventStructure.evidenceId+" 선택 완료");
             
+            yield return null;
+            
+            //Investigate UI에서 NO를 선택한 경우
             if (!UIManager.Instance.IsAcquiredInInvestigateUI())
             {
                 Debug.Log($"No 버튼을 눌렀으니 {eventStructure} 실행 false");
-                eventStructure.isExecuted = false;
-            }
-        
-            //예외 이벤트 처리 코드
-            if (!UIManager.Instance.IsAcquiredInInvestigateUI() && currentEventID == "Event_A007")
-            {
-                nextEventID = "Event_A007";
-            }
-            if (UIManager.Instance.IsAcquiredInInvestigateUI() && currentEventID == "Event_A018")
-            {
-                //일기 습득 성공하면 더이상 캐비넷에 접근할 수 없도록
-                DataManager.Instance._events["Event_A025"].repeatType = false;
+                _isEventSuccess = false;
+                CloseEventFailure(eventStructure);
+                
+                //예외처리
+                if(currentEventID == "Event_A007") nextEventID = "Event_A007";
+                yield break;
             }
             
-            if (eventStructure.evidenceId == "Evidence_019"
-                || eventStructure.evidenceId == "Evidence_023")
+            //Investigate UI에서 YES를 선택한 경우
+            Debug.Log($"YES 버튼을 눌렀으니 {eventStructure} 실행 true");
+            _isEventSuccess = true;
+            if (currentEventID == "Event_A018")
             {
-                Debug.Log($"#현재 증거물 아이디 : {eventStructure.evidenceId}, 습득 여부 : {UIManager.Instance.IsAcquiredInInvestigateUI()}");
-                if (!UIManager.Instance.IsAcquiredInInvestigateUI())
-                {
-                    //깨진 거울조각 증거물 조사 UI에서 NO를 눌렀을 경우
-                    string id = "";
-                    switch (eventStructure.evidenceId)
-                    {
-                        case ("Evidence_019"): //책장
-                            id = "Event_B064";
-                            break;
-                        case ("Evidence_023"): //라디오
-                            id = "Event_B063";
-                            break;
-                    }
-                    Debug.Log($"#{id} repeatType 변경 전 : {DataManager.Instance._events[id].repeatType}");
-                    DataManager.Instance._events[id].repeatType = true;
-                    Debug.Log($"#{id} repeatType 변경 후 : {DataManager.Instance._events[id].repeatType}");
-                }
-                else
-                {
-                    //깨진 거울조각 증거물 조사 UI에서 YES를 눌렀을 경우
-                    Debug.Log($"YES 버튼을 눌렀으니 {eventStructure.evidenceId} 거울 조각 얻음");
-                    MirrorPuzzleManager.Instance.GetMirrorPiece(eventStructure.evidenceId);
-                }
+                //일기 습득 성공하면 더이상 캐비넷에 접근할 수 없도록
+                Debug.LogWarning($"캐비넷 더이상 접근 불가능하도록 설정");
+                DataManager.Instance._events["Event_A025"].repeatType = false;
+                DataManager.Instance._events["Event_A025"].isExecuted = true;
+                DataManager.Instance._events["Event_A017"].isExecuted = true;
+                DataManager.Instance._events["Event_A017"].repeatType = false;
             }
-
-            if (eventStructure.evidenceId == "Evidence_020"
-                || eventStructure.evidenceId == "Evidence_021"
-                || eventStructure.evidenceId == "Evidence_022")
+            else if (evidence.evidenceId == "Evidence_019" || evidence.evidenceId == "Evidence_020" ||
+                     evidence.evidenceId == "Evidence_021" ||
+                     evidence.evidenceId == "Evidence_022" || evidence.evidenceId == "Evidence_023")
             {
-                if (UIManager.Instance.IsAcquiredInInvestigateUI())
-                {
-                    //깨진 거울조각 증거물 조사 UI에서 YES를 눌렀을 경우
-                    Debug.Log($"YES 버튼을 눌렀으니 {eventStructure.evidenceId} 거울 조각 얻음");
-                    MirrorPuzzleManager.Instance.GetMirrorPiece(eventStructure.evidenceId);
-                    if (eventStructure.evidenceId == "Evidence_020")
-                    {
-                        
-                    }
-                }
+                MirrorPuzzleManager.Instance.GetMirrorPiece(evidence.evidenceId);
+                //책장 UI에 ? 안 뜨도록
+                DataManager.Instance._events["Event_B064"].repeatType = false;
             }
         }
+
+        if (_isEventSuccess) CloseEventSuccess(eventStructure);
+        else CloseEventFailure(eventStructure);
     }
 
     //dialogue 시작
@@ -271,6 +271,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 DialogueManager.Instance.OnDialogueEnd += () => isDialogueEnd = true;
                 yield return new WaitUntil(() => isDialogueEnd);
                 Debug.Log("#4-2 : " + resultID + " 대화 끝");
+                _isEventSuccess = true;
             }
             else if (resultType == "Effect")
             {
@@ -281,6 +282,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 EffectManager.Instance.OnEffectEnd += () => isEffectEnd = true;
                 yield return new WaitUntil(() => isEffectEnd);
                 Debug.Log("#4-2 : " + resultID + " 효과 끝");
+                _isEventSuccess = true;
             }
             else if (resultType == "Quiz")
             {
@@ -292,26 +294,25 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 Debug.Log("#4-2 : " + resultID + " quiz 끝");
                 QuizStructure quizStructure = DataManager.Instance._quiz[resultID];
 
-                if (quizStructure.quizId == "Quiz_001") yield break;
-                
                 if (quizStructure.isSolved)
                 {
-                    foreach (var id in quizStructure.quizCorrects)
-                    {
-                        yield return StartCoroutine(DoResult(id));
-                    }
+                    yield return StartCoroutine(QuizManager.Instance.DoCorrectResult(quizStructure));
+                    _isEventSuccess = true;
                 }
                 else
                 {
-                    yield return StartCoroutine(DoResult(quizStructure.quizWrong));
+                    yield return StartCoroutine(QuizManager.Instance.DoWrongResult(quizStructure));
+                    _isEventSuccess = false;
                 }
             }
             else if (resultType == "Event")
             {
+                _isEventSuccess = true;
                 StartCoroutine(ExecuteEvent(resultID));
             }
             else if (resultType == "Mental")
             {
+                _isEventSuccess = true;
                 PlayerInteract.Instance.GetComponent<MentalEnterProcess>().StartEnter(resultID);
             }
         }

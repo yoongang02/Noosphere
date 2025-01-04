@@ -35,11 +35,13 @@ public class InputFieldManager : UIBase
         if (isAnswer)
         {
             //맞았을 때 결과가 있다면 결과 실행
+            DataManager.Instance._quiz[_currentID].isSolved = true;
             StartCoroutine(DoCorrectResult());
         }
         else
         {
             //틀렸을 때 결과가 있다면 결과 실행
+            DataManager.Instance._quiz[_currentID].isSolved = false;
             StartCoroutine(DoWrongResult());
         }
         

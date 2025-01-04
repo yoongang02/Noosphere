@@ -215,6 +215,7 @@ public class MentalEnterProcess : MonoBehaviour
         {
             yield return null;
         }
+        PlayerInteract.Instance.HideInteractionMark();
     }
 
     IEnumerator StartCoolTime()

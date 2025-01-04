@@ -65,6 +65,10 @@ public class DialogueManager : UIBase
     {
         base.OnClose();
         dialogueText.gameObject.SetActive(false);
+        if (_curDialogue.triggerType == "interact" && _curDialogue.interactionType == "npc")
+        {
+            PlayerController.Instance.ResetCamera();
+        }
     }
 
     public void SetDialogue(string id)
