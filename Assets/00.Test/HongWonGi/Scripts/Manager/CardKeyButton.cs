@@ -34,24 +34,28 @@ public class CardKeyButton : MonoBehaviour
 
     private void OnClickCard()
     {
-        if (!_isTakenCard)
+        if (!_isTakenCard)//카드 가져갔을때
         {
             _cardObj.SetActive(false);
             _buttonText.text = "반납 하기";
             _isTakenCard = true;
+            CardKeyManager.Instance.curCardID = _buttonId;
+            //얻은 카드 인벤토리에 저장
             _eventChannel.RaiseEvent(_buttonId);
         }
-        else
+        else//카드 반납할때
         { 
             _cardObj.SetActive(true);
             _buttonText.text = "사용 가능";
             _isTakenCard = false;
+            CardKeyManager.Instance.curCardID = -1; 
+            //인벤토리에 있는 카드 다시 반납
             _eventChannel.RaiseReturnEvent(_buttonId);
         }
  
     }
 
-    private void OnOtherButtonClicked(int clickedButtonId)
+    private void OnOtherButtonClicked(int clickedButtonId)//클릭한 버튼이외에 다른 버튼들 이벤트 전달
     {
         if(clickedButtonId != _buttonId)
         {
