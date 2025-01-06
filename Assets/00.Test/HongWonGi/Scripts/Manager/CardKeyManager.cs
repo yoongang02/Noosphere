@@ -1,12 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CardKeyManager : UIBase
-{
-    public int curCardID =-1;
+{   [SerializeField] private string _curQuizID;
+     private QuizStructure _curQuiz;
+    public string curCardEvidenceID;
     private static CardKeyManager _instance;
-
+ 
     public static CardKeyManager Instance
     {
         get
@@ -33,6 +36,32 @@ public class CardKeyManager : UIBase
             return;
         }
         _instance = this;
-        curCardID = -1; 
+        curCardEvidenceID = string.Empty; 
+    }
+    public override void OnOpen(string quizID)
+    {
+        base.OnOpen(quizID);
+        _curQuizID = quizID;
+        _curQuiz = DataManager.Instance._quiz[_curQuizID];
+        Debug.Log($"# quiz id : {quizID}, _curQuiz : {_curQuiz}");
+        transform.GetChild(0).gameObject.SetActive(true);
+    }
+
+    public override void OnClose()
+    {
+        base.OnClose();
+        transform.GetChild(0).gameObject.SetActive(false);
+        if (!string.IsNullOrEmpty(curCardEvidenceID))
+        {
+            //TODO: 닫았을때 인벤토리에 아이템 획득 or 갈아끼우는 동작
+        }
+        else
+        {
+            //TODO: 닫았을때 인벤토리에서 삭제
+        }
+
+       
+        _curQuizID = "";
+        _curQuiz = null;
     }
 }
