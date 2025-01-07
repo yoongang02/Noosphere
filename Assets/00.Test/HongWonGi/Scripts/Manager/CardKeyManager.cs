@@ -3,13 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using NooSphere;
+using Debug = NooSphere.Debug;  
 
 public class CardKeyManager : UIBase
-{   [SerializeField] private string _curQuizID;
-     private QuizStructure _curQuiz;
+{
+    [SerializeField] private string _curQuizID;
+    private QuizStructure _curQuiz;
     public string curCardEvidenceID;
     private static CardKeyManager _instance;
- 
+
     public static CardKeyManager Instance
     {
         get
@@ -35,9 +38,11 @@ public class CardKeyManager : UIBase
             Destroy(gameObject);
             return;
         }
+
         _instance = this;
-        curCardEvidenceID = string.Empty; 
+        curCardEvidenceID = string.Empty;
     }
+
     public override void OnOpen(string quizID)
     {
         base.OnOpen(quizID);
@@ -60,7 +65,7 @@ public class CardKeyManager : UIBase
             //TODO: 닫았을때 인벤토리에서 삭제
         }
 
-       
+
         _curQuizID = "";
         _curQuiz = null;
     }
