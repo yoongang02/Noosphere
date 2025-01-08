@@ -231,34 +231,4 @@ public class InventoryManager : Singleton<InventoryManager>
             }
         }
     }
-    
-    //인벤토리 내에 해당 증거물이 존재하는지 확인
-    public bool IsAcquiredEvidence(string evidence_id)
-    {
-        int chapterIndex = (int)EventManagerYKM.Instance.curStageInfo;
-        
-        if (chapterInventories[chapterIndex].realWorldEvidences.Count > 0)
-        {
-            foreach (var slot in chapterInventories[chapterIndex].realWorldEvidences)
-            {
-                if (slot.evidenceId == evidence_id)
-                {
-                    return true;
-                }
-            }
-        }
-
-        if (chapterInventories[chapterIndex].mentalWorldEvidences.Count > 0)
-        {
-            foreach (var slot in chapterInventories[chapterIndex].mentalWorldEvidences)
-            {
-                if (slot.evidenceId == evidence_id)
-                {
-                    return true;
-                }
-            }
-        }
-        
-        return false;
-    }
 }

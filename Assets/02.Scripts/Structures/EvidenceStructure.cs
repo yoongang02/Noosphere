@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Debug = NooSphere.Debug;
 public class EvidenceStructure
 {
     //기본 csv 파일 내 필드 값들
@@ -8,6 +9,7 @@ public class EvidenceStructure
     public char evidenceType;
     public string shapeType; //증거물 타입 종류. OnePage : 한페이지, TwoPage : 두페이지, Object : 물체
     public char acquisitionType;
+    public char canInvestigate;
     public char canUse;
     public string[] unlockConditions;
     public string evidenceTextDisplay;
@@ -19,40 +21,36 @@ public class EvidenceStructure
     
     //추가적으로 필요한 필드 값
     public int accessCnt = 0; //증거물 접근 횟수
+    public bool isAcquired = false; //증거물 습득했는지
 
-    //획득할 수 있는지
+    
+    //증거물 습득하기
     public void AcquireEvidence()
     {
-        //언락 조건이 있다면 언락 조건을 만족했는지 체크
-        if (!IsUnLockConditionMet())
+        if (acquisitionType == 'Y')
         {
-            return;
+            isAcquired = true;
+            InventoryManager.Instance.AddEvidence(this);
+        }
+        else if (acquisitionType == 'N')
+        {
+            isAcquired = true;
+            accessCnt++;
         }
         
-        //언락 조건을 만족하여 획득할 수 있다면
-        if (acquisitionType == 'Y') //인벤토리에 획득할 수 있다면
-        {
-            //이미 획득했다면 증거 정보 열면 안됨.
-            if (InventoryManager.Instance.IsAcquiredEvidence(this.evidenceId))
-            {
-                Debug.Log(evidenceId + " 증거물은 이미 인벤토리에 획득된 증거물입니다.");
-            }
-            else
-            {
-                //획득하지 않은 증거라면 인벤토리에 획득.
-                Debug.Log(evidenceId + " 증거물은 인벤토리에 존재하지 않는 증거물입니다.");
-                InventoryManager.Instance.AddEvidence(this);
-            }
-        }
-        else if (acquisitionType == 'N') //인벤토리에 획득할 수 없다면
-        {
-            accessCnt++;
-            Debug.Log(evidenceId + " 증거물은 획득할 수 없는 증거물입니다.");
-        }
     }
 
     public bool CanAcquireEvidence()
     {
+        //이미 습득했는지 확인
+        if (isAcquired)
+        {
+            if (acquisitionType == 'Y')
+            {
+                return false;
+            }
+        }
+   
         if (!IsUnLockConditionMet())
         {
             return false;
@@ -67,10 +65,24 @@ public class EvidenceStructure
         {
             if (!String.IsNullOrEmpty(unlockCondition))
             {
-                if (DataManager.Instance._events.ContainsKey(unlockCondition) && DataManager.Instance._events[unlockCondition].isExecuted)
+                string unlockType = unlockCondition.Substring(0, unlockCondition.IndexOf('_'));
+
+                if (unlockType == "Event")
                 {
-                    continue;
+                    if (DataManager.Instance._events.ContainsKey(unlockCondition) && DataManager.Instance._events[unlockCondition].isExecuted)
+                    {
+                        continue;
+                    }
                 }
+                else if (unlockType == "Evidence")
+                {
+                    if (DataManager.Instance._evidences.ContainsKey(unlockCondition) &&
+                        DataManager.Instance._evidences[unlockCondition].isAcquired)
+                    {
+                        continue;
+                    }
+                }
+                
                 Debug.Log("#" + unlockCondition + " 언락 조건을 만족하지 못하여, 획득 불가능");
                 return false;
             }

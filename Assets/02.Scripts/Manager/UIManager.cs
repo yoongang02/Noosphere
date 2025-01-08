@@ -23,11 +23,6 @@ public class UIManager : Singleton<UIManager>
     public bool isInMap = true;
     
     public Action OnSelectEnd;
-
-    void Start()
-    {
-        
-    }
     
     private void Update()
     {
