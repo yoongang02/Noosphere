@@ -4,8 +4,8 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
-using Unity.VisualScripting;
-
+using NooSphere;
+using Debug=NooSphere.Debug;
 public class CSVParserYKM
 {
     public async UniTask<Dictionary<string, T>> Parse<T>(string sheetName) where T : new()
@@ -151,9 +151,16 @@ public class CSVParserYKM
         return dictionary;
     }
    
-    
+    private static Dictionary<string, string> _csvCache = new Dictionary<string, string>();
     private async UniTask<string> LoadCSVFromURL(string url)
     {
+        // 캐시에 있는지 확인
+        if (_csvCache.TryGetValue(url, out string cachedData))
+        {
+            return cachedData;
+        }
+
+        // 캐시에 없으면 다운로드
         using (UnityWebRequest www = UnityWebRequest.Get(url))
         {
             try
@@ -167,6 +174,8 @@ public class CSVParserYKM
                 }
 
                 string csvText = www.downloadHandler.text;
+                // 캐시에 저장
+                _csvCache[url] = csvText;
                 return csvText;
             }
             catch (Exception e)
