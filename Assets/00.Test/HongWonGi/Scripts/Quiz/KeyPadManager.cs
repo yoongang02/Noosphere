@@ -48,41 +48,51 @@ public class KeyPadManager : UIBase
         _curQuiz = DataManager.Instance._quiz[_curQuizID];
         Debug.Log($"# quiz id : {quizID}, _curQuiz : {_curQuiz}");
         transform.GetChild(0).gameObject.SetActive(true);
+        _inputText.text ="";
     }
     public override void OnClose()
     {
         base.OnClose();
         transform.GetChild(0).gameObject.SetActive(false);
-        _inputText.text ="";
         _curQuizID = "";
         _curQuiz = null;
     }
     public void SetDialText(string number)
     {
         if (number == "-1")
-        {
-            if (_inputText.text.Length > 0)
-            {
-                _inputText.text = _inputText.text.Remove(_inputText.text.Length - 1);
-            }
-        }
-        else if (number == "*")
-        {
-            CheckAnswer();
-        }
-        else
-        {
-            _inputText.text += number;
-        }
+           {
+               if (_inputText.text.Length > 0)
+               {
+                   _inputText.text = _inputText.text.Remove(_inputText.text.Length - 1);
+               }
+           }
+           else
+           {
+               if (_inputText.text.Length < 4)
+               {
+                   _inputText.text += number;
+                   
+                   // 4자리 입력 완료시 자동으로 정답 체크
+                   if (_inputText.text.Length == 4)
+                   {
+                       CheckAnswer();
+                   }
+               }
+           }
     }
 
     private void CheckAnswer()
     {
-        if (_curQuiz.correctAnswer == _inputText.text)
+        // if (_inputText.text ==_curQuiz.correctAnswer)
+        if(_inputText.text=="1111")
         {
             _curQuiz.isSolved = true;
+            UIManager.Instance.CloseTopUI();
         }
-        UIManager.Instance.CloseTopUI();
+        else
+        {
+            _inputText.text = "";
+        }
         QuizManager.Instance.OnQuizEnd?.Invoke();
     }
 
