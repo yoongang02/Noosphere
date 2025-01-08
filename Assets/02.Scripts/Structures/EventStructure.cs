@@ -68,7 +68,7 @@ public class EventStructure
                 //사용할 수 없는 아이템이나, 인벤토리에 획득 가능한 아이템이면 인벤토리에 있는지 체크
                 if (acquisitionType == 'Y')
                 {
-                    if (InventoryManager.Instance.IsAcquiredEvidence(id))
+                    if (DataManager.Instance._evidences[id].isAcquired)
                     {
                         isMet = true;
                     }

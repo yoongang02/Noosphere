@@ -27,28 +27,16 @@ public class MentalEnterProcess : MonoBehaviour
         if (!UIManager.Instance.IsAnyUIOpen())
         {
             //현실세계 -> 정신세계 진입
-            if (_canEnter && !_startEnter && PlayerInteract.Instance.canInteract && PlayerInteract.Instance.mentalTrigger != null && Input.GetKeyDown(KeyCode.Space))
+            if (_canEnter && !_startEnter && PlayerInteract.Instance.canInteract && PlayerInteract.Instance.OnMentalInteract != null && Input.GetKeyDown(KeyCode.Space))
             {
-                foreach (string eventID in PlayerInteract.Instance.mentalTrigger.GetComponent<EventTrigger>().eventIdList)
-                {
-                    if (PlayerInteract.Instance.CheckInteractionAvail(eventID))
-                    {
-                        //이벤트 실행 가능하다면 실행
-                        StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(eventID));
-                        PlayerInteract.Instance.HideInteractionMark();
-                        break;
-                    }
-                    else
-                    {
-                        Debug.Log($"{eventID} 는 현재 정신세계 진입이 불가능함.");
-                    }
-                }
+                
             }
             
             //정신세계 -> 현실세계 진입
             if (_canEnter && !_startEnter && PlayerInteract.Instance.canInteract && mentalInfo != null &&
                 PlayerInteract.Instance.isInMental && Input.GetKeyDown(KeyCode.Space))
             {
+                /*
                 if (PlayerInteract.Instance.CheckInteractionAvail(_comebackEventId))
                 {
                     //이벤트 실행 가능하다면 실행
@@ -59,6 +47,7 @@ public class MentalEnterProcess : MonoBehaviour
                 {
                     Debug.Log($"{mentalInfo.combackEventId} 는 현재 현실세계 진입이 불가능함.");
                 }
+                */
             }
             
             //진입시작했고, 완료되지 않았고, 스페이스를 계속 누르고 있다면
