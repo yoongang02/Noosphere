@@ -141,7 +141,6 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             if (!string.IsNullOrEmpty(_event.lockConditionId) &&
                 DataManager.Instance._lockConditions.ContainsKey(_event.lockConditionId))
             {
-                Debug.Log($"#{_event.lockConditionId} 락 걸기");
                 DataManager.Instance._lockConditions[_event.lockConditionId].Lock();
             }
             
@@ -404,43 +403,41 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     //dialogue 시작
     void StartDialogue(string dialogueID)
     {
-        Debug.Log("#5-1 : " + dialogueID + " 대화 시작");
+        Debug.Log($"{dialogueID} 대화 시작");
         DialogueManager.Instance.SetDialogue(dialogueID);
     }
 
     //effect 시작
     void StartEffect(string effectID)
     {
-        Debug.Log("#5-1 : " + effectID + " 효과 시작");
+        Debug.Log($"{effectID} 효과 시작");
         EffectManager.Instance.SetEffect(effectID);
     }
     
     //Quiz 시작
     void StartQuiz(string quizID)
     {
-        Debug.Log("#5-1 : " + quizID + " input 시작");
+        Debug.Log($"{quizID} 퀴즈 시작");
         QuizManager.Instance.SetQuiz(quizID);
     }
     
     public void CloseEventFailure(EventStructure _event)
     {
-        Debug.Log("#6 : " + _event.eventId + " 성공적이지 못하게 이벤트 종료");
+        Debug.LogWarning($"{_event.eventId} 가 성공적으로 실행되지 않음.");
         
         if (!string.IsNullOrEmpty(_event.lockConditionId) &&
             DataManager.Instance._lockConditions.ContainsKey(_event.lockConditionId))
         {
-            Debug.Log("#7 : " + _event.lockConditionId + "락 조건 해제");
             DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();
         }
     }
     
     public void CloseEventSuccess(EventStructure _event)
     {
-        Debug.Log("#6 : " + _event.eventId + "성공적으로 이벤트 종료");
+        Debug.Log($"{_event.eventId} 가 성공적으로 실행.");
         if (!string.IsNullOrEmpty(_event.lockConditionId) &&
             DataManager.Instance._lockConditions.ContainsKey(_event.lockConditionId))
         {
-            Debug.Log("#7 : " + _event.lockConditionId + "락 조건 해제");
             DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();   
         }
         _event.isExecuted = true;
