@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -86,7 +87,7 @@ public class EvidenceDetailUI : UIBase
         //예외 이벤트 처리 코드 - 정신세계 첫 진입 시, 인벤토리 관련 다이얼로그
         if (EventManagerYKM.Instance.currentEventID == "Event_A007")
         {
-            StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(EventManagerYKM.Instance.nextEventID));
+            EventManagerYKM.Instance.ExecuteEvent(EventManagerYKM.Instance.nextEventID).Forget();
         }
 
         _curEvidenceID = "";
@@ -434,12 +435,12 @@ public class EvidenceDetailUI : UIBase
                         resultID = "Event_A024";
                     }
 
-                    if (InventoryManager.Instance.IsAcquiredEvidence("Evidence_020"))
+                    if (DataManager.Instance._evidences["Evidence_020"].isAcquired)
                     {
                         return;
                     }
                     
-                    StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(resultID));
+                    EventManagerYKM.Instance.ExecuteEvent(resultID).Forget();
                 }
             }   
         }

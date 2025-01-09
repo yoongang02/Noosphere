@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -372,7 +373,7 @@ public class InventoryNavigator : UIBase
                     if (!string.IsNullOrEmpty(_eventID) && DataManager.Instance._events.ContainsKey(_eventID))
                     {
                         //상호작용 가능하다면
-                        if (PlayerInteract.Instance.CheckInteractionAvail(_eventID))
+                        if (PlayerInteract.Instance.OnInteract != null)
                         {
                             EventStructure _event = DataManager.Instance._events[_eventID];
                             //해당 이벤트의 조건에 증거물이 있는지 체크
@@ -409,7 +410,7 @@ public class InventoryNavigator : UIBase
     {
         PlayerInteract.Instance.isUsingEvidence = true;
         UIManager.Instance.CloseAllUI();
-        StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(_evidenceUseEventId));
+        EventManagerYKM.Instance.ExecuteEvent(_evidenceUseEventId).Forget();
     }
 
     public void InitUsingEvidence()

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -156,7 +157,7 @@ public class MentalEnterProcess : MonoBehaviour
         //이동 성공 시 결과가 있다면 실행
         if (!string.IsNullOrEmpty(mentalInfo.mentalTrueResult))
         {
-            StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(mentalInfo.mentalTrueResult));
+            EventManagerYKM.Instance.ExecuteEvent(mentalInfo.mentalTrueResult).Forget();
         }
 
         if (!PlayerInteract.Instance.isInMental)
@@ -175,14 +176,8 @@ public class MentalEnterProcess : MonoBehaviour
         InitProgressBar();
         
         //이동 실패 시 결과가 있다면 실행
-        foreach (var result in mentalInfo.mentalFalseResults)
-        {
-            if (!string.IsNullOrEmpty(result))
-            {
-                StartCoroutine(EventManagerYKM.Instance.DoResult(result));
-            }
-        }
-
+        EventManagerYKM.Instance.DoResult(mentalInfo.mentalFalseResults).Forget();
+        
         if (EventManagerYKM.Instance.currentEventID == "Event_A026")
         {
             EventManagerYKM.Instance.nextEventID = "Event_A026";

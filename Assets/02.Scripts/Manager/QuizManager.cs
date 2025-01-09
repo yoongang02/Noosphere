@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class QuizManager : Singleton<QuizManager>
@@ -32,22 +33,15 @@ public class QuizManager : Singleton<QuizManager>
         }
     }
     
-    public IEnumerator DoCorrectResult(QuizStructure quiz)
+    public async UniTask DoCorrectResult(QuizStructure quiz)
     {
-        foreach (var resultID in quiz.quizCorrects)
-        {
-            if (!string.IsNullOrEmpty(resultID))
-            {
-                yield return StartCoroutine(EventManagerYKM.Instance.DoResult(resultID));
-            }
-        }
+        await EventManagerYKM.Instance.DoResult(quiz.quizCorrects);
     }
 
-    public IEnumerator DoWrongResult(QuizStructure quiz)
+    public async UniTask DoWrongResult(QuizStructure quiz)
     {
-        if (!string.IsNullOrEmpty(quiz.quizWrong))
-        {
-            yield return StartCoroutine(EventManagerYKM.Instance.DoResult(quiz.quizWrong));
-        }
+        string[] results = new string[1];
+        results[0] = quiz.quizWrong;
+        await EventManagerYKM.Instance.DoResult(results);
     }
 }

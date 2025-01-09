@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class PointEffect : MonoBehaviour
@@ -10,7 +11,7 @@ public class PointEffect : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             //EffectManager.Instance.OnEffectEnd?.Invoke();
-            CoroutineManager.Instance.StartManagedCoroutine(EventManagerYKM.Instance.ExecuteEvent(EventManagerYKM.Instance.nextEventID));
+            EventManagerYKM.Instance.ExecuteEvent(EventManagerYKM.Instance.nextEventID).Forget();
             gameObject.SetActive(false);
         }
     }

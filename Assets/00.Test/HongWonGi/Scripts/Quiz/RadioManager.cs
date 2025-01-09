@@ -45,6 +45,7 @@ public class RadioManager : UIBase
         //만약 거울이 깨졌는데 기믹을 미리 성공했다면
         if (_curQuiz.isSolved)
         {
+            /*
             if (PlayerInteract.Instance.isInMental)
             {
                 //조각을 이미 습득했다면 -> 라디오 켜기
@@ -59,7 +60,7 @@ public class RadioManager : UIBase
                 DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
                 ShowRealDialogue().Forget();
             }
-            
+            */
             //퀴즈 실행되지 않음
             UIManager.Instance.CloseTopUI();
             QuizManager.Instance.OnQuizEnd?.Invoke();
@@ -279,24 +280,5 @@ public class RadioManager : UIBase
     private void UpdateRadioText()
     {
         _radioText.text = $"{_tenDigit}{_oneDigit}.{_decimalDigit}MHz";
-    }
-
-    void DoCorrectResult()
-    {
-        foreach (var resultID in _curQuiz.quizCorrects)
-        {
-            if (!string.IsNullOrEmpty(resultID))
-            {
-                StartCoroutine(EventManagerYKM.Instance.DoResult(resultID));
-            }
-        }
-    }
-
-    void DoWrongResult()
-    {
-        if (!string.IsNullOrEmpty(_curQuiz.quizWrong))
-        {
-            StartCoroutine(EventManagerYKM.Instance.DoResult(_curQuiz.quizWrong));
-        }
     }
 }
