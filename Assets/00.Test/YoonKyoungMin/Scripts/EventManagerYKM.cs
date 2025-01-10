@@ -36,7 +36,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     {
         ExecuteEvent(startEventID).Forget();
     }
-    
+ 
     //현재 실행될 수 있는 이벤트인지 검사 -> 실행 가능하다면 플레이어에게 ? 띄우기
     public bool CheckExecutable(string eventID)
     {
@@ -53,7 +53,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         //nextEventID가 비어있지 않은데, 실행하고자 하는 이벤트ID와 같지 않다면
         if (!string.IsNullOrEmpty(nextEventID) && nextEventID != eventID)
         {
-            Debug.LogWarning($"현재 실행되어야 하는 이벤트는 {nextEventID} 입니다.");
+            Debug.LogWarning($"현재 실행되어야 하는 이벤트는 {eventID}가 아니라 {nextEventID} 입니다.");
             return false;
         }
 
@@ -97,12 +97,12 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             {
                 if (_curEvent.IsConditionMet(conditionID))
                 {
-                    Debug.Log($"{_curEvent.eventId}의 조건{conditionID} 만족");
+                    Debug.Log($"{_curEvent.eventId}의 조건{conditionNum} 만족");
                     _isConditionMet = true;
                 }
                 else
                 {
-                    Debug.LogWarning($"{_curEvent.eventId}의 조건{conditionID} 불만족");
+                    Debug.LogWarning($"{_curEvent.eventId}의 조건{conditionNum} 불만족");
                     _isConditionMet = false;
                     break;
                 }
@@ -172,6 +172,10 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             }
             
             //현재 위치한 곳에 트리거가 있다면 해당 트리거 실행 가능한지 다시 체크
+            if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
+            {
+                PlayerInteract.Instance.curTrigger.CheckTriggerAvail();
+            }
         }
     }
 
@@ -285,6 +289,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 //yes라면
                 if (UIManager.Instance.IsAcquiredInInvestigateUI())
                 {
+                    Debug.LogWarning("Investigate UI에서 YES를 선택함.");
                     _evidence.AcquireEvidence();
                     //증거물 상세 ui가 닫힐 때까지 기다리기
                     await UniTask.WaitUntil(() => !UIManager.Instance.IsAnyUIOpen());
@@ -299,10 +304,9 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 else
                 {
                     //no라면
+                    Debug.LogWarning("Investigate UI에서 NO를 선택함.");
                     _isEventSuccess = false;
                 }
-                
-                
             }
             else if (_evidence.canInvestigate == 'N')
             {

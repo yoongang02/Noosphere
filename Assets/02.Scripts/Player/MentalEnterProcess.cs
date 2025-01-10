@@ -28,27 +28,20 @@ public class MentalEnterProcess : MonoBehaviour
         if (!UIManager.Instance.IsAnyUIOpen())
         {
             //현실세계 -> 정신세계 진입
-            if (_canEnter && !_startEnter && PlayerInteract.Instance.canInteract && PlayerInteract.Instance.OnMentalInteract != null && Input.GetKeyDown(KeyCode.Space))
+            if (_canEnter && !_startEnter && PlayerInteract.Instance.canInteract && Input.GetKeyDown(KeyCode.Space))
             {
-                
+                Debug.LogWarning("OnMentalInteract 실행시키기 위해 Space 클릭");
+                PlayerInteract.Instance.OnMentalInteract?.Invoke();
+                PlayerInteract.Instance.OnMentalInteract = null;
             }
             
             //정신세계 -> 현실세계 진입
             if (_canEnter && !_startEnter && PlayerInteract.Instance.canInteract && mentalInfo != null &&
-                PlayerInteract.Instance.isInMental && Input.GetKeyDown(KeyCode.Space))
+                PlayerInteract.Instance.isInMental && Input.GetKeyDown(KeyCode.Space) && !PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger == null)
             {
-                /*
-                if (PlayerInteract.Instance.CheckInteractionAvail(_comebackEventId))
-                {
-                    //이벤트 실행 가능하다면 실행
-                    StartCoroutine(EventManagerYKM.Instance.ExecuteEvent(_comebackEventId));
-                    return;
-                }
-                else
-                {
-                    Debug.Log($"{mentalInfo.combackEventId} 는 현재 현실세계 진입이 불가능함.");
-                }
-                */
+                Debug.LogWarning("현실세계로 돌아가기 위헤 Space 클릭");
+                //이벤트 실행 가능하다면 실행
+                EventManagerYKM.Instance.ExecuteEvent(_comebackEventId).Forget();
             }
             
             //진입시작했고, 완료되지 않았고, 스페이스를 계속 누르고 있다면
@@ -170,13 +163,13 @@ public class MentalEnterProcess : MonoBehaviour
         StartCoroutine(StartCoolTime());
     }
 
-    void FailEnter()
+    async UniTaskVoid FailEnter()
     {
         //바 초기화
         InitProgressBar();
         
         //이동 실패 시 결과가 있다면 실행
-        EventManagerYKM.Instance.DoResult(mentalInfo.mentalFalseResults).Forget();
+        await EventManagerYKM.Instance.DoResult(mentalInfo.mentalFalseResults);
         
         if (EventManagerYKM.Instance.currentEventID == "Event_A026")
         {
@@ -188,6 +181,12 @@ public class MentalEnterProcess : MonoBehaviour
         {
             EventManagerYKM.Instance.nextEventID = "Event_A009";
             DataManager.Instance._events["Event_A009"].isExecuted = false;
+        }
+        
+        //트리거 내에 있는지 재검사
+        if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
+        {
+            PlayerInteract.Instance.curTrigger.CheckTriggerAvail();
         }
     }
     

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Debug = NooSphere.Debug;
 
 public class PlayerInteract : Singleton<PlayerInteract>
 {
@@ -11,6 +12,8 @@ public class PlayerInteract : Singleton<PlayerInteract>
     [SerializeField] private GameObject _interactionMark;
     private bool _isRepeatFalseCondition = false;
     public Action OnInteract;
+    public bool isInsideTrigger = false;
+    public EventTrigger curTrigger;
 
     [Space(5)] [Header("정신세계 진입")] public bool isInMental = false;
     public Action OnMentalInteract;
@@ -23,7 +26,9 @@ public class PlayerInteract : Singleton<PlayerInteract>
             //E키를 이용한 상호작용
             if (canInteract && Input.GetKeyDown(KeyCode.E))
             { 
+                Debug.LogWarning("OnInteract 실행시키기 위해 E 클릭");
                 OnInteract?.Invoke();
+                OnInteract = null;
             }
         }
     }

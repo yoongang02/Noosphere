@@ -35,7 +35,6 @@ public class UIBase : MonoBehaviour
     {
         if (evidence == null)
         {
-            Debug.LogError("🔥 evidence가 null이므로 OpenUI()를 호출할 수 없습니다.");
             return;
         }
         Debug.Log($"#{gameObject.name}이(가) 열렸습니다.");
