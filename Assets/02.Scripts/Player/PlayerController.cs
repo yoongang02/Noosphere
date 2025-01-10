@@ -36,7 +36,7 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private float _rayDistance;
     [SerializeField] private float _rayHeight;
 
-    private GameObject npcCam;
+    public GameObject npcCam;
     public NpcState npcState;
     private void OnDrawGizmos()
     {
@@ -154,27 +154,6 @@ public class PlayerController : Singleton<PlayerController>
             Vector3 targetVelocity = direction * speed;
             targetVelocity.y = _rigidbody.velocity.y; // 현재 수직 속도 유지
             _rigidbody.velocity = targetVelocity;
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("EventInteractionTrigger"))
-        {
-            EventTrigger eventTrigger = other.GetComponent<EventTrigger>();
-            if (eventTrigger.isNpc)
-            {
-                npcCam = eventTrigger.npcCameraPoint;
-                npcState = other.GetComponent<NpcState>();
-            }
-        }
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("EventInteractionTrigger"))
-        {
-            npcCam = null;
-            npcState = null;
         }
     }
 

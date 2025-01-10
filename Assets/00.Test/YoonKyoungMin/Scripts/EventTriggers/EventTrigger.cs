@@ -24,6 +24,12 @@ public class EventTrigger : MonoBehaviour
             CheckTriggerAvail();
             PlayerInteract.Instance.isInsideTrigger = true;
             PlayerInteract.Instance.curTrigger = this;
+            
+            if (isNpc)
+            {
+                PlayerController.Instance.npcCam = npcCameraPoint;
+                PlayerController.Instance.npcState = transform.GetChild(0).GetComponent<NpcState>();
+            }
         }
     }
     
@@ -34,8 +40,17 @@ public class EventTrigger : MonoBehaviour
         PlayerInteract.Instance.HideInteractionMark();
         PlayerInteract.Instance.isInsideTrigger = false;
         PlayerInteract.Instance.curTrigger = null;
+        
         //현재 이벤트 초기화하기
         _curEvent = null;
+        
+        //npc 변수 초기화
+        PlayerController.Instance.npcCam = null;
+        PlayerController.Instance.npcState = null;
+        
+        //플레이어에게 할당된 액션 다 초기화
+        PlayerInteract.Instance.OnInteract = null;
+        PlayerInteract.Instance.OnMentalInteract = null;
     }
 
     public void CheckTriggerAvail()

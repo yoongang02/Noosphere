@@ -133,6 +133,8 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     {
         if (CheckExecutable(eventID))
         {
+            Debug.LogWarning($"{eventID} 이벤트 실행");
+            _isEventSuccess = false;
             EventStructure _event = DataManager.Instance._events[eventID];
             currentEventID = eventID;
             string[] results = CheckConditions(_event);
@@ -159,12 +161,19 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     DataManager.Instance._evidences.ContainsKey(_event.evidenceId))
                 {
                     await AcquireEvidence(_event, _event.evidenceId);
+                    Debug.LogWarning($"{_event.evidenceId} 증거물 획득 다 실행 됨.");
                 }
             }
 
-            if (_isEventSuccess)
+            if (_isEventSuccess && _isConditionMet)
             {
                 CloseEventSuccess(_event);
+                
+                //예외 이벤트 처리 코드 - 정신세계 첫 진입 시, 인벤토리 관련 다이얼로그
+                if (currentEventID == "Event_A007")
+                {
+                    ExecuteEvent(nextEventID).Forget();
+                }
             }
             else
             {
@@ -246,6 +255,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     
     private async UniTask WaitForDialogueEndAsync()
     {
+        DialogueManager.Instance.OnDialogueEnd = null;
         var tcs = new UniTaskCompletionSource();
         DialogueManager.Instance.OnDialogueEnd += () => tcs.TrySetResult();
         await tcs.Task;
@@ -253,6 +263,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     
     private async UniTask WaitForEffectEndAsync()
     {
+        EffectManager.Instance.OnEffectEnd = null;
         var tcs = new UniTaskCompletionSource();
         EffectManager.Instance.OnEffectEnd += () => tcs.TrySetResult();
         await tcs.Task;
@@ -260,6 +271,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     
     private async UniTask WaitForQuizEndAsync()
     {
+        QuizManager.Instance.OnQuizEnd = null;
         var tcs = new UniTaskCompletionSource();
         QuizManager.Instance.OnQuizEnd += () => tcs.TrySetResult();
         await tcs.Task;
@@ -267,6 +279,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     
     private async UniTask WaitForInvestigateEndAsync()
     {
+        UIManager.Instance.OnSelectEnd = null;
         var tcs = new UniTaskCompletionSource();
         UIManager.Instance.OnSelectEnd += () => tcs.TrySetResult();
         await tcs.Task;
@@ -285,33 +298,37 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 UIManager.Instance.OpenUI(UIManager.Instance.investigateUI,_evidence);
                 //yes, no 선택 기다리기
                 await WaitForInvestigateEndAsync();
+                Debug.LogWarning($"Investigate UI 버튼 선택 다 기다림.");
                 
                 //yes라면
-                if (UIManager.Instance.IsAcquiredInInvestigateUI())
+                if (UIManager.Instance.isYesClicked)
                 {
                     Debug.LogWarning("Investigate UI에서 YES를 선택함.");
-                    _evidence.AcquireEvidence();
+                    
                     //증거물 상세 ui가 닫힐 때까지 기다리기
                     await UniTask.WaitUntil(() => !UIManager.Instance.IsAnyUIOpen());
+                    Debug.LogWarning("창 닫힐 때까지 다 기다림.");
                     //습득했는데 이벤트의 type이 true이고 repeat fasle result가 없으면 repeatType을 false로 변경
                     if (_event.repeatType && string.IsNullOrEmpty(_event.repeatFalseResult))
                     {
                         _event.repeatType = false;
+                        Debug.LogWarning($"{_event.eventId}의 repeatType true에서 false로 변경");
                     }
-                    
-                    //예외처리
                 }
                 else
                 {
                     //no라면
                     Debug.LogWarning("Investigate UI에서 NO를 선택함.");
                     _isEventSuccess = false;
+                    return;
                 }
             }
             else if (_evidence.canInvestigate == 'N')
             {
                 _evidence.AcquireEvidence();
             }
+
+            _isEventSuccess = true;
         }
     }
     

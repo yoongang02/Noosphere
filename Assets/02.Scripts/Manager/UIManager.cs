@@ -23,7 +23,7 @@ public class UIManager : Singleton<UIManager>
     public bool isInMap = true;
     
     public Action OnSelectEnd;
-    
+    public bool isYesClicked = false;
     private void Update()
     {
         // ESC 버튼 입력 처리
@@ -32,14 +32,17 @@ public class UIManager : Singleton<UIManager>
             if(IsUIOpen(dialogueUI)) return;
             CloseTopUI();
         }
-
+        
         if (IsAnyUIOpen())
         {
+            //인벤토리 아이콘 비활성화
             inventoryIcon.SetActive(false);
+            //플레이어 Lock
             LockPlayer();
         }
         else
         {
+            //인벤토리 아이콘 활성화
             inventoryIcon.SetActive(true);
         }
     }
@@ -62,7 +65,6 @@ public class UIManager : Singleton<UIManager>
         
         if (evidence == null)
         {
-            Debug.LogError("🔥 evidence가 null이므로 OpenUI()를 호출할 수 없습니다.");
             return;
         }
 
@@ -87,7 +89,6 @@ public class UIManager : Singleton<UIManager>
         
         if (string.IsNullOrEmpty(quizID) || !DataManager.Instance._quiz.ContainsKey(quizID))
         {
-            Debug.LogError("🔥 quiz가 올바르지 않아 OpenUI()를 호출할 수 없습니다.");
             return;
         }
         // 스택에 추가하고 UI를 활성화
@@ -140,15 +141,9 @@ public class UIManager : Singleton<UIManager>
     {
         return uiStack.Contains(ui);
     }
-
-    public bool IsAcquiredInInvestigateUI()
-    {
-        return investigateUI.GetComponent<InvestigateUI>().isAquired;
-    }
     
     public void LockPlayer()
     {
-        //Debug.Log("UI 열 때 LockPlayer 실행되나?");
         PlayerController.Instance.canMove = false;
         PlayerInteract.Instance.canInteract = false;
         PlayerInteract.Instance.HideInteractionMark();
@@ -156,7 +151,6 @@ public class UIManager : Singleton<UIManager>
 
     public void UnLockPlayer()
     {
-        //Debug.Log("UI 모두 닫히면 UnLockPlayer 실행되나?");
         PlayerController.Instance.canMove = true;
         PlayerInteract.Instance.canInteract = true;
     }

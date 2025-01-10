@@ -37,7 +37,6 @@ public class EvidenceDetailUI : UIBase
         
         if (evidence == null)
         {
-            Debug.LogError("🔥 evidence가 null이므로 OpenUI()를 호출할 수 없습니다.");
             return;
         }
         
@@ -53,11 +52,6 @@ public class EvidenceDetailUI : UIBase
                 evidence.AcquireEvidence();
                 InventoryManager.Instance.UpdateInventoryUI();
             }
-        }
-        else
-        {
-            //맵에서 증거물 상세사항이 오픈된 경우에는 해당 증거물을 습득함.
-            evidence.AcquireEvidence();
         }
         
         SetDetailEvidence(evidence);
@@ -84,12 +78,6 @@ public class EvidenceDetailUI : UIBase
         
         transform.GetChild(0).gameObject.SetActive(false);
         
-        //예외 이벤트 처리 코드 - 정신세계 첫 진입 시, 인벤토리 관련 다이얼로그
-        if (EventManagerYKM.Instance.currentEventID == "Event_A007")
-        {
-            EventManagerYKM.Instance.ExecuteEvent(EventManagerYKM.Instance.nextEventID).Forget();
-        }
-
         _curEvidenceID = "";
         _curEvidence = null;
         isSubEvidence = false;

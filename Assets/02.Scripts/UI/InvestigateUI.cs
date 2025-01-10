@@ -17,17 +17,18 @@ public class InvestigateUI : UIBase
     [Space(5)]
     [SerializeField] private GameObject _yesBtn;
     [SerializeField] private GameObject _noBtn;
-    
-    public bool isAquired = false;
 
     public override void OnOpen(EvidenceStructure evidence)
     {
         base.OnOpen(evidence);
+        
         //조사하는 증거물에 대한 정보 반영
         SetInvestigateUI(evidence);
         _curEvidence = evidence;
-        isAquired = false;
+        UIManager.Instance.isYesClicked = false;
+        //기본적으로 Yes 버튼 호버되게
         HoverYesBtn();
+        //조사 UI 열기
         transform.GetChild(0).gameObject.SetActive(true);
     }
 
@@ -74,6 +75,7 @@ public class InvestigateUI : UIBase
         }
     }
 
+    /*
     public override void HandleMouseInput()
     {
         base.HandleMouseInput();
@@ -106,7 +108,7 @@ public class InvestigateUI : UIBase
             }
         }
     }
-    
+    */
     
     void HoverYesBtn()
     {
@@ -124,12 +126,14 @@ public class InvestigateUI : UIBase
 
     void ClickYesBtn()
     {
+        UIManager.Instance.isYesClicked = true;
         HoverYesBtn();
         UIManager.Instance.CloseTopUI();
         
-        isAquired = true;
-        UIManager.Instance.OnSelectEnd?.Invoke();
+        _curEvidence.AcquireEvidence();
         UIManager.Instance.OpenUI(UIManager.Instance.evidenceDetailUI,_curEvidence);
+        
+        UIManager.Instance.OnSelectEnd?.Invoke();
         
         _curEvidence = null;
     }
@@ -139,7 +143,6 @@ public class InvestigateUI : UIBase
         HoverNoBtn();
         UIManager.Instance.CloseTopUI();
         
-        isAquired = false;
         UIManager.Instance.OnSelectEnd?.Invoke();
         
         _curEvidence = null;

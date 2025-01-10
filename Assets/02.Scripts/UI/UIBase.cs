@@ -22,7 +22,6 @@ public class UIBase : MonoBehaviour
         if (IsTopUI())
         {
             HandleKeyboardInput();
-            HandleMouseInput();
         }
     }
     
@@ -50,15 +49,7 @@ public class UIBase : MonoBehaviour
         Debug.Log($"#{gameObject.name}이(가) 닫혔습니다.");
     }
     
-    public virtual void HandleKeyboardInput()
-    {
-        
-    }
-    
-    public virtual void HandleMouseInput()
-    {
-        
-    }
+    public virtual void HandleKeyboardInput() { }
     
     public bool IsTopUI()
     {
@@ -85,40 +76,4 @@ public class UIBase : MonoBehaviour
     {
         OnClickEvent.AddListener(action);
     }
-
-    public void AddOnHoverListener(UnityAction action)
-    {
-        OnHoverEvent.AddListener(action);
-    }
-    
-    public void AddOnHoverExitListener(UnityAction action)
-    {
-        OnHoverExitEvent.AddListener(action);
-    }
-    
-    public void AddOnExitListener(UnityAction action)
-    {
-        OnExitEvent.AddListener(action);
-    }
-    
-    public void RemoveOnClickListener(UnityAction action)
-    {
-        OnClickEvent.RemoveListener(action);
-    }
-
-    public void RemoveOnHoverListener(UnityAction action)
-    {
-        OnHoverEvent.RemoveListener(action);
-    }
-    
-    public void RemoveOnHoverExitListener(UnityAction action)
-    {
-        OnHoverExitEvent.RemoveListener(action);
-    }
-    
-    public void RemoveOnExitListener(UnityAction action)
-    {
-        OnExitEvent.RemoveListener(action);
-    }
-
 }
