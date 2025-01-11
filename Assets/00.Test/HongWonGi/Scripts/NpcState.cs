@@ -6,7 +6,8 @@ using UnityEngine;
 public enum NPCState
 {
     Idle,
-    IsTalking
+    IsTalking,
+    IsWalking
 }
 public class NpcState : MonoBehaviour
 {
@@ -36,6 +37,9 @@ public class NpcState : MonoBehaviour
             case NPCState.IsTalking:
                 _animator.SetBool("IsTalking", true);
                 LookAtPlayer();
+                break;
+            case NPCState.IsWalking:
+                _animator.SetBool("IsWalking",true);
                 break;
         }
     }
