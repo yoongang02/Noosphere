@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor.Rendering.Universal;
 using UnityEngine;
 using DG.Tweening;
-
+using Cysharp.Threading.Tasks;
 public class AppearNPCEffect : MonoBehaviour
 {
   
@@ -39,6 +39,7 @@ public class AppearNPCEffect : MonoBehaviour
                 {
                     renderer.material = _originMat;
                 }
+                EffectManager.Instance.OnEffectEnd?.Invoke();
             });
     }
 
