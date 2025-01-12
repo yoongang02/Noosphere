@@ -27,21 +27,28 @@ public class MentalEnterProcess : MonoBehaviour
     {
         if (!UIManager.Instance.IsAnyUIOpen())
         {
-            //현실세계 -> 정신세계 진입
-            if (_canEnter && !_startEnter && PlayerInteract.Instance.canInteract && Input.GetKeyDown(KeyCode.Space))
+            if (PlayerInteract.Instance.canInteract && _canEnter && !_startEnter && Input.GetKeyDown(KeyCode.Space))
             {
-                Debug.LogWarning("OnMentalInteract 실행시키기 위해 Space 클릭");
-                PlayerInteract.Instance.OnMentalInteract?.Invoke();
-                PlayerInteract.Instance.OnMentalInteract = null;
-            }
-            
-            //정신세계 -> 현실세계 진입
-            if (_canEnter && !_startEnter && PlayerInteract.Instance.canInteract && mentalInfo != null &&
-                PlayerInteract.Instance.isInMental && Input.GetKeyDown(KeyCode.Space) && !PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger == null)
-            {
-                Debug.LogWarning("현실세계로 돌아가기 위헤 Space 클릭");
-                //이벤트 실행 가능하다면 실행
-                EventManagerYKM.Instance.ExecuteEvent(_comebackEventId).Forget();
+                if (PlayerInteract.Instance.isInMental)
+                {
+                    //정신세계 -> 현실세계 진입
+                    if (mentalInfo != null)
+                    {
+                        Debug.LogWarning("현실세계로 돌아가기 위헤 Space 클릭");
+                        //이벤트 실행 가능하다면 실행
+                        EventManagerYKM.Instance.ExecuteEvent(_comebackEventId).Forget();
+                    }
+                }
+                else
+                {
+                    //현실세계 -> 정신세계 진입
+                    if (PlayerInteract.Instance.OnMentalInteract != null)
+                    {
+                        Debug.LogWarning("OnMentalInteract 에 등록되어있는 메소드 실행");
+                        PlayerInteract.Instance.OnMentalInteract?.Invoke();
+                        PlayerInteract.Instance.OnMentalInteract = null;
+                    }
+                }
             }
             
             //진입시작했고, 완료되지 않았고, 스페이스를 계속 누르고 있다면
@@ -157,6 +164,11 @@ public class MentalEnterProcess : MonoBehaviour
         {
             mentalInfo = null;
             _comebackEventId = "";
+        }
+        else
+        {
+            PlayerInteract.Instance.isInsideTrigger = false;
+            PlayerInteract.Instance.curTrigger = null;
         }
         
         //성공적으로 도착한 경우, 쿨타임 시작

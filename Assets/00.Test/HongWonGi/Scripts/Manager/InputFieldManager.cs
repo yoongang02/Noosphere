@@ -31,19 +31,6 @@ public class InputFieldManager : UIBase
     {
         base.OnClose();
         _inputFieldUI.SetActive(false);
-
-        if (isAnswer)
-        {
-            //맞았을 때 결과가 있다면 결과 실행
-            DataManager.Instance._quiz[_currentID].isSolved = true;
-            StartCoroutine(DoCorrectResult());
-        }
-        else
-        {
-            //틀렸을 때 결과가 있다면 결과 실행
-            DataManager.Instance._quiz[_currentID].isSolved = false;
-            StartCoroutine(DoWrongResult());
-        }
         
         InitInputField();
         _currentID = "";
@@ -94,51 +81,15 @@ public class InputFieldManager : UIBase
                 isAnswer = false;
                 DataManager.Instance._quiz[_currentID].isSolved = false;
             }
-            QuizManager.Instance.OnQuizEnd?.Invoke();
-            
             //Input Field UI 종료
             UIManager.Instance.CloseTopUI();
+            
+            QuizManager.Instance.OnQuizEnd?.Invoke();
         }
     }
 
     private void InitInputField()
     {
         _inputText.text = "";
-    }
-
-    IEnumerator DoCorrectResult()
-    {
-        if (!string.IsNullOrEmpty(_currentID) && DataManager.Instance._quiz.ContainsKey(_currentID))
-        {
-            QuizStructure input = DataManager.Instance._quiz[_currentID];
-            string resultType = input.quizCorrects[0].Substring(0, input.quizCorrects[0].IndexOf("_"));
-
-            if (resultType == "Dialogue")
-            {
-                DialogueManager.Instance.SetDialogue(input.quizCorrects[0]);
-                
-                bool isDialogueEnd = false;
-                DialogueManager.Instance.OnDialogueEnd += () => isDialogueEnd = true;
-                yield return new WaitUntil(() => isDialogueEnd);
-            }
-        }
-    }
-
-    IEnumerator DoWrongResult()
-    {
-        if (!string.IsNullOrEmpty(_currentID) && DataManager.Instance._quiz.ContainsKey(_currentID))
-        {
-            QuizStructure input = DataManager.Instance._quiz[_currentID];
-            string resultType = input.quizWrong.Substring(0, input.quizWrong.IndexOf("_"));
-
-            if (resultType == "Dialogue")
-            {
-                DialogueManager.Instance.SetDialogue(input.quizWrong);
-                
-                bool isDialogueEnd = false;
-                DialogueManager.Instance.OnDialogueEnd += () => isDialogueEnd = true;
-                yield return new WaitUntil(() => isDialogueEnd);
-            }
-        }
     }
 }

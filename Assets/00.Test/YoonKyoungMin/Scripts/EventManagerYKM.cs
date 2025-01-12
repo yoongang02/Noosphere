@@ -156,6 +156,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             //이벤트가 성공적으로 실행이 되었다고
             if (!_isRepeatFalse && _isConditionMet)
             {
+                _isEventSuccess = true;
                 //증거물이 있다면
                 if (!string.IsNullOrEmpty(_event.evidenceId) &&
                     DataManager.Instance._evidences.ContainsKey(_event.evidenceId))
@@ -308,8 +309,8 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     //증거물 상세 ui가 닫힐 때까지 기다리기
                     await UniTask.WaitUntil(() => !UIManager.Instance.IsAnyUIOpen());
                     Debug.LogWarning("창 닫힐 때까지 다 기다림.");
-                    //습득했는데 이벤트의 type이 true이고 repeat fasle result가 없으면 repeatType을 false로 변경
-                    if (_event.repeatType && string.IsNullOrEmpty(_event.repeatFalseResult))
+                    //습득할 수 있는 증거물의 이벤트 type이 true이고 repeat fasle result가 없으면 repeatType을 false로 변경
+                    if (_event.repeatType && _evidence.acquisitionType == 'Y' && string.IsNullOrEmpty(_event.repeatFalseResult))
                     {
                         _event.repeatType = false;
                         Debug.LogWarning($"{_event.eventId}의 repeatType true에서 false로 변경");

@@ -135,6 +135,7 @@ public class DialogueManager : UIBase
             else
             {
                 Debug.LogWarning("대화가 종료되었습니다.");
+                UIManager.Instance.CloseTopUI();
                 
                 //예외 이벤트 처리 코드
                 if (EventManagerYKM.Instance.currentEventID == "Event_A004")
@@ -143,7 +144,6 @@ public class DialogueManager : UIBase
                 }
                 
                 OnDialogueEnd?.Invoke();
-                UIManager.Instance.CloseTopUI();
             }
         }
     }
