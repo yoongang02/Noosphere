@@ -120,7 +120,33 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         if (_curEvent.conditionType == "or")
         {
             //conditionType이 or 인 경우는 결과 바로 실행
-            _isConditionMet = true;
+            if (_curEvent.conditions == null)
+            {
+                _isConditionMet = true;
+            }
+            else
+            {
+                int conditionNum = 1;
+                foreach (var conditionID in _curEvent.conditions)
+                {
+                    if (_curEvent.IsConditionMet(conditionID))
+                    {
+                        Debug.Log($"{_curEvent.eventId}의 조건{conditionNum} 만족");
+                        _isConditionMet = true;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"{_curEvent.eventId}의 조건{conditionNum} 불만족");
+                    }
+                    conditionNum++;
+                }
+            }
+
+            if (!_isConditionMet)
+            {
+                Debug.LogWarning($"{_curEvent.eventId}의 conditionType은 or이지만 조건을 모두 만족하지 않았아 isConditionMet이 false가 됨.");
+            }
+            
             return _curEvent.results;
         }
         Debug.LogError($"{_curEvent.eventId}의 conditionType이 올바른 값이 아닙니다.");
@@ -143,7 +169,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             if (!string.IsNullOrEmpty(_event.lockConditionId) &&
                 DataManager.Instance._lockConditions.ContainsKey(_event.lockConditionId))
             {
-                DataManager.Instance._lockConditions[_event.lockConditionId].Lock();
+                await DataManager.Instance._lockConditions[_event.lockConditionId].Lock();
             }
             
             //실행할 수 있는 결과가 있다면
@@ -156,6 +182,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             //이벤트가 성공적으로 실행이 되었다고
             if (!_isRepeatFalse && _isConditionMet)
             {
+                _isEventSuccess = true;
                 //증거물이 있다면
                 if (!string.IsNullOrEmpty(_event.evidenceId) &&
                     DataManager.Instance._evidences.ContainsKey(_event.evidenceId))
@@ -308,11 +335,22 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     //증거물 상세 ui가 닫힐 때까지 기다리기
                     await UniTask.WaitUntil(() => !UIManager.Instance.IsAnyUIOpen());
                     Debug.LogWarning("창 닫힐 때까지 다 기다림.");
-                    //습득했는데 이벤트의 type이 true이고 repeat fasle result가 없으면 repeatType을 false로 변경
-                    if (_event.repeatType && string.IsNullOrEmpty(_event.repeatFalseResult))
+                    //습득할 수 있는 증거물의 이벤트 type이 true이고 repeat fasle result가 없으면 repeatType을 false로 변경
+                    if (_event.repeatType && _evidence.acquisitionType == 'Y' && string.IsNullOrEmpty(_event.repeatFalseResult))
                     {
                         _event.repeatType = false;
                         Debug.LogWarning($"{_event.eventId}의 repeatType true에서 false로 변경");
+                    }
+                    
+                    //예외처리
+                    if (currentEventID == "Event_A018" || currentEventID == "Event_A023")
+                    {
+                        //일기 습득 성공하면 더이상 캐비넷에 접근할 수 없도록
+                        Debug.LogWarning($"캐비넷 더이상 접근 불가능하도록 설정");
+                        DataManager.Instance._events["Event_A025"].repeatType = false;
+                        DataManager.Instance._events["Event_A025"].isExecuted = true;
+                        DataManager.Instance._events["Event_A017"].isExecuted = true;
+                        DataManager.Instance._events["Event_A017"].repeatType = false;
                     }
                 }
                 else

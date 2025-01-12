@@ -8,47 +8,16 @@ using Debug = NooSphere.Debug;
 
 public class CardKeyManager : UIBase
 {
-    [SerializeField] private string _curQuizID;
-    private QuizStructure _curQuiz;
-    public string curCardEvidenceID;
-    private static CardKeyManager _instance;
-
-    public static CardKeyManager Instance
+    string[] _cardKeys = {"Evidence_011","Evidence_012","Evidence_013","Evidence_014"};
+    
+    void OnEnable()
     {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<CardKeyManager>();
-                if (_instance == null)
-                {
-                    GameObject singletonObject = new GameObject(nameof(CardKeyManager));
-                    _instance = singletonObject.AddComponent<CardKeyManager>();
-                }
-            }
-
-            return _instance;
-        }
+        UIManager.Instance.OpenUI(this);
     }
 
-    void Awake()
+    public override void OnOpen()
     {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        _instance = this;
-        curCardEvidenceID = string.Empty;
-    }
-
-    public override void OnOpen(string quizID)
-    {
-        base.OnOpen(quizID);
-        _curQuizID = quizID;
-        _curQuiz = DataManager.Instance._quiz[_curQuizID];
-        Debug.Log($"# quiz id : {quizID}, _curQuiz : {_curQuiz}");
+        base.OnOpen();
         transform.GetChild(0).gameObject.SetActive(true);
     }
 
@@ -56,17 +25,6 @@ public class CardKeyManager : UIBase
     {
         base.OnClose();
         transform.GetChild(0).gameObject.SetActive(false);
-        if (!string.IsNullOrEmpty(curCardEvidenceID))
-        {
-            //TODO: 닫았을때 인벤토리에 아이템 획득 or 갈아끼우는 동작
-        }
-        else
-        {
-            //TODO: 닫았을때 인벤토리에서 삭제
-        }
-
-
-        _curQuizID = "";
-        _curQuiz = null;
+        this.gameObject.SetActive(false);
     }
 }

@@ -6,8 +6,8 @@ using Cinemachine;
 
 public class SwitchCamera : MonoBehaviour
 {
-    [SerializeField] private CinemachineVirtualCamera _corridorCamera;
-    [SerializeField] private CinemachineVirtualCamera _roomCamera;
+    [SerializeField] private CinemachineVirtualCamera camera1;
+    [SerializeField] private CinemachineVirtualCamera camera2;
 
     void OnTriggerExit(Collider other)
     {
@@ -20,6 +20,6 @@ public class SwitchCamera : MonoBehaviour
 
     void Switch()
     {
-        (_corridorCamera.Priority, _roomCamera.Priority) = (_roomCamera.Priority, _corridorCamera.Priority);
+        (camera1.Priority, camera2.Priority) = (camera1.Priority, camera2.Priority);
     }
 }

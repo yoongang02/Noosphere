@@ -8,7 +8,6 @@ public class PlayerInteract : Singleton<PlayerInteract>
 {
     [Header("상호작용")] 
     public bool canInteract = true; //상호작용을 할 수 있는지(lock 조건에 이용)
-    public GameObject interactionTrigger;
     [SerializeField] private GameObject _interactionMark;
     private bool _isRepeatFalseCondition = false;
     public Action OnInteract;
@@ -25,10 +24,13 @@ public class PlayerInteract : Singleton<PlayerInteract>
         {
             //E키를 이용한 상호작용
             if (canInteract && Input.GetKeyDown(KeyCode.E))
-            { 
-                Debug.LogWarning("OnInteract 실행시키기 위해 E 클릭");
-                OnInteract?.Invoke();
-                OnInteract = null;
+            {
+                if (OnInteract != null)
+                {
+                    Debug.LogWarning("OnInteract 에 등록되어있는 메소드 실행");
+                    OnInteract?.Invoke();
+                    OnInteract = null;   
+                }
             }
         }
     }

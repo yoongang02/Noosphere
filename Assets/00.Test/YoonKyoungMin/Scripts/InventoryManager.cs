@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-
+using Debug = NooSphere.Debug;
 public class InventorySlot
 {
     public string evidenceId;
@@ -118,15 +118,44 @@ public class InventoryManager : Singleton<InventoryManager>
             //현실세계 증거
             _chapterInventory.realWorldEvidences.Add(newSlot);
         }
-        
-        //맵에서 증거 오브젝트 파괴하기 - 현재 오류 존재. 다시 씬으로 이동해오면 원상복구 됨. 아예 삭제 해 버려야 함.
-        /*
-        if (PlayerInteract.Instance._evidenceObjectInScene != null)
+
+        evidence.isAcquired = true;
+    }
+    
+    //인벤토리에서 증거물 제거하는 함수
+    public void RemoveEvidence(EvidenceStructure evidence)
+    {
+        foreach (var chapter in chapterInventories)
         {
-            Debug.Log("맵에서 습득한 오브젝트 파괴");
-            Destroy(PlayerInteract.Instance._evidenceObjectInScene);
+            if (evidence.evidenceType == 'M')
+            {
+                //정신세계 증거물
+                foreach (var slot in chapter.Value.mentalWorldEvidences)
+                {
+                    if (slot.evidenceId == evidence.evidenceId)
+                    {
+                        evidence.isAcquired = false;
+                        chapter.Value.mentalWorldEvidences.Remove(slot);
+                        return;
+                    }
+                }
+            }
+            else if (evidence.evidenceType == 'R')
+            {
+                //현실세계 증거
+                foreach (var slot in chapter.Value.realWorldEvidences)
+                {
+                    if (slot.evidenceId == evidence.evidenceId)
+                    {
+                        evidence.isAcquired = false;
+                        chapter.Value.realWorldEvidences.Remove(slot);
+                        return;
+                    }
+                }
+            }
         }
-        */
+
+        evidence.isAcquired = false;
     }
 
     //현재 보이는 인벤토리 UI 업데이트
@@ -140,7 +169,7 @@ public class InventoryManager : Singleton<InventoryManager>
     IEnumerator ClearInventoryUI()
     {
         int childCount = _realWorldInventory.transform.childCount;
-        Debug.Log($"{_realWorldInventory.name}의 자식은 {childCount}개 입니다.");
+        //Debug.Log($"{_realWorldInventory.name}의 자식은 {childCount}개 입니다.");
 
         if (childCount > 0)
         {
@@ -149,14 +178,14 @@ public class InventoryManager : Singleton<InventoryManager>
                 Transform child = _realWorldInventory.transform.GetChild(i);
                 if (child != null)
                 {
-                    Debug.Log($"{_realWorldInventory.name}의 자식 {child.name}을 제거");
+                    //Debug.Log($"{_realWorldInventory.name}의 자식 {child.name}을 제거");
                     Destroy(child.gameObject);
                 }
             }
         }
         
         childCount = _mentalWorldInventory.transform.childCount;
-        Debug.Log($"{_mentalWorldInventory.name}의 자식은 {childCount}개 입니다.");
+        //Debug.Log($"{_mentalWorldInventory.name}의 자식은 {childCount}개 입니다.");
 
         if (childCount > 0)
         {
@@ -165,7 +194,7 @@ public class InventoryManager : Singleton<InventoryManager>
                 Transform child = _mentalWorldInventory.transform.GetChild(i);
                 if (child != null)
                 {
-                    Debug.Log($"{_mentalWorldInventory.name}의 자식 {child.name}을 제거");
+                    //Debug.Log($"{_mentalWorldInventory.name}의 자식 {child.name}을 제거");
                     Destroy(child.gameObject);
                 }
             }

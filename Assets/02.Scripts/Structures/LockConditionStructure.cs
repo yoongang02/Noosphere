@@ -1,12 +1,15 @@
+using System;
 using System.Collections;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using UnityEditor.Timeline.Actions;
 using UnityEngine;
 
 public class LockConditionStructure
 {
     public string lockConditionId;
 
-    public void Lock()
+    public async UniTask Lock()
     {
         switch (lockConditionId)
         {
@@ -27,7 +30,7 @@ public class LockConditionStructure
                 LockComeBackToRealWorld();
                 break;
             case "Lock_condition_006":
-                ForceQuitInteraction();
+                await ForceQuitInteraction();
                 break;
             case "Lock_condition_007":
                 BreakMirror();
@@ -111,14 +114,16 @@ public class LockConditionStructure
         UnLockEnterMentalWorld();
     }
 
-    void ForceQuitInteraction()
+    async UniTask ForceQuitInteraction()
     {
+        await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
         Debug.Log("상호작용 강제 종료");
         UIManager.Instance.CloseAllUI();
     }
-
+    
     void BreakMirror()
     {
         PlayerInteract.Instance.GetComponent<MentalEnterProcess>().ForceQuitMentalProcess();
     }
+    
 }

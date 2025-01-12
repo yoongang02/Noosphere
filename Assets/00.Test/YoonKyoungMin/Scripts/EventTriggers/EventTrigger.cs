@@ -84,6 +84,7 @@ public class EventTrigger : MonoBehaviour
                     case "EventInteractionTrigger":
                         //플레이어에게 ? 띄우기
                         PlayerInteract.Instance.ShowInteractionMark();
+                        PlayerInteract.Instance.OnInteract = null;
                         Debug.Log("OnInteract 할당");
                         //플레이어의 OnInteract 액션에 실행 메소드 할당
                         PlayerInteract.Instance.OnInteract += () =>
@@ -94,6 +95,7 @@ public class EventTrigger : MonoBehaviour
                     case "EventMentalEnterTrigger":
                         //플레이어에게 ? 띄우기
                         PlayerInteract.Instance.ShowInteractionMark();
+                        PlayerInteract.Instance.OnMentalInteract = null;
                         Debug.Log("OnMentalInteract에 할당");
                         //정신세계 진입 프로세스의 OnInteract 액션에 실행 메소드 할당
                         PlayerInteract.Instance.OnMentalInteract += () =>

@@ -202,13 +202,14 @@ public class PlayerController : Singleton<PlayerController>
             {
                 _dialogueCamera = child.GetComponent<CinemachineVirtualCamera>();
             }
-            else if (child.name == "Virtual Camera")
+            else
             {
-                CinemachineVirtualCamera abcCamera = child.GetComponent<CinemachineVirtualCamera>();
-                if (abcCamera != null)
+                if (child.GetComponent<CinemachineVirtualCamera>() != null)
                 {
+                    CinemachineVirtualCamera abcCamera = child.GetComponent<CinemachineVirtualCamera>();
                     abcCamera.LookAt = transform;
-                    Debug.Log("Set ABCCamera LookAt to player");
+                    Debug.Log($"Set {abcCamera.name} LookAt to player");
+                    break;
                 }
             }
         }
