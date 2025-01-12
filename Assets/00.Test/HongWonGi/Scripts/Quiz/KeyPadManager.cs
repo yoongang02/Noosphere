@@ -60,25 +60,23 @@ public class KeyPadManager : UIBase
     public void SetDialText(string number)
     {
         if (number == "-1")
-           {
-               if (_inputText.text.Length > 0)
-               {
-                   _inputText.text = _inputText.text.Remove(_inputText.text.Length - 1);
-               }
-           }
-           else
-           {
-               if (_inputText.text.Length < 4)
-               {
-                   _inputText.text += number;
-                   
-                   // 4자리 입력 완료시 자동으로 정답 체크
-                   if (_inputText.text.Length == 4)
-                   {
-                       CheckAnswer();
-                   }
-               }
-           }
+        {
+            if (_inputText.text.Length > 0)
+            {
+                _inputText.text = "";
+            }
+        }
+        else if (number == "*")
+        {
+            CheckAnswer();
+        }
+        else
+        {
+            if (_inputText.text.Length < 4)
+            {
+                _inputText.text += number;
+            } 
+        }
     }
 
     private void CheckAnswer()
