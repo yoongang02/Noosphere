@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +13,8 @@ public class CardKeyButton : MonoBehaviour
     [SerializeField] private Button _button;
     [SerializeField] private TextMeshProUGUI _buttonText;
     [SerializeField] private GameObject _cardObj;
+    [SerializeField] private string _takeEventID;
+    [SerializeField] private string _returnEventID;
     private bool _isTakenCard;
     
 
@@ -32,25 +35,30 @@ public class CardKeyButton : MonoBehaviour
         _eventChannel.OnResetCardState -= OnCardStateReturn; 
     }
 
-    private void OnClickCard()
+    private async void OnClickCard()
     {
         if (!_isTakenCard)//카드 가져갔을때
         {
             _cardObj.SetActive(false);
             _buttonText.text = "반납 하기";
             _isTakenCard = true;
-            CardKeyManager.Instance.curCardEvidenceID = _cardKeyEvidenceID;
             _eventChannel.RaiseEvent(_cardKeyEvidenceID);
+            //인벤토리에 추가
+            InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences[_cardKeyEvidenceID]);
+
+            DialogueManager.Instance.SetDialogue(_takeEventID);
         }
         else//카드 반납할때
         { 
             _cardObj.SetActive(true);
             _buttonText.text = "사용 가능";
             _isTakenCard = false;
-            CardKeyManager.Instance.curCardEvidenceID =string.Empty; 
             _eventChannel.RaiseReturnEvent(_cardKeyEvidenceID);
+            //인벤토리에 있는 카드키 제거
+            InventoryManager.Instance.RemoveEvidence(DataManager.Instance._evidences[_cardKeyEvidenceID]);
+            
+            DialogueManager.Instance.SetDialogue(_returnEventID);
         }
- 
     }
 
     private void OnOtherButtonClicked(string clickedButtonId)//클릭한 버튼이외에 다른 버튼들 이벤트 전달
