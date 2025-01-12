@@ -81,8 +81,7 @@ public class KeyPadManager : UIBase
 
     private void CheckAnswer()
     {
-        // if (_inputText.text ==_curQuiz.correctAnswer)
-        if(_inputText.text=="1111")
+        if(_inputText.text ==_curQuiz.correctAnswer)
         {
             _curQuiz.isSolved = true;
             UIManager.Instance.CloseTopUI();
