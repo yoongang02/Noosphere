@@ -63,7 +63,7 @@ public class KeyPadManager : UIBase
         {
             if (_inputText.text.Length > 0)
             {
-                _inputText.text = _inputText.text.Remove(_inputText.text.Length - 1);
+                _inputText.text = "";
             }
         }
         else if (number == "*")
