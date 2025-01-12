@@ -120,7 +120,33 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         if (_curEvent.conditionType == "or")
         {
             //conditionType이 or 인 경우는 결과 바로 실행
-            _isConditionMet = true;
+            if (_curEvent.conditions == null)
+            {
+                _isConditionMet = true;
+            }
+            else
+            {
+                int conditionNum = 1;
+                foreach (var conditionID in _curEvent.conditions)
+                {
+                    if (_curEvent.IsConditionMet(conditionID))
+                    {
+                        Debug.Log($"{_curEvent.eventId}의 조건{conditionNum} 만족");
+                        _isConditionMet = true;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"{_curEvent.eventId}의 조건{conditionNum} 불만족");
+                    }
+                    conditionNum++;
+                }
+            }
+
+            if (!_isConditionMet)
+            {
+                Debug.LogWarning($"{_curEvent.eventId}의 conditionType은 or이지만 조건을 모두 만족하지 않았아 isConditionMet이 false가 됨.");
+            }
+            
             return _curEvent.results;
         }
         Debug.LogError($"{_curEvent.eventId}의 conditionType이 올바른 값이 아닙니다.");
