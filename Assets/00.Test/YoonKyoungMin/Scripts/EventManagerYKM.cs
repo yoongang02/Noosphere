@@ -120,7 +120,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         if (_curEvent.conditionType == "or")
         {
             //conditionType이 or 인 경우는 결과 바로 실행
-            if (_curEvent.conditions == null)
+            if (_curEvent.conditions == null || _curEvent.conditions.Length == 0)
             {
                 _isConditionMet = true;
             }

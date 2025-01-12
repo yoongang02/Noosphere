@@ -209,7 +209,6 @@ public class PlayerController : Singleton<PlayerController>
                     CinemachineVirtualCamera abcCamera = child.GetComponent<CinemachineVirtualCamera>();
                     abcCamera.LookAt = transform;
                     Debug.Log($"Set {abcCamera.name} LookAt to player");
-                    break;
                 }
             }
         }
