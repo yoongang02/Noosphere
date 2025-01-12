@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-
+using Debug = NooSphere.Debug;
 public class InventorySlot
 {
     public string evidenceId;
@@ -140,7 +140,7 @@ public class InventoryManager : Singleton<InventoryManager>
     IEnumerator ClearInventoryUI()
     {
         int childCount = _realWorldInventory.transform.childCount;
-        Debug.Log($"{_realWorldInventory.name}의 자식은 {childCount}개 입니다.");
+        //Debug.Log($"{_realWorldInventory.name}의 자식은 {childCount}개 입니다.");
 
         if (childCount > 0)
         {
@@ -149,14 +149,14 @@ public class InventoryManager : Singleton<InventoryManager>
                 Transform child = _realWorldInventory.transform.GetChild(i);
                 if (child != null)
                 {
-                    Debug.Log($"{_realWorldInventory.name}의 자식 {child.name}을 제거");
+                    //Debug.Log($"{_realWorldInventory.name}의 자식 {child.name}을 제거");
                     Destroy(child.gameObject);
                 }
             }
         }
         
         childCount = _mentalWorldInventory.transform.childCount;
-        Debug.Log($"{_mentalWorldInventory.name}의 자식은 {childCount}개 입니다.");
+        //Debug.Log($"{_mentalWorldInventory.name}의 자식은 {childCount}개 입니다.");
 
         if (childCount > 0)
         {
@@ -165,7 +165,7 @@ public class InventoryManager : Singleton<InventoryManager>
                 Transform child = _mentalWorldInventory.transform.GetChild(i);
                 if (child != null)
                 {
-                    Debug.Log($"{_mentalWorldInventory.name}의 자식 {child.name}을 제거");
+                    //Debug.Log($"{_mentalWorldInventory.name}의 자식 {child.name}을 제거");
                     Destroy(child.gameObject);
                 }
             }

@@ -143,7 +143,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             if (!string.IsNullOrEmpty(_event.lockConditionId) &&
                 DataManager.Instance._lockConditions.ContainsKey(_event.lockConditionId))
             {
-                DataManager.Instance._lockConditions[_event.lockConditionId].Lock();
+                await DataManager.Instance._lockConditions[_event.lockConditionId].Lock();
             }
             
             //실행할 수 있는 결과가 있다면
@@ -314,6 +314,17 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     {
                         _event.repeatType = false;
                         Debug.LogWarning($"{_event.eventId}의 repeatType true에서 false로 변경");
+                    }
+                    
+                    //예외처리
+                    if (currentEventID == "Event_A018" || currentEventID == "Event_A023")
+                    {
+                        //일기 습득 성공하면 더이상 캐비넷에 접근할 수 없도록
+                        Debug.LogWarning($"캐비넷 더이상 접근 불가능하도록 설정");
+                        DataManager.Instance._events["Event_A025"].repeatType = false;
+                        DataManager.Instance._events["Event_A025"].isExecuted = true;
+                        DataManager.Instance._events["Event_A017"].isExecuted = true;
+                        DataManager.Instance._events["Event_A017"].repeatType = false;
                     }
                 }
                 else

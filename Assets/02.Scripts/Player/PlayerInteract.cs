@@ -8,7 +8,6 @@ public class PlayerInteract : Singleton<PlayerInteract>
 {
     [Header("상호작용")] 
     public bool canInteract = true; //상호작용을 할 수 있는지(lock 조건에 이용)
-    public GameObject interactionTrigger;
     [SerializeField] private GameObject _interactionMark;
     private bool _isRepeatFalseCondition = false;
     public Action OnInteract;

@@ -96,24 +96,24 @@ public class InventoryNavigator : UIBase
         if (realWorldSlots.Count > 0 && mentalWorldSlots.Count > 0)
         {
             //현실세계 증거물과 정신세계 증거물을 교차로 넣기
-            Debug.Log("현실 증거물 정신 증거물 둘 다 존재?");
+            //Debug.Log("현실 증거물 정신 증거물 둘 다 존재?");
             AddSlotsPerRow();
             isBothInventory = true;
         }
         else if(realWorldSlots.Count > 0)
         {
-            Debug.Log($"현실 증거물 {realWorldSlots.Count}개 만 존재");
+            //Debug.Log($"현실 증거물 {realWorldSlots.Count}개 만 존재");
             inventorySlots = realWorldSlots;
         }
         else if (mentalWorldSlots.Count > 0)
         {
-            Debug.Log($"정신 증거물 {mentalWorldSlots.Count}개 만 존재");
+            //Debug.Log($"정신 증거물 {mentalWorldSlots.Count}개 만 존재");
             inventorySlots = mentalWorldSlots;
         }
 
         if (inventorySlots.Count == 0)
         {
-            Debug.Log("증거물이 아무것도 존재하지 않아");
+            //Debug.Log("증거물이 아무것도 존재하지 않아");
             _curSelectedSlot = null;
             return;
         }
@@ -364,25 +364,24 @@ public class InventoryNavigator : UIBase
         if (canUse == 'Y')
         {
             //플레이어가 현재 이벤트 트리거 내에 있다면 이벤트 가져오기
-            if (PlayerInteract.Instance.interactionTrigger != null)
+            if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
             {
-                EventTrigger trigger = PlayerInteract.Instance.interactionTrigger.GetComponent<EventTrigger>();
                 //상호작용 할 수 있는 이벤트가 있는지 확인
-                foreach (var _eventID in trigger.eventIdList)
+                foreach (var eventID in PlayerInteract.Instance.curTrigger.eventIdList)
                 {
-                    if (!string.IsNullOrEmpty(_eventID) && DataManager.Instance._events.ContainsKey(_eventID))
+                    if (!string.IsNullOrEmpty(eventID) && DataManager.Instance._events.ContainsKey(eventID))
                     {
                         //상호작용 가능하다면
                         if (PlayerInteract.Instance.OnInteract != null)
                         {
-                            EventStructure _event = DataManager.Instance._events[_eventID];
+                            EventStructure _event = DataManager.Instance._events[eventID];
                             //해당 이벤트의 조건에 증거물이 있는지 체크
                             foreach (var condition in _event.conditions)
                             {
                                 if (evidenceId == condition)
                                 {
                                     _slotUseBtn.color = UnityExtension.HexColor(BlackColor);
-                                    _evidenceUseEventId = _eventID;
+                                    _evidenceUseEventId = eventID;
                                     canEvidenceUse = true;
                                     return;
                                 }
