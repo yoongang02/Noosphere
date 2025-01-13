@@ -143,6 +143,7 @@ public class InvestigateUI : UIBase
         HoverNoBtn();
         UIManager.Instance.CloseTopUI();
         
+        _curEvidence.AcquireEvidence();
         UIManager.Instance.OnSelectEnd?.Invoke();
         
         _curEvidence = null;
