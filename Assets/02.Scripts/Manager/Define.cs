@@ -3,7 +3,7 @@ public static class Define
     public const string _bgmRoot = "BGM";
     public const string _soundRoot = "Sound";
 
-    public const string Soundresource_001 = "Soundresource_001";
+    public const string Soundresource_001 = "Amb_CCTV Noise";
     public const string Soundresource_002 = "Ani_Character_Main_Focus";
     public const string Soundresource_003 = "Ani_Character_Main_Pulling_Lever";
     public const string Soundresource_004 = "Character_Main_Running_Foot Step_1";
@@ -59,6 +59,30 @@ public static class Define
     public const string Soundresource_053 = "Radio_6";
     public const string Soundresource_054 = "Window_Break";
     public const string Soundresource_055 = "Password_incorrect";
+
+    public const string Soundresource_056 = "Start BGM";
+    public const string Soundresource_057 = "book puzzle 1";
+    public const string Soundresource_058 = "book puzzle 2";
+    public const string Soundresource_059 = "book puzzle 3";
+    public const string Soundresource_060 = "book puzzle 4";
+    public const string Soundresource_061 = "book puzzle 5";
+    public const string Soundresource_062 = "radio_dial_1(left)";
+    public const string Soundresource_063 = "radio_dial_2(middle)";
+    public const string Soundresource_064 = "radio_dial_3(Right)";
+    public const string Soundresource_065 = "glass_Shard_1";
+    public const string Soundresource_066 = "glass_Shard_2";
+    public const string Soundresource_067 = "glass_Shard_3";
+    public const string Soundresource_068 = "glass_Shard_4";
+    public const string Soundresource_069 = "glass_Shard_5";
+    public const string Soundresource_070 = "inventory_ui_select";
+    public const string Soundresource_071 = "radio_on_off_Button";
+    public const string Soundresource_072 = "Prologue_3_BGM";
+    public const string Soundresource_073 = "Prologue_1_BGM";
+    public const string Soundresource_074 = "Wall_Clock_Answer_correct";
+    
+ 
+    
+    //[BGM]----------------------------------------------------------------------------------------------
     public const string porlogueBGM = "PrologueBGM";
     public const string stage1BGM="Stage1";
 }
