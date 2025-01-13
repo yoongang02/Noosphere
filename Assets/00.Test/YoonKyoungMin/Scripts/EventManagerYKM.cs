@@ -22,6 +22,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     
     //이벤트 성공 여부 
     private bool _isEventSuccess = false;
+    private bool _isQuizSolved = true;
     [SerializeField] private bool _isRepeatFalse = false;
     [SerializeField] private bool _isConditionMet = false;
     
@@ -61,6 +62,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         EventStructure eventData = DataManager.Instance._events[eventID];
         if (!eventData.repeatType && eventData.isExecuted)
         {
+            Debug.LogWarning($"{eventID} 이벤트의 repeatType {eventData.repeatType} , isExecuted : {eventData.isExecuted}");
             //repeat false result가 존재한다면
             if (!string.IsNullOrEmpty(eventData.repeatFalseResult))
             {
@@ -160,10 +162,13 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         if (CheckExecutable(eventID))
         {
             Debug.LogWarning($"{eventID} 이벤트 실행");
+            
             _isEventSuccess = false;
+            _isQuizSolved = true;
             EventStructure _event = DataManager.Instance._events[eventID];
             currentEventID = eventID;
             string[] results = CheckConditions(_event);
+            Debug.LogWarning($"{eventID} 이벤트의 repeatType {_event.repeatType} , isExecuted : {_event.isExecuted}");
 
             //락 걸기
             if (!string.IsNullOrEmpty(_event.lockConditionId) &&
@@ -179,20 +184,31 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 await DoResult(results);
             }
             
+            Debug.LogWarning($"{eventID} 이벤트의 repeatType {_event.repeatType} , isExecuted : {_event.isExecuted}");
+            
             //이벤트가 성공적으로 실행이 되었다고
             if (!_isRepeatFalse && _isConditionMet)
             {
-                _isEventSuccess = true;
-                //증거물이 있다면
-                if (!string.IsNullOrEmpty(_event.evidenceId) &&
-                    DataManager.Instance._evidences.ContainsKey(_event.evidenceId))
+                if (!_isQuizSolved)
                 {
-                    await AcquireEvidence(_event, _event.evidenceId);
-                    Debug.LogWarning($"{_event.evidenceId} 증거물 획득 다 실행 됨.");
+                    _isEventSuccess = false;
+                }
+                else
+                {
+                    _isEventSuccess = true;
+                    //증거물이 있다면
+                    if (!string.IsNullOrEmpty(_event.evidenceId) &&
+                        DataManager.Instance._evidences.ContainsKey(_event.evidenceId))
+                    {
+                        await AcquireEvidence(_event, _event.evidenceId);
+                        Debug.LogWarning($"{_event.evidenceId} 증거물 획득 다 실행 됨.");
+                    }
                 }
             }
 
-            if (_isEventSuccess && _isConditionMet)
+            Debug.LogWarning($"{eventID} 이벤트의 repeatType {_event.repeatType} , isExecuted : {_event.isExecuted}");
+            
+            if (_isEventSuccess)
             {
                 CloseEventSuccess(_event);
                 
@@ -206,6 +222,8 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             {
                 CloseEventFailure(_event);
             }
+            
+            Debug.LogWarning($"{eventID} 이벤트의 repeatType {_event.repeatType} , isExecuted : {_event.isExecuted}");
             
             //현재 위치한 곳에 트리거가 있다면 해당 트리거 실행 가능한지 다시 체크
             if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
@@ -221,6 +239,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         {
             if (!string.IsNullOrEmpty(resultID))
             {
+                _isEventSuccess = true;
                 string resultType = resultID.Substring(0, resultID.IndexOf('_'));
                 
                 if (resultType == "Dialogue")
@@ -236,7 +255,6 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     // 대화가 끝날 때까지 대기
                     await WaitForDialogueEndAsync();
                     Debug.Log("#4-2 : " + resultID + " 대화 끝");
-                    _isEventSuccess = true;
                 }
                 else if (resultType == "Effect")
                 {
@@ -245,7 +263,6 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     // 효과가 끝날 때까지 대기
                     await WaitForEffectEndAsync();
                     Debug.Log("#4-2 : " + resultID + " 효과 끝");
-                    _isEventSuccess = true;
                 }
                 else if (resultType == "Quiz")
                 {
@@ -258,22 +275,20 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     if (quizStructure.isSolved)
                     {
                         await QuizManager.Instance.DoCorrectResult(quizStructure);
-                        _isEventSuccess = true;
+                        _isQuizSolved = true;
                     }
                     else
                     {
                         await QuizManager.Instance.DoWrongResult(quizStructure);
-                        _isEventSuccess = false;
+                        _isQuizSolved = false;
                     }
                 }
                 else if (resultType == "Event")
                 {
-                    _isEventSuccess = true;
                     await ExecuteEvent(resultID);
                 }
                 else if (resultType == "Mental")
                 {
-                    _isEventSuccess = true;
                     PlayerInteract.Instance.GetComponent<MentalEnterProcess>().StartEnter(resultID);
                 }
             }
@@ -483,12 +498,13 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     public void CloseEventFailure(EventStructure _event)
     {
         Debug.LogWarning($"{_event.eventId} 가 성공적으로 실행되지 않음.");
-        
         if (!string.IsNullOrEmpty(_event.lockConditionId) &&
             DataManager.Instance._lockConditions.ContainsKey(_event.lockConditionId))
         {
             DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();
         }
+        
+        _event.isExecuted = false;
     }
     
     public void CloseEventSuccess(EventStructure _event)
