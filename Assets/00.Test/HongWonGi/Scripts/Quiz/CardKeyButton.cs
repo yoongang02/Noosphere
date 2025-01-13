@@ -39,9 +39,6 @@ public class CardKeyButton : MonoBehaviour
     {
         if (!_isTakenCard)//카드 가져갔을때
         {
-            _cardObj.SetActive(false);
-            _buttonText.text = "반납 하기";
-            _isTakenCard = true;
             _eventChannel.RaiseEvent(_cardKeyEvidenceID);
             //인벤토리에 추가
             InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences[_cardKeyEvidenceID]);
@@ -50,9 +47,6 @@ public class CardKeyButton : MonoBehaviour
         }
         else//카드 반납할때
         { 
-            _cardObj.SetActive(true);
-            _buttonText.text = "사용 가능";
-            _isTakenCard = false;
             _eventChannel.RaiseReturnEvent(_cardKeyEvidenceID);
             //인벤토리에 있는 카드키 제거
             InventoryManager.Instance.RemoveEvidence(DataManager.Instance._evidences[_cardKeyEvidenceID]);
@@ -70,6 +64,12 @@ public class CardKeyButton : MonoBehaviour
             _button.interactable = false;
             _isTakenCard = false;
         }
+        else
+        {
+            _cardObj.SetActive(false);
+            _buttonText.text = "반납 하기";
+            _isTakenCard = true;
+        }
     }
     private void OnCardStateReturn(string returnedButtonId)
     {
@@ -78,5 +78,16 @@ public class CardKeyButton : MonoBehaviour
             _buttonText.text = "사용 가능";
             _button.interactable = true;
         }
+        else
+        {
+            _cardObj.SetActive(true);
+            _buttonText.text = "사용 가능";
+            _isTakenCard = false;
+        }
+    }
+
+    public void InitCardKey()
+    {
+        _eventChannel.OnButtonClicked?.Invoke(_cardKeyEvidenceID);
     }
 }
