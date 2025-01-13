@@ -25,6 +25,8 @@ public class TimeLineController : MonoBehaviour
             newPosition.x = 0f;
             newPosition.z = 0f;
             _player.transform.localPosition = newPosition;
+            _player.transform.localRotation = Quaternion.identity;
+            _player.transform.localRotation = Quaternion.Euler(0, -180f, 0);
         }
 
         _playableDirector.Play();
