@@ -12,9 +12,9 @@ public class ComputerBtn : MonoBehaviour
     private Button _emailBtn;
     private Image _btnImg;
     //테스트용 나중에 이미지 갈아끼우는걸로 바꾸려나??
-    [Header("Colors")]
-    [SerializeField] private Color _normalColor = Color.white;
-    [SerializeField] private Color _selectedColor = Color.yellow;
+    [Header("Button Spr")]
+    [SerializeField] private Sprite _normalSprite;
+    [SerializeField] private Sprite _selectedSprite;
 
     private void Awake()
     {
@@ -33,7 +33,7 @@ public class ComputerBtn : MonoBehaviour
 
     private void HandleBtnClicked(string clickedBtnId)
     {
-        _btnImg.color = (clickedBtnId == _btnId) ? _selectedColor : _normalColor;
+        _btnImg.sprite = (clickedBtnId == _btnId) ? _selectedSprite : _normalSprite;
 
         // 선택된 버튼인 경우 이미지 업데이트
         if (clickedBtnId == _btnId)

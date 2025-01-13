@@ -12,9 +12,11 @@ public class ComputerController : UIBase
     public override void OnOpen()
     {
         base.OnOpen();
+        transform.GetChild(0).gameObject.SetActive(true);
         _eventChannel.RaiseEvent("0");//컴퓨터 열었을때 맨처음 버튼 눌리는 이벤트 전달
         _exitBtn.onClick.AddListener(()=>UIManager.Instance.CloseTopUI());
     }
+    
     public override void OnClose()
     {
         base.OnClose();
