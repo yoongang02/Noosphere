@@ -350,30 +350,29 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     //증거물 상세 ui가 닫힐 때까지 기다리기
                     await UniTask.WaitUntil(() => !UIManager.Instance.IsAnyUIOpen());
                     Debug.LogWarning("창 닫힐 때까지 다 기다림.");
-                    //습득할 수 있는 증거물의 이벤트 type이 true이고 repeat fasle result가 없으면 repeatType을 false로 변경
-                    if (_event.repeatType && _evidence.acquisitionType == 'Y' && string.IsNullOrEmpty(_event.repeatFalseResult))
-                    {
-                        _event.repeatType = false;
-                        Debug.LogWarning($"{_event.eventId}의 repeatType true에서 false로 변경");
-                    }
-                    
-                    //예외처리
-                    if (currentEventID == "Event_A018" || currentEventID == "Event_A023")
-                    {
-                        //일기 습득 성공하면 더이상 캐비넷에 접근할 수 없도록
-                        Debug.LogWarning($"캐비넷 더이상 접근 불가능하도록 설정");
-                        DataManager.Instance._events["Event_A025"].repeatType = false;
-                        DataManager.Instance._events["Event_A025"].isExecuted = true;
-                        DataManager.Instance._events["Event_A017"].isExecuted = true;
-                        DataManager.Instance._events["Event_A017"].repeatType = false;
-                    }
                 }
                 else
                 {
                     //no라면
                     Debug.LogWarning("Investigate UI에서 NO를 선택함.");
-                    _isEventSuccess = false;
-                    return;
+                }
+                
+                //습득할 수 있는 증거물의 이벤트 type이 true이고 repeat fasle result가 없으면 repeatType을 false로 변경
+                if (_event.repeatType && _evidence.acquisitionType == 'Y' && string.IsNullOrEmpty(_event.repeatFalseResult))
+                {
+                    _event.repeatType = false;
+                    Debug.LogWarning($"{_event.eventId}의 repeatType true에서 false로 변경");
+                }
+                    
+                //예외처리
+                if (currentEventID == "Event_A018" || currentEventID == "Event_A023")
+                {
+                    //일기 습득 성공하면 더이상 캐비넷에 접근할 수 없도록
+                    Debug.LogWarning($"캐비넷 더이상 접근 불가능하도록 설정");
+                    DataManager.Instance._events["Event_A025"].repeatType = false;
+                    DataManager.Instance._events["Event_A025"].isExecuted = true;
+                    DataManager.Instance._events["Event_A017"].isExecuted = true;
+                    DataManager.Instance._events["Event_A017"].repeatType = false;
                 }
             }
             else if (_evidence.canInvestigate == 'N')
