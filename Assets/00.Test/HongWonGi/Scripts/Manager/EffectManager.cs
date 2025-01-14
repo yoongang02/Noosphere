@@ -51,7 +51,6 @@ public class EffectManager : Singleton<EffectManager>
             if (!string.IsNullOrEmpty(effect.artresourceId))
             {
                 DoEffect(effect.artresourceId);
-                StartCoroutine(EndEffect());
             }
 
             if (!string.IsNullOrEmpty(effect.soundresourceId))
@@ -65,6 +64,13 @@ public class EffectManager : Singleton<EffectManager>
                 {
                     SoundManager.Instance.PlayBGM(effect.soundresourceId);
                 }
+            }
+            
+            
+            //effectType에 따라 onEffectEnd 호출
+            if (effect.effectType == "particle" || effect.effectType == "sound" || effect.effectType == "ui" || string.IsNullOrEmpty(effect.effectType))
+            {
+                OnEffectEnd?.Invoke();
             }
         }
         else
@@ -107,11 +113,5 @@ public class EffectManager : Singleton<EffectManager>
         _vhsImage.color = color;
         _vhsVolume.weight = 0;
         _cameraData.renderPostProcessing = false;
-    }
-
-    IEnumerator EndEffect()
-    {
-        yield return null;
-        OnEffectEnd?.Invoke();
     }
 }

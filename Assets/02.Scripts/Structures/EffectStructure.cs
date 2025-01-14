@@ -6,6 +6,7 @@ public class EffectStructure
 {
   public string effectId;
   public string effectName;
+  public string effectType;
   public string description;
   public string artresourceId;
   public string soundresourceId;
