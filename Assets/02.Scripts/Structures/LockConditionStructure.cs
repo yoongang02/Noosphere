@@ -124,6 +124,11 @@ public class LockConditionStructure
     void BreakMirror()
     {
         PlayerInteract.Instance.GetComponent<MentalEnterProcess>().ForceQuitMentalProcess();
+
+        if (DataManager.Instance._quiz["Quiz_005"].isSolved && !DataManager.Instance._evidences["Evidence_019"].isAcquired)
+        {
+            DataManager.Instance._events["Event_B044"].repeatType = true;
+        }
     }
     
 }

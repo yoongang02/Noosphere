@@ -217,6 +217,8 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 {
                     ExecuteEvent(nextEventID).Forget();
                 }
+                //예외처리
+                if(currentEventID == "Event_B044") return;
             }
             else
             {
@@ -291,6 +293,10 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 {
                     PlayerInteract.Instance.GetComponent<MentalEnterProcess>().StartEnter(resultID);
                 }
+                else if (resultType == "Evidence")
+                {
+                    await AcquireEvidence(DataManager.Instance._events[currentEventID], resultID);
+                }
             }
         }
     }
@@ -334,6 +340,12 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         //증거물을 습득할 수 있는지 체크
         if (_evidence.CanAcquireEvidence())
         {
+            //거울 조각이면 유리 UI에 반영하기
+            if (evidenceID == "Evidence_019" || evidenceID == "Evidence_023")
+            {
+                return;
+            }
+            
             //Investigate UI를 열수 있으면 열기
             if (_evidence.canInvestigate == 'Y')
             {
@@ -356,6 +368,13 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     //no라면
                     Debug.LogWarning("Investigate UI에서 NO를 선택함.");
                 }
+
+                if (evidenceID == "Evidence_020" || evidenceID == "Evidence_021" ||
+                    evidenceID == "Evidence_022")
+                {
+                    MirrorPuzzleManager.Instance.GetMirrorPiece(evidenceID);
+                }
+                
                 
                 //습득할 수 있는 증거물의 이벤트 type이 true이고 repeat fasle result가 없으면 repeatType을 false로 변경
                 if (_event.repeatType && _evidence.acquisitionType == 'Y' && string.IsNullOrEmpty(_event.repeatFalseResult))
@@ -516,5 +535,10 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         }
         _event.isExecuted = true;
         nextEventID = _event.nextEventId;
+    }
+
+    public bool IsConditionMet()
+    {
+        return _isConditionMet;
     }
 }

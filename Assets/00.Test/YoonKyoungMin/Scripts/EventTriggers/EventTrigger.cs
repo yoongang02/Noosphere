@@ -73,6 +73,12 @@ public class EventTrigger : MonoBehaviour
             //결과 실행
             if (results != null && results.Length > 0)
             {
+                if (!EventManagerYKM.Instance.IsConditionMet() &&
+                    string.IsNullOrEmpty(_curEvent.conditionFalseResults[0]))
+                {
+                    Debug.LogWarning($"{_curEvent.eventId}는 조건을 만족하지 못했으나 conditionFalseResult도 존재하지 않아 할당하지 않음");
+                    return;
+                }
                 //트리거 종류에 따라 할당하기
                 switch (tag)
                 {

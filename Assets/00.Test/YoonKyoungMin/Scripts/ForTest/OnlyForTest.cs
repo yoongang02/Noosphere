@@ -62,5 +62,8 @@ public class OnlyForTest : MonoBehaviour
         EventManagerYKM.Instance.curStageInfo = EventManagerYKM.ChapterInfo.Stage1;
         EventManagerYKM.Instance.currentEventID = "Event_A031";
         EventManagerYKM.Instance.nextEventID = "";
+        
+        //플레이어 찾기
+        FindObjectOfType<PlayerInteract>().transform.position = new Vector3(-7, 1, 3);
     }
 }
