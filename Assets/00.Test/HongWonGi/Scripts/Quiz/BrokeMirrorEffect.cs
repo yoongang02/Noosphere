@@ -90,4 +90,9 @@ public class BrokeMirrorEffect : MonoBehaviour
             }
         }
     }
+
+    public void OnAnimEnd()
+    {
+        EffectManager.Instance.OnEffectEnd?.Invoke();
+    }
 }
