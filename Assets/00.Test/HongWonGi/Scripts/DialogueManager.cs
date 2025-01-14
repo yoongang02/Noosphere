@@ -93,7 +93,7 @@ public class DialogueManager : UIBase
     }
     public override void HandleKeyboardInput()
     {
-        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && !string.IsNullOrEmpty(_currentDialogueId))
+        if ((Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0)) && !string.IsNullOrEmpty(_currentDialogueId))
         {
             if (isTyping)
             {

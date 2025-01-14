@@ -10,7 +10,7 @@ public class PointEffect : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            //EffectManager.Instance.OnEffectEnd?.Invoke();
+            EffectManager.Instance.OnEffectEnd?.Invoke();
             EventManagerYKM.Instance.ExecuteEvent(EventManagerYKM.Instance.nextEventID).Forget();
             gameObject.SetActive(false);
         }
