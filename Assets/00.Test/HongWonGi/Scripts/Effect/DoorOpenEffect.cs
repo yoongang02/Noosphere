@@ -13,4 +13,9 @@ public class DoorOpenEffect : MonoBehaviour
       _closeDoor.SetActive(false);
       _clearTrigger.SetActive(true);
    }
+
+   public void OnAnimationEnd()
+   {
+      EffectManager.Instance.OnEffectEnd?.Invoke();
+   }
 }

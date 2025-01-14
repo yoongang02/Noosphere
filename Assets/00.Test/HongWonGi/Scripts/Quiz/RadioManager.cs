@@ -127,6 +127,7 @@ public class RadioManager : UIBase
     {
         if (_radioText.text == radioAnswer)
         {
+            SoundManager.Instance.PlaySound("Soundresource_049",1);
             if (PlayerInteract.Instance.isInMental)
             {
                 //현실세계 정신세계 구분
@@ -142,6 +143,7 @@ public class RadioManager : UIBase
         }
         else
         {
+            SoundManager.Instance.PlaySound("Soundresource_001",1);
             Debug.Log("오답");
         }
     }
