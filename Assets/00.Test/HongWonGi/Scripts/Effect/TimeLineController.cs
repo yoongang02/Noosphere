@@ -11,10 +11,12 @@ public class TimeLineController : MonoBehaviour
     [SerializeField] private GameObject _playerParent;
     private GameObject _player;
 
-    private void Awake()
-    {
-        _player = GameObject.FindObjectOfType<PlayerController>().gameObject;
-    }
+      private void Start()
+        {
+            _player = FindObjectOfType<PlayerController>().gameObject;
+            _playableDirector.stopped += EndTimeLine;
+        }
+
 
     private void OnEnable()
     {
@@ -31,20 +33,15 @@ public class TimeLineController : MonoBehaviour
 
         _playableDirector.Play();
     }
-
-    private void Start()
-    {
-        _playableDirector.stopped += EndTimeLine;
-    }
-
+  
     private void EndTimeLine(PlayableDirector obj)
     {
-        EffectManager.Instance.OnEffectEnd?.Invoke();
         Debug.Log("타임라인 끝");
 
         if (_playerParent != null)
         {
             _player.transform.SetParent(null);
         }
+        EffectManager.Instance.OnEffectEnd?.Invoke();
     }
 }
