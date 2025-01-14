@@ -68,9 +68,9 @@ public class EffectManager : Singleton<EffectManager>
             
             
             //effectType에 따라 onEffectEnd 호출
-            if (effect.effectType == "particle" || effect.effectType == "sound" || effect.effectType == "ui" || string.IsNullOrEmpty(effect.effectType))
+            if (effect.effectType == "sound" || effect.effectType == "ui" || string.IsNullOrEmpty(effect.effectType))
             {
-                OnEffectEnd?.Invoke();
+                StartCoroutine(EndEffect());
             }
         }
         else
@@ -113,5 +113,11 @@ public class EffectManager : Singleton<EffectManager>
         _vhsImage.color = color;
         _vhsVolume.weight = 0;
         _cameraData.renderPostProcessing = false;
+    }
+
+    IEnumerator EndEffect()
+    {
+        yield return null;
+        OnEffectEnd?.Invoke();
     }
 }
