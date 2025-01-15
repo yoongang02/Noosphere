@@ -254,6 +254,7 @@ public class MentalEnterProcess : MonoBehaviour
     {
         yield return new WaitForSeconds(1.0f);
         _isForceQuit = true;
+        SoundManager.Instance.StopSound();
     }
 
     public void SetCombackEventId(string id)

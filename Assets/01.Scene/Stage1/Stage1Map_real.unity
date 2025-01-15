@@ -6113,6 +6113,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1114918166}
     m_Modifications:
+    - target: {fileID: 2702813130723650298, guid: 850abc825653f4ca8a28ccd472ed2eed,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.608
+      objectReference: {fileID: 0}
     - target: {fileID: 6746687205332642442, guid: 850abc825653f4ca8a28ccd472ed2eed,
         type: 3}
       propertyPath: eventID
@@ -6121,7 +6126,12 @@ PrefabInstance:
     - target: {fileID: 6746687205332642442, guid: 850abc825653f4ca8a28ccd472ed2eed,
         type: 3}
       propertyPath: nextScene
-      value: Stage2Map_real
+      value: Lounge
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855133484327716860, guid: 850abc825653f4ca8a28ccd472ed2eed,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7524766270656867663, guid: 850abc825653f4ca8a28ccd472ed2eed,
         type: 3}
@@ -14437,6 +14447,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1743755052}
     m_Modifications:
+    - target: {fileID: 2082923601417948953, guid: ea4484091fa46d24f94ab6ede3c5395b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2315263927009229911, guid: ea4484091fa46d24f94ab6ede3c5395b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -14540,7 +14555,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
