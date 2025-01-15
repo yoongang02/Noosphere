@@ -202,7 +202,6 @@ public class InventoryManager : Singleton<InventoryManager>
         yield return null;
         
         //현재 챕터에 따른 인벤토리 가져오기
-        currentViewChapter = (int)EventManagerYKM.Instance.curRoomInfo;
         ChapterInventory currentInventory = chapterInventories[currentViewChapter];
 
         // 현실 세계 증거물 추가
