@@ -411,8 +411,8 @@ public class EvidenceDetailUI : UIBase
                     string resultID = _curEvidence.acquisitionPageResultId;
                     
                     //예외 처리 코드
-                    if (_subEvidence.evidenceId == "Evidence_008" && EventManagerYKM.Instance.curStageInfo !=
-                        EventManagerYKM.ChapterInfo.Prologue)
+                    if (_subEvidence.evidenceId == "Evidence_008" && EventManagerYKM.Instance.curRoomInfo !=
+                        EventManagerYKM.RoomInfo.Room_101)
                     {
                         //프롤로그에서만 볼 수 없는 이벤트이기 때문에, 프롤로그가 아니면 강제 종료 이벤트 실행되지 않도록 이른 리턴
                         return;

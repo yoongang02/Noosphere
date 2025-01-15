@@ -59,7 +59,7 @@ public class OnlyForTest : MonoBehaviour
         //씬 스테이지1로 이동
         SceneManager.LoadScene("Stage1Map_real");
         //현재 스테이지 변경
-        EventManagerYKM.Instance.curStageInfo = EventManagerYKM.ChapterInfo.Stage1;
+        EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_102;
         EventManagerYKM.Instance.currentEventID = "Event_A031";
         EventManagerYKM.Instance.nextEventID = "";
         

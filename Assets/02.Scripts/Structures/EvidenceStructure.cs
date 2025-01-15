@@ -9,6 +9,7 @@ public class EvidenceStructure
     public char evidenceType;
     public string shapeType; //증거물 타입 종류. OnePage : 한페이지, TwoPage : 두페이지, Object : 물체
     public char acquisitionType;
+    public int inventoryIndex;
     public char canInvestigate;
     public char canUse;
     public string[] unlockConditions;
