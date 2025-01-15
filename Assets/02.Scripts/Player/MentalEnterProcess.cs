@@ -21,7 +21,7 @@ public class MentalEnterProcess : MonoBehaviour
     [Header("정신세계 진입 UI")]
     [SerializeField] private GameObject _progressBarUI;
     [SerializeField] private EnterProgressBar _progressBarFill;
-    
+    private bool _soundPlayed=false;
     
     void Update()
     {
@@ -59,7 +59,19 @@ public class MentalEnterProcess : MonoBehaviour
                 {
                     float value = _progressBarFill.FillAmount();
                     EffectManager.Instance.StartMentalEffect(value);
-                    
+                    if(!_soundPlayed)
+                    {
+                        SoundManager.Instance.PlaySound(Define.Soundresource_029, 1);
+                        _soundPlayed = true;
+                    }
+
+                    if (value >= 1f)
+                    {
+                        isComplete = true;
+                        // 완료되면 소리 재생
+                        SoundManager.Instance.StopSound();
+                        SoundManager.Instance.PlaySound(Define.Soundresource_028, 1);
+                    }
                     if (value >= 1f)
                     {
                         isComplete = true;
@@ -70,7 +82,8 @@ public class MentalEnterProcess : MonoBehaviour
                     //스페이스에서 손 때면, 현 상태에서 게이지 감소하는 코드
                     float value = _progressBarFill.DrainAmount();
                     EffectManager.Instance.StartMentalEffect(value);
-
+                    _soundPlayed = false; 
+                    SoundManager.Instance.StopSound();
                     if (value <= 0)
                     {
                         FailEnter();
@@ -127,6 +140,7 @@ public class MentalEnterProcess : MonoBehaviour
         isComplete = false;
         _startEnter = false;
         _isForceQuit = false;
+        _soundPlayed = false;
     }
 
     public void StartEnter(string mentalId)
