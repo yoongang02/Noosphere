@@ -40,7 +40,7 @@ public static class Define
     public const string Soundresource_034 = "ui_E_button_5";
     public const string Soundresource_035 = "ui_select_button";
     public const string Soundresource_036 = "ui_Back up_button";
-    public const string Soundresource_037 = "ui _Space_button";
+    public const string Soundresource_037 = "ui_Space_button";
     public const string Soundresource_038 = "ui_paper_1";
     public const string Soundresource_039 = "ui_paper_2";
     public const string Soundresource_040 = "ui_paper_3";

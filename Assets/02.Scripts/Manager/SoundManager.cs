@@ -53,7 +53,10 @@ public class SoundManager : Singleton<SoundManager>
     //         return;
     //     _soundSource.PlayOneShot(clip);
     // }
-
+    public void StopSound()
+    {
+        _soundSource.Stop();
+    }
     public void PlaySound(string path,int loopCount)
     {
         AudioClip clip = LoadAudioClip(GetSoundFullPath(path));

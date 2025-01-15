@@ -9,7 +9,7 @@ public class LoadingSceneUI : MonoBehaviour
 {
     [SerializeField] private Slider _loadingSlider;
     [SerializeField] private TextMeshProUGUI _loadingText;
-    [SerializeField] private RawImage _fadeImage;
+    [SerializeField] private Image _fadeImage;
     [SerializeField] private float _fadeDuration = 0.8f;
     
     private void Start()
