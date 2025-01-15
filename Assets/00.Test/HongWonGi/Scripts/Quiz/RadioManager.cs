@@ -115,7 +115,7 @@ public class RadioManager : UIBase
             if (PlayerInteract.Instance.isInMental)
             {
                 //조각을 습득하지 않았다면
-                if (!DataManager.Instance._evidences["Evidence_023"].isAcquired)
+                if (!DataManager.Instance._evidences["Evidence_023"].isAcquired && MirrorPuzzleManager.Instance.isMirrorBroke)
                 {
                     await GetMirrorPiece();
                 }

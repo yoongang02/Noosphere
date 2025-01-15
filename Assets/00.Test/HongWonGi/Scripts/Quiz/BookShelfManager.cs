@@ -71,7 +71,6 @@ public class BookShelfManager : UIBase
             //퀴즈 해결되었다고 표시
             _curQuiz.isSolved = true;
             UIManager.Instance.CloseTopUI();
-            QuizManager.Instance.OnQuizEnd?.Invoke();
             
             //거울이 깨져있는지 확인
             if (MirrorPuzzleManager.Instance.isMirrorBroke)
@@ -80,6 +79,7 @@ public class BookShelfManager : UIBase
                 await GetMirrorPiece();
             }
             DataManager.Instance._events["Event_B044"].repeatType = false;
+            QuizManager.Instance.OnQuizEnd?.Invoke();
         }
     }
 

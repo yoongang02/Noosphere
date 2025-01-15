@@ -226,6 +226,17 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             }
             
             Debug.LogWarning($"{eventID} 이벤트의 repeatType {_event.repeatType} , isExecuted : {_event.isExecuted}");
+
+            if (_isEventSuccess)
+            {
+                if (!string.IsNullOrEmpty(nextEventID) && DataManager.Instance._events.ContainsKey(nextEventID))
+                {
+                    if (DataManager.Instance._events[nextEventID].isAuto)
+                    {
+                        ExecuteEvent(nextEventID).Forget();
+                    }
+                }
+            }
             
             //현재 위치한 곳에 트리거가 있다면 해당 트리거 실행 가능한지 다시 체크
             if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)

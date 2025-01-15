@@ -44,6 +44,8 @@ public class KeyPadManager : UIBase
     public override void OnOpen(string quizID)
     {
         base.OnOpen(quizID);
+        _curQuizID = "";
+        _curQuiz = null;
         _curQuizID = quizID;
         _curQuiz = DataManager.Instance._quiz[_curQuizID];
         Debug.Log($"# quiz id : {quizID}, _curQuiz : {_curQuiz}");
@@ -54,8 +56,7 @@ public class KeyPadManager : UIBase
     {
         base.OnClose();
         transform.GetChild(0).gameObject.SetActive(false);
-        _curQuizID = "";
-        _curQuiz = null;
+        QuizManager.Instance.OnQuizEnd?.Invoke();
     }
     public void SetDialText(string number)
     {
@@ -89,8 +90,8 @@ public class KeyPadManager : UIBase
         else
         {
             _inputText.text = "";
+            QuizManager.Instance.OnQuizEnd?.Invoke();
         }
-        QuizManager.Instance.OnQuizEnd?.Invoke();
     }
 
 }
