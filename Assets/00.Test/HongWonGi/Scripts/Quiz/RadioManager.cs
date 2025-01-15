@@ -34,9 +34,11 @@ public class RadioManager : UIBase
 
     private bool isDataLoaded = false;
 
-    public override void OnOpen(string quizID)
+    public override async void OnOpen(string quizID)
     {
         base.OnOpen(quizID);
+        _curQuizID = "";
+        _curQuiz = null;
         _curQuizID = quizID;
         _curQuiz = DataManager.Instance._quiz[_curQuizID];
         Debug.Log($"# quiz id : {quizID}, _curQuiz : {_curQuiz}");
@@ -45,25 +47,34 @@ public class RadioManager : UIBase
         //만약 거울이 깨졌는데 기믹을 미리 성공했다면
         if (_curQuiz.isSolved)
         {
-            /*
+            //퀴즈 실행되지 않음
+            UIManager.Instance.CloseTopUI();
+            
             if (PlayerInteract.Instance.isInMental)
             {
-                //조각을 이미 습득했다면 -> 라디오 켜기
-                if (InventoryManager.Instance.IsAcquiredEvidence("Evidence_023") || !MirrorPuzzleManager.Instance.isMirrorBroke)
+                //거울이 깨져있다면
+                if (MirrorPuzzleManager.Instance.isMirrorBroke)
+                {
+                    //조각을 습득하지 않았다면 습득 먼저 진행
+                    if (!DataManager.Instance._evidences["Evidence_023"].isAcquired)
+                    {
+                        await GetMirrorPiece();
+                    }
+                    DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
+                    await ShowDialogue();
+                }
+                else //거울이 깨져있지 않다면
                 {
                     DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
-                    ShowDialogue().Forget();
+                    await ShowDialogue();
                 }
             }
             else
             {
                 DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
-                ShowRealDialogue().Forget();
+                await ShowRealDialogue();
             }
-            */
-            //퀴즈 실행되지 않음
-            UIManager.Instance.CloseTopUI();
-            QuizManager.Instance.OnQuizEnd?.Invoke();
+            
             return;
         }
         
@@ -77,7 +88,6 @@ public class RadioManager : UIBase
         
         _powerBtn.onClick.AddListener(CheckAnswer);
         transform.GetChild(0).gameObject.SetActive(true);
-        
     }
     
     public override void OnClose()
@@ -90,56 +100,32 @@ public class RadioManager : UIBase
             _dialBtn[2].OnValueChanged -= OnDecimalDigitChanged;
         }
         transform.GetChild(0).gameObject.SetActive(false);
-        
-        _curQuizID = "";
-        _curQuiz = null;
-    }
-    /*
-    //삭제
-    private async void Awake()
-    {
-        await LoadTestDialogue();
     }
     
-
-    /// <summary>
-    /// ////////////////////
-    /// </summary>
-    private async UniTask LoadTestDialogue()
-    {
-        try
-        {
-            DialogueCSVParser parser = new DialogueCSVParser();
-            _testDialogue = await parser.Parse("Dialogue");
-            isDataLoaded = true;
-            Debug.Log("테스트 대화 데이터 로드 완료");
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"대화 데이터 로드 실패: {e.Message}");
-        }
-    }
-*/
-    /// <summary>
-    /// //////
-    /// </summary>
-    private void CheckAnswer()
+    private async void CheckAnswer()
     {
         if (_radioText.text == radioAnswer)
         {
             SoundManager.Instance.PlaySound("Soundresource_049",1);
-            if (PlayerInteract.Instance.isInMental)
-            {
-                //현실세계 정신세계 구분
-                ShowDialogue().Forget();
-            }
-            else
-            {
-                ShowRealDialogue().Forget();
-            }
+            
             //퀴즈 해결되었다고 표시
             _curQuiz.isSolved = true;
             UIManager.Instance.CloseTopUI();
+            
+            if (PlayerInteract.Instance.isInMental)
+            {
+                //조각을 습득하지 않았다면
+                if (!DataManager.Instance._evidences["Evidence_023"].isAcquired && MirrorPuzzleManager.Instance.isMirrorBroke)
+                {
+                    await GetMirrorPiece();
+                }
+                //현실세계 정신세계 구분
+                await ShowDialogue();
+            }
+            else
+            {
+                await ShowRealDialogue();
+            }
         }
         else
         {
@@ -152,12 +138,13 @@ public class RadioManager : UIBase
     {
         DialogueStructure mirrorDialogue = DataManager.Instance._dialogue["Dialogue_0024"];
         // DialogueStructure mirrorDialogue = _testDialogue["Dialogue_0024"];
-        
+        DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
         _realText.gameObject.SetActive(true);
         PlayerInteract.Instance.HideInteractionMark();
         for (int i = 0; i < mirrorDialogue.Dialogue_Text_List.Count; i++)
         {
             DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
+            
             _realText.text = $"<mark=#00000055>{mirrorDialogue.Dialogue_Text_List[i]}</mark>";
 
             // 페이드 인
@@ -181,7 +168,7 @@ public class RadioManager : UIBase
         QuizManager.Instance.OnQuizEnd?.Invoke();
     }
 
-    private async UniTaskVoid ShowDialogue()
+    private async UniTask ShowDialogue()
     {
         // DialogueStructure realDialogue = _testDialogue["Dialogue_0027"];
         // DialogueStructure mirrorDialogue = _testDialogue["Dialogue_0028"];
@@ -198,6 +185,7 @@ public class RadioManager : UIBase
         for (int i = 0; i < maxLength; i++)
         {
             DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
+            
             // 각 텍스트가 있을 경우에만 표시
             if (i < realDialogue.Dialogue_Text_List.Count)
             {
@@ -282,5 +270,37 @@ public class RadioManager : UIBase
     private void UpdateRadioText()
     {
         _radioText.text = $"{_tenDigit}{_oneDigit}.{_decimalDigit}MHz";
+    }
+
+    private async UniTask WaitForInvestigateEndAsync()
+    {
+        UIManager.Instance.OnSelectEnd = null;
+        var tcs = new UniTaskCompletionSource();
+        UIManager.Instance.OnSelectEnd += () => tcs.TrySetResult();
+        await tcs.Task;
+    }
+    
+    private async UniTask GetMirrorPiece()
+    {
+        UIManager.Instance.OpenUI(UIManager.Instance.investigateUI,DataManager.Instance._evidences["Evidence_023"]);
+        //yes, no 선택 기다리기
+        await WaitForInvestigateEndAsync();
+        Debug.LogWarning($"Investigate UI 버튼 선택 다 기다림.");
+                
+        //yes라면
+        if (UIManager.Instance.isYesClicked)
+        {
+            Debug.LogWarning("Investigate UI에서 YES를 선택함.");
+                    
+            //증거물 상세 ui가 닫힐 때까지 기다리기
+            await UniTask.WaitUntil(() => !UIManager.Instance.IsAnyUIOpen());
+            Debug.LogWarning("창 닫힐 때까지 다 기다림.");
+        }
+        else
+        {
+            //no라면
+            Debug.LogWarning("Investigate UI에서 NO를 선택함.");
+        }
+        MirrorPuzzleManager.Instance.GetMirrorPiece("Evidence_023");
     }
 }

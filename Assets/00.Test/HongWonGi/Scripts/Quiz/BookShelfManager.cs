@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class BookShelfManager : UIBase
 {
@@ -10,18 +11,33 @@ public class BookShelfManager : UIBase
     [SerializeField] private List<int> _answer; // 정답 순서
     [SerializeField] private Transform _bookParent;
 
-    public override void OnOpen(string quizID)
+    public override async void OnOpen(string quizID)
     {
         base.OnOpen(quizID);
+        _curQuizID = "";
+        _curQuiz = null;
         _curQuizID = quizID;
         _curQuiz = DataManager.Instance._quiz[_curQuizID];
         Debug.Log($"# quiz id : {quizID}, _curQuiz : {_curQuiz}");
         
+        //정신세계인데
         //만약 거울이 깨졌는데 기믹을 미리 성공했다면
         if (_curQuiz.isSolved)
         {
             //퀴즈 실행되지 않음
             UIManager.Instance.CloseTopUI();
+            
+            //거울이 깨져있다면
+            if (MirrorPuzzleManager.Instance.isMirrorBroke)
+            {
+                DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
+                //조각을 습득하지 않았다면 습득 먼저 진행
+                if (!DataManager.Instance._evidences["Evidence_019"].isAcquired)
+                {
+                    await GetMirrorPiece();
+                }
+            }
+            
             QuizManager.Instance.OnQuizEnd?.Invoke();
             return;
         }
@@ -33,12 +49,9 @@ public class BookShelfManager : UIBase
     {
         base.OnClose();
         transform.GetChild(0).gameObject.SetActive(false);
-        
-        _curQuizID = "";
-        _curQuiz = null;
     }
     
-    public void CheckBookOrder()
+    public async void CheckBookOrder()
     {
         List<int> currentOrder = new List<int>();
         
@@ -58,6 +71,14 @@ public class BookShelfManager : UIBase
             //퀴즈 해결되었다고 표시
             _curQuiz.isSolved = true;
             UIManager.Instance.CloseTopUI();
+            
+            //거울이 깨져있는지 확인
+            if (MirrorPuzzleManager.Instance.isMirrorBroke)
+            {
+                //증거물 획득
+                await GetMirrorPiece();
+            }
+            DataManager.Instance._events["Event_B044"].repeatType = false;
             QuizManager.Instance.OnQuizEnd?.Invoke();
         }
     }
@@ -73,5 +94,37 @@ public class BookShelfManager : UIBase
                 return false;
         }
         return true;
+    }
+    
+    private async UniTask WaitForInvestigateEndAsync()
+    {
+        UIManager.Instance.OnSelectEnd = null;
+        var tcs = new UniTaskCompletionSource();
+        UIManager.Instance.OnSelectEnd += () => tcs.TrySetResult();
+        await tcs.Task;
+    }
+    
+    private async UniTask GetMirrorPiece()
+    {
+        UIManager.Instance.OpenUI(UIManager.Instance.investigateUI,DataManager.Instance._evidences["Evidence_019"]);
+        //yes, no 선택 기다리기
+        await WaitForInvestigateEndAsync();
+        Debug.LogWarning($"Investigate UI 버튼 선택 다 기다림.");
+                
+        //yes라면
+        if (UIManager.Instance.isYesClicked)
+        {
+            Debug.LogWarning("Investigate UI에서 YES를 선택함.");
+                    
+            //증거물 상세 ui가 닫힐 때까지 기다리기
+            await UniTask.WaitUntil(() => !UIManager.Instance.IsAnyUIOpen());
+            Debug.LogWarning("창 닫힐 때까지 다 기다림.");
+        }
+        else
+        {
+            //no라면
+            Debug.LogWarning("Investigate UI에서 NO를 선택함.");
+        }
+        MirrorPuzzleManager.Instance.GetMirrorPiece("Evidence_019");
     }
 }

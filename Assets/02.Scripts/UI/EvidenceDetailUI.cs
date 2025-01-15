@@ -382,7 +382,7 @@ public class EvidenceDetailUI : UIBase
         btn.GetComponent<Image>().color = UnityExtension.HexColor(WhiteColor);
     }
 
-    void CheckSubEvidence()
+    async void CheckSubEvidence()
     {
         //우선은 OnePage, TwoPage에 대해서만 작성
         //OnePage에서는 _curPage와 바로 비교
@@ -428,7 +428,7 @@ public class EvidenceDetailUI : UIBase
                         return;
                     }
                     
-                    EventManagerYKM.Instance.ExecuteEvent(resultID).Forget();
+                    await EventManagerYKM.Instance.ExecuteEvent(resultID);
                 }
             }   
         }
