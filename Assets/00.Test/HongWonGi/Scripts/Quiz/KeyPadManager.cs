@@ -85,12 +85,12 @@ public class KeyPadManager : UIBase
         if(_inputText.text ==_curQuiz.correctAnswer)
         {
             _curQuiz.isSolved = true;
+            UIManager.Instance.isQuizing = false;
             UIManager.Instance.CloseTopUI();
         }
         else
         {
             _inputText.text = "";
-            QuizManager.Instance.OnQuizEnd?.Invoke();
         }
     }
 

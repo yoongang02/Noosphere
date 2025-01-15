@@ -24,18 +24,18 @@ public class UIManager : Singleton<UIManager>
     
     public Action OnSelectEnd;
     public bool isYesClicked = false;
-    private bool _isQuizing = false;
+    public bool isQuizing = false;
     private void Update()
     {
         // ESC 버튼 입력 처리
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if(IsUIOpen(dialogueUI)) return;
-            if (_isQuizing)
+            if (isQuizing)
             {
                 Debug.LogWarning("ESC 눌러서 퀴즈 종료");
                 QuizManager.Instance.OnQuizEnd?.Invoke();
-                _isQuizing = false;
+                isQuizing = false;
             }
             CloseTopUI();
         }
@@ -101,7 +101,7 @@ public class UIManager : Singleton<UIManager>
         // 스택에 추가하고 UI를 활성화
         // 상호작용 금지
         LockPlayer();
-        _isQuizing = true;
+        isQuizing = true;
         uiStack.Push(ui);
         topUI = ui;
         ui.OnOpen(quizID);
@@ -123,10 +123,10 @@ public class UIManager : Singleton<UIManager>
         {
             this.topUI = null;
             UnLockPlayer();
-            if (_isQuizing) LockInteraction();
+            if (isQuizing) LockInteraction();
         }
 
-        if (_isQuizing) _isQuizing = false;
+        if (isQuizing) isQuizing = false;
     }
     
     public void CloseAllUI()
@@ -162,6 +162,7 @@ public class UIManager : Singleton<UIManager>
 
     public void LockInteraction()
     {
+        Debug.LogWarning("LockInteraction 실행");
         PlayerInteract.Instance.canInteract = false;
         PlayerInteract.Instance.HideInteractionMark();
     }
