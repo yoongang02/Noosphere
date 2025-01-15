@@ -125,6 +125,6 @@ public class BookShelfManager : UIBase
             //no라면
             Debug.LogWarning("Investigate UI에서 NO를 선택함.");
         }
-        MirrorPuzzleManager.Instance.GetMirrorPiece("Evidence_023");
+        MirrorPuzzleManager.Instance.GetMirrorPiece("Evidence_019");
     }
 }

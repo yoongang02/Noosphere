@@ -143,6 +143,8 @@ public class RadioManager : UIBase
         PlayerInteract.Instance.HideInteractionMark();
         for (int i = 0; i < mirrorDialogue.Dialogue_Text_List.Count; i++)
         {
+            DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
+            
             _realText.text = $"<mark=#00000055>{mirrorDialogue.Dialogue_Text_List[i]}</mark>";
 
             // 페이드 인
@@ -182,6 +184,8 @@ public class RadioManager : UIBase
 
         for (int i = 0; i < maxLength; i++)
         {
+            DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
+            
             // 각 텍스트가 있을 경우에만 표시
             if (i < realDialogue.Dialogue_Text_List.Count)
             {

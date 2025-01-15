@@ -349,6 +349,21 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             //Investigate UI를 열수 있으면 열기
             if (_evidence.canInvestigate == 'Y')
             {
+                if (UIManager.Instance.IsAnyUIOpen())
+                {
+                    await UniTask.Delay(500);
+                    
+                    Debug.LogWarning($"Investigate UI 열기 전, 창이 열려있어서 닫기");
+                    UIManager.Instance.CloseAllUI();
+                    await UniTask.Yield();
+                    if (UIManager.Instance.evidenceDetailUI.transform.GetChild(0).gameObject.activeSelf)
+                    {
+                        UIManager.Instance.evidenceDetailUI.transform.GetChild(0).gameObject.SetActive(false);
+                    }
+
+                    await UniTask.Delay(200);
+                }
+                
                 UIManager.Instance.OpenUI(UIManager.Instance.investigateUI,_evidence);
                 //yes, no 선택 기다리기
                 await WaitForInvestigateEndAsync();
@@ -368,13 +383,13 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     //no라면
                     Debug.LogWarning("Investigate UI에서 NO를 선택함.");
                 }
+                
 
                 if (evidenceID == "Evidence_020" || evidenceID == "Evidence_021" ||
                     evidenceID == "Evidence_022")
                 {
                     MirrorPuzzleManager.Instance.GetMirrorPiece(evidenceID);
                 }
-                
                 
                 //습득할 수 있는 증거물의 이벤트 type이 true이고 repeat fasle result가 없으면 repeatType을 false로 변경
                 if (_event.repeatType && _evidence.acquisitionType == 'Y' && string.IsNullOrEmpty(_event.repeatFalseResult))
@@ -400,6 +415,10 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             }
 
             _isEventSuccess = true;
+        }
+        else
+        {
+            _isEventSuccess = false;
         }
     }
     
