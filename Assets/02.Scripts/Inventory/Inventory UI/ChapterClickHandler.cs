@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ChapterClickHandler : InventoryNavigator, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+public class ChapterClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     private GameObject _lastEnteredObject;
+    private InventoryNavigator _navigator;
+
+    void Start()
+    {
+        _navigator = InventoryManager.Instance.transform.GetComponent<InventoryNavigator>();
+    }
     public void OnPointerClick(PointerEventData eventData)
     {
         //젤 위에 있는 UI 아니면 작동 X
@@ -22,7 +28,7 @@ public class ChapterClickHandler : InventoryNavigator, IPointerClickHandler, IPo
         if (InventoryManager.Instance.selectedChapterUIList.Contains(clickedObject))
         {
             int chapterIndex = InventoryManager.Instance.selectedChapterUIList.IndexOf(clickedObject);
-            SetChapterSelected(chapterIndex);
+            _navigator.SetChapterSelected(chapterIndex);
         }
     }
 
@@ -41,7 +47,7 @@ public class ChapterClickHandler : InventoryNavigator, IPointerClickHandler, IPo
             _lastEnteredObject = enteredObject;
             
             int chapterIndex = InventoryManager.Instance.deselectedChapterUIList.IndexOf(enteredObject);
-            HoverEnterOnChapter(chapterIndex);
+            _navigator.HoverEnterOnChapter(chapterIndex);
         }
     }
 
