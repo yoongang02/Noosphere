@@ -165,14 +165,15 @@ public class MentalEnterProcess : MonoBehaviour
         InitProgressBar();
         
         //씬 이동
-        StartCoroutine(LoadSceneAsync(mentalInfo.destination));
+        // StartCoroutine(LoadSceneAsync(mentalInfo.destination));
+        LoadSceneAsync(mentalInfo.destination).Forget();
         PlayerInteract.Instance.isInMental = !PlayerInteract.Instance.isInMental;
         
         //이동 성공 시 결과가 있다면 실행
-        if (!string.IsNullOrEmpty(mentalInfo.mentalTrueResult))
-        {
-            EventManagerYKM.Instance.ExecuteEvent(mentalInfo.mentalTrueResult).Forget();
-        }
+        // if (!string.IsNullOrEmpty(mentalInfo.mentalTrueResult))
+        // {
+        //     EventManagerYKM.Instance.ExecuteEvent(mentalInfo.mentalTrueResult).Forget();
+        // }
 
         if (!PlayerInteract.Instance.isInMental)
         {
@@ -216,17 +217,48 @@ public class MentalEnterProcess : MonoBehaviour
         }
     }
     
-    private IEnumerator LoadSceneAsync(string sceneName)
+    // private IEnumerator LoadSceneAsync(string sceneName)
+    // {
+    //     AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
+    //     
+    //     while (!operation.isDone)
+    //     {
+    //         yield return null;
+    //     }
+    //     PlayerInteract.Instance.HideInteractionMark();
+    // }
+    private async UniTask LoadSceneAsync(string sceneName)
     {
+        string eventId;//씬전환이후에 mentalinfo가 null이 되는 문제 해결위함
+        if (mentalInfo != null)
+        {
+            eventId = mentalInfo.mentalTrueResult;
+        }
+        else
+        {
+            eventId = null;
+        }
+
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
-        
+    
         while (!operation.isDone)
         {
-            yield return null;
+            await UniTask.Yield();
         }
+
+        // await UniTask.Yield(); 
+    
+        // 씬 이동 후 이펙트 실행
+        if (EffectManager.Instance != null)
+        {
+            await EffectManager.Instance.StartMentalEffectReverse(eventId);
+        }
+      
         PlayerInteract.Instance.HideInteractionMark();
+        
     }
 
+    
     IEnumerator StartCoolTime()
     {
         PlayerInteract.Instance.HideInteractionMark();
