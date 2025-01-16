@@ -11,7 +11,7 @@ public class TimeLineController : MonoBehaviour
     [SerializeField] private GameObject _playerParent;
     private GameObject _player;
 
-      private void Start()
+      private void Awake()
         {
             _player = FindObjectOfType<PlayerController>().gameObject;
             _playableDirector.stopped += EndTimeLine;

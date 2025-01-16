@@ -114,6 +114,32 @@ public class EffectManager : Singleton<EffectManager>
         _vhsVolume.weight = 0;
         _cameraData.renderPostProcessing = false;
     }
+    
+    public async UniTask StartMentalEffectReverse(string eventId=null)  // UniTaskVoid -> UniTask로 변경
+    {
+        vhsObj.SetActive(true);
+        _cameraData.renderPostProcessing = true;
+        PlayerInteract.Instance.canInteract = false;
+        Color color = _vhsImage.color;
+        color.a = 1f;
+        _vhsImage.color = color;
+        _vhsVolume.weight = 1f;
+
+        await DOTween.To(() => _vhsImage.color.a, x => {
+            Color newColor = _vhsImage.color;
+            newColor.a = x;
+            _vhsImage.color = newColor;
+            _vhsVolume.weight = x;
+        }, 0f, 3f).AsyncWaitForCompletion();
+
+        vhsObj.SetActive(false);
+        _cameraData.renderPostProcessing = false;
+        PlayerInteract.Instance.canInteract = true;
+        if (!string.IsNullOrEmpty(eventId))
+        {
+            EventManagerYKM.Instance.ExecuteEvent(eventId).Forget();
+        }
+    }
 
     IEnumerator EndEffect()
     {

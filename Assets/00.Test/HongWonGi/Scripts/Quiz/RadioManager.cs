@@ -106,7 +106,7 @@ public class RadioManager : UIBase
     {
         if (_radioText.text == radioAnswer)
         {
-            SoundManager.Instance.PlaySound("Soundresource_049",1);
+            SoundManager.Instance.PlaySound(Define.Soundresource_049,1);
             
             //퀴즈 해결되었다고 표시
             _curQuiz.isSolved = true;
@@ -129,7 +129,7 @@ public class RadioManager : UIBase
         }
         else
         {
-            SoundManager.Instance.PlaySound("Soundresource_001",1);
+            SoundManager.Instance.PlaySound(Define.Soundresource_001,1);
             Debug.Log("오답");
         }
     }
