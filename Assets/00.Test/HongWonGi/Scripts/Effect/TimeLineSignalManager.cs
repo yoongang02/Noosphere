@@ -83,11 +83,16 @@ public class TimeLineSignalManager : MonoBehaviour
 
        _vhsObj.SetActive(false);
        _cameraData.renderPostProcessing = false;
-       SceneManager.LoadScene("Stage2Map_spirit");
+       DontDestroyOnLoad(_player.gameObject);
    }
    public void OnStartMentalProcess()
    {
        StartAutoEffect().Forget();
+   }
+
+   public void OnLoadScene(string SceneName)
+   {
+       SceneManager.LoadSceneAsync(SceneName);
    }
 
 }
