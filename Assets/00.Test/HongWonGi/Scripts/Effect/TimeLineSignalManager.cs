@@ -10,6 +10,7 @@ public class TimeLineSignalManager : MonoBehaviour
 {
     private Animator _player;
     [SerializeField] private Animator _npc;
+    [SerializeField] private Animator _friendNpc;
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Animator>();
@@ -38,6 +39,15 @@ public class TimeLineSignalManager : MonoBehaviour
    public void EndNpcAnim(string npcAnim)
    {
        _npc.SetBool(npcAnim,false);
+   }
+   public void StartFriendNpcAnim(string npcAnim)
+   {
+       _friendNpc.SetBool(npcAnim,true);
+   }
+
+   public void EndFriendNpcAnim(string npcAnim)
+   {
+       _friendNpc.SetBool(npcAnim,false);
    }
    
    /// <summary>
