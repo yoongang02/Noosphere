@@ -11,6 +11,8 @@ public class TimeLineSignalManager : MonoBehaviour
     private Animator _player;
     [SerializeField] private Animator _npc;
     [SerializeField] private Animator _friendNpc;
+    [SerializeField] private SkinnedMeshRenderer _freindMaterial;
+    [SerializeField] private Material _friendMaterial;
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Animator>();
@@ -43,13 +45,19 @@ public class TimeLineSignalManager : MonoBehaviour
    public void StartFriendNpcAnim(string npcAnim)
    {
        _friendNpc.SetBool(npcAnim,true);
+       _freindMaterial.material = _friendMaterial;
    }
 
    public void EndFriendNpcAnim(string npcAnim)
    {
        _friendNpc.SetBool(npcAnim,false);
    }
-   
+
+   public void SetMaterial(Material material)
+   {
+       _freindMaterial.material = material;
+   }
+
    /// <summary>
    /// ///////////////////////////////////////////////////
    /// </summary>
