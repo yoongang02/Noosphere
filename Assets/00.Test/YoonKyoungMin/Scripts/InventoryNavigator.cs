@@ -35,7 +35,7 @@ public class InventoryNavigator : UIBase
         _inventoryWindow.SetActive(true);
         InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curRoomInfo;
         //인벤토리 열었을 때, 현재 상태를 바탕으로 인벤토리 업데이트 진행
-        InventoryManager.Instance.UpdateInventoryUI();
+        SetChapterSelected(InventoryManager.Instance.currentViewChapter);
     }
 
     public override void OnClose()
@@ -119,9 +119,10 @@ public class InventoryNavigator : UIBase
             return;
         }
 
-        //챕터 및 선택 초기화
+        //슬롯 선택 초기화
         currentIndex = 0;
         UpdateSelection();
+        InitChapter(InventoryManager.Instance.currentViewChapter);
     }
 
     //증거물 행 별로 슬롯에 추가 함수
@@ -293,22 +294,44 @@ public class InventoryNavigator : UIBase
     {
         InventoryManager.Instance.currentViewChapter = index;
         
-        GameObject selectedChapter = InventoryManager.Instance.selectedChapterUIList[index];
-        GameObject deselectedChapter = InventoryManager.Instance.deselectedChapterUIList[index];
-        selectedChapter.SetActive(true);
-        deselectedChapter.SetActive(false);
-
-        foreach (var _chapter in InventoryManager.Instance.selectedChapterUIList)
-        {
-            if(_chapter != selectedChapter) _chapter.SetActive(false);
-        }
-        foreach (var _chapter in InventoryManager.Instance.deselectedChapterUIList)
-        {
-            if(_chapter != deselectedChapter) _chapter.SetActive(true);
-        }
+        InitChapter(index);
         
         //인벤토리 업데이트 하기
         InventoryManager.Instance.UpdateInventoryUI();
+    }
+    
+    public void InitChapter(int index)
+    {
+        InventoryManager.Instance.currentViewChapter = index;
+        
+        GameObject selectedChapterUI = InventoryManager.Instance.selectedChapterUIList[index];
+        GameObject deselectedChapterUI = InventoryManager.Instance.deselectedChapterUIList[index];
+        
+        if (!selectedChapterUI.activeSelf)
+        {
+            //선택 버전이 활성화되고
+            selectedChapterUI.SetActive(true);
+            //비선택 버전이 비활성화 되기
+            deselectedChapterUI.SetActive(false);
+
+            //선택 버전의 나머지 애들 비활성화
+            foreach (var chapter in InventoryManager.Instance.selectedChapterUIList)
+            {
+                if (chapter != selectedChapterUI)
+                {
+                    chapter.SetActive(false);
+                }
+            }
+            
+            //비선택 버전의 나머지 애들 활성화
+            foreach (var chapter in InventoryManager.Instance.deselectedChapterUIList)
+            {
+                if (chapter != deselectedChapterUI)
+                {
+                    chapter.SetActive(true);
+                }
+            }
+        }
     }
     
     //챕터 호버 enter
