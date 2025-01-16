@@ -33,6 +33,7 @@ public class InventoryNavigator : UIBase
         base.OnOpen();
         UIManager.Instance.isInMap = false;
         _inventoryWindow.SetActive(true);
+        InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curRoomInfo;
         //인벤토리 열었을 때, 현재 상태를 바탕으로 인벤토리 업데이트 진행
         InventoryManager.Instance.UpdateInventoryUI();
     }
@@ -41,7 +42,7 @@ public class InventoryNavigator : UIBase
     {
         base.OnClose();
         UIManager.Instance.isInMap = true;
-        InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curStageInfo;
+        InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curRoomInfo;
         _inventoryWindow.SetActive(false);
     }
 

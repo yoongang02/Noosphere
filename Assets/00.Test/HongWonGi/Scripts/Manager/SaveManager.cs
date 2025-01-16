@@ -24,7 +24,7 @@ public class SaveManager : Singleton<SaveManager>
    public void Save()
    {
       _loadingText.alpha = 0f;
-      ES3.Save("curStageInfo", EventManagerYKM.Instance.curStageInfo);
+      ES3.Save("curRoomInfo", EventManagerYKM.Instance.curRoomInfo);
       ES3.Save("nextEventID", EventManagerYKM.Instance.nextEventID);
       ES3.Save("startEventID", EventManagerYKM.Instance.startEventID);
       // ES3.Save("chapterInventories", InventoryManager.Instance.chapterInventories);

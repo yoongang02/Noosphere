@@ -87,7 +87,7 @@ public class InventoryManager : Singleton<InventoryManager>
     void InitInventory()
     {
         //챕터 정보 저장하기
-        int chapterCount = Enum.GetValues(typeof(EventManagerYKM.ChapterInfo)).Length;
+        int chapterCount = Enum.GetValues(typeof(EventManagerYKM.RoomInfo)).Length;
         currentViewChapter = 0;
         chapterInventories.Clear();
         
@@ -101,7 +101,7 @@ public class InventoryManager : Singleton<InventoryManager>
     public void AddEvidence(EvidenceStructure evidence)
     {
         //현재 어디 챕터인지 정보 가져오기
-        int chapterNum = (int)EventManagerYKM.Instance.curStageInfo;
+        int chapterNum = evidence.inventoryIndex;
         ChapterInventory _chapterInventory = chapterInventories[chapterNum];
         
         //인벤토리 슬롯 생성
@@ -202,7 +202,6 @@ public class InventoryManager : Singleton<InventoryManager>
         yield return null;
         
         //현재 챕터에 따른 인벤토리 가져오기
-        currentViewChapter = (int)EventManagerYKM.Instance.curStageInfo;
         ChapterInventory currentInventory = chapterInventories[currentViewChapter];
 
         // 현실 세계 증거물 추가

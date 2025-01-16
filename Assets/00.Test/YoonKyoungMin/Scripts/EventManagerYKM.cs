@@ -11,9 +11,18 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     {
         Prologue,
         Stage1,
-        Stage2
+        Stage2,
+        Final
     }
-    public ChapterInfo curStageInfo;
+    public enum RoomInfo
+    {
+        Room_101,
+        Room_102,
+        Room_103,
+        Room_104
+    }
+    public RoomInfo curRoomInfo;
+    public ChapterInfo curChapterInfo;
     
     //다음 이벤트 정보
     public string startEventID;
@@ -29,7 +38,8 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     void Awake()
     {
         //게임 시작 시, 스테이지 정보 초기화
-        curStageInfo = ChapterInfo.Prologue;
+        curChapterInfo = ChapterInfo.Prologue;
+        curRoomInfo = RoomInfo.Room_101;
         nextEventID = startEventID;
     }
 
