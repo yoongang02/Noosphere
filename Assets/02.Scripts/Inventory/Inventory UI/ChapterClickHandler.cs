@@ -25,7 +25,7 @@ public class ChapterClickHandler : MonoBehaviour, IPointerClickHandler, IPointer
         
         Debug.Log($"챕터 클릭 {clickedObject.name}");
         
-        if (InventoryManager.Instance.selectedChapterUIList.Contains(clickedObject))
+        if (eventData.button == PointerEventData.InputButton.Left && InventoryManager.Instance.selectedChapterUIList.Contains(clickedObject))
         {
             int chapterIndex = InventoryManager.Instance.selectedChapterUIList.IndexOf(clickedObject);
             _navigator.SetChapterSelected(chapterIndex);
