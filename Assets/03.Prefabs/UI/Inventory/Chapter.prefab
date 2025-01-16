@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 496399468252829704}
   - component: {fileID: 4455329152012089497}
   - component: {fileID: 4459674400745036497}
+  - component: {fileID: 540872417786334613}
   m_Layer: 5
   m_Name: Chapter
   m_TagString: Untagged
@@ -76,6 +77,43 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &540872417786334613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176073073910830301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b05c65131625a467ea17e816ad4c23df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnClickEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHoverEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHoverExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnForceQuitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  _inventoryWindow: {fileID: 0}
+  _curSelectedSlot: {fileID: 0}
+  currentIndex: 0
+  isBothInventory: 0
+  inventorySlots: []
+  _selectedSprite: {fileID: 0}
+  _deselectedSprite: {fileID: 0}
+  _slotUseBtn: {fileID: 0}
+  canEvidenceUse: 0
+  _evidenceUseEventId: 
 --- !u!1 &3427460081834763795
 GameObject:
   m_ObjectHideFlags: 0
