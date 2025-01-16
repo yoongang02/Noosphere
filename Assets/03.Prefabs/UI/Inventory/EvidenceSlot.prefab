@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 11.1}
+  m_AnchoredPosition: {x: 0, y: 6.799988}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &4390594003705478678
@@ -204,7 +204,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 77b10b07af4da4924a5b2b6b08969c59, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a3cfbcebafb2342d28ea4848165d951f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -239,13 +239,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeb2a7d976a6b4c50a87915d50782f12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnClickEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHoverEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHoverExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnForceQuitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  _inventoryWindow: {fileID: 0}
+  _curSelectedSlot: {fileID: 0}
   currentIndex: 0
   isBothInventory: 0
-  canEvidenceUse: 0
   inventorySlots: []
   _selectedSprite: {fileID: 0}
   _deselectedSprite: {fileID: 0}
   _slotUseBtn: {fileID: 0}
+  canEvidenceUse: 0
+  _evidenceUseEventId: 
 --- !u!1 &8094573179339725542
 GameObject:
   m_ObjectHideFlags: 0
@@ -280,7 +298,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -26}
+  m_AnchoredPosition: {x: 0, y: -32.8}
   m_SizeDelta: {x: 135, y: 164}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &4632835206805124118
