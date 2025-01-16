@@ -37,7 +37,7 @@ public class DialogueCSVParser
                     currentDialogueId = dialogueId;
                     currentDialogue = new DialogueStructure();
                     currentDialogue.dialogueId = dialogueId;
-                    currentDialogue.Dialogue_Text_List = new List<string>();
+                    currentDialogue.Dialogue_Text_List = new List<DialogueStructure.DialougeText>();
     
                     for (int j = 1; j < headers.Length && j < values.Length; j++)
                     {
@@ -47,17 +47,28 @@ public class DialogueCSVParser
                         string value = values[j].Trim().Replace("\"", "");
                         SetField(currentDialogue, header, value);
                     }
-    
-                    currentDialogue.Dialogue_Text_List.Add(currentDialogue.dialogueText);
+
+                    DialogueStructure.DialougeText dialougeText = new DialogueStructure.DialougeText();
+                    dialougeText.text = currentDialogue.dialogueText;
+                    dialougeText.tutorialID = currentDialogue.tutorialId;
+                    
+                    currentDialogue.Dialogue_Text_List.Add(dialougeText);
                     dictionary[currentDialogueId] = currentDialogue;
                 }
                 else if (currentDialogue != null)
                 {
                     int textIndex = Array.FindIndex(headers, h => h.Trim().Replace("\"", "") == "dialogueText");
-                    if (textIndex >= 0 && textIndex < values.Length)
+                    int tutorialIndex = Array.FindIndex(headers, h => h.Trim().Replace("\"", "") == "tutorialId");
+                    if (textIndex >= 0 && textIndex < values.Length && tutorialIndex >= 0 && tutorialIndex < values.Length)
                     {
                         string additionalText = values[textIndex].Trim().Replace("\"", "");
-                        currentDialogue.Dialogue_Text_List.Add(additionalText);
+                        string tutorialID = values[tutorialIndex].Trim().Replace("\"", "");
+                        
+                        DialogueStructure.DialougeText dialougeText = new DialogueStructure.DialougeText();
+                        dialougeText.text = additionalText;
+                        dialougeText.tutorialID = tutorialID;
+                        
+                        currentDialogue.Dialogue_Text_List.Add(dialougeText);
                     }
                 }
             }

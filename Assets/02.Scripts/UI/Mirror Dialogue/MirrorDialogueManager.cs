@@ -32,7 +32,7 @@ public class MirrorDialogueManager : UIBase
         _curDialogue = DataManager.Instance._dialogue["Dialogue_0030"];
         
         transform.GetChild(0).gameObject.SetActive(true);
-        await TypeText(_curDialogue.Dialogue_Text_List[0]);
+        await TypeText(_curDialogue.Dialogue_Text_List[0].text);
         HoverYesBtn();
         _btns.SetActive(true);
     }

@@ -111,8 +111,10 @@ public class DialogueManager : UIBase
 
         if (_currentLineIndex < _curDialogue.Dialogue_Text_List.Count)
         {
+            //튜토리얼 있으면 실행
+            TutorialManager.Instance.ShowTutorial(_curDialogue.Dialogue_Text_List[_currentLineIndex].tutorialID);
             // 타이핑 시작
-            await TypeText(_curDialogue.Dialogue_Text_List[_currentLineIndex]);
+            await TypeText(_curDialogue.Dialogue_Text_List[_currentLineIndex].text);
             // 타이핑이 완료되었거나 스킵되었을 때만 다음 라인으로 진행
             _currentLineIndex++;
         }
