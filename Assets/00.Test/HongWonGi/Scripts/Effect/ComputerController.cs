@@ -19,7 +19,11 @@ public class ComputerController : UIBase
         base.OnOpen();
         transform.GetChild(0).gameObject.SetActive(true);
         _eventChannel.RaiseEvent("0");//컴퓨터 열었을때 맨처음 버튼 눌리는 이벤트 전달
-        _exitBtn.onClick.AddListener(()=>UIManager.Instance.CloseTopUI());
+        _exitBtn.onClick.AddListener(()=>
+        {
+            SoundManager.Instance.PlaySFX("Soundresource_036");
+            UIManager.Instance.CloseTopUI();
+        });
     }
     
     public override void OnClose()

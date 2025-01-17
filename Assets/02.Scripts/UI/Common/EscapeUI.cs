@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class EscapeUI : MonoBehaviour, IPointerClickHandler
+public class EscapeUI : Singleton<EscapeUI>, IPointerClickHandler
 {
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -16,6 +16,7 @@ public class EscapeUI : MonoBehaviour, IPointerClickHandler
         //클릭한 오브젝트가 챕터인지 파악
         if (eventData.button == PointerEventData.InputButton.Left)
         {
+            SoundManager.Instance.PlaySFX("Soundresource_036");
             UIManager.Instance.CloseTopUI();
         }
     }
