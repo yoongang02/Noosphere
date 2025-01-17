@@ -27,7 +27,7 @@ public class MentalEnterProcess : MonoBehaviour
     {
         if (!UIManager.Instance.IsAnyUIOpen())
         {
-            if (PlayerInteract.Instance.canInteract && _canEnter && !_startEnter && Input.GetKeyDown(KeyCode.Space))
+            if (PlayerInteract.Instance.canInteract && _canEnter && !_startEnter && Input.GetKeyDown(KeyCode.R))
             {
                 if (PlayerInteract.Instance.isInMental)
                 {
@@ -57,7 +57,7 @@ public class MentalEnterProcess : MonoBehaviour
             if (_startEnter && !isComplete)
             {
                 PlayerInteract.Instance.HideInteractionMark();
-                if (Input.GetKey(KeyCode.Space))
+                if (Input.GetKey(KeyCode.R))
                 {
                     float value = _progressBarFill.FillAmount();
                     EffectManager.Instance.StartMentalEffect(value);
