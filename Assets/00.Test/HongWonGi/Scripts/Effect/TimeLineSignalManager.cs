@@ -10,6 +10,9 @@ public class TimeLineSignalManager : MonoBehaviour
 {
     private Animator _player;
     [SerializeField] private Animator _npc;
+    [SerializeField] private Animator _friendNpc;
+    [SerializeField] private SkinnedMeshRenderer _freindMaterial;
+    [SerializeField] private Material _friendMaterial;
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Animator>();
@@ -39,7 +42,22 @@ public class TimeLineSignalManager : MonoBehaviour
    {
        _npc.SetBool(npcAnim,false);
    }
-   
+   public void StartFriendNpcAnim(string npcAnim)
+   {
+       _friendNpc.SetBool(npcAnim,true);
+       _freindMaterial.material = _friendMaterial;
+   }
+
+   public void EndFriendNpcAnim(string npcAnim)
+   {
+       _friendNpc.SetBool(npcAnim,false);
+   }
+
+   public void SetMaterial(Material material)
+   {
+       _freindMaterial.material = material;
+   }
+
    /// <summary>
    /// ///////////////////////////////////////////////////
    /// </summary>
@@ -73,11 +91,16 @@ public class TimeLineSignalManager : MonoBehaviour
 
        _vhsObj.SetActive(false);
        _cameraData.renderPostProcessing = false;
-       SceneManager.LoadScene("Stage2Map_spirit");
+       DontDestroyOnLoad(_player.gameObject);
    }
    public void OnStartMentalProcess()
    {
        StartAutoEffect().Forget();
+   }
+
+   public void OnLoadScene(string SceneName)
+   {
+       SceneManager.LoadSceneAsync(SceneName);
    }
 
 }
