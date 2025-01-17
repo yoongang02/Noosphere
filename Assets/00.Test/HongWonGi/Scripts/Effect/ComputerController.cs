@@ -27,5 +27,6 @@ public class ComputerController : UIBase
         base.OnClose();
         _exitBtn.onClick.RemoveAllListeners();
         transform.GetChild(0).gameObject.SetActive(false);
+        EffectManager.Instance.OnEffectEnd.Invoke();
     }
 }
