@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class EscapeUI : Singleton<EscapeUI>, IPointerClickHandler
 {
+    [SerializeField] private GameObject _escapeBtn;
     public void OnPointerClick(PointerEventData eventData)
     {
         //젤 위에 있는 UI 아니면 작동 X
@@ -18,6 +19,12 @@ public class EscapeUI : Singleton<EscapeUI>, IPointerClickHandler
         {
             SoundManager.Instance.PlaySFX("Soundresource_036");
             UIManager.Instance.CloseTopUI();
+            _escapeBtn.SetActive(false);
         }
+    }
+
+    public void Active()
+    {
+        _escapeBtn.SetActive(true);
     }
 }

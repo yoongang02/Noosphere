@@ -21,6 +21,7 @@ public class CardKeyManager : UIBase
         base.OnOpen();
         InitCardKey();
         transform.GetChild(0).gameObject.SetActive(true);
+        EscapeUI.Instance.Active();
     }
 
     public override void OnClose()

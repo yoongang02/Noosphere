@@ -33,6 +33,7 @@ public class InventoryNavigator : UIBase
         base.OnOpen();
         UIManager.Instance.isInMap = false;
         _inventoryWindow.SetActive(true);
+        EscapeUI.Instance.Active();
         InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curRoomInfo;
         //인벤토리 열었을 때, 현재 상태를 바탕으로 인벤토리 업데이트 진행
         SetChapterSelected(InventoryManager.Instance.currentViewChapter);
