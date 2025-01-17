@@ -14,7 +14,7 @@ public class PageBtnHandler : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         //젤 위에 있는 UI 아니면 작동 X
-        if (!UIManager.Instance.IsUIOpen(UIManager.Instance.inventoryUI))
+        if (!UIManager.Instance.IsUIOpen(UIManager.Instance.evidenceDetailUI))
         {
             return;
         }

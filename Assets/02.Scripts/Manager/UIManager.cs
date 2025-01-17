@@ -105,6 +105,7 @@ public class UIManager : Singleton<UIManager>
         uiStack.Push(ui);
         topUI = ui;
         ui.OnOpen(quizID);
+        EscapeUI.Instance.Active();
     }
     public void CloseTopUI()
     {
@@ -113,7 +114,8 @@ public class UIManager : Singleton<UIManager>
         UIBase topUI = uiStack.Pop();
         
         topUI.OnClose();
-
+        SoundManager.Instance.PlaySFX("Soundresource_036");
+        
         if (uiStack.Count > 0)
         {
             this.topUI = uiStack.Peek();
@@ -124,6 +126,7 @@ public class UIManager : Singleton<UIManager>
             this.topUI = null;
             UnLockPlayer();
             if (isQuizing) LockInteraction();
+            EscapeUI.Instance.DisActive();
         }
 
         if (isQuizing) isQuizing = false;

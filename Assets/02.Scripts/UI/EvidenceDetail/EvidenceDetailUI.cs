@@ -60,7 +60,6 @@ public class EvidenceDetailUI : UIBase
         if (transform.childCount > 0)
         {
             transform.GetChild(0).gameObject.SetActive(true);
-            EscapeUI.Instance.Active();
         }
     }
 
@@ -433,5 +432,10 @@ public class EvidenceDetailUI : UIBase
                 }
             }   
         }
+    }
+
+    public void CloseUI()
+    {
+        UIManager.Instance.CloseTopUI();
     }
 }
