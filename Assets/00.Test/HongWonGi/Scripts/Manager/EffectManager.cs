@@ -160,6 +160,7 @@ public class EffectManager : Singleton<EffectManager>
         vhsObj.SetActive(false);
         _cameraData.renderPostProcessing = false;
         PlayerInteract.Instance.canInteract = true;
+        EventManagerYKM.Instance.ExecuteEvent("Event_C074").Forget();
     }
 
     IEnumerator EndEffect()

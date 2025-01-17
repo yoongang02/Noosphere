@@ -98,8 +98,9 @@ public class TimeLineSignalManager : MonoBehaviour
 
    public void OnLoadScene(string SceneName)
    {
+       //돌아오는 정보 저장
        _player.gameObject.GetComponent<PlayerInteract>().isInMental = true;
-       // _player.gameObject.GetComponent<MentalEnterProcess>().SetCombackEventId();
+       _player.gameObject.GetComponent<MentalEnterProcess>().SetCombackEventId("Event_C075");
        SceneManager.LoadSceneAsync(SceneName);
    }
 }
