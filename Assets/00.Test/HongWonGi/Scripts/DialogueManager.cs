@@ -189,16 +189,16 @@ public class DialogueManager : UIBase
     {
         switch (speaker)
         {
-            case "(나)d":
+            case "(나)":
                 SoundManager.Instance.PlayLoopingSound("Soundresource_026"); 
                 break;
-            case "닥터 로만" :
+            case "(닥터 로만)" :
                  SoundManager.Instance.PlayLoopingSound("Soundresource_027");
                  break;
-            case "레이" :
+            case "(레이)" :
                 SoundManager.Instance.PlayLoopingSound("Soundresource_077");
                 break;
-            case "다프네" :
+            case "(다프네)" :
                 SoundManager.Instance.PlayLoopingSound("Soundresource_076");
                 break;
             case "" :
