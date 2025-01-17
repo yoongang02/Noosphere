@@ -263,4 +263,22 @@ public class SoundManager : Singleton<SoundManager>
             source.Stop();
         }
     }
+
+    public void PlayLoopingSound(string id)
+    {
+        SoundData soundData = _sfxDictionary[id];
+        if (soundData == null || soundData.soundClip == null)
+        {
+            Debug.LogWarning("SoundData 유효하지 않습니다.");
+            return;
+        }
+
+        // 재사용 가능한 AudioSource 가져오기
+        AudioSource source = GetAvailableSFXSource();
+
+        source.clip = soundData.soundClip;
+        source.volume = soundData.volume;
+        source.loop = true; // 루프 활성화
+        source.Play();
+    }
 }

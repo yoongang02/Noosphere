@@ -133,7 +133,7 @@ public class DialogueManager : UIBase
     {
         _toggleIcon.SetActive(false);
         _speakerText.text = _curDialogue.characterId;
-        if (_currentLineIndex < _curDialogue.Dialogue_Text_List.Count)
+       if (_currentLineIndex < _curDialogue.Dialogue_Text_List.Count)
         {
             //튜토리얼 있으면 실행
             TutorialManager.Instance.ShowTutorial(_curDialogue.Dialogue_Text_List[_currentLineIndex].tutorialID);
@@ -168,7 +168,6 @@ public class DialogueManager : UIBase
                 {
                     GameObject.Find("Artresource_0002").transform.GetChild(0).gameObject.SetActive(false);
                 }
-                
                 OnDialogueEnd?.Invoke();
             }
         }
@@ -180,7 +179,7 @@ public class DialogueManager : UIBase
         isTyping = true;
         dialogueText.text = "";
         text = text.Replace("\\n", "\n");
-
+        // SoundManager.Instance.PlayLoopingSound("Soundresource_026");
         if (!isTyping)
         {
             dialogueText.text = text;
@@ -195,7 +194,7 @@ public class DialogueManager : UIBase
 
         dialogueText.text = text;
         isTyping = false;
-
+        // SoundManager.Instance.StopAllSFX();
         _toggleIcon.SetActive(true);
     }
 
