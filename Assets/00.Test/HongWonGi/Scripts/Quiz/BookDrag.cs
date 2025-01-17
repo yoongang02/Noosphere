@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
 
-public class BookDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class BookDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler,IPointerDownHandler
 {
     [SerializeField] private GameObject _placeholderObject;
     [SerializeField] public int bookIdx;
@@ -44,7 +45,11 @@ public class BookDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
         _placeholderObject.SetActive(false);
     }
-
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        int randNum = Random.Range(57, 61);
+        SoundManager.Instance.PlaySFX($"Soundresource_0{randNum}");
+    }
     public void OnDrag(PointerEventData eventData)
     {
         _rectTransform.position = Input.mousePosition;

@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Random = UnityEngine.Random;
 
 public class RadioManager : UIBase
 {
@@ -104,12 +105,13 @@ public class RadioManager : UIBase
     
     private async void CheckAnswer()
     {
+        SoundManager.Instance.PlaySFX("Soundresource_071");
         if (_radioText.text == radioAnswer)
         {
-            SoundManager.Instance.PlaySFX("Soundresource_049");
             
             //퀴즈 해결되었다고 표시
             _curQuiz.isSolved = true;
+            SoundManager.Instance.PlaySFX("Soundresource_083");
             UIManager.Instance.CloseTopUI();
             
             if (PlayerInteract.Instance.isInMental)
@@ -144,7 +146,8 @@ public class RadioManager : UIBase
         for (int i = 0; i < mirrorDialogue.Dialogue_Text_List.Count; i++)
         {
             DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
-            
+            int randomNum = Random.Range(48, 54); // 48~53
+            SoundManager.Instance.PlaySFX($"Soundresource_0{randomNum}");
             _realText.text = $"<mark=#00000055>{mirrorDialogue.Dialogue_Text_List[i].text}</mark>";
 
             // 페이드 인
@@ -164,6 +167,7 @@ public class RadioManager : UIBase
         }
         
         _realText.gameObject.SetActive(false);
+        SoundManager.Instance.StopAllSFX();
         DataManager.Instance._lockConditions["Lock_condition_003"].UnLock();
         QuizManager.Instance.OnQuizEnd?.Invoke();
     }
@@ -190,6 +194,8 @@ public class RadioManager : UIBase
             if (i < realDialogue.Dialogue_Text_List.Count)
             {
                 _realText.text = $"<mark=#00000055>{realDialogue.Dialogue_Text_List[i].text}</mark>";
+                int randomNum = Random.Range(48, 54); // 48~53
+                SoundManager.Instance.PlaySFX($"Soundresource_0{randomNum}");
             }
 
             if (i < mirrorDialogue.Dialogue_Text_List.Count)
@@ -237,6 +243,7 @@ public class RadioManager : UIBase
 
         _realText.gameObject.SetActive(false);
         _mirrorText.gameObject.SetActive(false);
+        SoundManager.Instance.StopAllSFX();
         DataManager.Instance._lockConditions["Lock_condition_003"].UnLock();
         QuizManager.Instance.OnQuizEnd?.Invoke();
     }
