@@ -74,7 +74,7 @@ public class TimeLineSignalManager : MonoBehaviour
        _cameraData.renderPostProcessing = true;
 
        float elapsedTime = 0f;
-       SoundManager.Instance.PlaySound(Define.Soundresource_029, 1);
+       SoundManager.Instance.PlaySFX("Soundresource_029");
        // 5초동안 게이지 증가
        while (elapsedTime < _duration)
        {
@@ -88,7 +88,7 @@ public class TimeLineSignalManager : MonoBehaviour
       
            await UniTask.Yield();
        }
-       SoundManager.Instance.PlaySound(Define.Soundresource_028, 1);
+       SoundManager.Instance.PlaySFX("Soundresource_028");
        DontDestroyOnLoad(_player.gameObject);
    }
    public void OnStartMentalProcess()

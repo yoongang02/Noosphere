@@ -31,29 +31,39 @@ public class TitleSceneUI : MonoBehaviour
 
     private void OnClickLoadBtn()
     {
-        SoundManager.Instance.PlaySound(Define.Soundresource_037,1);
+        SoundManager.Instance.PlaySFX("Soundresource_037");
         
     }
 
     private void OnClickNewGameBtn()
     {
-        SoundManager.Instance.PlaySound(Define.Soundresource_037,1);
+        SoundManager.Instance.PlaySFX("Soundresource_037");
         SceneManager.LoadScene("LoadingScene");
     }
 
     private void OnClickCreditBtn()
     {
-        SoundManager.Instance.PlaySound(Define.Soundresource_037,1);
+        SoundManager.Instance.PlaySFX("Soundresource_037");
     }
 
     private void OnClickSettingBtn()
     {
-        SoundManager.Instance.PlaySound(Define.Soundresource_037,1);
+        SoundManager.Instance.PlaySFX("Soundresource_037");
     }
 
     private void OnClickExitBtn()
     {
-        SoundManager.Instance.PlaySound(Define.Soundresource_037,1);
+        SoundManager.Instance.PlaySFX("Soundresource_037");
         Application.Quit();
+    }
+
+    public void OnClickSound()
+    {
+        SoundManager.Instance.PlaySFX("Soundresource_037");
+    }
+
+    public void OnHoverSound()
+    {
+        SoundManager.Instance.PlaySFX("Soundresource_035");
     }
 }

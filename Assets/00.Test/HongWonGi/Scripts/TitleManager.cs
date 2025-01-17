@@ -9,7 +9,7 @@ public class TitleManager : MonoBehaviour
     private void Start()
     {
         ActiveRandomMenu();
-        SoundManager.Instance.PlayBGM(Define.Soundresource_056);
+        SoundManager.Instance.PlayBGM("Soundresource_056");
     }
 
     private void ActiveRandomMenu()
