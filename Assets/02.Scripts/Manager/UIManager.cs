@@ -112,9 +112,13 @@ public class UIManager : Singleton<UIManager>
         if (uiStack.Count == 0) return;
 
         UIBase topUI = uiStack.Pop();
+
+        if (topUI != dialogueUI)
+        {
+            SoundManager.Instance.PlaySFX("Soundresource_036");
+        }
         
         topUI.OnClose();
-        SoundManager.Instance.PlaySFX("Soundresource_036");
         
         if (uiStack.Count > 0)
         {
