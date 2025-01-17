@@ -130,7 +130,7 @@ public class EffectManager : Singleton<EffectManager>
             newColor.a = x;
             _vhsImage.color = newColor;
             _vhsVolume.weight = x;
-        }, 0f, 3f).AsyncWaitForCompletion();
+        }, 0f, 1.5f).AsyncWaitForCompletion();
 
         vhsObj.SetActive(false);
         _cameraData.renderPostProcessing = false;
@@ -155,7 +155,7 @@ public class EffectManager : Singleton<EffectManager>
             newColor.a = x;
             _vhsImage.color = newColor;
             _vhsVolume.weight = x;
-        }, 0f, 3f).AsyncWaitForCompletion();
+        }, 0f, 1.5f).AsyncWaitForCompletion();
 
         vhsObj.SetActive(false);
         _cameraData.renderPostProcessing = false;
