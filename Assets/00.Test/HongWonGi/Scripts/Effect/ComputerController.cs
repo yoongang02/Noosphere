@@ -20,9 +20,10 @@ public class ComputerController : UIBase
         transform.GetChild(0).gameObject.SetActive(true);
         EscapeUI.Instance.Active();
         _eventChannel.RaiseEvent("0");//컴퓨터 열었을때 맨처음 버튼 눌리는 이벤트 전달
+        SoundManager.Instance.PlaySFX("Soundresource_091");
         _exitBtn.onClick.AddListener(()=>
         {
-            SoundManager.Instance.PlaySFX("Soundresource_036");
+            SoundManager.Instance.PlaySFX("Soundresource_092");
             UIManager.Instance.CloseTopUI();
         });
     }
@@ -31,6 +32,7 @@ public class ComputerController : UIBase
     {
         base.OnClose();
         _exitBtn.onClick.RemoveAllListeners();
+        SoundManager.Instance.PlaySFX("Soundresource_092");
         transform.GetChild(0).gameObject.SetActive(false);
         gameObject.SetActive(false);
         EffectManager.Instance.OnEffectEnd.Invoke();

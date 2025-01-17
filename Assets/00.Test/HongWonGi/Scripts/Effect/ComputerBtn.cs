@@ -29,6 +29,7 @@ public class ComputerBtn : MonoBehaviour
     {
         _eventChannel.RaiseEvent(_btnId);
         _targetImage.sprite = _emailSpr;
+        SoundManager.Instance.PlaySFX("Soundresource_035");
     }
 
     private void HandleBtnClicked(string clickedBtnId)
