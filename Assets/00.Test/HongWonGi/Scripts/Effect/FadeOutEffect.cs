@@ -12,6 +12,7 @@ public class FadeOutEffect : MonoBehaviour
     {
         _fadeImage.color = new Color(0, 0, 0, 0);
         _fadeImage.DOFade(1f, 1f)
-            .SetEase(Ease.InOutQuad).OnComplete(() => { gameObject.SetActive(false); });
+            .SetEase(Ease.InOutQuad);
+        // todo 최종스테이지로
     }
 }
