@@ -23,11 +23,12 @@ public class InventoryNavigator : UIBase
     private List<GameObject> mentalWorldSlots = new List<GameObject>();
     [SerializeField] private Sprite _selectedSprite;
     [SerializeField] private Sprite _deselectedSprite;
-    [SerializeField] private TextMeshProUGUI _slotUseBtn;
+    [SerializeField] private Image _slotUseBtn;
     
     [Space(5)][Header("증거물 사용 정보")]
     public bool canEvidenceUse = false;
     [SerializeField] private string _evidenceUseEventId;
+    [SerializeField] private List<Sprite> _useBtnImgs = new List<Sprite>();
     
     public override void OnOpen()
     {
@@ -413,7 +414,7 @@ public class InventoryNavigator : UIBase
                             {
                                 if (evidenceId == condition)
                                 {
-                                    _slotUseBtn.color = UnityExtension.HexColor(BlackColor);
+                                    _slotUseBtn.sprite = _useBtnImgs[1];
                                     _evidenceUseEventId = eventID;
                                     canEvidenceUse = true;
                                     return;
@@ -424,7 +425,7 @@ public class InventoryNavigator : UIBase
                 }
             }
         }
-        _slotUseBtn.color = UnityExtension.HexColor("#B3B3B3");
+        _slotUseBtn.sprite = _useBtnImgs[0];
         canEvidenceUse = false;
     }
     
