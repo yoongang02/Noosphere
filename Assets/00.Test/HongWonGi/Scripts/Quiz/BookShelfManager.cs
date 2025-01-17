@@ -24,7 +24,6 @@ public class BookShelfManager : UIBase
         //만약 거울이 깨졌는데 기믹을 미리 성공했다면
         if (_curQuiz.isSolved)
         {
-            UIManager.Instance.isQuizing = false;
             //퀴즈 실행되지 않음
             UIManager.Instance.CloseTopUI();
             
@@ -75,7 +74,6 @@ public class BookShelfManager : UIBase
         {
             //퀴즈 해결되었다고 표시
             _curQuiz.isSolved = true;
-            UIManager.Instance.isQuizing = false;
             SoundManager.Instance.PlaySFX("Soundresource_083");
             UIManager.Instance.CloseTopUI();
             
@@ -137,5 +135,12 @@ public class BookShelfManager : UIBase
             Debug.LogWarning("Investigate UI에서 NO를 선택함.");
         }
         MirrorPuzzleManager.Instance.GetMirrorPiece("Evidence_019");
+        
+        await UniTask.Yield();
+        PlayerInteract.Instance.curTrigger = null;
+        PlayerInteract.Instance.isInsideTrigger = false;
+        PlayerInteract.Instance.HideInteractionMark();
+        await UniTask.Yield();
+        DataManager.Instance._events["Event_B044"].repeatType = false;
     }
 }
