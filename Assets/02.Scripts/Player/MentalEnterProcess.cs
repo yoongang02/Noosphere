@@ -61,7 +61,7 @@ public class MentalEnterProcess : MonoBehaviour
                     EffectManager.Instance.StartMentalEffect(value);
                     if(!_soundPlayed)
                     {
-                        SoundManager.Instance.PlaySound(Define.Soundresource_029, 1);
+                        SoundManager.Instance.PlaySFX("Soundresource_029");
                         _soundPlayed = true;
                     }
 
@@ -69,8 +69,8 @@ public class MentalEnterProcess : MonoBehaviour
                     {
                         isComplete = true;
                         // 완료되면 소리 재생
-                        SoundManager.Instance.StopSound();
-                        SoundManager.Instance.PlaySound(Define.Soundresource_028, 1);
+                        SoundManager.Instance.StopSFX("Soundresource_029");
+                        SoundManager.Instance.PlaySFX("Soundresource_028");
                     }
                     if (value >= 1f)
                     {
@@ -83,7 +83,7 @@ public class MentalEnterProcess : MonoBehaviour
                     float value = _progressBarFill.DrainAmount();
                     EffectManager.Instance.StartMentalEffect(value);
                     _soundPlayed = false; 
-                    SoundManager.Instance.StopSound();
+                    SoundManager.Instance.StopSFX("Soundresource_029");
                     if (value <= 0)
                     {
                         FailEnter();
@@ -289,7 +289,7 @@ public class MentalEnterProcess : MonoBehaviour
     {
         yield return new WaitForSeconds(1.0f);
         _isForceQuit = true;
-        SoundManager.Instance.StopSound();
+        SoundManager.Instance.StopAllSFX();
     }
 
     public void SetCombackEventId(string id)

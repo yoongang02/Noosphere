@@ -9,4 +9,5 @@ public class SoundResourceStructure
     public string soundresourceType;
     public string FilePath;
     public int loopCount;
+    public float volume;
 }
