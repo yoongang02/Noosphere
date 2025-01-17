@@ -42,6 +42,7 @@ public class DialogueManager : UIBase
 
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private GameObject _toggleIcon;
+    [SerializeField] private TextMeshProUGUI _speakerText;
 
     private DialogueStructure _curDialogue;
     
@@ -108,7 +109,7 @@ public class DialogueManager : UIBase
     public async UniTaskVoid ShowNextLine()
     {
         _toggleIcon.SetActive(false);
-
+        _speakerText.text = _curDialogue.characterId;
         if (_currentLineIndex < _curDialogue.Dialogue_Text_List.Count)
         {
             //튜토리얼 있으면 실행
@@ -119,7 +120,7 @@ public class DialogueManager : UIBase
             _currentLineIndex++;
         }
         else
-        {
+        { 
             if (!string.IsNullOrEmpty(_curDialogue.nextDialougeId))
             {
                 if (DataManager.Instance._dialogue.ContainsKey(_curDialogue.nextDialougeId))
@@ -155,6 +156,7 @@ public class DialogueManager : UIBase
     {
         isTyping = true;
         dialogueText.text = "";
+        text = text.Replace("\\n", "\n");
 
         if (!isTyping)
         {

@@ -12,7 +12,7 @@ public class DialogueStructure
     }
     
     public string dialogueId;
-    public string characterID;
+    public string characterId;
     public string triggerType;
     public string interactionType;
     public string dialogueText;

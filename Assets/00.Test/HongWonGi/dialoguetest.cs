@@ -31,7 +31,7 @@ public class dialoguetest : MonoBehaviour
             {
                 Debug.Log($"=== Dialogue Data for ID: {id} ===");
                 Debug.Log($"Dialogue ID: {dialogue.dialogueId}");
-                Debug.Log($"Character ID: {dialogue.characterID}");
+                Debug.Log($"Character ID: {dialogue.characterId}");
                 Debug.Log($"Trigger Type: {dialogue.triggerType}");
                 Debug.Log($"Interaction Type: {dialogue.interactionType}");
                 Debug.Log($"Next Dialogue ID: {dialogue.nextDialougeId}");
