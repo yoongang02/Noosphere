@@ -35,6 +35,9 @@ public class LockConditionStructure
             case "Lock_condition_007":
                 BreakMirror();
                 break;
+            case "Lock_condition_008":
+                ForceQuitMentalProcess();
+                break;
         }
     }
 
@@ -129,6 +132,11 @@ public class LockConditionStructure
         {
             DataManager.Instance._events["Event_B044"].repeatType = true;
         }
+    }
+
+    void ForceQuitMentalProcess()
+    {
+        PlayerInteract.Instance.GetComponent<MentalEnterProcess>().ForceQuitMentalProcess();
     }
     
 }

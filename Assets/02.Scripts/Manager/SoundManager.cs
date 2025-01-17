@@ -158,8 +158,8 @@ public class SoundManager : Singleton<SoundManager>
             Debug.Log("현재 재생 중인 BGM과 동일합니다.");
             return;
         }
-        
-        _bgmSource.Stop();
+
+        StopBGM();
         _bgmSource.clip = soundData.soundClip;
         _bgmSource.volume = 0f;
         _bgmSource.loop = true;
