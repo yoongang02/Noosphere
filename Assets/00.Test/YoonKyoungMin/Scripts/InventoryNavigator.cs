@@ -12,7 +12,7 @@ public class InventoryNavigator : UIBase
 {
     [SerializeField] private GameObject _inventoryWindow;
     [Header("인벤토리 네비게이션 정보")]
-    [SerializeField] protected GameObject _curSelectedSlot;
+    public GameObject _curSelectedSlot;
     public int currentIndex = 0;
     public bool isBothInventory = false; //정신세계 증거물과 현실세계 증거물이 모두 있을 때
     
@@ -35,7 +35,7 @@ public class InventoryNavigator : UIBase
         _inventoryWindow.SetActive(true);
         InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curRoomInfo;
         //인벤토리 열었을 때, 현재 상태를 바탕으로 인벤토리 업데이트 진행
-        InventoryManager.Instance.UpdateInventoryUI();
+        SetChapterSelected(InventoryManager.Instance.currentViewChapter);
     }
 
     public override void OnClose()
@@ -119,9 +119,10 @@ public class InventoryNavigator : UIBase
             return;
         }
 
-        //챕터 및 선택 초기화
+        //슬롯 선택 초기화
         currentIndex = 0;
         UpdateSelection();
+        InitChapter(InventoryManager.Instance.currentViewChapter);
     }
 
     //증거물 행 별로 슬롯에 추가 함수
@@ -264,7 +265,7 @@ public class InventoryNavigator : UIBase
     }
 
     //슬롯 선택 시, 슬롯 선택에 따른 업데이트
-    protected void UpdateSelection()
+    public void UpdateSelection()
     {
         _curSelectedSlot = inventorySlots[currentIndex];
         SetSlotSelected(_curSelectedSlot);
@@ -272,7 +273,7 @@ public class InventoryNavigator : UIBase
     }
 
     //슬롯 배경 업데이트
-    protected void SetSlotSelected(GameObject slot)
+    public void SetSlotSelected(GameObject slot)
     {
         Image slotImg = slot.GetComponent<Image>();
         slotImg.sprite = _selectedSprite;
@@ -282,37 +283,59 @@ public class InventoryNavigator : UIBase
         }
     }
 
-    protected void SetSlotDeselected(GameObject slot)
+    public void SetSlotDeselected(GameObject slot)
     {
         Image slotImg = slot.GetComponent<Image>();
         slotImg.sprite = _deselectedSprite;
     }
 
     //챕터 선택
-    protected void SetChapterSelected(int index)
+    public void SetChapterSelected(int index)
     {
         InventoryManager.Instance.currentViewChapter = index;
         
-        GameObject selectedChapter = InventoryManager.Instance.selectedChapterUIList[index];
-        GameObject deselectedChapter = InventoryManager.Instance.deselectedChapterUIList[index];
-        selectedChapter.SetActive(true);
-        deselectedChapter.SetActive(false);
-
-        foreach (var _chapter in InventoryManager.Instance.selectedChapterUIList)
-        {
-            if(_chapter != selectedChapter) _chapter.SetActive(false);
-        }
-        foreach (var _chapter in InventoryManager.Instance.deselectedChapterUIList)
-        {
-            if(_chapter != deselectedChapter) _chapter.SetActive(true);
-        }
+        InitChapter(index);
         
         //인벤토리 업데이트 하기
         InventoryManager.Instance.UpdateInventoryUI();
     }
     
+    public void InitChapter(int index)
+    {
+        InventoryManager.Instance.currentViewChapter = index;
+        
+        GameObject selectedChapterUI = InventoryManager.Instance.selectedChapterUIList[index];
+        GameObject deselectedChapterUI = InventoryManager.Instance.deselectedChapterUIList[index];
+        
+        if (!selectedChapterUI.activeSelf)
+        {
+            //선택 버전이 활성화되고
+            selectedChapterUI.SetActive(true);
+            //비선택 버전이 비활성화 되기
+            deselectedChapterUI.SetActive(false);
+
+            //선택 버전의 나머지 애들 비활성화
+            foreach (var chapter in InventoryManager.Instance.selectedChapterUIList)
+            {
+                if (chapter != selectedChapterUI)
+                {
+                    chapter.SetActive(false);
+                }
+            }
+            
+            //비선택 버전의 나머지 애들 활성화
+            foreach (var chapter in InventoryManager.Instance.deselectedChapterUIList)
+            {
+                if (chapter != deselectedChapterUI)
+                {
+                    chapter.SetActive(true);
+                }
+            }
+        }
+    }
+    
     //챕터 호버 enter
-    protected void HoverEnterOnChapter(int index)
+    public void HoverEnterOnChapter(int index)
     {
         //호버를 한 챕터의 선택 버전과 비선택 버전을 할당하기
         GameObject selectedChapterUI = InventoryManager.Instance.selectedChapterUIList[index];
@@ -397,7 +420,7 @@ public class InventoryNavigator : UIBase
     }
     
     //증거물 상세 내용 UI 열기
-    protected void OpenEvidenceDetailUI()
+    public void OpenEvidenceDetailUI()
     {
         Debug.Log("인벤토리에서 상세 내용 오픈");
         string id = _curSelectedSlot.GetComponent<InventorySlotInfo>().evidenceId;
@@ -406,7 +429,7 @@ public class InventoryNavigator : UIBase
     }
 
     //증거물 사용하기
-    protected void UseEvidence()
+    public void UseEvidence()
     {
         PlayerInteract.Instance.isUsingEvidence = true;
         UIManager.Instance.CloseAllUI();

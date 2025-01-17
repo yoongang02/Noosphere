@@ -145,7 +145,7 @@ public class RadioManager : UIBase
         {
             DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
             
-            _realText.text = $"<mark=#00000055>{mirrorDialogue.Dialogue_Text_List[i]}</mark>";
+            _realText.text = $"<mark=#00000055>{mirrorDialogue.Dialogue_Text_List[i].text}</mark>";
 
             // 페이드 인
             await _realText.DOFade(1f, _fadeDuration).AsyncWaitForCompletion();
@@ -189,12 +189,12 @@ public class RadioManager : UIBase
             // 각 텍스트가 있을 경우에만 표시
             if (i < realDialogue.Dialogue_Text_List.Count)
             {
-                _realText.text = $"<mark=#00000055>{realDialogue.Dialogue_Text_List[i]}</mark>";
+                _realText.text = $"<mark=#00000055>{realDialogue.Dialogue_Text_List[i].text}</mark>";
             }
 
             if (i < mirrorDialogue.Dialogue_Text_List.Count)
             {
-                _mirrorText.text = $"<mark=#00000055>{mirrorDialogue.Dialogue_Text_List[i]}</mark>";
+                _mirrorText.text = $"<mark=#00000055>{mirrorDialogue.Dialogue_Text_List[i].text}</mark>";
             }
 
             // 동시에 페이드 인

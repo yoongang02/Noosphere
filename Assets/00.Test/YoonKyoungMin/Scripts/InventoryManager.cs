@@ -229,9 +229,6 @@ public class InventoryManager : Singleton<InventoryManager>
         
         //인벤토리 네비게이션 업데이트
         GetComponent<InventoryNavigator>().InitNavigator(_realWorldInventory,_mentalWorldInventory);
-
-        yield return null;
-        _navigator = GetComponent<InventoryNavigator>();
     }
     
     //slot UI 업데이트 함수

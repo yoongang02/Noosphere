@@ -179,6 +179,9 @@ public class MentalEnterProcess : MonoBehaviour
         {
             mentalInfo = null;
             _comebackEventId = "";
+            
+            PlayerInteract.Instance.isInsideTrigger = false;
+            PlayerInteract.Instance.curTrigger = null;
         }
         else
         {

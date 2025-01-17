@@ -5,11 +5,18 @@ using UnityEngine;
 [System.Serializable]
 public class DialogueStructure
 {
+    public class DialougeText
+    {
+        public string text;
+        public string tutorialID;
+    }
+    
     public string dialogueId;
     public string characterID;
     public string triggerType;
     public string interactionType;
     public string dialogueText;
     public string nextDialougeId;
-    public List<string> Dialogue_Text_List;
+    public string tutorialId;
+    public List<DialougeText> Dialogue_Text_List;
 }

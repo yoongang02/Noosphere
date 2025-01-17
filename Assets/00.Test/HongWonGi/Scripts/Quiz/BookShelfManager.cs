@@ -24,6 +24,7 @@ public class BookShelfManager : UIBase
         //만약 거울이 깨졌는데 기믹을 미리 성공했다면
         if (_curQuiz.isSolved)
         {
+            UIManager.Instance.isQuizing = false;
             //퀴즈 실행되지 않음
             UIManager.Instance.CloseTopUI();
             
@@ -37,8 +38,11 @@ public class BookShelfManager : UIBase
                     await GetMirrorPiece();
                 }
             }
+            //트리거 삭제
+            PlayerInteract.Instance.curTrigger = null;
+            PlayerInteract.Instance.isInsideTrigger = false;
+            PlayerInteract.Instance.HideInteractionMark();
             
-            QuizManager.Instance.OnQuizEnd?.Invoke();
             return;
         }
         
@@ -49,6 +53,7 @@ public class BookShelfManager : UIBase
     {
         base.OnClose();
         transform.GetChild(0).gameObject.SetActive(false);
+        QuizManager.Instance.OnQuizEnd?.Invoke();
     }
     
     public async void CheckBookOrder()
@@ -70,6 +75,7 @@ public class BookShelfManager : UIBase
         {
             //퀴즈 해결되었다고 표시
             _curQuiz.isSolved = true;
+            UIManager.Instance.isQuizing = false;
             UIManager.Instance.CloseTopUI();
             
             //거울이 깨져있는지 확인
@@ -78,8 +84,12 @@ public class BookShelfManager : UIBase
                 //증거물 획득
                 await GetMirrorPiece();
             }
+            //트리거 삭제
+            PlayerInteract.Instance.curTrigger = null;
+            PlayerInteract.Instance.isInsideTrigger = false;
+            PlayerInteract.Instance.HideInteractionMark();
+            await UniTask.Yield();
             DataManager.Instance._events["Event_B044"].repeatType = false;
-            QuizManager.Instance.OnQuizEnd?.Invoke();
         }
     }
 

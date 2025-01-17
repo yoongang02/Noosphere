@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ChapterClickHandler : InventoryNavigator, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+public class ChapterClickHandler : MonoBehaviour, IPointerClickHandler/*, IPointerEnterHandler, IPointerExitHandler*/
 {
     private GameObject _lastEnteredObject;
+    private InventoryNavigator _navigator;
+
+    void Start()
+    {
+        _navigator = InventoryManager.Instance.transform.GetComponent<InventoryNavigator>();
+    }
     public void OnPointerClick(PointerEventData eventData)
     {
         //젤 위에 있는 UI 아니면 작동 X
@@ -18,14 +24,34 @@ public class ChapterClickHandler : InventoryNavigator, IPointerClickHandler, IPo
         GameObject clickedObject = eventData.pointerClick;
         
         Debug.Log($"챕터 클릭 {clickedObject.name}");
-        
-        if (InventoryManager.Instance.selectedChapterUIList.Contains(clickedObject))
+        int chapterIndex;
+
+        switch (clickedObject.name)
         {
-            int chapterIndex = InventoryManager.Instance.selectedChapterUIList.IndexOf(clickedObject);
-            SetChapterSelected(chapterIndex);
+            case "Chapter0":
+                chapterIndex = 0;
+                break;
+            case "Chapter1":
+                chapterIndex = 1;
+                break;
+            case "Chapter2":
+                chapterIndex = 2;
+                break;
+            case "Chapter3":
+                chapterIndex = 3;
+                break;
+            default:
+                chapterIndex = 0;
+                break;
+        }
+        
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            _navigator.SetChapterSelected(chapterIndex);
         }
     }
 
+    /*
     public void OnPointerEnter(PointerEventData eventData)
     {
         //젤 위에 있는 UI 아니면 작동 X
@@ -41,7 +67,7 @@ public class ChapterClickHandler : InventoryNavigator, IPointerClickHandler, IPo
             _lastEnteredObject = enteredObject;
             
             int chapterIndex = InventoryManager.Instance.deselectedChapterUIList.IndexOf(enteredObject);
-            HoverEnterOnChapter(chapterIndex);
+            _navigator.HoverEnterOnChapter(chapterIndex);
         }
     }
 
@@ -72,4 +98,5 @@ public class ChapterClickHandler : InventoryNavigator, IPointerClickHandler, IPo
 
         _lastEnteredObject = null;
     }
+    */
 }
