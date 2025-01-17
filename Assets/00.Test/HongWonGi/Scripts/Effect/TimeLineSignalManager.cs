@@ -74,7 +74,7 @@ public class TimeLineSignalManager : MonoBehaviour
        _cameraData.renderPostProcessing = true;
 
        float elapsedTime = 0f;
-       
+       SoundManager.Instance.PlaySound(Define.Soundresource_029, 1);
        // 5초동안 게이지 증가
        while (elapsedTime < _duration)
        {
@@ -85,12 +85,10 @@ public class TimeLineSignalManager : MonoBehaviour
            color.a = value;
            _vhsImage.color = color;
            _vhsVolume.weight = value;
-           
+      
            await UniTask.Yield();
        }
-
-       _vhsObj.SetActive(false);
-       _cameraData.renderPostProcessing = false;
+       SoundManager.Instance.PlaySound(Define.Soundresource_028, 1);
        DontDestroyOnLoad(_player.gameObject);
    }
    public void OnStartMentalProcess()

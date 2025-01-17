@@ -101,7 +101,7 @@ public class EffectManager : Singleton<EffectManager>
                 newColor.a = x;
                 _vhsImage.color = newColor;
                 _vhsVolume.weight = x;
-            }, 0f, 3f).SetDelay(0.5f).OnComplete(() => ResetMetalEffect());
+            }, 0f, 3f).SetDelay(0.5f)/*.OnComplete(() => ResetMetalEffect())*/;
         }
     }
     public void ResetMetalEffect()

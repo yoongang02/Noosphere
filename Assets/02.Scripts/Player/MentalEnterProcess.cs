@@ -133,7 +133,7 @@ public class MentalEnterProcess : MonoBehaviour
     public void InitProgressBar()
     {
         _progressBarUI.SetActive(false);
-        EffectManager.Instance.ResetMetalEffect();
+        // EffectManager.Instance.ResetMetalEffect();
         
         _timer = 0f;
         _progressBarFill.InitFillAmount();

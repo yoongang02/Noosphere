@@ -8,7 +8,12 @@ public class ComputerController : UIBase
 {
     [SerializeField] private ButtonEventChannel _eventChannel;
     [SerializeField] private Button _exitBtn;
-    
+
+    private void OnEnable()
+    {
+        UIManager.Instance.OpenUI(this);   
+    }
+
     public override void OnOpen()
     {
         base.OnOpen();
