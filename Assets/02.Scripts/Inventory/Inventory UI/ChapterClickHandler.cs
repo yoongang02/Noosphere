@@ -47,6 +47,7 @@ public class ChapterClickHandler : MonoBehaviour, IPointerClickHandler/*, IPoint
         
         if (eventData.button == PointerEventData.InputButton.Left)
         {
+            _navigator.PlayClickSound();
             _navigator.SetChapterSelected(chapterIndex);
         }
     }
