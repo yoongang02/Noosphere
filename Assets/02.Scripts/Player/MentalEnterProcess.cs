@@ -133,7 +133,7 @@ public class MentalEnterProcess : MonoBehaviour
     public void InitProgressBar()
     {
         _progressBarUI.SetActive(false);
-        // EffectManager.Instance.ResetMetalEffect();
+        EffectManager.Instance.ResetMetalEffect();
         
         _timer = 0f;
         _progressBarFill.InitFillAmount();
@@ -162,8 +162,14 @@ public class MentalEnterProcess : MonoBehaviour
     void CompleteEnter()
     {
         //바 초기화
-        InitProgressBar();
-        
+        // InitProgressBar();
+        _progressBarUI.SetActive(false);
+        _timer = 0f;
+        _progressBarFill.InitFillAmount();
+        isComplete = false;
+        _startEnter = false;
+        _isForceQuit = false;
+        _soundPlayed = false;
         //씬 이동
         // StartCoroutine(LoadSceneAsync(mentalInfo.destination));
         LoadSceneAsync(mentalInfo.destination).Forget();
