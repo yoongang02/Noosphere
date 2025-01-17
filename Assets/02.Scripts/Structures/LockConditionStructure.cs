@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using UnityEditor.Timeline.Actions;
 using UnityEngine;
 
 public class LockConditionStructure

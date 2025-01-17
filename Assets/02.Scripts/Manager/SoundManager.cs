@@ -33,8 +33,9 @@ public class SoundManager : Singleton<SoundManager>
         LoadSoundData("Assets/02.Scripts/Sounds/SoundData/SFX", _sfxDictionary);
     }
     */
-    void Start()
+    void Awake()
     {
+        base.Awake();
         // bgm 데이터 초기화
         foreach (var bgmData in _bgmList)
         {

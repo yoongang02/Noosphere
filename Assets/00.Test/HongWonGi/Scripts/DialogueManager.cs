@@ -183,4 +183,10 @@ public class DialogueManager : UIBase
         _curDialogue = null;
         PlayerController.Instance.ResetCamera();
     }
+
+    // private void StartDialogueSound(string)
+    // {
+    //  
+    // }
 }
+
