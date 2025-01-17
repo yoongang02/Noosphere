@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using DG.Tweening;
 
 public class SoundManager : Singleton<SoundManager>
 {
@@ -37,10 +38,17 @@ public class SoundManager : Singleton<SoundManager>
             return;
         
         _bgmSource.clip = clip;
+        _bgmSource.volume = 0f;
         _bgmSource.Play();
+        DOTween.To(() => _bgmSource.volume, x => _bgmSource.volume = x, 1f, 1f);
     }
 
-    public void StopBGM() => _bgmSource.Stop();
+    public void StopForceBGM() => _bgmSource.Stop();
+    public void StopBGM()
+    {
+        DOTween.To(() => _bgmSource.volume, x => _bgmSource.volume = x, 0f, 1.5f)
+            .OnComplete(() => _bgmSource.Stop());
+    }
 
     private static string GetSoundFullPath(string path) => Define._soundRoot + "/" + path;
 

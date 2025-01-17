@@ -39,6 +39,7 @@ public class SceneChanger : Singleton<SceneChanger>
                 {
                     PlayerController.Instance.canMove = false;
                 }
+                SoundManager.Instance.StopBGM();
             })
             .AsyncWaitForCompletion();
 
