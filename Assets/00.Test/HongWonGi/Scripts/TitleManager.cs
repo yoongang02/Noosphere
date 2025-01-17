@@ -6,11 +6,10 @@ using UnityEngine;
 public class TitleManager : MonoBehaviour
 {
     [SerializeField] private List<GameObject> _objects;
-    [SerializeField] private AudioSource _bgmSource;
     private void Start()
     {
         ActiveRandomMenu();
-        _bgmSource.Play();
+        SoundManager.Instance.PlayBGM("Soundresource_056");
     }
 
     private void ActiveRandomMenu()

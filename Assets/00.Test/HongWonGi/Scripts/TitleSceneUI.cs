@@ -14,7 +14,6 @@ public class TitleSceneUI : MonoBehaviour
     [SerializeField] private Button _settingBtn;
     [SerializeField] private Button _exitBtn;
     public EventSystem _eventSys;
-    [SerializeField] private AudioSource _sfxSource;
 
     private void OnEnable()
     {
@@ -32,29 +31,39 @@ public class TitleSceneUI : MonoBehaviour
 
     private void OnClickLoadBtn()
     {
-        _sfxSource.Play();
+        SoundManager.Instance.PlaySFX("Soundresource_037");
         
     }
 
     private void OnClickNewGameBtn()
     {
-        _sfxSource.Play();
+        SoundManager.Instance.PlaySFX("Soundresource_037");
         SceneManager.LoadScene("LoadingScene");
     }
 
     private void OnClickCreditBtn()
     {
-        _sfxSource.Play();
+        SoundManager.Instance.PlaySFX("Soundresource_037");
     }
 
     private void OnClickSettingBtn()
     {
-        _sfxSource.Play();
+        SoundManager.Instance.PlaySFX("Soundresource_037");
     }
 
     private void OnClickExitBtn()
     {
-        _sfxSource.Play();
+        SoundManager.Instance.PlaySFX("Soundresource_037");
         Application.Quit();
+    }
+
+    public void OnClickSound()
+    {
+        SoundManager.Instance.PlaySFX("Soundresource_037");
+    }
+
+    public void OnHoverSound()
+    {
+        SoundManager.Instance.PlaySFX("Soundresource_035");
     }
 }

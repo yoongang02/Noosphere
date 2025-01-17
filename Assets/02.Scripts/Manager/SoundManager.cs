@@ -11,6 +11,8 @@ public class SoundManager : Singleton<SoundManager>
     // 딕셔너리로 오디오 관리
     private Dictionary<string, SoundData> _bgmDictionary = new Dictionary<string, SoundData>();
     private Dictionary<string, SoundData> _sfxDictionary = new Dictionary<string, SoundData>();
+    [SerializeField] private List<SoundData> _bgmList = new List<SoundData>();
+    [SerializeField] private List<SoundData> _sfxList = new List<SoundData>();
     
     [SerializeField]
     private AudioSource _bgmSource = null;
@@ -18,6 +20,7 @@ public class SoundManager : Singleton<SoundManager>
     private List<AudioSource> _sfxSources = new List<AudioSource>(); // SFX를 재생하는 AudioSource 리스트
     [SerializeField] private int _maxSFXPoolSize = 10;
     
+    /* 사운드 Data 시트에 따라 업데이트 하고 싶으면, 이 주석 제거한 뒤 실행하면 생성됨.
     async void Awake()
     {
         //데이터 매니저의 사운드 리소스들을 읽어서 자동으로 soundData로 변환해서 저장하기
@@ -29,7 +32,29 @@ public class SoundManager : Singleton<SoundManager>
         LoadSoundData("Assets/02.Scripts/Sounds/SoundData/BGM", _bgmDictionary);
         LoadSoundData("Assets/02.Scripts/Sounds/SoundData/SFX", _sfxDictionary);
     }
+    */
+    void Start()
+    {
+        // bgm 데이터 초기화
+        foreach (var bgmData in _bgmList)
+        {
+            if (bgmData != null && bgmData.soundClip != null)
+            {
+                _bgmDictionary[bgmData.soundID] = bgmData;
+            }
+        }
+        
+        // sfx 데이터 초기화
+        foreach (var sfxData in _sfxList)
+        {
+            if (sfxData != null && sfxData.soundClip != null)
+            {
+                _sfxDictionary[sfxData.soundID] = sfxData;
+            }
+        }
+    }
     
+    /*
     // 특정 폴더 내 Sound Data 로드
     public void LoadSoundData(string folderPath, Dictionary<string, SoundData> dictionary)
     {
@@ -56,7 +81,8 @@ public class SoundManager : Singleton<SoundManager>
 
         Debug.Log($"총 {dictionary.Count}개의 SoundData를 로드했습니다.");
     }
-    
+    */
+    /*
     public AudioClip LoadAudioClip(string path)
     {
         // Resources 폴더 내의 경로에서 AudioClip 로드
@@ -69,12 +95,8 @@ public class SoundManager : Singleton<SoundManager>
 
         return clip;
     }
-
-    void Start()
-    {
-        
-    }
-    
+*/
+    /*
     async UniTask CreateSoundData(SoundResourceStructure data)
     {
         SoundData soundData = ScriptableObject.CreateInstance<SoundData>();
@@ -120,7 +142,7 @@ public class SoundManager : Singleton<SoundManager>
 
         Debug.Log($"SoundData created at {assetPath}");
     }
-
+*/
     public void PlayBGM(string id)
     {
         SoundData soundData = _bgmDictionary[id];
