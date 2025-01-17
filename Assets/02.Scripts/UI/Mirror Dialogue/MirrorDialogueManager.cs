@@ -75,43 +75,6 @@ public class MirrorDialogueManager : UIBase
             }
         }
     }
-    
-    public override void HandleMouseInput()
-    {
-        base.HandleMouseInput();
-        
-        PointerEventData pointerData = new PointerEventData(EventSystem.current)
-        {
-            position = Input.mousePosition
-        };
-
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(pointerData, results);
-
-        foreach (var result in results)
-        {
-            if (result.gameObject == _yesBtn)
-            {
-                SoundManager.Instance.PlaySFX("Soundresource_035");
-                HoverYesBtn();
-                if (Input.GetMouseButtonDown(0)) 
-                {
-                    SoundManager.Instance.PlaySFX("Soundresource_037");
-                    ClickYesBtn();
-                }
-            }
-            else if (result.gameObject == _noBtn)
-            {
-                SoundManager.Instance.PlaySFX("Soundresource_035");
-                HoverNoBtn();
-                if (Input.GetMouseButtonDown(0)) 
-                {
-                    SoundManager.Instance.PlaySFX("Soundresource_037");
-                    ClickNoBtn();
-                }
-            }
-        }
-    }
 
     private async UniTask TypeText(string text)
     {
@@ -134,21 +97,21 @@ public class MirrorDialogueManager : UIBase
         isTyping = false;
     }
     
-    void HoverYesBtn()
+    public void HoverYesBtn()
     {
         SetButtonSelected(_yesBtn, UnityExtension.HexColor(RedColor));
         SetButtonSelected(_noBtn, UnityExtension.HexColor(WhiteColor));
         _curSelectedBtn = _yesBtn;
     }
 
-    void HoverNoBtn()
+    public void HoverNoBtn()
     {
         SetButtonSelected(_noBtn,UnityExtension.HexColor(RedColor));
         SetButtonSelected(_yesBtn,UnityExtension.HexColor(WhiteColor));
         _curSelectedBtn = _noBtn;
     }
 
-    void ClickYesBtn()
+    public void ClickYesBtn()
     {
         UIManager.Instance.isYesClicked = true;
         HoverYesBtn();
@@ -157,7 +120,7 @@ public class MirrorDialogueManager : UIBase
         QuizManager.Instance.OnQuizEnd?.Invoke();
     }
 
-    void ClickNoBtn()
+    public void ClickNoBtn()
     {
         HoverNoBtn();
         UIManager.Instance.CloseTopUI();

@@ -39,6 +39,7 @@ public class CardKeyButton : MonoBehaviour
     {
         if (!_isTakenCard)//카드 가져갔을때
         {
+            SoundManager.Instance.PlaySFX("Soundresource_070");
             _eventChannel.RaiseEvent(_cardKeyEvidenceID);
             //인벤토리에 추가
             InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences[_cardKeyEvidenceID]);
@@ -47,6 +48,7 @@ public class CardKeyButton : MonoBehaviour
         }
         else//카드 반납할때
         { 
+            SoundManager.Instance.PlaySFX("Soundresource_070");
             _eventChannel.RaiseReturnEvent(_cardKeyEvidenceID);
             //인벤토리에 있는 카드키 제거
             InventoryManager.Instance.RemoveEvidence(DataManager.Instance._evidences[_cardKeyEvidenceID]);
