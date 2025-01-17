@@ -12,6 +12,7 @@ public class DoorOpenEffect : MonoBehaviour
    {
       _closeDoor.SetActive(false);
       _clearTrigger.SetActive(true);
+      SoundManager.Instance.PlaySFX("Soundresource_082");
    }
 
    public void OnAnimationEnd()
