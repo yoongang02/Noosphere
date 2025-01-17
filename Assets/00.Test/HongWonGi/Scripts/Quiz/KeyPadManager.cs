@@ -86,10 +86,12 @@ public class KeyPadManager : UIBase
         {
             _curQuiz.isSolved = true;
             UIManager.Instance.isQuizing = false;
+            SoundManager.Instance.PlaySFX("Soundresource_084");
             UIManager.Instance.CloseTopUI();
         }
         else
         {
+            SoundManager.Instance.PlaySFX("Soundresource_055");
             _inputText.text = "";
         }
     }

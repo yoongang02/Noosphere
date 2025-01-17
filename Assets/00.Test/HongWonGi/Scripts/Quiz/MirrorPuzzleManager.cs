@@ -125,7 +125,7 @@ public class MirrorPuzzleManager : UIBase
         {
             Debug.Log("퍼즐 클리어!");
             isPuzzleClear = true;
-            
+            SoundManager.Instance.PlaySFX("Soundresource_084");
             //퀴즈 해결되었다고 표시
             _curQuiz.isSolved = true;
             UIManager.Instance.CloseTopUI();

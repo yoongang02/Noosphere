@@ -103,4 +103,9 @@ public class TimeLineSignalManager : MonoBehaviour
        _player.gameObject.GetComponent<MentalEnterProcess>().SetCombackEventId("Event_C075");
        SceneManager.LoadSceneAsync(SceneName);
    }
+
+   public void StartVfx(string SoundResource)
+   {
+       SoundManager.Instance.PlaySFX(SoundResource);
+   }
 }

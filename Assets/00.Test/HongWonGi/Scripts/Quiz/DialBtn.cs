@@ -3,13 +3,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class DialBtn : MonoBehaviour, IDragHandler, IPointerDownHandler
+public class DialBtn :MonoBehaviour, IDragHandler, IPointerDownHandler, IBeginDragHandler, IEndDragHandler
 {
     [SerializeField] private RectTransform _handle;
     [SerializeField] private RectTransform _centerPoint;
     [SerializeField] private Canvas _canvas;
     [SerializeField] private GameObject _dialBtnImg;
-
+    [SerializeField] private string _soundInfo;
     private int _maxChips = 360; // 최대 값 (100%에 해당)
     private float _radius;
     private float _maxAngle = 360f; // 최대 각도
@@ -30,6 +30,16 @@ public class DialBtn : MonoBehaviour, IDragHandler, IPointerDownHandler
     public void OnDrag(PointerEventData eventData)
     {
         UpdateHandlePosition(eventData);
+    }
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        SoundManager.Instance.StopAllSFX();
+        SoundManager.Instance.PlaySFX(_soundInfo);
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        SoundManager.Instance.StopAllSFX();
     }
 
     private void UpdateHandlePosition(PointerEventData eventData)
