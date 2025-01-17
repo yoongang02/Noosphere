@@ -158,6 +158,7 @@ public class DialogueManager : UIBase
         dialogueText.text = "";
         text = text.Replace("\\n", "\n");
         // SoundManager.Instance.PlayLoopingSound("Soundresource_026");
+        StartDialogueSound(_curDialogue.characterId);
         if (!isTyping)
         {
             dialogueText.text = text;
@@ -172,7 +173,7 @@ public class DialogueManager : UIBase
 
         dialogueText.text = text;
         isTyping = false;
-        // SoundManager.Instance.StopAllSFX();
+        SoundManager.Instance.StopAllSFX();
         _toggleIcon.SetActive(true);
     }
 
@@ -184,9 +185,27 @@ public class DialogueManager : UIBase
         PlayerController.Instance.ResetCamera();
     }
 
-    // private void StartDialogueSound(string)
-    // {
-    //  
-    // }
+    private void StartDialogueSound(string speaker)
+    {
+        switch (speaker)
+        {
+            case "주인공":
+                SoundManager.Instance.PlayLoopingSound("Soundresource_026"); 
+                break;
+            case "박사" :
+                 SoundManager.Instance.PlayLoopingSound("Soundresource_027");
+                 break;
+            case "친구" :
+                SoundManager.Instance.PlayLoopingSound("Soundresource_077");
+                break;
+            case "실험체" :
+                SoundManager.Instance.PlayLoopingSound("Soundresource_076");
+                break;
+            case "" :
+                SoundManager.Instance.PlayLoopingSound("Soundresource_075");
+                break;
+        }
+
+    }
 }
 
