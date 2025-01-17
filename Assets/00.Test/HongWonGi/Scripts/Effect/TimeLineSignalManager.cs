@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using DG.Tweening;
@@ -13,6 +14,7 @@ public class TimeLineSignalManager : MonoBehaviour
     [SerializeField] private Animator _friendNpc;
     [SerializeField] private SkinnedMeshRenderer _freindMaterial;
     [SerializeField] private Material _friendMaterial;
+    [SerializeField] private List<string> footSteps;
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Animator>();
@@ -107,5 +109,40 @@ public class TimeLineSignalManager : MonoBehaviour
    public void StartVfx(string SoundResource)
    {
        SoundManager.Instance.PlaySFX(SoundResource);
+   }
+
+   public void EndVfx()
+   {
+       SoundManager.Instance.StopAllSFX();
+   }
+   private bool isPlayingFootsteps = false;
+   private async UniTask PlayRandomFootSteps(float duration)
+   {
+       if (footSteps == null || footSteps.Count == 0) return;
+       
+       isPlayingFootsteps = true;
+       float elapsedTime = 0f;
+       float interval = 0.4f;
+
+       while (elapsedTime < duration && isPlayingFootsteps)
+       {
+           int randomIndex = Random.Range(0, footSteps.Count);
+           SoundManager.Instance.PlaySFX(footSteps[randomIndex]);
+           
+           await UniTask.Delay(System.TimeSpan.FromSeconds(interval));
+           elapsedTime += interval;
+       }
+
+       isPlayingFootsteps = false;
+   }
+
+   public void StartRandomSound(float duration)
+   {
+       PlayRandomFootSteps(duration).Forget();
+   }
+
+   public void StopFootSteps()
+   {
+       isPlayingFootsteps = true;
    }
 }
