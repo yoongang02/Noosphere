@@ -31,6 +31,7 @@ public class SlotClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnt
             {
                 //현재 선택된 오브젝트와 클릭한 오브젝트가 다를 경우 -> 신규 선택
                 Debug.Log($"슬롯{_navigator.currentIndex} 클릭");
+                _navigator.PlaySlotMoveSound();
                 _navigator.UpdateSelection();
             }
             else
@@ -38,6 +39,7 @@ public class SlotClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnt
                 //현재 선택된 오브젝트와 클릭한 오브젝트가 같을 경우 -> 상세 보기 기능
                 Debug.Log($"슬롯{_navigator.currentIndex} 선택");
                 _navigator.OpenEvidenceDetailUI();
+                _navigator.PlayClickSound();
             }
         }
 
@@ -49,6 +51,7 @@ public class SlotClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnt
             {
                 Debug.Log("아이템 사용");
                 _navigator.UseEvidence();
+                _navigator.PlayClickSound();
             }
         }
     }
@@ -66,6 +69,7 @@ public class SlotClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnt
         Debug.Log($"슬롯 호버 진입");
         _lastEnteredObject = enteredObject;
         _navigator.SetSlotSelected(enteredObject);
+        _navigator.PlaySlotMoveSound();
     }
 
     public void OnPointerExit(PointerEventData eventData)
