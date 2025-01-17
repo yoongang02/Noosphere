@@ -344,6 +344,26 @@ public class EvidenceDetailUI : UIBase
             
             _curPage++;
             UpdateOnePage();
+            SoundManager.Instance.PlaySFX("Soundresource_070");
+            
+            int random = Random.Range(0, 4);
+            string id = "";
+            switch (random)
+            {
+                case 0 :
+                    id = "Soundresource_038";
+                    break;
+                case 1:
+                    id = "Soundresource_039";
+                    break;
+                case 2:
+                    id = "Soundresource_040";
+                    break;
+                case 3:
+                    id = "Soundresource_041";
+                    break;
+            }
+            SoundManager.Instance.PlaySFX(id);
         }
         else
         {
@@ -351,6 +371,25 @@ public class EvidenceDetailUI : UIBase
             
             _curPage += 2;
             UpdateTwoPage();
+            SoundManager.Instance.PlaySFX("Soundresource_070");
+            int random = Random.Range(0, 4);
+            string id = "";
+            switch (random)
+            {
+                case 0 :
+                    id = "Soundresource_038";
+                    break;
+                case 1:
+                    id = "Soundresource_039";
+                    break;
+                case 2:
+                    id = "Soundresource_040";
+                    break;
+                case 3:
+                    id = "Soundresource_041";
+                    break;
+            }
+            SoundManager.Instance.PlaySFX(id);
         }
     }
 
@@ -362,6 +401,25 @@ public class EvidenceDetailUI : UIBase
             
             _curPage--;
             UpdateOnePage();
+            SoundManager.Instance.PlaySFX("Soundresource_070");
+            int random = Random.Range(0, 4);
+            string id = "";
+            switch (random)
+            {
+                case 0 :
+                    id = "Soundresource_038";
+                    break;
+                case 1:
+                    id = "Soundresource_039";
+                    break;
+                case 2:
+                    id = "Soundresource_040";
+                    break;
+                case 3:
+                    id = "Soundresource_041";
+                    break;
+            }
+            SoundManager.Instance.PlaySFX(id);
         }
         else
         {
@@ -369,6 +427,25 @@ public class EvidenceDetailUI : UIBase
             
             _curPage -= 2;
             UpdateTwoPage();
+            SoundManager.Instance.PlaySFX("Soundresource_070");
+            int random = Random.Range(0, 4);
+            string id = "";
+            switch (random)
+            {
+                case 0 :
+                    id = "Soundresource_038";
+                    break;
+                case 1:
+                    id = "Soundresource_039";
+                    break;
+                case 2:
+                    id = "Soundresource_040";
+                    break;
+                case 3:
+                    id = "Soundresource_041";
+                    break;
+            }
+            SoundManager.Instance.PlaySFX(id);
         }
     }
 

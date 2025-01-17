@@ -97,28 +97,6 @@ public class DialogueManager : UIBase
     {
         if ((Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0)) && !string.IsNullOrEmpty(_currentDialogueId))
         {
-            int random = Random.Range(0, 5);
-            string id = "";
-            switch (random)
-            {
-                case 0 :
-                    id = "Soundresource_030";
-                    break;
-                case 1:
-                    id = "Soundresource_031";
-                    break;
-                case 2:
-                    id = "Soundresource_032";
-                    break;
-                case 3:
-                    id = "Soundresource_033";
-                    break;
-                case 4:
-                    id = "Soundresource_034";
-                    break;
-            }
-            SoundManager.Instance.PlaySFX(id);
-            
             if (isTyping)
             {
                 isTyping = false;
