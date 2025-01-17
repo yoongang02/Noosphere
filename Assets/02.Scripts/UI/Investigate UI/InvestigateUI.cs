@@ -45,18 +45,21 @@ public class InvestigateUI : UIBase
         //키보드 A - YES 버튼
         if (Input.GetKeyDown(KeyCode.A))
         {
+            SoundManager.Instance.PlaySFX("Soundresource_035");
             HoverYesBtn();
         }
 
         //키보드 D - NO 버튼
         if (Input.GetKeyDown(KeyCode.D))
         { 
+            SoundManager.Instance.PlaySFX("Soundresource_035");
             HoverNoBtn();
         }
 
         //스페이스 - 버튼 선택
         if (_curSelectedBtn != null && Input.GetKeyDown(KeyCode.Space))
         {
+            SoundManager.Instance.PlaySFX("Soundresource_037");
             if (_curSelectedBtn == _yesBtn)
             {
                 ClickYesBtn();
@@ -70,6 +73,7 @@ public class InvestigateUI : UIBase
         //ESC - NO 선택
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            SoundManager.Instance.PlaySFX("Soundresource_036");
             //NO 버튼 선택
             ClickNoBtn();
         }
@@ -92,17 +96,21 @@ public class InvestigateUI : UIBase
         {
             if (result.gameObject == _yesBtn)
             {
+                SoundManager.Instance.PlaySFX("Soundresource_035");
                 HoverYesBtn();
                 if (Input.GetMouseButtonDown(0)) 
                 {
+                    SoundManager.Instance.PlaySFX("Soundresource_037");
                     ClickYesBtn();
                 }
             }
             else if (result.gameObject == _noBtn)
             {
+                SoundManager.Instance.PlaySFX("Soundresource_035");
                 HoverNoBtn();
                 if (Input.GetMouseButtonDown(0)) 
                 {
+                    SoundManager.Instance.PlaySFX("Soundresource_037");
                     ClickNoBtn();
                 }
             }
