@@ -76,7 +76,7 @@ public class BookShelfManager : UIBase
             //퀴즈 해결되었다고 표시
             _curQuiz.isSolved = true;
             UIManager.Instance.isQuizing = false;
-            SoundManager.Instance.PlaySFX("Soundresource_084");
+            SoundManager.Instance.PlaySFX("Soundresource_083");
             UIManager.Instance.CloseTopUI();
             
             //거울이 깨져있는지 확인

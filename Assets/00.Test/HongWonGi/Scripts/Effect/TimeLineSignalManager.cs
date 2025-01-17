@@ -127,7 +127,7 @@ public class TimeLineSignalManager : MonoBehaviour
        while (elapsedTime < duration && isPlayingFootsteps)
        {
            int randomIndex = Random.Range(0, footSteps.Count);
-           SoundManager.Instance.PlaySFX(footSteps[randomIndex]);
+           SoundManager.Instance.PlaySFXNoEffect(footSteps[randomIndex]);
            
            await UniTask.Delay(System.TimeSpan.FromSeconds(interval));
            elapsedTime += interval;
