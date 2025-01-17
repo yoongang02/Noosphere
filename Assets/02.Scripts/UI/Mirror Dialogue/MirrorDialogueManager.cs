@@ -50,18 +50,21 @@ public class MirrorDialogueManager : UIBase
         //키보드 A - YES 버튼
         if (Input.GetKeyDown(KeyCode.W))
         {
+            SoundManager.Instance.PlaySFX("Soundresource_035");
             HoverYesBtn();
         }
 
         //키보드 D - NO 버튼
         if (Input.GetKeyDown(KeyCode.S))
         { 
+            SoundManager.Instance.PlaySFX("Soundresource_035");
             HoverNoBtn();
         }
 
         //스페이스 - 버튼 선택
         if (_curSelectedBtn != null && Input.GetKeyDown(KeyCode.Space))
         {
+            SoundManager.Instance.PlaySFX("Soundresource_037");
             if (_curSelectedBtn == _yesBtn)
             {
                 ClickYesBtn();
@@ -89,17 +92,21 @@ public class MirrorDialogueManager : UIBase
         {
             if (result.gameObject == _yesBtn)
             {
+                SoundManager.Instance.PlaySFX("Soundresource_035");
                 HoverYesBtn();
                 if (Input.GetMouseButtonDown(0)) 
                 {
+                    SoundManager.Instance.PlaySFX("Soundresource_037");
                     ClickYesBtn();
                 }
             }
             else if (result.gameObject == _noBtn)
             {
+                SoundManager.Instance.PlaySFX("Soundresource_035");
                 HoverNoBtn();
                 if (Input.GetMouseButtonDown(0)) 
                 {
+                    SoundManager.Instance.PlaySFX("Soundresource_037");
                     ClickNoBtn();
                 }
             }
