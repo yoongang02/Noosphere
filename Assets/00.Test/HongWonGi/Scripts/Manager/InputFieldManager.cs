@@ -25,6 +25,7 @@ public class InputFieldManager : UIBase
     {
         base.OnOpen();
         _inputFieldUI.SetActive(true);
+        EscapeUI.Instance.Active();
     }
     
     public override void OnClose()
@@ -34,6 +35,8 @@ public class InputFieldManager : UIBase
         
         InitInputField();
         _currentID = "";
+        
+        QuizManager.Instance.OnQuizEnd?.Invoke();
     }
     
     /// <summary>
@@ -83,8 +86,6 @@ public class InputFieldManager : UIBase
             }
             //Input Field UI 종료
             UIManager.Instance.CloseTopUI();
-            
-            QuizManager.Instance.OnQuizEnd?.Invoke();
         }
     }
 

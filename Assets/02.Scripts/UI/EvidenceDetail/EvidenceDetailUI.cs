@@ -433,4 +433,9 @@ public class EvidenceDetailUI : UIBase
             }   
         }
     }
+
+    public void CloseUI()
+    {
+        UIManager.Instance.CloseTopUI();
+    }
 }

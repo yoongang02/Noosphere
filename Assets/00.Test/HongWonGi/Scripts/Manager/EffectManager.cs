@@ -51,6 +51,11 @@ public class EffectManager : Singleton<EffectManager>
             if (!string.IsNullOrEmpty(effect.artresourceId))
             {
                 DoEffect(effect.artresourceId);
+
+                if (effect.artresourceId == "Artresource_0035" || effect.artresourceId == "Artresource_0040")
+                {
+                    EscapeUI.Instance.Active();
+                }
             }
 
             if (!string.IsNullOrEmpty(effect.soundresourceId))

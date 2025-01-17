@@ -35,6 +35,7 @@ public class MentalEnterProcess : MonoBehaviour
                     if (mentalInfo != null)
                     {
                         Debug.LogWarning("현실세계로 돌아가기 위헤 Space 클릭");
+                        SoundManager.Instance.PlaySFX("Soundresource_037");
                         //이벤트 실행 가능하다면 실행
                         EventManagerYKM.Instance.ExecuteEvent(_comebackEventId).Forget();
                     }
@@ -45,6 +46,7 @@ public class MentalEnterProcess : MonoBehaviour
                     if (PlayerInteract.Instance.OnMentalInteract != null)
                     {
                         Debug.LogWarning("OnMentalInteract 에 등록되어있는 메소드 실행");
+                        SoundManager.Instance.PlaySFX("Soundresource_037");
                         PlayerInteract.Instance.OnMentalInteract?.Invoke();
                         PlayerInteract.Instance.OnMentalInteract = null;
                     }

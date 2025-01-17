@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
 
 public class InventoryNavigator : UIBase
 {
@@ -33,6 +34,8 @@ public class InventoryNavigator : UIBase
         base.OnOpen();
         UIManager.Instance.isInMap = false;
         _inventoryWindow.SetActive(true);
+        SoundManager.Instance.PlaySFX("Soundresource_042");
+        EscapeUI.Instance.Active();
         InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curRoomInfo;
         //인벤토리 열었을 때, 현재 상태를 바탕으로 인벤토리 업데이트 진행
         SetChapterSelected(InventoryManager.Instance.currentViewChapter);
@@ -53,30 +56,36 @@ public class InventoryNavigator : UIBase
             //슬롯 상하좌우 이동 - 키보드 WASD
             if (Input.GetKeyDown(KeyCode.W))
             {
+                PlaySlotMoveSound();
                 MoveUp();
             }
             if (Input.GetKeyDown(KeyCode.A))
             {
+                PlaySlotMoveSound();
                 MoveLeft();
             }
             if (Input.GetKeyDown(KeyCode.S))
             {
+                PlaySlotMoveSound();
                 MoveDown();
             }
             if (Input.GetKeyDown(KeyCode.D))
             {
+                PlaySlotMoveSound();
                 MoveRight();
             }
                 
             //증거물 상세 정보 열기 - 키보드 E
             if (Input.GetKeyDown(KeyCode.E))
-            { 
+            {
+                PlayClickSound();
                 OpenEvidenceDetailUI();
             }
             
             //Space 버튼을 누르면 증거물 사용하기
             if (canEvidenceUse && Input.GetKeyDown(KeyCode.Space))
             {
+                PlayClickSound();
                 UseEvidence();
             }
         }
@@ -440,5 +449,35 @@ public class InventoryNavigator : UIBase
     {
         canEvidenceUse = false;
         _evidenceUseEventId = "";
+    }
+
+    public void PlaySlotMoveSound()
+    {
+        int random = Random.Range(0, 5);
+        string id = "";
+        switch (random)
+        {
+            case 0 :
+                id = "Soundresource_043";
+                break;
+            case 1:
+                id = "Soundresource_044";
+                break;
+            case 2:
+                id = "Soundresource_045";
+                break;
+            case 3:
+                id = "Soundresource_046";
+                break;
+            case 4:
+                id = "Soundresource_047";
+                break;
+        }
+        SoundManager.Instance.PlaySFX(id);
+    }
+
+    public void PlayClickSound()
+    {
+        SoundManager.Instance.PlaySFX("Soundresource_070");
     }
 }
