@@ -155,6 +155,7 @@ public class DialogueManager : UIBase
     {
         isTyping = true;
         dialogueText.text = "";
+        text = text.Replace("\\n", "\n");
 
         if (!isTyping)
         {
