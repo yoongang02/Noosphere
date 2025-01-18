@@ -9,7 +9,7 @@ public enum ClockHandType
     Hour,   // 시침
     Minute  // 분침
 }
-public class ClockHandBtn :  MonoBehaviour, IDragHandler,IEndDragHandler
+public class ClockHandBtn :  MonoBehaviour, IDragHandler,IEndDragHandler, IBeginDragHandler
 {
    [Header("Clock Hand Settings")]
     [SerializeField] private ClockHandType handType;
@@ -34,14 +34,27 @@ public class ClockHandBtn :  MonoBehaviour, IDragHandler,IEndDragHandler
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
         clockHand.rotation = Quaternion.Euler(0, 0, angle);
     }
-
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        SoundManager.Instance.StopAllSFX();
+        if (handType == ClockHandType.Hour)
+        {
+            SoundManager.Instance.PlayLoopingSound("Soundresource_093");
+        }
+        else
+        {
+            SoundManager.Instance.PlayLoopingSound("Soundresource_094");
+        }
+        
+    }
+    
     public void OnEndDrag(PointerEventData eventData)
     {
         float currentAngle = clockHand.rotation.eulerAngles.z;
         float normalizedAngle = (360 - currentAngle) % 360;
         
         int currentUnit = Mathf.RoundToInt(normalizedAngle / _degreePerUnit) % 12;
-        
+        SoundManager.Instance.StopAllSFX();
         // 시침이나 분침이 0일 때의 처리
         if (currentUnit == 0)
         {
