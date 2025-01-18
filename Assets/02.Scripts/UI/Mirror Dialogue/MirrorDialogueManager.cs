@@ -30,9 +30,10 @@ public class MirrorDialogueManager : UIBase
         _curQuizID = quizID;
         _curQuiz = DataManager.Instance._quiz[_curQuizID];
         _curDialogue = DataManager.Instance._dialogue["Dialogue_0030"];
-        
+        SoundManager.Instance.PlaySFX("Soundresource_076");
         transform.GetChild(0).gameObject.SetActive(true);
         await TypeText(_curDialogue.Dialogue_Text_List[0].text);
+        SoundManager.Instance.StopSFX("Soundresource_076");
         HoverYesBtn();
         _btns.SetActive(true);
     }
