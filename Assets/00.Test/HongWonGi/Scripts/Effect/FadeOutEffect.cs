@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class FadeOutEffect : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class FadeOutEffect : MonoBehaviour
     {
         _fadeImage.color = new Color(0, 0, 0, 0);
         _fadeImage.DOFade(1f, 1f)
-            .SetEase(Ease.InOutQuad);
+            .SetEase(Ease.InOutQuad).OnComplete(()=>SceneManager.LoadScene("StartScene"));
         // todo 최종스테이지로
     }
 }
