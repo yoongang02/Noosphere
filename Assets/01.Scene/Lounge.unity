@@ -14675,6 +14675,7 @@ MonoBehaviour:
   _freindMaterial: {fileID: 0}
   _friendMaterial: {fileID: 0}
   footSteps: []
+  _farLoungCam: {fileID: 0}
   _vhsImage: {fileID: 0}
   _vhsVolume: {fileID: 0}
   _vhsObj: {fileID: 0}
@@ -25626,7 +25627,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1347486254
 Transform:
   m_ObjectHideFlags: 0
@@ -39779,6 +39780,7 @@ MonoBehaviour:
   m_Events:
     m_Signals:
     - {fileID: 11400000, guid: bb82fab2dac42634ca879eddd5b2b285, type: 2}
+    - {fileID: 11400000, guid: e5cf6b16e6a25ad45833080d03db35e0, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -39792,6 +39794,20 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: Soundresource_082
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 767475535}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: CameraON
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
 --- !u!1001 &2027901850
