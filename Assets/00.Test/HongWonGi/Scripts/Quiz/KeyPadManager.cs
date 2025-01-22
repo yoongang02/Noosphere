@@ -85,7 +85,6 @@ public class KeyPadManager : UIBase
         if(_inputText.text ==_curQuiz.correctAnswer)
         {
             _curQuiz.isSolved = true;
-            UIManager.Instance.isQuizing = false;
             SoundManager.Instance.PlaySFX("Soundresource_084");
             UIManager.Instance.CloseTopUI();
         }

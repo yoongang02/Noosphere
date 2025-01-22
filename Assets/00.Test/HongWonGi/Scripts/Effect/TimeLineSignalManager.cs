@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Cinemachine;
 
 public class TimeLineSignalManager : MonoBehaviour
 {
@@ -15,7 +16,8 @@ public class TimeLineSignalManager : MonoBehaviour
     [SerializeField] private SkinnedMeshRenderer _freindMaterial;
     [SerializeField] private Material _friendMaterial;
     [SerializeField] private List<string> footSteps;
-    private void Start()
+    [SerializeField] CinemachineVirtualCamera _farLoungCam;
+    private void Start() 
     {
         _player = GameObject.Find("Player").GetComponent<Animator>();
         _mainCamera = Camera.main;
@@ -144,5 +146,10 @@ public class TimeLineSignalManager : MonoBehaviour
    public void StopFootSteps()
    {
        isPlayingFootsteps = true;
+   }
+
+   public void CameraON()
+   {
+       _farLoungCam.Priority = 12;
    }
 }

@@ -71,7 +71,6 @@ public class ClockManager : UIBase
         if (_hour == _targetHour && _minute == _targetMinute)
         {
             _curQuiz.isSolved = true;
-            UIManager.Instance.isQuizing = false;
             Debug.Log($"정답입니다! {_hour}시 {_minute}분");
             UIManager.Instance.CloseTopUI();
         }

@@ -48,6 +48,7 @@ public class RadioManager : UIBase
         //만약 거울이 깨졌는데 기믹을 미리 성공했다면
         if (_curQuiz.isSolved)
         {
+            await UniTask.Yield();
             //퀴즈 실행되지 않음
             UIManager.Instance.CloseTopUI();
             
@@ -75,7 +76,6 @@ public class RadioManager : UIBase
                 DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
                 await ShowRealDialogue();
             }
-            
             return;
         }
         
