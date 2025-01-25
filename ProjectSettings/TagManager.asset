@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - NPC
+  - EventTrigger
+  - EventInteractionTrigger
+  - EventMentalEnterTrigger
+  - InvestigateObj
   layers:
   - Default
   - TransparentFX
@@ -11,10 +16,10 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - MirrorOnly
+  - IgnoreMirrorCam
+  - IgnoreMirrorCam - wall
+  - MirrorOnly - point effect
   - 
   - 
   - 
@@ -40,4 +45,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: UI_Background
+    uniqueID: 3775393369
+    locked: 0
+  - name: UI_Foreground
+    uniqueID: 2643118981
     locked: 0

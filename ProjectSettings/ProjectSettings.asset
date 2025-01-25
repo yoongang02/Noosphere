@@ -47,7 +47,7 @@ PlayerSettings:
   defaultScreenWidthWeb: 960
   defaultScreenHeightWeb: 600
   m_StereoRenderingPath: 0
-  m_ActiveColorSpace: 1
+  m_ActiveColorSpace: 0
   unsupportedMSAAFallback: 0
   m_SpriteBatchVertexThreshold: 300
   m_MTRendering: 1
@@ -514,6 +514,13 @@ PlayerSettings:
       m_Height: 720
       m_Kind: 1
       m_SubKind: 
+  - m_BuildTarget: VisionOS
+    m_Icons:
+    - m_Textures: []
+      m_Width: 1024
+      m_Height: 1024
+      m_Kind: 0
+      m_SubKind: 
   m_BuildTargetBatching: []
   m_BuildTargetShaderSettings: []
   m_BuildTargetGraphicsJobs: []
@@ -808,23 +815,24 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Android: DOTWEEN
-    EmbeddedLinux: DOTWEEN
+    Android: DOTWEEN;UNITY_POST_PROCESSING_STACK_V2;UNITY_VISUAL_SCRIPTING
+    EmbeddedLinux: DOTWEEN;UNITY_POST_PROCESSING_STACK_V2;UNITY_VISUAL_SCRIPTING
     GameCoreScarlett: DOTWEEN
-    GameCoreXboxOne: DOTWEEN
-    LinuxHeadlessSimulation: DOTWEEN
-    Nintendo Switch: DOTWEEN
-    PS4: DOTWEEN
-    PS5: DOTWEEN
-    QNX: DOTWEEN
-    Stadia: DOTWEEN
-    Standalone: DOTWEEN
-    VisionOS: DOTWEEN
-    WebGL: DOTWEEN
-    Windows Store Apps: DOTWEEN
-    XboxOne: DOTWEEN
-    iPhone: DOTWEEN
-    tvOS: DOTWEEN
+    GameCoreXboxOne: DOTWEEN;UNITY_POST_PROCESSING_STACK_V2
+    LinuxHeadlessSimulation: DOTWEEN;UNITY_VISUAL_SCRIPTING
+    Nintendo Switch: DOTWEEN;UNITY_POST_PROCESSING_STACK_V2;UNITY_VISUAL_SCRIPTING
+    PS4: DOTWEEN;UNITY_POST_PROCESSING_STACK_V2;UNITY_VISUAL_SCRIPTING
+    PS5: DOTWEEN;UNITY_POST_PROCESSING_STACK_V2
+    QNX: DOTWEEN;UNITY_POST_PROCESSING_STACK_V2;UNITY_VISUAL_SCRIPTING
+    Server: UNITY_VISUAL_SCRIPTING
+    Stadia: DOTWEEN;UNITY_POST_PROCESSING_STACK_V2
+    Standalone: DOTWEEN;UNITY_POST_PROCESSING_STACK_V2;UNITY_VISUAL_SCRIPTING;ENABLE_LOG
+    VisionOS: DOTWEEN;UNITY_POST_PROCESSING_STACK_V2;UNITY_VISUAL_SCRIPTING
+    WebGL: DOTWEEN;UNITY_POST_PROCESSING_STACK_V2;UNITY_VISUAL_SCRIPTING
+    Windows Store Apps: DOTWEEN;UNITY_VISUAL_SCRIPTING
+    XboxOne: DOTWEEN;UNITY_POST_PROCESSING_STACK_V2;UNITY_VISUAL_SCRIPTING
+    iPhone: DOTWEEN;UNITY_VISUAL_SCRIPTING
+    tvOS: DOTWEEN;UNITY_POST_PROCESSING_STACK_V2;UNITY_VISUAL_SCRIPTING
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}
@@ -931,7 +939,7 @@ PlayerSettings:
   hmiLogStartupTiming: 0
   hmiCpuConfiguration: 
   apiCompatibilityLevel: 6
-  activeInputHandler: 0
+  activeInputHandler: 2
   windowsGamepadBackendHint: 0
   cloudProjectId: 
   framebufferDepthMemorylessMode: 0
