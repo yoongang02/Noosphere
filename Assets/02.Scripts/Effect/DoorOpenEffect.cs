@@ -7,6 +7,7 @@ public class DoorOpenEffect : MonoBehaviour
 {
    [SerializeField] private GameObject _closeDoor;
    [SerializeField] private GameObject _clearTrigger;
+   [SerializeField] private GameObject _block;
 
    private void OnEnable()
    {
@@ -17,6 +18,7 @@ public class DoorOpenEffect : MonoBehaviour
 
    public void OnAnimationEnd()
    {
+      _block.SetActive(false);
       EffectManager.Instance.OnEffectEnd?.Invoke();
    }
 }
