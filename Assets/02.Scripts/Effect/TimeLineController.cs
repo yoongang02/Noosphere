@@ -31,6 +31,7 @@ public class TimeLineController : MonoBehaviour
             _player.transform.localRotation = Quaternion.Euler(0, -180f, 0);
         }
 
+        InventoryManager.Instance.canOpenInventory = true;
         _playableDirector.Play();
     }
   
@@ -43,5 +44,6 @@ public class TimeLineController : MonoBehaviour
             _player.transform.SetParent(null);
         }
         EffectManager.Instance.OnEffectEnd?.Invoke();
+        InventoryManager.Instance.canOpenInventory = false;
     }
 }

@@ -47,6 +47,8 @@ public class InventoryManager : Singleton<InventoryManager>
 
     [Space(5)] [Header("증거물 사용 정보")] [SerializeField]
     private string usingEvidenceId;
+
+    public bool canOpenInventory = false;//컷씬 진행도중 인벤토리 열리는거 막기위함
     void Start()
     {
         //인벤토리 초기화
@@ -58,6 +60,9 @@ public class InventoryManager : Singleton<InventoryManager>
         //인벤토리 열기
         if (!UIManager.Instance.IsAnyUIOpen())
         {
+            if (canOpenInventory)
+                return;
+            
             //키보드 입력 - Tab 버튼
             if (Input.GetKeyDown(KeyCode.Tab))
             {
