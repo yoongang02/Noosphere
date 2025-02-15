@@ -9,10 +9,12 @@ using UnityEngine.UI;
 using Cinemachine;
 
 public class TimeLineSignalManager : MonoBehaviour
-{
-    private Animator _player;
+{ 
+    [Header("npc및 캐릭터 애니메이션 관련")]
     [SerializeField] private Animator _npc;
     [SerializeField] private Animator _friendNpc;
+    private Animator _player;
+  
     [SerializeField] private SkinnedMeshRenderer _freindMaterial;
     [SerializeField] private Material _friendMaterial;
     [SerializeField] private List<string> footSteps;
@@ -26,7 +28,7 @@ public class TimeLineSignalManager : MonoBehaviour
             _cameraData = _mainCamera.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();
         }
     }
-
+    
     public void StartPlayerAnim(string playerAnim)
    {
        _player.SetBool(playerAnim,true);

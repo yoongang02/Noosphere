@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using TMPro;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 
@@ -39,9 +40,14 @@ public class DialogueManager : UIBase
 
         _instance = this;
         DontDestroyOnLoad(gameObject); 
+        contentSizeFitter = dialogueText.gameObject.AddComponent<ContentSizeFitter>();
+        contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+        textRectTransform = dialogueText.GetComponent<RectTransform>();
+        textRectTransform.pivot = new Vector2(0, 0.5f); //
     }
 
     [SerializeField] private TextMeshProUGUI dialogueText;
+    [SerializeField] private GameObject _dialogueGroup;
     [SerializeField] private GameObject _toggleIcon;
     [SerializeField] private TextMeshProUGUI _speakerText;
 
@@ -56,17 +62,20 @@ public class DialogueManager : UIBase
     private int _currentLetterIndex = 0;
     public bool isTyping = false;
     public Action OnDialogueEnd;
+    private ContentSizeFitter contentSizeFitter;
+    private RectTransform textRectTransform;
+
 
     public override void OnOpen()
     {
         base.OnOpen();
-        dialogueText.gameObject.SetActive(true);
+        _dialogueGroup.SetActive(true);
     }
 
     public override void OnClose()
     {
         base.OnClose();
-        dialogueText.gameObject.SetActive(false);
+        _dialogueGroup.SetActive(false);
         if (_curDialogue.triggerType == "interact" && _curDialogue.interactionType == "npc")
         {
             PlayerController.Instance.ResetCamera();
@@ -155,9 +164,26 @@ public class DialogueManager : UIBase
     private async UniTask TypeText(string text)
     {
         isTyping = true;
-        dialogueText.text = "";
+    
+        // 임시로 텍스트 알파값을 0으로 설정
+        dialogueText.alpha = 0;
+    
+        // 전체 텍스트 길이 계산을 위해 텍스트 설정
         text = text.Replace("\\n", "\n");
-        // SoundManager.Instance.PlayLoopingSound("Soundresource_026");
+        dialogueText.text = text;
+        await UniTask.NextFrame();
+    
+        float totalWidth = dialogueText.preferredWidth;
+    
+        Canvas canvas = dialogueText.transform.GetComponentInParent<Canvas>();
+        RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+        float canvasCenter = canvasRect.rect.width / 2f;
+        float startX = canvasCenter - (totalWidth / 2f);
+        textRectTransform.anchoredPosition = new Vector2(startX, textRectTransform.anchoredPosition.y);
+    
+        // 텍스트 다시 비우고 알파값 복구
+        dialogueText.text = "";
+        dialogueText.alpha = 1;
         StartDialogueSound(_curDialogue.characterId);
         if (!isTyping)
         {
