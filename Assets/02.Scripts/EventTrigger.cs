@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -11,19 +12,22 @@ public class EventTrigger : MonoBehaviour
     private EventStructure _curEvent;
     [Space(5)] [Header("트리거 설정")] 
     [SerializeField] private bool _canDestroy = false;
+    [SerializeField] private float _frontAngle = 40f;
     [Space(5)][Header("NPC 관련")]
     public GameObject npcCameraPoint;
     public bool isNpc;
-    
+
+    private RaycastHit[] _frontRayHits;
     
     //플레이어가 트리거 내에 진입한다면
-    protected void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && PlayerInteract.Instance.canInteract)
         {
-            CheckTriggerAvail();
             PlayerInteract.Instance.isInsideTrigger = true;
             PlayerInteract.Instance.curTrigger = this;
+            if(!IsPlayerFront(other.transform)) return;
+            CheckTriggerAvail();
             
             if (isNpc)
             {
@@ -32,6 +36,7 @@ public class EventTrigger : MonoBehaviour
             }
         }
     }
+    
     
     //플레이어가 트리거 내에서 나간다면
     protected void OnTriggerExit(Collider other)
@@ -113,4 +118,31 @@ public class EventTrigger : MonoBehaviour
             }
         }
     }
+
+    // 플레이어가 트리거를 정면 방향으로 진입했는지 체크하는 함수
+    bool IsPlayerFront(Transform player)
+    {
+        Vector3 triggerDirection = (transform.GetChild(0).position - player.position).normalized;
+        float angle = Vector3.Angle(player.forward, triggerDirection);
+        
+        if (angle <= _frontAngle)
+        {
+            Debug.Log("플레이어가 정면을 바라보고 들어 옴.");
+            return true;
+        }
+        Debug.Log("플레이어가 뒤돌거나 옆을 보고 들어오지 않음");
+        //현재 이벤트 초기화하기
+        _curEvent = null;
+        PlayerInteract.Instance.HideInteractionMark();
+        
+        //npc 변수 초기화
+        PlayerController.Instance.npcCam = null;
+        PlayerController.Instance.npcState = null;
+        
+        //플레이어에게 할당된 액션 다 초기화
+        PlayerInteract.Instance.OnInteract = null;
+        PlayerInteract.Instance.OnMentalInteract = null;
+        return false;
+    }
 }
+
