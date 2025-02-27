@@ -15,7 +15,8 @@ public class TimeLineSignalManager : MonoBehaviour
 
     [SerializeField] private Animator _friendNpc;
     private Animator _player;
-
+    private SkinnedMeshRenderer _playerSkin;
+    [SerializeField] private List<Material> _playerMaterial;
     [SerializeField] private SkinnedMeshRenderer _freindMaterial;
     [SerializeField] private Material _friendMaterial;
     [SerializeField] private List<string> footSteps;
@@ -25,6 +26,7 @@ public class TimeLineSignalManager : MonoBehaviour
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Animator>();
+        _playerSkin = GameObject.Find("Character_Main_Body").GetComponent<SkinnedMeshRenderer>();
         _mainCamera = Camera.main;
         if (_mainCamera != null)
         {
@@ -94,11 +96,11 @@ public class TimeLineSignalManager : MonoBehaviour
         anim.SetBool(animName, false);
     }
 
-    public void SetMaterial(Material material)
+    public void SetPlayerMaterial(Material material)
     {
-        _freindMaterial.material = material;
+        _playerSkin.material = material;
     }
-
+    
     /// <summary>
     /// ///////////////////////////////////////////////////
     /// </summary>
