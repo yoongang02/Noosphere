@@ -30,9 +30,10 @@ public class MirrorDialogueManager : UIBase
         _curQuizID = quizID;
         _curQuiz = DataManager.Instance._quiz[_curQuizID];
         _curDialogue = DataManager.Instance._dialogue["Dialogue_0030"];
-        
+        SoundManager.Instance.PlaySFX("Soundresource_076");
         transform.GetChild(0).gameObject.SetActive(true);
         await TypeText(_curDialogue.Dialogue_Text_List[0].text);
+        SoundManager.Instance.StopSFX("Soundresource_076");
         HoverYesBtn();
         _btns.SetActive(true);
     }
@@ -50,18 +51,21 @@ public class MirrorDialogueManager : UIBase
         //키보드 A - YES 버튼
         if (Input.GetKeyDown(KeyCode.W))
         {
+            SoundManager.Instance.PlaySFX("Soundresource_035");
             HoverYesBtn();
         }
 
         //키보드 D - NO 버튼
         if (Input.GetKeyDown(KeyCode.S))
         { 
+            SoundManager.Instance.PlaySFX("Soundresource_035");
             HoverNoBtn();
         }
 
         //스페이스 - 버튼 선택
         if (_curSelectedBtn != null && Input.GetKeyDown(KeyCode.Space))
         {
+            SoundManager.Instance.PlaySFX("Soundresource_037");
             if (_curSelectedBtn == _yesBtn)
             {
                 ClickYesBtn();
@@ -69,39 +73,6 @@ public class MirrorDialogueManager : UIBase
             else if (_curSelectedBtn == _noBtn)
             {
                 ClickNoBtn();
-            }
-        }
-    }
-    
-    public override void HandleMouseInput()
-    {
-        base.HandleMouseInput();
-        
-        PointerEventData pointerData = new PointerEventData(EventSystem.current)
-        {
-            position = Input.mousePosition
-        };
-
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(pointerData, results);
-
-        foreach (var result in results)
-        {
-            if (result.gameObject == _yesBtn)
-            {
-                HoverYesBtn();
-                if (Input.GetMouseButtonDown(0)) 
-                {
-                    ClickYesBtn();
-                }
-            }
-            else if (result.gameObject == _noBtn)
-            {
-                HoverNoBtn();
-                if (Input.GetMouseButtonDown(0)) 
-                {
-                    ClickNoBtn();
-                }
             }
         }
     }
@@ -127,21 +98,21 @@ public class MirrorDialogueManager : UIBase
         isTyping = false;
     }
     
-    void HoverYesBtn()
+    public void HoverYesBtn()
     {
         SetButtonSelected(_yesBtn, UnityExtension.HexColor(RedColor));
         SetButtonSelected(_noBtn, UnityExtension.HexColor(WhiteColor));
         _curSelectedBtn = _yesBtn;
     }
 
-    void HoverNoBtn()
+    public void HoverNoBtn()
     {
         SetButtonSelected(_noBtn,UnityExtension.HexColor(RedColor));
         SetButtonSelected(_yesBtn,UnityExtension.HexColor(WhiteColor));
         _curSelectedBtn = _noBtn;
     }
 
-    void ClickYesBtn()
+    public void ClickYesBtn()
     {
         UIManager.Instance.isYesClicked = true;
         HoverYesBtn();
@@ -150,7 +121,7 @@ public class MirrorDialogueManager : UIBase
         QuizManager.Instance.OnQuizEnd?.Invoke();
     }
 
-    void ClickNoBtn()
+    public void ClickNoBtn()
     {
         HoverNoBtn();
         UIManager.Instance.CloseTopUI();

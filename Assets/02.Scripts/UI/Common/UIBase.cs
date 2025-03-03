@@ -10,7 +10,7 @@ public class UIBase : MonoBehaviour
     protected static readonly string WhiteColor = "#FFFFFF";
     protected static readonly string BlackColor = "#000000";
     protected static readonly string GrayColor = "#7B7B7B";
-    protected static readonly string RedColor = "#FF4949";
+    protected static readonly string RedColor = "#FF0000";
     
     public UnityEvent OnClickEvent;
     public UnityEvent OnHoverEvent;

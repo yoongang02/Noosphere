@@ -33,8 +33,9 @@ public class SoundManager : Singleton<SoundManager>
         LoadSoundData("Assets/02.Scripts/Sounds/SoundData/SFX", _sfxDictionary);
     }
     */
-    void Start()
+    void Awake()
     {
+        base.Awake();
         // bgm 데이터 초기화
         foreach (var bgmData in _bgmList)
         {
@@ -261,6 +262,48 @@ public class SoundManager : Singleton<SoundManager>
         foreach (AudioSource source in _sfxSources)
         {
             source.Stop();
+        }
+    }
+
+    public void PlayLoopingSound(string id)
+    {
+        SoundData soundData = _sfxDictionary[id];
+        if (soundData == null || soundData.soundClip == null)
+        {
+            Debug.LogWarning("SoundData 유효하지 않습니다.");
+            return;
+        }
+
+        // 재사용 가능한 AudioSource 가져오기
+        AudioSource source = GetAvailableSFXSource();
+
+        source.clip = soundData.soundClip;
+        source.volume = soundData.volume;
+        source.loop = true; // 루프 활성화
+        source.Play();
+    }
+    
+    public void PlaySFXNoEffect(string id)
+    {
+        SoundData soundData = _sfxDictionary[id];
+        if (soundData == null || soundData.soundClip == null)
+        {
+            Debug.LogWarning("SoundData 유효하지 않습니다.");
+            return;
+        }
+
+        // 재사용 가능한 AudioSource 가져오기
+        AudioSource source = GetAvailableSFXSource();
+
+        source.clip = soundData.soundClip;
+        source.volume = soundData.volume;
+
+        for(int i = 0; i < soundData.loopCnt; i++)
+        {
+            source.Play();
+            // AudioClip의 길이만큼 대기 후 오디오 소스 중지 및 반환
+            float clipLength = soundData.soundClip.length; // 클립의 길이 가져오기
+            StartCoroutine(StopAndReleaseSourceAfterDelay(source, clipLength));
         }
     }
 }

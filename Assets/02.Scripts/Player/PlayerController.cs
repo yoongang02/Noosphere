@@ -32,19 +32,11 @@ public class PlayerController : Singleton<PlayerController>
     public GameObject _currentNPC;
     public GameObject _swapNpc;
     private float lastStepTime = 0f;
-    [Header("Ray Settings")]
-    [SerializeField] private float _rayDistance;
-    [SerializeField] private float _rayHeight;
 
     public GameObject npcCam;
     public NpcState npcState;
-    private void OnDrawGizmos()
-    {
-        Vector3 rayStart = transform.position + Vector3.up * _rayHeight; // Ray 시작점을 위로 올림
-        Gizmos.color = Color.red;
-        Vector3 direction = transform.forward * _rayDistance;
-        Gizmos.DrawRay(rayStart, direction);
-    }
+    
+    
     private void Start()
     {
         _animator = GetComponent<Animator>();
@@ -132,6 +124,12 @@ public class PlayerController : Singleton<PlayerController>
                 footstepSource.clip = currentSounds[randomIndex];
                 footstepSource.Play();
                 lastStepTime = Time.time;
+            }
+
+            if (PlayerInteract.Instance.curTrigger != null && PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.canInteract)
+            {
+                PlayerInteract.Instance.curTrigger.GetComponent<EventTrigger>().OnTriggerEnter(GetComponent<CapsuleCollider>());
+                NooSphere.Debug.LogWarning("트리거 내에서 이동했을 때 강제로 다시 트리거 엔터 호출");
             }
         }
         else

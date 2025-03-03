@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Debug = NooSphere.Debug;
+using Random = UnityEngine.Random;
 
 public class PlayerInteract : Singleton<PlayerInteract>
 {
@@ -28,7 +29,31 @@ public class PlayerInteract : Singleton<PlayerInteract>
                 if (OnInteract != null)
                 {
                     Debug.LogWarning("OnInteract 에 등록되어있는 메소드 실행");
-                    OnInteract?.Invoke();
+                    if (OnInteract != null)
+                    {
+                        int random = Random.Range(0, 5);
+                        string id = "";
+                        switch (random)
+                        {
+                            case 0 :
+                                id = "Soundresource_030";
+                                break;
+                            case 1:
+                                id = "Soundresource_031";
+                                break;
+                            case 2:
+                                id = "Soundresource_032";
+                                break;
+                            case 3:
+                                id = "Soundresource_033";
+                                break;
+                            case 4:
+                                id = "Soundresource_034";
+                                break;
+                        }
+                        SoundManager.Instance.PlaySFX(id);
+                        OnInteract.Invoke();
+                    }
                     OnInteract = null;   
                 }
             }

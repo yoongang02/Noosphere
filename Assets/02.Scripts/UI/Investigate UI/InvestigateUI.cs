@@ -45,18 +45,21 @@ public class InvestigateUI : UIBase
         //키보드 A - YES 버튼
         if (Input.GetKeyDown(KeyCode.A))
         {
+            SoundManager.Instance.PlaySFX("Soundresource_035");
             HoverYesBtn();
         }
 
         //키보드 D - NO 버튼
         if (Input.GetKeyDown(KeyCode.D))
         { 
+            SoundManager.Instance.PlaySFX("Soundresource_035");
             HoverNoBtn();
         }
 
         //스페이스 - 버튼 선택
         if (_curSelectedBtn != null && Input.GetKeyDown(KeyCode.Space))
         {
+            SoundManager.Instance.PlaySFX("Soundresource_037");
             if (_curSelectedBtn == _yesBtn)
             {
                 ClickYesBtn();
@@ -70,60 +73,27 @@ public class InvestigateUI : UIBase
         //ESC - NO 선택
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            SoundManager.Instance.PlaySFX("Soundresource_036");
             //NO 버튼 선택
             ClickNoBtn();
         }
     }
-
     
-    public override void HandleMouseInput()
-    {
-        base.HandleMouseInput();
-        
-        PointerEventData pointerData = new PointerEventData(EventSystem.current)
-        {
-            position = Input.mousePosition
-        };
-
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(pointerData, results);
-
-        foreach (var result in results)
-        {
-            if (result.gameObject == _yesBtn)
-            {
-                HoverYesBtn();
-                if (Input.GetMouseButtonDown(0)) 
-                {
-                    ClickYesBtn();
-                }
-            }
-            else if (result.gameObject == _noBtn)
-            {
-                HoverNoBtn();
-                if (Input.GetMouseButtonDown(0)) 
-                {
-                    ClickNoBtn();
-                }
-            }
-        }
-    }
-    
-    void HoverYesBtn()
+    public void HoverYesBtn()
     {
         SetButtonSelected(_yesBtn, UnityExtension.HexColor(GreenColor));
         SetButtonSelected(_noBtn, UnityExtension.HexColor(WhiteColor));
         _curSelectedBtn = _yesBtn;
     }
 
-    void HoverNoBtn()
+    public void HoverNoBtn()
     {
         SetButtonSelected(_noBtn,UnityExtension.HexColor(GreenColor));
         SetButtonSelected(_yesBtn,UnityExtension.HexColor(WhiteColor));
         _curSelectedBtn = _noBtn;
     }
 
-    void ClickYesBtn()
+    public void ClickYesBtn()
     {
         UIManager.Instance.isYesClicked = true;
         HoverYesBtn();
@@ -137,7 +107,7 @@ public class InvestigateUI : UIBase
         _curEvidence = null;
     }
 
-    void ClickNoBtn()
+    public void ClickNoBtn()
     {
         HoverNoBtn();
         UIManager.Instance.CloseTopUI();
