@@ -1386,8 +1386,7 @@ MonoBehaviour:
   canMove: 0
   _currentNPC: {fileID: 0}
   _swapNpc: {fileID: 0}
-  _rayDistance: 0.68
-  _rayHeight: 0.79
+  npcCam: {fileID: 0}
   npcState: {fileID: 0}
 --- !u!54 &5763481761334650358
 Rigidbody:
@@ -1474,11 +1473,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dontDestroy: 1
   canInteract: 1
-  interactionTrigger: {fileID: 0}
   _interactionMark: {fileID: 4027558490432177639}
-  _evidenceObjectInScene: {fileID: 0}
+  isInsideTrigger: 0
+  curTrigger: {fileID: 0}
   isInMental: 0
-  mentalTrigger: {fileID: 0}
   isUsingEvidence: 0
 --- !u!82 &8517289265125909748
 AudioSource:
