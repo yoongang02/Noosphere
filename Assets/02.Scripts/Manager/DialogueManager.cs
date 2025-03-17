@@ -57,7 +57,7 @@ public class DialogueManager : UIBase
     private int _currentLineIndex = 0;
     private string _initialDialogueId = "";
 
-    private float _letterDelay = 0.05f;
+    [SerializeField] float _letterDelay = 0.05f;
     private float _currentTextElapsedTime = 0f;
     private int _currentLetterIndex = 0;
     public bool isTyping = false;
