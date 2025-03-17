@@ -67,7 +67,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
 
     public void HideInteractionMark()
     {
-        _interactionMark.SetActive(false);
+        _interactionMark.GetComponent<Animator>().SetTrigger("Hide");
     }
     
     public void InitUsingEvidence()
