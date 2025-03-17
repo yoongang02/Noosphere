@@ -51,6 +51,7 @@ public class DialogueCSVParser
                     DialogueStructure.DialougeText dialougeText = new DialogueStructure.DialougeText();
                     dialougeText.text = currentDialogue.dialogueText;
                     dialougeText.tutorialID = currentDialogue.tutorialId;
+                    dialougeText.characterId = currentDialogue.characterId;
                     
                     currentDialogue.Dialogue_Text_List.Add(dialougeText);
                     dictionary[currentDialogueId] = currentDialogue;
@@ -59,15 +60,32 @@ public class DialogueCSVParser
                 {
                     int textIndex = Array.FindIndex(headers, h => h.Trim().Replace("\"", "") == "dialogueText");
                     int tutorialIndex = Array.FindIndex(headers, h => h.Trim().Replace("\"", "") == "tutorialId");
-                    if (textIndex >= 0 && textIndex < values.Length && tutorialIndex >= 0 && tutorialIndex < values.Length)
+                    int characterIndex = Array.FindIndex(headers, h => h.Trim().Replace("\"", "") == "characterId");
+    
+                    if (textIndex >= 0 && textIndex < values.Length)
                     {
                         string additionalText = values[textIndex].Trim().Replace("\"", "");
-                        string tutorialID = values[tutorialIndex].Trim().Replace("\"", "");
-                        
+                        string tutorialID = (tutorialIndex >= 0 && tutorialIndex < values.Length) 
+                            ? values[tutorialIndex].Trim().Replace("\"", "") 
+                            : "";
+            
+                        string characterID = "";
+                        // 추가 행에 characterId가 있으면 그 값을 사용
+                        if (characterIndex >= 0 && characterIndex < values.Length && !string.IsNullOrEmpty(values[characterIndex]))
+                        {
+                            characterID = values[characterIndex].Trim().Replace("\"", "");
+                        }
+                        // 없으면 대화의 기본 characterId 사용
+                        else
+                        {
+                            characterID = currentDialogue.characterId;
+                        }
+        
                         DialogueStructure.DialougeText dialougeText = new DialogueStructure.DialougeText();
                         dialougeText.text = additionalText;
                         dialougeText.tutorialID = tutorialID;
-                        
+                        dialougeText.characterId = characterID;
+        
                         currentDialogue.Dialogue_Text_List.Add(dialougeText);
                     }
                 }
