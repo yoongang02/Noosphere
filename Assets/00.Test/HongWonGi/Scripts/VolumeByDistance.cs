@@ -17,13 +17,6 @@ public class VolumeByDistance : MonoBehaviour
 
     [SerializeField]
     private Volume _volume;
-    // [SerializeField]
-    // private Light targetLight;
-
-    // [Header("Light Intensity 설정")] [Range(0f, 1f)]
-    // public float maxIntensity = 0.8f;
-    //
-    // public float minIntensity = 0f;
 
     private Vignette _vignette;
 
@@ -39,6 +32,10 @@ public class VolumeByDistance : MonoBehaviour
     }
 
     void Update()
+    {
+        OnDark();
+    }
+    private void OnDark()
     {
         // 시작점과 도착점 사이의 전체 거리
         float totalDistance = Vector3.Distance(_startPoint.position, _endPoint.position);
@@ -67,3 +64,4 @@ public class VolumeByDistance : MonoBehaviour
         }
     }
 }
+
