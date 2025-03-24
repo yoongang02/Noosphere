@@ -10,6 +10,7 @@ public class InventorySlot
 {
     public string evidenceId;
     public string evidenceName;
+    public string evidenceContent;
     public char evidenceType;
     public char canUse;
     public string artresourceId;
@@ -18,6 +19,7 @@ public class InventorySlot
     {
         evidenceId = evidence.evidenceId;
         evidenceName = evidence.evidenceName;
+        evidenceContent = evidence.evidenceTextDisplay;
         evidenceType = evidence.evidenceType;
         canUse = evidence.canUse;
         artresourceId = evidence.artresourceId;

@@ -20,6 +20,13 @@ public class InventoryNavigator : UIBase
     public List<GameObject> inventorySlots = new List<GameObject>();
     [SerializeField] private Image _slotUseBtn;
     private GameObject _slotOn;
+
+    [Space(5)] [Header("인벤토리 네비게이션 UI")] [SerializeField]
+    private TextMeshProUGUI _evidenceName;
+    [SerializeField] private Image _evidenceBackground;
+    [SerializeField] private List<Sprite> _backgroundImgs;
+    [SerializeField] private Image _evidenceImg;
+    [SerializeField] private TextMeshProUGUI _evidenceContent;
     
     [Space(5)][Header("증거물 사용 정보")]
     public bool canEvidenceUse = false;
@@ -165,19 +172,44 @@ public class InventoryNavigator : UIBase
         UpdateSelection();
     }
 
-    //슬롯 선택 시, 슬롯 선택에 따른 업데이트
+    // 슬롯 선택 시, 슬롯 선택에 따른 업데이트
     public void UpdateSelection()
     {
         _curSelectedSlot = inventorySlots[currentIndex];
         SetSlotSelected(_curSelectedSlot);
+        SetSlotDetailInfo(_curSelectedSlot);
         //SetSlotUseBtn(_curSelectedSlot);
     }
 
-    public void SetSlotDetailInfo()
+    // 슬롯 디테일 정보 업데이트
+    public void SetSlotDetailInfo(GameObject slot)
     {
-        
+        if (DataManager.Instance._evidences.ContainsKey(slot.GetComponent<InventorySlotInfo>().evidenceId))
+        {
+            EvidenceStructure evidence = DataManager.Instance._evidences[slot.GetComponent<InventorySlotInfo>().evidenceId];
+            
+            // 증거물 이름과 설명 업데이트
+            _evidenceName.text = evidence.evidenceName;
+            _evidenceContent.text = evidence.evidenceTextDisplay;
+            
+            // 증거물 디테일 배경 업데이트
+            if (evidence.evidenceType == 'R')
+            {
+                _evidenceBackground.sprite = _backgroundImgs[0];
+            }
+            else if (evidence.evidenceType == 'M')
+            {
+                _evidenceBackground.sprite = _backgroundImgs[1];
+            }
+            
+            // 증거물 디테일 이미지 업데이트
+            if (DataManager.Instance._artResources.ContainsKey(evidence.artresourceId))
+            {
+                ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresourceId];
+                _evidenceImg.sprite = artResource.GetSpriteFromFilePath(artResource.filePathInventoryDetail);
+            }
+        }
     }
-    
 
     //슬롯 선택 배경 업데이트
     public void SetSlotSelected(GameObject slot)
