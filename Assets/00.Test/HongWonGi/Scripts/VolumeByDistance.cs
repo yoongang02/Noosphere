@@ -7,42 +7,34 @@ using UnityEngine.Rendering.Universal;
 
 public class VolumeByDistance : MonoBehaviour
 {
-    [Header("시작점과 도착점 설정")] [SerializeField]
+    [Header("시작점과 도착점 설정")] 
+    [SerializeField]
     private Transform _startPoint;
+    [SerializeField] 
+    private Transform _endPoint;
+    [SerializeField]
+    private Transform _playerTrans;
 
-    [SerializeField] private Transform _endPoint;
-    [SerializeField] private Transform _playerTrans;
+    [SerializeField]
+    private Volume _volume;
 
-    [SerializeField] private Volume _volume;
-
-    [SerializeField] private UniversalAdditionalCameraData _mainCam;
-    [SerializeField] private GameObject _overlayCam;
     private Vignette _vignette;
 
-    private void OnEnable()
+    private void Start()
     {
-        InitCamSetting();
-    }
-
-    private void InitCamSetting()
-    {
-        if (!_volume.profile.TryGet<Vignette>(out _vignette))
+        if (_volume != null && _volume.profile != null)
         {
-            Debug.Log("volume효과 존재 x");
+            if (!_volume.profile.TryGet<Vignette>(out _vignette))
+            {
+                Debug.LogWarning("Volume Profile에 Vignette 효과가 없습니다.");
+            }
         }
-        else
-        {
-            Debug.Log("volume효과 존재");
-        }
-        _mainCam.renderPostProcessing = true;
-        _overlayCam.SetActive(true);
     }
 
     void Update()
     {
         OnDark();
     }
-
     private void OnDark()
     {
         // 시작점과 도착점 사이의 전체 거리
@@ -58,13 +50,6 @@ public class VolumeByDistance : MonoBehaviour
         // volume의 weight를 t값으로 조절 (0이면 효과 없음, 1이면 최대 효과)
         _volume.weight = t;
         float reversedT = 1f - t;
-        if (t >= 1)
-        {
-            //끝까지 도달했을 때
-            // Debug.Log("끝");
-            // EffectManager.Instance.OnEffectEnd?.Invoke();
-        }
-
         // targetLight.intensity = Mathf.Lerp(minIntensity, maxIntensity, reversedT);
         if (_vignette != null)
         {
@@ -77,6 +62,6 @@ public class VolumeByDistance : MonoBehaviour
             newColor.a = originalColor.a; // 기존 알파값 유지
             _vignette.color.value = newColor;
         }
-      
     }
 }
+
