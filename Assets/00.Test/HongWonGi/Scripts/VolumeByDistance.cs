@@ -61,7 +61,7 @@ public class VolumeByDistance : MonoBehaviour
         if (t >= 1)
         {
             //끝까지 도달했을 때
-            // Debug.Log("끝");
+            Debug.Log("끝에 도달");
             // EffectManager.Instance.OnEffectEnd?.Invoke();
         }
 

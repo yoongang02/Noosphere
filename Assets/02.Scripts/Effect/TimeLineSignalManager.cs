@@ -83,6 +83,7 @@ public class TimeLineSignalManager : MonoBehaviour
     {
         string objectName = command.Split(':')[0];
         string animName = command.Split(':')[1];
+        Debug.Log(animName+"시발시발");
         Animator anim = GetAnimator(objectName);
         anim.SetBool(animName,true);
 
