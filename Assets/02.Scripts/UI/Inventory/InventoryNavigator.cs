@@ -15,15 +15,11 @@ public class InventoryNavigator : UIBase
     [Header("인벤토리 네비게이션 정보")]
     public GameObject _curSelectedSlot;
     public int currentIndex = 0;
-    public bool isBothInventory = false; //정신세계 증거물과 현실세계 증거물이 모두 있을 때
     
     [Space(5)][Header("인벤토리 네비게이션 UI")]
     public List<GameObject> inventorySlots = new List<GameObject>();
-    private List<GameObject> realWorldSlots = new List<GameObject>();
-    private List<GameObject> mentalWorldSlots = new List<GameObject>();
-    [SerializeField] private Sprite _selectedSprite;
-    [SerializeField] private Sprite _deselectedSprite;
     [SerializeField] private Image _slotUseBtn;
+    private GameObject _slotOn;
     
     [Space(5)][Header("증거물 사용 정보")]
     public bool canEvidenceUse = false;
@@ -83,80 +79,37 @@ public class InventoryNavigator : UIBase
                 OpenEvidenceDetailUI();
             }
             
+            /*
             //Space 버튼을 누르면 증거물 사용하기
             if (canEvidenceUse && Input.GetKeyDown(KeyCode.Space))
             {
                 PlayClickSound();
                 UseEvidence();
             }
+            */
         }
     }
-    public void InitNavigator(GameObject realWorld, GameObject mentalWorld)
+    public void InitNavigator(GameObject inventoryBase)
     {
         //초기화
-        realWorldSlots.Clear();
-        mentalWorldSlots.Clear();
         inventorySlots.Clear();
         
         //현재 인벤토리 기준으로 재설정
-        realWorldSlots = GetChildSlots(realWorld.transform);
-        mentalWorldSlots = GetChildSlots(mentalWorld.transform);
+        inventorySlots = GetChildSlots(inventoryBase.transform);
         
-        
-        //실제 이동에 사용할 슬롯 리스트
-        if (realWorldSlots.Count > 0 && mentalWorldSlots.Count > 0)
-        {
-            //현실세계 증거물과 정신세계 증거물을 교차로 넣기
-            //Debug.Log("현실 증거물 정신 증거물 둘 다 존재?");
-            AddSlotsPerRow();
-            isBothInventory = true;
-        }
-        else if(realWorldSlots.Count > 0)
-        {
-            //Debug.Log($"현실 증거물 {realWorldSlots.Count}개 만 존재");
-            inventorySlots = realWorldSlots;
-        }
-        else if (mentalWorldSlots.Count > 0)
-        {
-            //Debug.Log($"정신 증거물 {mentalWorldSlots.Count}개 만 존재");
-            inventorySlots = mentalWorldSlots;
-        }
-
         if (inventorySlots.Count == 0)
         {
             //Debug.Log("증거물이 아무것도 존재하지 않아");
             _curSelectedSlot = null;
             return;
         }
-
+        
         //슬롯 선택 초기화
         currentIndex = 0;
         UpdateSelection();
         InitChapter(InventoryManager.Instance.currentViewChapter);
     }
-
-    //증거물 행 별로 슬롯에 추가 함수
-    void AddSlotsPerRow()
-    {
-        int maxCount = (int)Mathf.Max(realWorldSlots.Count,mentalWorldSlots.Count);
-        int maxRow = Mathf.CeilToInt((float)maxCount / 3);
-
-        for (int row = 0; row < maxRow; row++)
-        {
-            int startIndex = row * 3;
-            int endIndexR = Mathf.Min(startIndex + 3, realWorldSlots.Count);
-            int endIndexM = Mathf.Min(startIndex + 3, mentalWorldSlots.Count);
-            for (int index = startIndex; index < endIndexR; index++)
-            {
-                inventorySlots.Add(realWorldSlots[index]);
-            }
-            for (int index = startIndex; index < endIndexM; index++)
-            {
-                inventorySlots.Add(mentalWorldSlots[index]);
-            }
-        }
-    }
-
+    
     //슬롯들 가져오기
     List<GameObject> GetChildSlots(Transform parent)
     {
@@ -177,83 +130,21 @@ public class InventoryNavigator : UIBase
     //현재 슬롯에서 위로 이동 - 정신(현실) 세계 증거물만 있는 경우
     public void MoveUp()
     {
-        if (isBothInventory)
-        {
-            //현실 세계에 있다면
-            if (IsInRealWorldSlot())
-            {
-                MoveUpInBothInventory(realWorldSlots);
-            }
-            else
-            {
-                MoveUpInBothInventory(mentalWorldSlots);
-            }
-            
-        }
-        else
-        {
-            currentIndex -= 3;
-            if(currentIndex < 0) currentIndex = Mathf.FloorToInt((inventorySlots.Count - 1) / 3) * 3;
-        }
+        currentIndex -= 3;
+        if(currentIndex < 0) currentIndex = Mathf.FloorToInt((inventorySlots.Count - 1) / 3) * 3;
         UpdateSelection();
-    }
-
-    //현재 슬롯에서 위로 이동 - 정신과 현실 세계 증거물이 모두 있는 경우
-    private void MoveUpInBothInventory(List<GameObject> slots)
-    {
-        int index = slots.IndexOf(_curSelectedSlot);
-        int targetIndex = index - 3;
-
-        if (targetIndex < 0)
-        {
-            targetIndex = Mathf.FloorToInt((slots.Count - 1) / 3) * 3;
-        }
-        
-        GameObject target = slots[targetIndex];
-        currentIndex = inventorySlots.IndexOf(target);
-    }
-
-    //현재 슬롯에서 아래로 이동 - 정신과 현실 세계 증거물이 모두 있는 경우
-    private void MoveDownInBothInventory(List<GameObject> slots)
-    {
-        int index = slots.IndexOf(_curSelectedSlot);
-        int targetIndex = index + 3;
-        
-        if (targetIndex >= slots.Count)
-        {
-            int currentRow = targetIndex / 3;
-            int endRow = Mathf.FloorToInt((slots.Count - 1) / 3);
-            if (currentRow == endRow) targetIndex = endRow * 3;
-            else if (currentRow > endRow) targetIndex = 0;
-        }
-        GameObject target = slots[targetIndex];
-        currentIndex = inventorySlots.IndexOf(target);
     }
     
     //현재 슬롯에서 아래로 이동 - 정신(현실) 세계 증거물만 있는 경우
     public void MoveDown()
     {
-        if (isBothInventory)
+        currentIndex += 3;
+        if (currentIndex >= inventorySlots.Count)
         {
-            if (IsInRealWorldSlot())
-            {
-                MoveDownInBothInventory(realWorldSlots);
-            }
-            else
-            {
-                MoveDownInBothInventory(mentalWorldSlots);
-            }
-        }
-        else
-        {
-            currentIndex += 3;
-            if (currentIndex >= inventorySlots.Count)
-            {
-                int currentRow = currentIndex / 3;
-                int endRow = Mathf.FloorToInt((inventorySlots.Count - 1) / 3);
-                if (currentRow == endRow) currentIndex = endRow * 3;
-                else if (currentRow > endRow) currentIndex = 0;
-            }
+            int currentRow = currentIndex / 3;
+            int endRow = Mathf.FloorToInt((inventorySlots.Count - 1) / 3);
+            if (currentRow == endRow) currentIndex = endRow * 3;
+            else if (currentRow > endRow) currentIndex = 0;
         }
         UpdateSelection();
     }
@@ -279,24 +170,30 @@ public class InventoryNavigator : UIBase
     {
         _curSelectedSlot = inventorySlots[currentIndex];
         SetSlotSelected(_curSelectedSlot);
-        SetSlotUseBtn(_curSelectedSlot);
+        //SetSlotUseBtn(_curSelectedSlot);
     }
 
-    //슬롯 배경 업데이트
+    public void SetSlotDetailInfo()
+    {
+        
+    }
+    
+
+    //슬롯 선택 배경 업데이트
     public void SetSlotSelected(GameObject slot)
     {
-        Image slotImg = slot.GetComponent<Image>();
-        slotImg.sprite = _selectedSprite;
+        _slotOn = slot.transform.GetChild(0).gameObject;
+        _slotOn.SetActive(true);
+        
         foreach (var _slot in inventorySlots)
         {
-            if (_slot != slot) _slot.GetComponent<Image>().sprite = _deselectedSprite;
+            if (_slot != slot) SetSlotDeselected(_slot);
         }
     }
 
     public void SetSlotDeselected(GameObject slot)
     {
-        Image slotImg = slot.GetComponent<Image>();
-        slotImg.sprite = _deselectedSprite;
+        slot.transform.GetChild(0).gameObject.SetActive(false);
     }
 
     //챕터 선택
@@ -378,17 +275,7 @@ public class InventoryNavigator : UIBase
             }
         }
     }
-    //현실 세계 항목에 있는 슷롯인지 확인
-    private bool IsInRealWorldSlot()
-    {
-        if (realWorldSlots.Contains(_curSelectedSlot))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
+    
     //슬롯 버튼 업데이트
     void SetSlotUseBtn(GameObject slot)
     {
