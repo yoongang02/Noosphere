@@ -10,6 +10,8 @@ public class InventorySlot
 {
     public string evidenceId;
     public string evidenceName;
+    public string evidenceContent;
+    public char evidenceType;
     public char canUse;
     public string artresourceId;
 
@@ -17,14 +19,15 @@ public class InventorySlot
     {
         evidenceId = evidence.evidenceId;
         evidenceName = evidence.evidenceName;
+        evidenceContent = evidence.evidenceTextDisplay;
+        evidenceType = evidence.evidenceType;
         canUse = evidence.canUse;
         artresourceId = evidence.artresourceId;
     }
 }
 public class ChapterInventory
 {
-    public List<InventorySlot> realWorldEvidences { get; set; } = new List<InventorySlot>();
-    public List<InventorySlot> mentalWorldEvidences { get; set; } = new List<InventorySlot>();
+    public List<InventorySlot> evidences { get; set; } = new List<InventorySlot>();
 }
 public class InventoryManager : Singleton<InventoryManager>
 {
@@ -33,9 +36,9 @@ public class InventoryManager : Singleton<InventoryManager>
     
     //인벤토리 UI
     [Header("인벤토리 UI 오브젝트")]
-    [SerializeField] private GameObject _realWorldInventory;
-    [SerializeField] private GameObject _mentalWorldInventory;
+    [SerializeField] private GameObject _inventorySlotParent;
     [SerializeField] private GameObject _inventorySlotPrefab;
+    [SerializeField] private List<Sprite> _slotSprite;
     
     [Space(5)][Header("인벤토리 정보")]
     //챕터 관련
@@ -102,28 +105,21 @@ public class InventoryManager : Singleton<InventoryManager>
         }
     }
 
-    //증거물 가져오기
+    // 증거물 가져오기
     public void AddEvidence(EvidenceStructure evidence)
     {
-        //현재 어디 챕터인지 정보 가져오기
+        // 인벤토리에 해당 증거물이 있으면 추가하지 않음
+        if(IsEvidenceInInventory(evidence.evidenceId)) return;
+        
+        // 현재 어디 챕터인지 정보 가져오기
         int chapterNum = evidence.inventoryIndex;
         ChapterInventory _chapterInventory = chapterInventories[chapterNum];
         
-        //인벤토리 슬롯 생성
+        // 인벤토리 슬롯 생성
         InventorySlot newSlot = new InventorySlot(evidence);
         
-        //현실 증거인지 정신세계 증거인지 csv에서 구분 필요
-        if (evidence.evidenceType == 'M')
-        {
-            //정신세계 증거
-            _chapterInventory.mentalWorldEvidences.Add(newSlot);
-        }
-        else if (evidence.evidenceType == 'R')
-        {
-            //현실세계 증거
-            _chapterInventory.realWorldEvidences.Add(newSlot);
-        }
-
+        // 인벤토리에 추가
+        _chapterInventory.evidences.Add(newSlot);
         evidence.isAcquired = true;
     }
     
@@ -132,35 +128,16 @@ public class InventoryManager : Singleton<InventoryManager>
     {
         foreach (var chapter in chapterInventories)
         {
-            if (evidence.evidenceType == 'M')
+            foreach (var slot in chapter.Value.evidences)
             {
-                //정신세계 증거물
-                foreach (var slot in chapter.Value.mentalWorldEvidences)
+                if (slot.evidenceId == evidence.evidenceId)
                 {
-                    if (slot.evidenceId == evidence.evidenceId)
-                    {
-                        evidence.isAcquired = false;
-                        chapter.Value.mentalWorldEvidences.Remove(slot);
-                        return;
-                    }
-                }
-            }
-            else if (evidence.evidenceType == 'R')
-            {
-                //현실세계 증거
-                foreach (var slot in chapter.Value.realWorldEvidences)
-                {
-                    if (slot.evidenceId == evidence.evidenceId)
-                    {
-                        evidence.isAcquired = false;
-                        chapter.Value.realWorldEvidences.Remove(slot);
-                        return;
-                    }
+                    evidence.isAcquired = false;
+                    chapter.Value.evidences.Remove(slot);
+                    return;
                 }
             }
         }
-
-        evidence.isAcquired = false;
     }
 
     //현재 보이는 인벤토리 UI 업데이트
@@ -173,75 +150,58 @@ public class InventoryManager : Singleton<InventoryManager>
     //인벤토리 슬롯 초기화
     IEnumerator ClearInventoryUI()
     {
-        int childCount = _realWorldInventory.transform.childCount;
-        //Debug.Log($"{_realWorldInventory.name}의 자식은 {childCount}개 입니다.");
+        int childCount = _inventorySlotParent.transform.childCount;
+        //Debug.Log($"{_inventorySlotParent.name}의 자식은 {childCount}개 입니다.");
 
         if (childCount > 0)
         {
             for (int i = childCount - 1; i >= 0; i--)
             {
-                Transform child = _realWorldInventory.transform.GetChild(i);
+                Transform child = _inventorySlotParent.transform.GetChild(i);
                 if (child != null)
                 {
-                    //Debug.Log($"{_realWorldInventory.name}의 자식 {child.name}을 제거");
+                    //Debug.Log($"{_inventorySlotParent.name}의 자식 {child.name}을 제거");
                     Destroy(child.gameObject);
                 }
             }
         }
         
-        childCount = _mentalWorldInventory.transform.childCount;
-        //Debug.Log($"{_mentalWorldInventory.name}의 자식은 {childCount}개 입니다.");
-
-        if (childCount > 0)
-        {
-            for (int i = childCount - 1; i >= 0; i--)
-            {
-                Transform child = _mentalWorldInventory.transform.GetChild(i);
-                if (child != null)
-                {
-                    //Debug.Log($"{_mentalWorldInventory.name}의 자식 {child.name}을 제거");
-                    Destroy(child.gameObject);
-                }
-            }
-        }
         yield return null;
         
         //현재 챕터에 따른 인벤토리 가져오기
         ChapterInventory currentInventory = chapterInventories[currentViewChapter];
 
         // 현실 세계 증거물 추가
-        if (currentInventory.realWorldEvidences.Count != 0)
+        if (currentInventory.evidences.Count != 0)
         {
-            foreach (var evidence in currentInventory.realWorldEvidences)
+            foreach (var evidence in currentInventory.evidences)
             {
-                GameObject slot = Instantiate(_inventorySlotPrefab, _realWorldInventory.transform);
+                GameObject slot = Instantiate(_inventorySlotPrefab, _inventorySlotParent.transform);
                 slot.GetComponent<InventorySlotInfo>().evidenceId = evidence.evidenceId;
                 UpdateSlotUI(slot, evidence);
             }
         }
 
-        if (currentInventory.mentalWorldEvidences.Count != 0)
-        {
-            // 정신 세계 증거물 추가
-            foreach (var evidence in currentInventory.mentalWorldEvidences)
-            {
-                GameObject slot = Instantiate(_inventorySlotPrefab, _mentalWorldInventory.transform);
-                slot.GetComponent<InventorySlotInfo>().evidenceId = evidence.evidenceId;
-                UpdateSlotUI(slot, evidence);
-            }
-        }
         yield return null;
         
         //인벤토리 네비게이션 업데이트
-        GetComponent<InventoryNavigator>().InitNavigator(_realWorldInventory,_mentalWorldInventory);
+        GetComponent<InventoryNavigator>().InitNavigator(_inventorySlotParent);
     }
     
     //slot UI 업데이트 함수
     void UpdateSlotUI(GameObject slot, InventorySlot evidence)
     {
-        TextMeshProUGUI nameText = slot.GetComponentInChildren<TextMeshProUGUI>(true);
-        nameText.text = evidence.evidenceName;
+        // 증거물 슬롯 배경(현실/정신) 업데이트
+        if (evidence.evidenceType == 'R')
+        {
+            slot.GetComponent<Image>().sprite = _slotSprite[0];
+        }
+        else if(evidence.evidenceType == 'M')
+        {
+            slot.GetComponent<Image>().sprite = _slotSprite[1];
+        }
         
+        // 증거물 이미지 업데이트
         Image[] images = slot.GetComponentsInChildren<Image>(true);
         foreach (Image img in images)
         {
@@ -260,5 +220,22 @@ public class InventoryManager : Singleton<InventoryManager>
                 break;
             }
         }
+    }
+
+    public bool IsEvidenceInInventory(string evidenceID)
+    {
+        foreach (var chapter in chapterInventories)
+        {
+            foreach (var evidence in chapter.Value.evidences)
+            {
+                if (evidence.evidenceId == evidenceID)
+                {
+                    Debug.LogWarning($"{evidenceID}는 이미 획득한 증거물입니다.");
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
