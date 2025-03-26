@@ -35,31 +35,16 @@ public class RadioManager : UIBase
     private static bool _alreadyShowDialogue = false;
 
     [SerializeField] private Button _skipBtn;
+
     private void Awake()
     {
-        _skipBtn.onClick.AddListener(()=>
+        _skipBtn.onClick.AddListener(() =>
         {
-            _isSkipping = true;
+            if (_alreadyShowDialogue)
+            {
+                _isSkipping = true;
+            }
         });
-    }
-
-     private void OnSkipButtonClicked()
-    {
-        if (_alreadyShowDialogue)
-        {
-            _isSkipping = true;
-            Debug.Log("대화 스킵됨");
-        }
-    }
-
-    private void Update()
-    {
-        // T 키를 누르면 대화 스킵 (첫 대화가 이미 표시된 경우에만)
-        if (Input.GetKeyDown(KeyCode.T) && _alreadyShowDialogue)
-        {
-            _isSkipping = true;
-            Debug.Log("대화 스킵됨");
-        }
     }
 
     public override async void OnOpen(string quizID)
@@ -70,13 +55,13 @@ public class RadioManager : UIBase
         _curQuizID = quizID;
         _curQuiz = DataManager.Instance._quiz[_curQuizID];
         Debug.Log($"# quiz id : {quizID}, _curQuiz : {_curQuiz}");
-        
+
         // 스킵 버튼 상태 설정
         if (_skipBtn != null)
         {
             _skipBtn.gameObject.SetActive(_alreadyShowDialogue);
         }
-        
+
         //정신세계인데
         //만약 거울이 깨졌는데 기믹을 미리 성공했다면
         if (_curQuiz.isSolved)
@@ -84,7 +69,7 @@ public class RadioManager : UIBase
             await UniTask.Yield();
             //퀴즈 실행되지 않음
             UIManager.Instance.CloseTopUI();
-            
+
             if (PlayerInteract.Instance.isInMental)
             {
                 //거울이 깨져있다면
@@ -95,6 +80,7 @@ public class RadioManager : UIBase
                     {
                         await GetMirrorPiece();
                     }
+
                     DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
                     await ShowDialogue();
                 }
@@ -109,9 +95,10 @@ public class RadioManager : UIBase
                 DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
                 await ShowRealDialogue();
             }
+
             return;
         }
-        
+
         ResetText();
         if (_dialBtn != null && _dialBtn.Count >= 3)
         {
@@ -119,11 +106,11 @@ public class RadioManager : UIBase
             _dialBtn[1].OnValueChanged += OnOneDigitChanged;
             _dialBtn[2].OnValueChanged += OnDecimalDigitChanged;
         }
-        
+
         _powerBtn.onClick.AddListener(CheckAnswer);
         transform.GetChild(0).gameObject.SetActive(true);
     }
-    
+
     public override void OnClose()
     {
         base.OnClose();
@@ -133,37 +120,38 @@ public class RadioManager : UIBase
             _dialBtn[1].OnValueChanged -= OnOneDigitChanged;
             _dialBtn[2].OnValueChanged -= OnDecimalDigitChanged;
         }
-        
+
         // 스킵 플래그 초기화
         _isSkipping = false;
-        
+
         // 스킵 버튼 비활성화
         if (_skipBtn != null)
         {
             _skipBtn.gameObject.SetActive(false);
         }
-        
+
         transform.GetChild(0).gameObject.SetActive(false);
     }
-    
+
     private async void CheckAnswer()
     {
         SoundManager.Instance.PlaySFX("Soundresource_071");
         if (_radioText.text == radioAnswer)
         {
-            
             //퀴즈 해결되었다고 표시
             _curQuiz.isSolved = true;
             SoundManager.Instance.PlaySFX("Soundresource_083");
             UIManager.Instance.CloseTopUI();
-            
+
             if (PlayerInteract.Instance.isInMental)
             {
                 //조각을 습득하지 않았다면
-                if (!DataManager.Instance._evidences["Evidence_023"].isAcquired && MirrorPuzzleManager.Instance.isMirrorBroke)
+                if (!DataManager.Instance._evidences["Evidence_023"].isAcquired &&
+                    MirrorPuzzleManager.Instance.isMirrorBroke)
                 {
                     await GetMirrorPiece();
                 }
+
                 //현실세계 정신세계 구분
                 await ShowDialogue();
             }
@@ -183,24 +171,24 @@ public class RadioManager : UIBase
     {
         // 스킵 관련 초기화
         _isSkipping = false;
-        
+
         // 스킵 버튼 상태 설정
         if (_skipBtn != null)
         {
             _skipBtn.gameObject.SetActive(_alreadyShowDialogue);
         }
-        
+
         DialogueStructure mirrorDialogue = DataManager.Instance._dialogue["Dialogue_0024"];
         DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
         _realText.gameObject.SetActive(true);
         _realText.alpha = 0f;
         PlayerInteract.Instance.HideInteractionMark();
-        
+
         for (int i = 0; i < mirrorDialogue.Dialogue_Text_List.Count; i++)
         {
             // 첫 대화가 아니고 스킵 요청이 있을 경우 체크
             if (_alreadyShowDialogue && _isSkipping) break;
-            
+
             DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
             int randomNum = Random.Range(48, 54); // 48~53
             SoundManager.Instance.PlaySFX($"Soundresource_0{randomNum}");
@@ -218,6 +206,7 @@ public class RadioManager : UIBase
                 if (_alreadyShowDialogue && _isSkipping) break;
                 await UniTask.Yield();
             }
+
             if (_alreadyShowDialogue && _isSkipping) break;
 
             // 페이드 아웃
@@ -234,24 +223,25 @@ public class RadioManager : UIBase
                     if (_alreadyShowDialogue && _isSkipping) break;
                     await UniTask.Yield();
                 }
+
                 if (_alreadyShowDialogue && _isSkipping) break;
             }
         }
 
         // 첫 대화 표시 완료 표시
-        _alreadyShowDialogue = true;
+        // _alreadyShowDialogue = true;
 
         // 정리 작업
         _realText.DOKill();
         _realText.alpha = 0f;
         _realText.gameObject.SetActive(false);
-        
+
         // 스킵 버튼 비활성화
         if (_skipBtn != null)
         {
             _skipBtn.gameObject.SetActive(false);
         }
-        
+
         SoundManager.Instance.StopAllSFX();
         DataManager.Instance._lockConditions["Lock_condition_003"].UnLock();
         QuizManager.Instance.OnQuizEnd?.Invoke();
@@ -261,23 +251,23 @@ public class RadioManager : UIBase
     {
         // 스킵 관련 초기화
         _isSkipping = false;
-        
+
         // 스킵 버튼 상태 설정
         if (_skipBtn != null)
         {
             _skipBtn.gameObject.SetActive(_alreadyShowDialogue);
         }
-        
+
         DialogueStructure realDialogue = DataManager.Instance._dialogue["Dialogue_0027"];
         DialogueStructure mirrorDialogue = DataManager.Instance._dialogue["Dialogue_0028"];
 
         DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
-        
+
         _realText.gameObject.SetActive(true);
         _mirrorText.gameObject.SetActive(true);
         _realText.alpha = 0f;
         _mirrorText.alpha = 0f;
-        
+
         // 더 긴 리스트의 길이만큼 반복
         int maxLength = Mathf.Max(realDialogue.Dialogue_Text_List.Count, mirrorDialogue.Dialogue_Text_List.Count);
 
@@ -285,9 +275,9 @@ public class RadioManager : UIBase
         {
             // 첫 대화가 아니고 스킵 요청이 있을 경우 체크
             if (_alreadyShowDialogue && _isSkipping) break;
-            
+
             DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
-            
+
             // 각 텍스트가 있을 경우에만 표시
             if (i < realDialogue.Dialogue_Text_List.Count)
             {
@@ -318,6 +308,7 @@ public class RadioManager : UIBase
                 await tween.AsyncWaitForCompletion();
                 if (_alreadyShowDialogue && _isSkipping) break;
             }
+
             if (_alreadyShowDialogue && _isSkipping) break;
 
             // 표시 시간 대기
@@ -327,6 +318,7 @@ public class RadioManager : UIBase
                 if (_alreadyShowDialogue && _isSkipping) break;
                 await UniTask.Yield();
             }
+
             if (_alreadyShowDialogue && _isSkipping) break;
 
             // 동시에 페이드 아웃
@@ -346,6 +338,7 @@ public class RadioManager : UIBase
                 await tween.AsyncWaitForCompletion();
                 if (_alreadyShowDialogue && _isSkipping) break;
             }
+
             if (_alreadyShowDialogue && _isSkipping) break;
 
             // 마지막이 아니면 잠시 대기
@@ -357,12 +350,13 @@ public class RadioManager : UIBase
                     if (_alreadyShowDialogue && _isSkipping) break;
                     await UniTask.Yield();
                 }
+
                 if (_alreadyShowDialogue && _isSkipping) break;
             }
         }
 
         // 첫 대화 표시 완료 표시
-        _alreadyShowDialogue = true;
+        // _alreadyShowDialogue = true;
 
         // 정리 작업
         _realText.DOKill();
@@ -371,18 +365,17 @@ public class RadioManager : UIBase
         _mirrorText.alpha = 0f;
         _realText.gameObject.SetActive(false);
         _mirrorText.gameObject.SetActive(false);
-        
+
         // 스킵 버튼 비활성화
         if (_skipBtn != null)
         {
             _skipBtn.gameObject.SetActive(false);
         }
-        
+
         SoundManager.Instance.StopAllSFX();
         DataManager.Instance._lockConditions["Lock_condition_003"].UnLock();
         QuizManager.Instance.OnQuizEnd?.Invoke();
     }
-
 
 
     private void ResetText()
