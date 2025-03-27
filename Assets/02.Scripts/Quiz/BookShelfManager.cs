@@ -40,7 +40,7 @@ public class BookShelfManager : UIBase
             //트리거 삭제
             PlayerInteract.Instance.curTrigger = null;
             PlayerInteract.Instance.isInsideTrigger = false;
-            PlayerInteract.Instance.HideInteractionMark();
+            //PlayerInteract.Instance.HideInteractionMark();
             
             return;
         }
@@ -86,7 +86,7 @@ public class BookShelfManager : UIBase
             //트리거 삭제
             PlayerInteract.Instance.curTrigger = null;
             PlayerInteract.Instance.isInsideTrigger = false;
-            PlayerInteract.Instance.HideInteractionMark();
+            //PlayerInteract.Instance.HideInteractionMark();
             await UniTask.Yield();
             DataManager.Instance._events["Event_B044"].repeatType = false;
         }
@@ -139,7 +139,7 @@ public class BookShelfManager : UIBase
         await UniTask.Yield();
         PlayerInteract.Instance.curTrigger = null;
         PlayerInteract.Instance.isInsideTrigger = false;
-        PlayerInteract.Instance.HideInteractionMark();
+        //PlayerInteract.Instance.HideInteractionMark();
         await UniTask.Yield();
         DataManager.Instance._events["Event_B044"].repeatType = false;
     }

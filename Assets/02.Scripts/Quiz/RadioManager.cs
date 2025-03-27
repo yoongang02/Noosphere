@@ -182,8 +182,8 @@ public class RadioManager : UIBase
         DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
         _realText.gameObject.SetActive(true);
         _realText.alpha = 0f;
-        PlayerInteract.Instance.HideInteractionMark();
-
+        //PlayerInteract.Instance.HideInteractionMark();
+        
         for (int i = 0; i < mirrorDialogue.Dialogue_Text_List.Count; i++)
         {
             // 첫 대화가 아니고 스킵 요청이 있을 경우 체크

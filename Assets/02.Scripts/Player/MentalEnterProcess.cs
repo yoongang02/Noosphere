@@ -56,7 +56,7 @@ public class MentalEnterProcess : MonoBehaviour
             //진입시작했고, 완료되지 않았고, 스페이스를 계속 누르고 있다면
             if (_startEnter && !isComplete)
             {
-                PlayerInteract.Instance.HideInteractionMark();
+                //PlayerInteract.Instance.HideInteractionMark();
                 if (Input.GetKey(KeyCode.R))
                 {
                     float value = _progressBarFill.FillAmount();
@@ -265,14 +265,14 @@ public class MentalEnterProcess : MonoBehaviour
             await EffectManager.Instance.StartMentalEffectReverse(eventId);
         }
       
-        PlayerInteract.Instance.HideInteractionMark();
+        //PlayerInteract.Instance.HideInteractionMark();
         
     }
 
     
     IEnumerator StartCoolTime()
     {
-        PlayerInteract.Instance.HideInteractionMark();
+        //PlayerInteract.Instance.HideInteractionMark();
         _canEnter = false;
         yield return new WaitForSeconds(_coolTime);
         _canEnter = true;
@@ -303,5 +303,10 @@ public class MentalEnterProcess : MonoBehaviour
     public void SetCombackEventId(string id)
     {
         _comebackEventId = id;
+    }
+
+    public bool CanEnterProcess()
+    {
+        return _canEnter;
     }
 }

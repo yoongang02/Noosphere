@@ -60,7 +60,7 @@ public class EventStructure
                 if (PlayerInteract.Instance.isUsingEvidence)
                 {
                     isMet = true;
-                    PlayerInteract.Instance.InitUsingEvidence();
+                    PlayerInteract.Instance.isUsingEvidence = false;
                 }
             }
             else if (canUse == 'N')

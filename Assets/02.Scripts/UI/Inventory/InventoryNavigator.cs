@@ -18,7 +18,6 @@ public class InventoryNavigator : UIBase
     
     [Space(5)][Header("인벤토리 네비게이션 UI")]
     public List<GameObject> inventorySlots = new List<GameObject>();
-    [SerializeField] private Image _slotUseBtn;
     private GameObject _slotOn;
 
     [Space(5)] [Header("인벤토리 네비게이션 UI")] [SerializeField]
@@ -29,15 +28,29 @@ public class InventoryNavigator : UIBase
     [SerializeField] private TextMeshProUGUI _evidenceContent;
     
     [Space(5)][Header("증거물 사용 정보")]
-    public bool canEvidenceUse = false;
     [SerializeField] private string _evidenceUseEventId;
     [SerializeField] private List<Sprite> _useBtnImgs = new List<Sprite>();
-    
+    [SerializeField] private GameObject _useBtn;
+    [SerializeField] private GameObject _openBtn;
+
     public override void OnOpen()
     {
         base.OnOpen();
         UIManager.Instance.isInMap = false;
-        _inventoryWindow.SetActive(true);
+
+        // 인벤토리인지 증거물 사용인지에 따라 버튼 활성화
+        if (InventoryManager.Instance.isUsingEvidence)
+        {
+            _openBtn.SetActive(false);
+            _useBtn.SetActive(true);
+        }
+        else
+        {
+            _openBtn.SetActive(true);
+            _useBtn.SetActive(false);
+        }
+
+            _inventoryWindow.SetActive(true);
         SoundManager.Instance.PlaySFX("Soundresource_042");
         EscapeUI.Instance.Active();
         InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curRoomInfo;
@@ -80,20 +93,19 @@ public class InventoryNavigator : UIBase
             }
                 
             //증거물 상세 정보 열기 - 키보드 E
-            if (Input.GetKeyDown(KeyCode.E))
+            if (!InventoryManager.Instance.isUsingEvidence && Input.GetKeyDown(KeyCode.E))
             {
                 PlayClickSound();
                 OpenEvidenceDetailUI();
             }
             
-            /*
+            
             //Space 버튼을 누르면 증거물 사용하기
-            if (canEvidenceUse && Input.GetKeyDown(KeyCode.Space))
+            if (InventoryManager.Instance.isUsingEvidence && Input.GetKeyDown(KeyCode.Space))
             {
                 PlayClickSound();
                 UseEvidence();
             }
-            */
         }
     }
     public void InitNavigator(GameObject inventoryBase)
@@ -308,46 +320,6 @@ public class InventoryNavigator : UIBase
         }
     }
     
-    //슬롯 버튼 업데이트
-    void SetSlotUseBtn(GameObject slot)
-    {
-        string evidenceId = slot.GetComponent<InventorySlotInfo>().evidenceId;
-        char canUse = DataManager.Instance._evidences[evidenceId].canUse;
-        
-        if (canUse == 'Y')
-        {
-            //플레이어가 현재 이벤트 트리거 내에 있다면 이벤트 가져오기
-            if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
-            {
-                //상호작용 할 수 있는 이벤트가 있는지 확인
-                foreach (var eventID in PlayerInteract.Instance.curTrigger.eventIdList)
-                {
-                    if (!string.IsNullOrEmpty(eventID) && DataManager.Instance._events.ContainsKey(eventID))
-                    {
-                        //상호작용 가능하다면
-                        if (PlayerInteract.Instance.OnInteract != null)
-                        {
-                            EventStructure _event = DataManager.Instance._events[eventID];
-                            //해당 이벤트의 조건에 증거물이 있는지 체크
-                            foreach (var condition in _event.conditions)
-                            {
-                                if (evidenceId == condition)
-                                {
-                                    _slotUseBtn.sprite = _useBtnImgs[1];
-                                    _evidenceUseEventId = eventID;
-                                    canEvidenceUse = true;
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        _slotUseBtn.sprite = _useBtnImgs[0];
-        canEvidenceUse = false;
-    }
-    
     //증거물 상세 내용 UI 열기
     public void OpenEvidenceDetailUI()
     {
@@ -360,15 +332,10 @@ public class InventoryNavigator : UIBase
     //증거물 사용하기
     public void UseEvidence()
     {
-        PlayerInteract.Instance.isUsingEvidence = true;
         UIManager.Instance.CloseAllUI();
+        InventoryManager.Instance.isUsingEvidence = false;
+        PlayerInteract.Instance.isUsingEvidence = true;
         EventManagerYKM.Instance.ExecuteEvent(_evidenceUseEventId).Forget();
-    }
-
-    public void InitUsingEvidence()
-    {
-        canEvidenceUse = false;
-        _evidenceUseEventId = "";
     }
 
     public void PlaySlotMoveSound()

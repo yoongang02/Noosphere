@@ -42,7 +42,7 @@ public class EventTrigger : MonoBehaviour
     protected void OnTriggerExit(Collider other)
     {
         //플레이어에게 ? 없애기
-        PlayerInteract.Instance.HideInteractionMark();
+        InteractionMarkManager.Instance.DisableInteractionMarkUI(transform);
         PlayerInteract.Instance.isInsideTrigger = false;
         PlayerInteract.Instance.curTrigger = null;
         
@@ -56,6 +56,7 @@ public class EventTrigger : MonoBehaviour
         //플레이어에게 할당된 액션 다 초기화
         PlayerInteract.Instance.OnInteract = null;
         PlayerInteract.Instance.OnMentalInteract = null;
+        PlayerInteract.Instance.OnEvidenceUse = null;
     }
 
     public void CheckTriggerAvail()
@@ -71,7 +72,7 @@ public class EventTrigger : MonoBehaviour
             }
         }
 
-        if (canExecute)
+        if (canExecute && PlayerInteract.Instance.canInteract && PlayerController.Instance.canMove && PlayerController.Instance.GetComponent<MentalEnterProcess>().CanEnterProcess())
         {
             string[] results = EventManagerYKM.Instance.CheckConditions(_curEvent);
 
@@ -94,25 +95,27 @@ public class EventTrigger : MonoBehaviour
                         break;
                     case "EventInteractionTrigger":
                         //플레이어에게 ? 띄우기
-                        PlayerInteract.Instance.ShowInteractionMark();
                         PlayerInteract.Instance.OnInteract = null;
                         Debug.Log("OnInteract 할당");
                         //플레이어의 OnInteract 액션에 실행 메소드 할당
                         PlayerInteract.Instance.OnInteract += () =>
                         {
                             EventManagerYKM.Instance.ExecuteEvent(_curEvent.eventId).Forget();
+                            InteractionMarkManager.Instance.DisableInteractionMarkUI(transform);
                         };
+                        InteractionMarkManager.Instance.EnableInteractionMarkUI(this.transform, _curEvent.eventId);
                         break;
                     case "EventMentalEnterTrigger":
                         //플레이어에게 ? 띄우기
-                        PlayerInteract.Instance.ShowInteractionMark();
                         PlayerInteract.Instance.OnMentalInteract = null;
                         Debug.Log("OnMentalInteract에 할당");
                         //정신세계 진입 프로세스의 OnInteract 액션에 실행 메소드 할당
                         PlayerInteract.Instance.OnMentalInteract += () =>
                         {
                             EventManagerYKM.Instance.ExecuteEvent(_curEvent.eventId).Forget();
+                            InteractionMarkManager.Instance.DisableInteractionMarkUI(transform);
                         };
+                        InteractionMarkManager.Instance.EnableInteractionMarkUI(this.transform, _curEvent.eventId);
                         break;
                 }
             }
@@ -133,8 +136,8 @@ public class EventTrigger : MonoBehaviour
         Debug.Log("플레이어가 뒤돌거나 옆을 보고 들어오지 않음");
         //현재 이벤트 초기화하기
         _curEvent = null;
-        PlayerInteract.Instance.HideInteractionMark();
-        
+        InteractionMarkManager.Instance.DisableInteractionMarkUI(transform);
+
         //npc 변수 초기화
         PlayerController.Instance.npcCam = null;
         PlayerController.Instance.npcState = null;
