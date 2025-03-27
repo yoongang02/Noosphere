@@ -12,7 +12,6 @@ public class FadeOutEffect : MonoBehaviour
     private void OnEnable()
     {
         SoundManager.Instance.StopAllSFX();
-        SoundManager.Instance.PlayLoopingSound("Soundresource_090");
         _fadeImage.color = new Color(0, 0, 0, 0);
         _fadeImage.DOFade(1f, 5f)
             .SetEase(Ease.InOutQuad).OnComplete(()=>SceneManager.LoadScene("StartScene"));

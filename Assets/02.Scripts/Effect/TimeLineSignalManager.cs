@@ -1,13 +1,14 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using DG.Tweening;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using Cinemachine;
-
+using TMPro;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
 public class TimeLineSignalManager : MonoBehaviour
 {
     [Header("npc및 캐릭터 애니메이션 관련")] [SerializeField]
@@ -20,8 +21,18 @@ public class TimeLineSignalManager : MonoBehaviour
     [SerializeField] private SkinnedMeshRenderer _freindMaterial;
     [SerializeField] private Material _friendMaterial;
     [SerializeField] private List<string> footSteps;
-    [SerializeField] CinemachineVirtualCamera _farLoungCam;
-    
+    [SerializeField] CinemachineVirtualCamera _farLoungCam;  
+    [Header("정신세계 이펙트")] 
+    [SerializeField] private RawImage _vhsImage;
+    [SerializeField] private Volume _vhsVolume;
+    [SerializeField] private GameObject _vhsObj;
+    [SerializeField] private float _duration = 5f;
+    private Camera _mainCamera;
+    private UnityEngine.Rendering.Universal.UniversalAdditionalCameraData _cameraData;
+    [Header("문틈 대사 관련")]
+    [SerializeField] private TextMeshProUGUI _realText;
+    private float _fadeDuration = 0.5f;
+    private float _displayDuration = 0.8f;
     private Dictionary<string, Animator> _animCacheDic = new Dictionary<string, Animator>();
     private void Start()
     {
@@ -32,6 +43,7 @@ public class TimeLineSignalManager : MonoBehaviour
         {
             _cameraData = _mainCamera.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();
         }
+        // DataManager.Instance.InitializeData().Forget();--> 테스트용
     }
 
     #region 애니메이션 관련
@@ -66,10 +78,7 @@ public class TimeLineSignalManager : MonoBehaviour
     {
         _friendNpc.SetBool(npcAnim, false);
     }
-
-    #endregion
-
-    private Animator GetAnimator(string npcObjectName)
+  private Animator GetAnimator(string npcObjectName)
     {
         if (!_animCacheDic.ContainsKey(npcObjectName))
         {
@@ -83,7 +92,6 @@ public class TimeLineSignalManager : MonoBehaviour
     {
         string objectName = command.Split(':')[0];
         string animName = command.Split(':')[1];
-        Debug.Log(animName+"시발시발");
         Animator anim = GetAnimator(objectName);
         anim.SetBool(animName,true);
 
@@ -97,21 +105,14 @@ public class TimeLineSignalManager : MonoBehaviour
         anim.SetBool(animName, false);
     }
 
+    #endregion
+
+  
     public void SetPlayerMaterial(Material material)
     {
         _playerSkin.material = material;
     }
-    
-    /// <summary>
-    /// ///////////////////////////////////////////////////
-    /// </summary>
-    [Header("정신세계 이펙트")] [SerializeField] private RawImage _vhsImage;
-
-    [SerializeField] private Volume _vhsVolume;
-    [SerializeField] private GameObject _vhsObj;
-    [SerializeField] private float _duration = 5f;
-    private Camera _mainCamera;
-    private UnityEngine.Rendering.Universal.UniversalAdditionalCameraData _cameraData;
+  
 
     private async UniTaskVoid StartAutoEffect()
     {
@@ -197,4 +198,39 @@ public class TimeLineSignalManager : MonoBehaviour
     {
         _farLoungCam.Priority = 12;
     }
+
+    public void StartDialogueOnWorld(string ID)
+    {
+        ShowRealDialogue(ID).Forget();
+    }
+    
+    private async UniTask ShowRealDialogue(string dialogueID)
+    {
+        DialogueStructure doorDialogue = DataManager.Instance._dialogue[dialogueID];
+        DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
+        _realText.gameObject.SetActive(true);
+        for (int i = 0; i < doorDialogue.Dialogue_Text_List.Count; i++)
+        {
+            DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
+            string processedText = doorDialogue.Dialogue_Text_List[i].text.Replace("\\n", "<br>");
+            _realText.text = $"<mark=#00000055>{processedText}</mark>";
+            
+            await _realText.DOFade(1f, _fadeDuration).AsyncWaitForCompletion();
+            
+            await UniTask.Delay(TimeSpan.FromSeconds(_displayDuration));
+            
+            await _realText.DOFade(0f, _fadeDuration).AsyncWaitForCompletion();
+            
+            if (i < doorDialogue.Dialogue_Text_List.Count - 1)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(_fadeDuration));
+            }
+        }
+        
+        _realText.gameObject.SetActive(false);
+        DataManager.Instance._lockConditions["Lock_condition_003"].UnLock();
+        
+    }
+
+   
 }
