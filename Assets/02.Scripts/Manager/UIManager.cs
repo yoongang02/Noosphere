@@ -153,14 +153,14 @@ public class UIManager : Singleton<UIManager>
     {
         PlayerController.Instance.canMove = false;
         PlayerInteract.Instance.canInteract = false;
-        PlayerInteract.Instance.HideInteractionMark();
+        //PlayerInteract.Instance.HideInteractionMark();
     }
 
     public void LockInteraction()
     {
         Debug.LogWarning("LockInteraction 실행");
         PlayerInteract.Instance.canInteract = false;
-        PlayerInteract.Instance.HideInteractionMark();
+        //PlayerInteract.Instance.HideInteractionMark();
     }
 
     public void UnLockPlayer()

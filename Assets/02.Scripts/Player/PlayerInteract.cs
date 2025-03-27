@@ -9,7 +9,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
 {
     [Header("상호작용")] 
     public bool canInteract = true; //상호작용을 할 수 있는지(lock 조건에 이용)
-    [SerializeField] private GameObject _interactionMark;
+    public bool canUse = false; // 증거물 사용 상호작용 할 수 있는지(InteractionMarkManager.cs에서 값을 관리함)
     private bool _isRepeatFalseCondition = false;
     public Action OnInteract;
     public bool isInsideTrigger = false;
@@ -58,16 +58,6 @@ public class PlayerInteract : Singleton<PlayerInteract>
                 }
             }
         }
-    }
-
-    public void ShowInteractionMark()
-    {
-        _interactionMark.SetActive(true);
-    }
-
-    public void HideInteractionMark()
-    {
-        _interactionMark.GetComponent<Animator>().SetTrigger("Hide");
     }
     
     public void InitUsingEvidence()

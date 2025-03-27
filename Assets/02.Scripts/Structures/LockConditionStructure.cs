@@ -80,7 +80,7 @@ public class LockConditionStructure
     void LockAllInteraction()
     {
         PlayerInteract.Instance.canInteract = false;
-        PlayerInteract.Instance.HideInteractionMark();
+        //PlayerInteract.Instance.HideInteractionMark();
         Debug.Log("모든 물체 및 캐릭터 상호작용 Lock");
     }
     

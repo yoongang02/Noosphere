@@ -142,7 +142,7 @@ public class RadioManager : UIBase
         // DialogueStructure mirrorDialogue = _testDialogue["Dialogue_0024"];
         DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
         _realText.gameObject.SetActive(true);
-        PlayerInteract.Instance.HideInteractionMark();
+        //PlayerInteract.Instance.HideInteractionMark();
         for (int i = 0; i < mirrorDialogue.Dialogue_Text_List.Count; i++)
         {
             DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
