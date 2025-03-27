@@ -33,7 +33,7 @@ public class InteractionMarkManager : Singleton<InteractionMarkManager>
             // 이미 이 함수로 오기까지 증거물 아이디에 대한 검증이 완료되었기에 추가적으로 검증 진행하지 않음
             EventStructure _event = DataManager.Instance._events[eventID];
 
-            bool canUse = false;
+            PlayerInteract.Instance.canUse = false;
             foreach (var condition in _event.conditions)
             {
                 if (condition.StartsWith("Evidence"))
@@ -42,16 +42,19 @@ public class InteractionMarkManager : Singleton<InteractionMarkManager>
                     // 해당 증거물이 사용 가능한 증거물이고 인벤토리에 있는지 체크
                     if(evidence.canUse == 'Y' && InventoryManager.Instance.IsEvidenceInInventory(evidence.evidenceId))
                     {
-                        canUse = true;
+                        GameObject evidenceKey = Instantiate(_useEvidenceKeyPrefab);
+                        evidenceKey.transform.SetParent(parent, false);
+                        PlayerInteract.Instance.canUse = true;
+                        PlayerInteract.Instance.OnEvidenceUse += () =>
+                        {
+                            // 증거물 사용하기 설정으로 인벤토리 초기화
+                            InventoryManager.Instance.isUsingEvidence = true;
+                            // 인벤토리 열기 코드
+                            UIManager.Instance.OpenUI(UIManager.Instance.inventoryUI);
+                        };
                         break;
                     }
                 }
-            }
-
-            if (canUse)
-            {
-                GameObject evidenceKey = Instantiate(_useEvidenceKeyPrefab);
-                evidenceKey.transform.SetParent(parent, false);
             }
         }
         else if (trigger.tag == "EventMentalEnterTrigger") // 정신세계 진입 트리거인 경우

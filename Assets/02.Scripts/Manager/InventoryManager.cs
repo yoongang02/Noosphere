@@ -46,10 +46,11 @@ public class InventoryManager : Singleton<InventoryManager>
     public List<GameObject> selectedChapterUIList;
     public int currentViewChapter = 0;
 
-    private InventoryNavigator _navigator;
+    [Space(5)]
+    [Header("증거물 사용 관련 변수")]
+    public bool isUsingEvidence = false;
 
-    [Space(5)] [Header("증거물 사용 정보")] [SerializeField]
-    private string usingEvidenceId;
+    private InventoryNavigator _navigator;
 
     public bool canOpenInventory = false;//컷씬 진행도중 인벤토리 열리는거 막기위함
     void Start()

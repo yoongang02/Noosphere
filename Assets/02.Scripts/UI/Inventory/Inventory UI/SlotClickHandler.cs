@@ -44,7 +44,7 @@ public class SlotClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnt
         }
 
         // 우클릭 감지
-        if (_navigator.canEvidenceUse && eventData.button == PointerEventData.InputButton.Right)
+        if (InventoryManager.Instance.isUsingEvidence && eventData.button == PointerEventData.InputButton.Right)
         {
             //현재 선택된 오브젝트가 우클릭한 오브젝트와 같아야 함. -> 사용하기 기능
             if (_navigator._curSelectedSlot == clickedObject)

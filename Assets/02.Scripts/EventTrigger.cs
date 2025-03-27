@@ -56,6 +56,7 @@ public class EventTrigger : MonoBehaviour
         //플레이어에게 할당된 액션 다 초기화
         PlayerInteract.Instance.OnInteract = null;
         PlayerInteract.Instance.OnMentalInteract = null;
+        PlayerInteract.Instance.OnEvidenceUse = null;
     }
 
     public void CheckTriggerAvail()
