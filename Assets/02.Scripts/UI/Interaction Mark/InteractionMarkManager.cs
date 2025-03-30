@@ -4,33 +4,33 @@ using UnityEngine;
 
 public class InteractionMarkManager : Singleton<InteractionMarkManager>
 {
-    [Header("»óÈ£ÀÛ¿ë ¾È³» Å° ÇÁ¸®ÆÕ")]
-    [SerializeField] private GameObject _interactionKeyPrefab; // »óÈ£ÀÛ¿ë Å°
-    [SerializeField] private GameObject _enterMentalKeyPrefab; // Á¤½Å¼¼°è ÁøÀÔ Å°
-    [SerializeField] private GameObject _useEvidenceKeyPrefab; // Áõ°Å¹° »ç¿ë Å°
+    [Header("ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½È³ï¿½ Å° ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
+    [SerializeField] private GameObject _interactionKeyPrefab; // ï¿½ï¿½È£ï¿½Û¿ï¿½ Å°
+    [SerializeField] private GameObject _enterMentalKeyPrefab; // ï¿½ï¿½ï¿½Å¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å°
+    [SerializeField] private GameObject _useEvidenceKeyPrefab; // ï¿½ï¿½ï¿½Å¹ï¿½ ï¿½ï¿½ï¿½ Å°
 
 
-    // ¾È³» Å° UI È°¼ºÈ­ ÇÏ±â
+    // ï¿½È³ï¿½ Å° UI È°ï¿½ï¿½È­ ï¿½Ï±ï¿½
     public void EnableInteractionMarkUI(Transform trigger, string eventID)
     {
-        // EventTrigger ½ºÅ©¸³Æ®°¡ ºÎÂøµÇ¾îÀÖ´Â ¿ÀºêÁ§Æ®ÀÇ ÀÚ½Ä ¿ÀºêÁ§Æ® Áß InteractionMark ½ºÅ©¸³Æ®¸¦ °®°í ÀÖ´Â ¿ÀºêÁ§Æ® Ã£±â
+        // EventTrigger ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ú½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ InteractionMark ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® Ã£ï¿½ï¿½
         Transform parent = trigger.GetComponentInChildren<InteractionMark>(true).transform;
 
-        // ÇØ´ç ¿ÀºêÁ§Æ®ÀÇ ÀÚ½Ä ¿ÀºêÁ§Æ® ¸ðµÎ ÆÄ±«ÇÏ±â ÃÊ±âÈ­
+        // ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ú½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ ï¿½Ä±ï¿½ï¿½Ï±ï¿½ ï¿½Ê±ï¿½È­
         foreach (Transform chiild in parent)
         {
             Destroy(chiild.gameObject);
         }
 
-        // »óÈ£ÀÛ¿ë Æ®¸®°ÅÀÎ °æ¿ì
+        // ï¿½ï¿½È£ï¿½Û¿ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         if (trigger.tag == "EventInteractionTrigger")
         {
-            // »óÈ£ÀÛ¿ë Å°´Â ¹«Á¶°Ç Á¸Àç
+            // ï¿½ï¿½È£ï¿½Û¿ï¿½ Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             GameObject interactionKey = Instantiate(_interactionKeyPrefab);
             interactionKey.transform.SetParent(parent, false);
 
-            // ÇØ´ç ÀÌº¥Æ®ÀÇ Á¶°Ç¿¡ Áõ°Å¹°ÀÌ ÀÖ´Â °æ¿ì¿¡´Â Áõ°Å¹° »ç¿ë Å°µµ ¶ç¿ò
-            // ÀÌ¹Ì ÀÌ ÇÔ¼ö·Î ¿À±â±îÁö Áõ°Å¹° ¾ÆÀÌµð¿¡ ´ëÇÑ °ËÁõÀÌ ¿Ï·áµÇ¾ú±â¿¡ Ãß°¡ÀûÀ¸·Î °ËÁõ ÁøÇàÇÏÁö ¾ÊÀ½
+            // ï¿½Ø´ï¿½ ï¿½Ìºï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½Ç¿ï¿½ ï¿½ï¿½ï¿½Å¹ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ì¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½Å¹ï¿½ ï¿½ï¿½ï¿½ Å°ï¿½ï¿½ ï¿½ï¿½ï¿½
+            // ï¿½Ì¹ï¿½ ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Å¹ï¿½ ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½Ç¾ï¿½ï¿½â¿¡ ï¿½ß°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             EventStructure _event = DataManager.Instance._events[eventID];
 
             PlayerInteract.Instance.canUse = false;
@@ -39,17 +39,22 @@ public class InteractionMarkManager : Singleton<InteractionMarkManager>
                 if (condition.StartsWith("Evidence"))
                 {
                     EvidenceStructure evidence = DataManager.Instance._evidences[condition];
-                    // ÇØ´ç Áõ°Å¹°ÀÌ »ç¿ë °¡´ÉÇÑ Áõ°Å¹°ÀÌ°í ÀÎº¥Åä¸®¿¡ ÀÖ´ÂÁö Ã¼Å©
+                    // ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½Å¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Å¹ï¿½ï¿½Ì°ï¿½ ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ Ã¼Å©
                     if(evidence.canUse == 'Y' && InventoryManager.Instance.IsEvidenceInInventory(evidence.evidenceId))
                     {
                         GameObject evidenceKey = Instantiate(_useEvidenceKeyPrefab);
                         evidenceKey.transform.SetParent(parent, false);
                         PlayerInteract.Instance.canUse = true;
+                        
+                        Debug.LogWarning("OnEvidenceUse ì•¡ì…˜ì— ë©”ì†Œë“œ ë“±ë¡");
+                        PlayerInteract.Instance.OnEvidenceUse = null;
                         PlayerInteract.Instance.OnEvidenceUse += () =>
                         {
-                            // Áõ°Å¹° »ç¿ëÇÏ±â ¼³Á¤À¸·Î ÀÎº¥Åä¸® ÃÊ±âÈ­
+                            // ï¿½ï¿½ï¿½Å¹ï¿½ ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ä¸® ï¿½Ê±ï¿½È­
                             InventoryManager.Instance.isUsingEvidence = true;
-                            // ÀÎº¥Åä¸® ¿­±â ÄÚµå
+                            InventoryManager.Instance.GetComponent<InventoryNavigator>()
+                                .SetEvidenceUseEventID(_event);
+                            // ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½
                             UIManager.Instance.OpenUI(UIManager.Instance.inventoryUI);
                         };
                         break;
@@ -57,27 +62,27 @@ public class InteractionMarkManager : Singleton<InteractionMarkManager>
                 }
             }
         }
-        else if (trigger.tag == "EventMentalEnterTrigger") // Á¤½Å¼¼°è ÁøÀÔ Æ®¸®°ÅÀÎ °æ¿ì
+        else if (trigger.tag == "EventMentalEnterTrigger") // ï¿½ï¿½ï¿½Å¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         {
             GameObject mentalKey = Instantiate(_enterMentalKeyPrefab);
             mentalKey.transform.SetParent(parent, false);
         }
         else
         {
-            Debug.LogError("»óÈ£ÀÛ¿ë mark parent°¡ Àß¸øµÈ ÅÂ±×¸¦ °®°í ÀÖ½À´Ï´Ù.");
+            Debug.LogError("ï¿½ï¿½È£ï¿½Û¿ï¿½ mark parentï¿½ï¿½ ï¿½ß¸ï¿½ï¿½ï¿½ ï¿½Â±×¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö½ï¿½ï¿½Ï´ï¿½.");
         }
 
-        // »óÈ£ÀÛ¿ë Å° UI ÃÊ±âÈ­ ÈÄ È°¼ºÈ­ -> ÀÚµ¿ ¾Ö´Ï¸ÞÀÌ¼Ç ½ÇÇà
+        // ï¿½ï¿½È£ï¿½Û¿ï¿½ Å° UI ï¿½Ê±ï¿½È­ ï¿½ï¿½ È°ï¿½ï¿½È­ -> ï¿½Úµï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½
         parent.gameObject.SetActive(true);
     }
 
-    // ¾È³» Å° UI ºñÈ°¼ºÈ­ ÇÏ±â
+    // ï¿½È³ï¿½ Å° UI ï¿½ï¿½È°ï¿½ï¿½È­ ï¿½Ï±ï¿½
     public void DisableInteractionMarkUI(Transform trigger)
     {
-        // EventTrigger ½ºÅ©¸³Æ®°¡ ºÎÂøµÇ¾îÀÖ´Â ¿ÀºêÁ§Æ®ÀÇ ÀÚ½Ä ¿ÀºêÁ§Æ® Áß InteractionMark ½ºÅ©¸³Æ®¸¦ °®°í ÀÖ´Â ¿ÀºêÁ§Æ® Ã£±â
+        // EventTrigger ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ú½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ InteractionMark ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® Ã£ï¿½ï¿½
         Transform parent = trigger.GetComponentInChildren<InteractionMark>(true).transform;
 
-        // ¾Ö´Ï¸ÞÀÌÅÍ¿¡¼­ ºñÈ°¼ºÈ­ ¾Ö´Ï¸ÞÀÌ¼Ç ½ÇÇà
+        // ï¿½Ö´Ï¸ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½
         parent.GetComponent<Animator>().SetTrigger("Hide");
     }
 }

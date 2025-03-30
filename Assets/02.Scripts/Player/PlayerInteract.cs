@@ -54,6 +54,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
                         }
                         SoundManager.Instance.PlaySFX(id);
                         OnInteract.Invoke();
+                        InteractionMarkManager.Instance.DisableInteractionMarkUI(curTrigger.transform);
                     }
                     OnInteract = null;   
                 }
@@ -89,6 +90,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
                         }
                         SoundManager.Instance.PlaySFX(id);
                         OnEvidenceUse.Invoke();
+                        InteractionMarkManager.Instance.DisableInteractionMarkUI(curTrigger.transform);
                     }
                     OnEvidenceUse = null;
                 }
