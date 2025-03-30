@@ -28,8 +28,7 @@ public class InventoryNavigator : UIBase
     [SerializeField] private TextMeshProUGUI _evidenceContent;
     
     [Space(5)][Header("증거물 사용 정보")]
-    [SerializeField] private string _evidenceUseEventId;
-    [SerializeField] private List<Sprite> _useBtnImgs = new List<Sprite>();
+    [SerializeField] private EventStructure _evidenceUseEvent;
     [SerializeField] private GameObject _useBtn;
     [SerializeField] private GameObject _openBtn;
 
@@ -37,7 +36,7 @@ public class InventoryNavigator : UIBase
     {
         base.OnOpen();
         UIManager.Instance.isInMap = false;
-
+        
         // 인벤토리인지 증거물 사용인지에 따라 버튼 활성화
         if (InventoryManager.Instance.isUsingEvidence)
         {
@@ -49,8 +48,8 @@ public class InventoryNavigator : UIBase
             _openBtn.SetActive(true);
             _useBtn.SetActive(false);
         }
-
-            _inventoryWindow.SetActive(true);
+        
+        _inventoryWindow.SetActive(true);
         SoundManager.Instance.PlaySFX("Soundresource_042");
         EscapeUI.Instance.Active();
         InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curRoomInfo;
@@ -333,9 +332,30 @@ public class InventoryNavigator : UIBase
     public void UseEvidence()
     {
         UIManager.Instance.CloseAllUI();
+        
+        // 증거물 사용 변수 초기화
         InventoryManager.Instance.isUsingEvidence = false;
-        PlayerInteract.Instance.isUsingEvidence = true;
-        EventManagerYKM.Instance.ExecuteEvent(_evidenceUseEventId).Forget();
+        
+        Debug.LogWarning($"{_evidenceUseEvent.eventId} 현재 트리거의 이벤트 아이디");
+        // 현재 선택된 슬롯의 증거물 아이디가 올바른 증거물 아이디인지 체크
+        foreach (var condition in _evidenceUseEvent.conditions)
+        {
+            if (condition.StartsWith("Evidence"))
+            {
+                if (_curSelectedSlot.GetComponent<InventorySlotInfo>().evidenceId == condition)
+                {
+                    PlayerInteract.Instance.isUsingEvidence = true;
+                    EventManagerYKM.Instance.ExecuteEvent(_evidenceUseEvent.eventId).Forget();
+                    return;
+                }
+                else
+                {
+                    PlayerInteract.Instance.isUsingEvidence = false;
+                    DialogueManager.Instance.SetDialogue("Dialogue_0064");
+                    return;
+                }
+            }
+        }
     }
 
     public void PlaySlotMoveSound()
@@ -366,5 +386,11 @@ public class InventoryNavigator : UIBase
     public void PlayClickSound()
     {
         SoundManager.Instance.PlaySFX("Soundresource_070");
+    }
+    
+    // 증거물 사용 이벤트가 발생한 이벤트 id 가 무엇인지 체크
+    public void SetEvidenceUseEventID(EventStructure _event)
+    {
+        _evidenceUseEvent = _event;
     }
 }
