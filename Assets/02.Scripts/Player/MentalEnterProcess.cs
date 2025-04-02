@@ -112,6 +112,8 @@ public class MentalEnterProcess : MonoBehaviour
                 Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
             {
                 Debug.Log($"#{mentalInfo.mentalId} 진입 중에 움직여서 초기화 됨.");
+                // 소리 초기화
+                SoundManager.Instance.StopAllSFX();
                 FailEnter();
             }
 

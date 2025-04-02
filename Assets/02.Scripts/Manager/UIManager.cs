@@ -17,6 +17,7 @@ public class UIManager : Singleton<UIManager>
     public UIBase inventoryUI;
     public UIBase dialogueUI;
     public UIBase inputFieldUI;
+    public GameObject cctvFrame;
     
     public GameObject inventoryIcon;
     
@@ -33,17 +34,25 @@ public class UIManager : Singleton<UIManager>
             CloseTopUI();
         }
         
+        
         if (IsAnyUIOpen())
         {
             //인벤토리 아이콘 비활성화
             inventoryIcon.SetActive(false);
             //플레이어 Lock
             LockPlayer();
+            if (!IsUIOpen(dialogueUI))
+            {
+                //cctv 프레임 비활성화
+                cctvFrame.SetActive(false);
+            }
         }
         else
         {
             //인벤토리 아이콘 활성화
             inventoryIcon.SetActive(true);
+            //cctv 프레임 활성화
+            cctvFrame.SetActive(true);
         }
     }
     

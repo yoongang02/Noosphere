@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using TMPro;
@@ -115,7 +116,7 @@ public class DialogueManager : UIBase
             }
         }
     }
-    public async UniTaskVoid ShowNextLine()
+    public async UniTask ShowNextLine()
     {
         // _speakerText.text = _curDialogue.characterId;
        if (_currentLineIndex < _curDialogue.Dialogue_Text_List.Count)
@@ -155,11 +156,17 @@ public class DialogueManager : UIBase
                     GameObject.Find("Artresource_0002").transform.GetChild(0).gameObject.SetActive(false);
                 }
                 OnDialogueEnd?.Invoke();
+                
+                //현재 위치한 곳에 트리거가 있다면 해당 트리거 실행 가능한지 다시 체크
+                if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
+                {
+                    await Task.Delay(500);
+                    PlayerInteract.Instance.curTrigger.CheckTriggerAvail();
+                }
             }
         }
     }
-
-
+    
     private async UniTask TypeText(string text)
     {
         isTyping = true;
