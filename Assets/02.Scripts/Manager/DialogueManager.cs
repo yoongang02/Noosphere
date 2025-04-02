@@ -48,7 +48,6 @@ public class DialogueManager : UIBase
 
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private GameObject _dialogueGroup;
-    [SerializeField] private GameObject _toggleIcon;
     [SerializeField] private TextMeshProUGUI _speakerText;
 
     private DialogueStructure _curDialogue;
@@ -118,7 +117,6 @@ public class DialogueManager : UIBase
     }
     public async UniTaskVoid ShowNextLine()
     {
-        _toggleIcon.SetActive(false);
         // _speakerText.text = _curDialogue.characterId;
        if (_currentLineIndex < _curDialogue.Dialogue_Text_List.Count)
         {
@@ -201,7 +199,6 @@ public class DialogueManager : UIBase
         dialogueText.text = text;
         isTyping = false;
         SoundManager.Instance.StopAllSFX();
-        _toggleIcon.SetActive(true);
     }
 
     void InitDialogue()
