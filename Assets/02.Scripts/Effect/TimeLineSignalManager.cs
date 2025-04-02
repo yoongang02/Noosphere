@@ -7,6 +7,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using Cinemachine;
 using TMPro;
+using TMPro.EditorUtilities;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 public class TimeLineSignalManager : MonoBehaviour
@@ -152,6 +153,8 @@ public class TimeLineSignalManager : MonoBehaviour
         SceneManager.LoadSceneAsync(SceneName);
     }
 
+    #region 사운드 관련
+
     public void StartVfx(string SoundResource)
     {
         SoundManager.Instance.PlaySFXNoEffect(SoundResource);
@@ -188,6 +191,10 @@ public class TimeLineSignalManager : MonoBehaviour
     {
         PlayRandomFootSteps(duration).Forget();
     }
+    
+
+    #endregion
+  
 
     public void StopFootSteps()
     {
@@ -230,6 +237,20 @@ public class TimeLineSignalManager : MonoBehaviour
         _realText.gameObject.SetActive(false);
         DataManager.Instance._lockConditions["Lock_condition_003"].UnLock();
         
+    }
+
+    [SerializeField] private Image _fadeImage;
+
+    public void StartFadeIn()
+    {
+        FadeIn().Forget();
+    }
+
+    private async UniTask FadeIn()
+    {
+        _fadeImage.color = new Color(0, 0, 0, 1);
+        await _fadeImage.DOFade(0, _fadeDuration).AsyncWaitForCompletion();
+        _fadeImage.gameObject.transform.parent.gameObject.SetActive(false);
     }
 
    

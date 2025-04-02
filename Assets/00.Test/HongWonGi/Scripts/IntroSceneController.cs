@@ -34,7 +34,7 @@ public class IntroSceneController : MonoBehaviour
         contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
         textRectTransform = dialogueText.GetComponent<RectTransform>();
         textRectTransform.pivot = new Vector2(0, 0.5f);
-
+        // SoundManager.Instance.StopAllSFX();
         FadeIn().Forget();
     }
     public void OnLoadScene(string sceneName)
@@ -79,11 +79,11 @@ public class IntroSceneController : MonoBehaviour
         if (fullText.Contains(":"))
         {
             int colonIndex = fullText.IndexOf(":");
-            speaker = fullText.Substring(0, colonIndex).Trim();
+            // speaker = fullText.Substring(0, colonIndex).Trim();
             text = fullText.Substring(colonIndex + 1).Trim();
         }
 
-        _speakerText.text = speaker;
+        // _speakerText.text = speaker;
         TypeText(text).Forget();
     }
 
@@ -111,8 +111,8 @@ public class IntroSceneController : MonoBehaviour
         dialogueText.text = "";
         dialogueText.alpha = 1;
 
-        StartDialogueSound(_speakerText.text);
-
+        // StartDialogueSound(_speakerText.text);
+        SoundManager.Instance.PlayLoopingSound("Soundresource_027");
         if (!isTyping)
         {
             dialogueText.text = text;
