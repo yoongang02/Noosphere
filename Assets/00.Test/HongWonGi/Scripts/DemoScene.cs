@@ -9,26 +9,24 @@ public class DemoScene : MonoBehaviour
 {
     [SerializeField] private Button _restartBtn;
 
-    private void Start()
+    private void Awake()
     {
-        _restartBtn.onClick.AddListener(RestartScene);
+        //dontdestroyonload에서 사운드매니저하고 dotween만 남겨놓기
+        GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj.scene.name == "DontDestroyOnLoad" &&
+                obj.GetComponent<SoundManager>() == null &&
+                !obj.name.Contains("[DOTween]"))
+            {
+                Destroy(obj);
+            }
+        }
     }
 
-    private void RestartScene()
+    private void Start()
     {
-        {
-            GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
-            foreach (GameObject obj in allObjects)
-            {
-                if (obj.scene.name == "DontDestroyOnLoad")
-                {
-                    Destroy(obj);
-                }
-            }
-
-            // 첫 번째 씬 로드
-            // SceneManager.LoadScene("StartScene");
-            SceneChanger.Instance.ChangeScene("StartScene");
-        }
+        _restartBtn.onClick.AddListener(() => SceneChanger.Instance.ChangeScene("StartScene"));
+        SoundManager.Instance.PlayBGM("Soundresource_056");
     }
 }
