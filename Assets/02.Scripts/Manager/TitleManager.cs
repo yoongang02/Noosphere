@@ -8,6 +8,7 @@ public class TitleManager : MonoBehaviour
     [SerializeField] private List<GameObject> _objects;
     private void Start()
     {
+        PlayerPrefs.SetInt("FadeImage",0);
         ActiveRandomMenu();
     }
 
