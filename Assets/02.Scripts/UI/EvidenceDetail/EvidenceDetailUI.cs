@@ -89,6 +89,9 @@ public class EvidenceDetailUI : UIBase
     {
         base.HandleKeyboardInput();
         
+        // Object UI이면 페이지 넘기는 소리 나오지 않도록
+        if(_objectUI.activeSelf) return;
+        
         //키보드 A - 이전 페이지 버튼 
         if (_prevPageBtn != null && _nextPageBtn != null)
         {

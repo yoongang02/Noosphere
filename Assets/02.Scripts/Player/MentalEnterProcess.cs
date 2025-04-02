@@ -182,6 +182,7 @@ public class MentalEnterProcess : MonoBehaviour
         // {
         //     EventManagerYKM.Instance.ExecuteEvent(mentalInfo.mentalTrueResult).Forget();
         // }
+        
 
         if (!PlayerInteract.Instance.isInMental)
         {
@@ -276,6 +277,9 @@ public class MentalEnterProcess : MonoBehaviour
         _canEnter = false;
         yield return new WaitForSeconds(_coolTime);
         _canEnter = true;
+        
+        PlayerInteract.Instance.isInsideTrigger = false;
+        PlayerInteract.Instance.curTrigger = null;
     }
 
     public void LockEnterProcess()

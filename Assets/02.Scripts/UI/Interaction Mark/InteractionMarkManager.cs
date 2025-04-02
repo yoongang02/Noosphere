@@ -8,6 +8,8 @@ public class InteractionMarkManager : Singleton<InteractionMarkManager>
     [SerializeField] private GameObject _interactionKeyPrefab; // ��ȣ�ۿ� Ű
     [SerializeField] private GameObject _enterMentalKeyPrefab; // ���ż��� ���� Ű
     [SerializeField] private GameObject _useEvidenceKeyPrefab; // ���Ź� ��� Ű
+    [SerializeField] private GameObject _openDoorKeyPrefab; // 문 열기 UI
+    [SerializeField] private GameObject _talkNpcPrefab; // NPC 대화 UI
 
 
     // �ȳ� Ű UI Ȱ��ȭ �ϱ�
@@ -26,7 +28,20 @@ public class InteractionMarkManager : Singleton<InteractionMarkManager>
         if (trigger.tag == "EventInteractionTrigger")
         {
             // ��ȣ�ۿ� Ű�� ������ ����
-            GameObject interactionKey = Instantiate(_interactionKeyPrefab);
+            EventTrigger eventTrigger = trigger.GetComponent<EventTrigger>();
+            GameObject interactionKey;
+            if (eventTrigger.isDoor)
+            {
+                interactionKey = Instantiate(_openDoorKeyPrefab);
+            }
+            else if (eventTrigger.isNpc)
+            {
+                interactionKey = Instantiate(_talkNpcPrefab);
+            }
+            else
+            {
+                interactionKey = Instantiate(_interactionKeyPrefab);
+            }
             interactionKey.transform.SetParent(parent, false);
 
             // �ش� �̺�Ʈ�� ���ǿ� ���Ź��� �ִ� ��쿡�� ���Ź� ��� Ű�� ���

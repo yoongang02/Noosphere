@@ -148,20 +148,20 @@ public class InventoryNavigator : UIBase
     //현재 슬롯에서 위로 이동 - 정신(현실) 세계 증거물만 있는 경우
     public void MoveUp()
     {
-        currentIndex -= 3;
-        if(currentIndex < 0) currentIndex = Mathf.FloorToInt((inventorySlots.Count - 1) / 3) * 3;
+        currentIndex -= 4;
+        if(currentIndex < 0) currentIndex = Mathf.FloorToInt((inventorySlots.Count - 1) / 4) * 4;
         UpdateSelection();
     }
     
     //현재 슬롯에서 아래로 이동 - 정신(현실) 세계 증거물만 있는 경우
     public void MoveDown()
     {
-        currentIndex += 3;
+        currentIndex += 4;
         if (currentIndex >= inventorySlots.Count)
         {
-            int currentRow = currentIndex / 3;
-            int endRow = Mathf.FloorToInt((inventorySlots.Count - 1) / 3);
-            if (currentRow == endRow) currentIndex = endRow * 3;
+            int currentRow = currentIndex / 4;
+            int endRow = Mathf.FloorToInt((inventorySlots.Count - 1) / 4);
+            if (currentRow == endRow) currentIndex = endRow * 4;
             else if (currentRow > endRow) currentIndex = 0;
         }
         UpdateSelection();
