@@ -20,12 +20,13 @@ public class InventoryNavigator : UIBase
     public List<GameObject> inventorySlots = new List<GameObject>();
     private GameObject _slotOn;
 
-    [Space(5)] [Header("인벤토리 네비게이션 UI")] [SerializeField]
+    [Space(5)] [Header("인벤토리 디테일 UI")] [SerializeField]
     private TextMeshProUGUI _evidenceName;
     [SerializeField] private Image _evidenceBackground;
     [SerializeField] private List<Sprite> _backgroundImgs;
     [SerializeField] private Image _evidenceImg;
     [SerializeField] private TextMeshProUGUI _evidenceContent;
+    [SerializeField] private Sprite _evidenceDefaultImg;
     
     [Space(5)][Header("증거물 사용 정보")]
     [SerializeField] private EventStructure _evidenceUseEvent;
@@ -119,6 +120,8 @@ public class InventoryNavigator : UIBase
         {
             //Debug.Log("증거물이 아무것도 존재하지 않아");
             _curSelectedSlot = null;
+            // 증거물 디테일 UI 초기화
+            InitEvidenceDetailUI();
             return;
         }
         
@@ -126,6 +129,14 @@ public class InventoryNavigator : UIBase
         currentIndex = 0;
         UpdateSelection();
         InitChapter(InventoryManager.Instance.currentViewChapter);
+    }
+    
+    // 증거물 디테일 UI 초기화
+    void InitEvidenceDetailUI()
+    {
+        _evidenceName.text = "";
+        _evidenceImg.sprite = _evidenceDefaultImg;
+        _evidenceContent.text = "";
     }
     
     //슬롯들 가져오기
