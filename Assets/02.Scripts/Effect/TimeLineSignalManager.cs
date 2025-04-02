@@ -9,6 +9,7 @@ using Cinemachine;
 using TMPro;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
+
 public class TimeLineSignalManager : MonoBehaviour
 {
     [Header("npc및 캐릭터 애니메이션 관련")] [SerializeField]
@@ -21,19 +22,18 @@ public class TimeLineSignalManager : MonoBehaviour
     [SerializeField] private SkinnedMeshRenderer _freindMaterial;
     [SerializeField] private Material _friendMaterial;
     [SerializeField] private List<string> footSteps;
-    [SerializeField] CinemachineVirtualCamera _farLoungCam;  
-    [Header("정신세계 이펙트")] 
-    [SerializeField] private RawImage _vhsImage;
+    [SerializeField] CinemachineVirtualCamera _farLoungCam;
+    [Header("정신세계 이펙트")] [SerializeField] private RawImage _vhsImage;
     [SerializeField] private Volume _vhsVolume;
     [SerializeField] private GameObject _vhsObj;
     [SerializeField] private float _duration = 5f;
     private Camera _mainCamera;
     private UnityEngine.Rendering.Universal.UniversalAdditionalCameraData _cameraData;
-    [Header("문틈 대사 관련")]
-    [SerializeField] private TextMeshProUGUI _realText;
+    [Header("문틈 대사 관련")] [SerializeField] private TextMeshProUGUI _realText;
     private float _fadeDuration = 0.5f;
     private float _displayDuration = 0.8f;
     private Dictionary<string, Animator> _animCacheDic = new Dictionary<string, Animator>();
+
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Animator>();
@@ -46,7 +46,9 @@ public class TimeLineSignalManager : MonoBehaviour
 
         if (_fadeImage != null)
         {
-            _fadeImage.gameObject.transform.parent.gameObject.SetActive(_isFadeImageActive);
+            bool showFadeImage = PlayerPrefs.GetInt("FadeImage", 0) == 0;
+            _fadeImage.gameObject.transform.parent.gameObject.SetActive(showFadeImage);
+            
         }
         // DataManager.Instance.InitializeData().Forget();--> 테스트용
     }
@@ -83,13 +85,15 @@ public class TimeLineSignalManager : MonoBehaviour
     {
         _friendNpc.SetBool(npcAnim, false);
     }
-  private Animator GetAnimator(string npcObjectName)
+
+    private Animator GetAnimator(string npcObjectName)
     {
         if (!_animCacheDic.ContainsKey(npcObjectName))
         {
             Animator anim = GameObject.Find(npcObjectName)?.GetComponent<Animator>();
             _animCacheDic[npcObjectName] = anim;
         }
+
         return _animCacheDic[npcObjectName];
     }
 
@@ -98,8 +102,7 @@ public class TimeLineSignalManager : MonoBehaviour
         string objectName = command.Split(':')[0];
         string animName = command.Split(':')[1];
         Animator anim = GetAnimator(objectName);
-        anim.SetBool(animName,true);
-
+        anim.SetBool(animName, true);
     }
 
     public void EndAnim(string command)
@@ -112,12 +115,12 @@ public class TimeLineSignalManager : MonoBehaviour
 
     #endregion
 
-  
+
     public void SetPlayerMaterial(Material material)
     {
         _playerSkin.material = material;
     }
-  
+
 
     private async UniTaskVoid StartAutoEffect()
     {
@@ -195,10 +198,9 @@ public class TimeLineSignalManager : MonoBehaviour
     {
         PlayRandomFootSteps(duration).Forget();
     }
-    
 
     #endregion
-  
+
 
     public void StopFootSteps()
     {
@@ -214,7 +216,7 @@ public class TimeLineSignalManager : MonoBehaviour
     {
         ShowRealDialogue(ID).Forget();
     }
-    
+
     private async UniTask ShowRealDialogue(string dialogueID)
     {
         DialogueStructure doorDialogue = DataManager.Instance._dialogue[dialogueID];
@@ -225,26 +227,25 @@ public class TimeLineSignalManager : MonoBehaviour
             DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
             string processedText = doorDialogue.Dialogue_Text_List[i].text.Replace("\\n", "<br>");
             _realText.text = $"<mark=#00000055>{processedText}</mark>";
-            
+
             await _realText.DOFade(1f, _fadeDuration).AsyncWaitForCompletion();
-            
+
             await UniTask.Delay(TimeSpan.FromSeconds(_displayDuration));
-            
+
             await _realText.DOFade(0f, _fadeDuration).AsyncWaitForCompletion();
-            
+
             if (i < doorDialogue.Dialogue_Text_List.Count - 1)
             {
                 await UniTask.Delay(TimeSpan.FromSeconds(_fadeDuration));
             }
         }
-        
+
         _realText.gameObject.SetActive(false);
         DataManager.Instance._lockConditions["Lock_condition_003"].UnLock();
-        
     }
 
     [SerializeField] private Image _fadeImage;
-    private static bool _isFadeImageActive = true;
+
     public void StartFadeIn()
     {
         FadeIn().Forget();
@@ -255,8 +256,7 @@ public class TimeLineSignalManager : MonoBehaviour
         _fadeImage.color = new Color(0, 0, 0, 1);
         await _fadeImage.DOFade(0, _fadeDuration).AsyncWaitForCompletion();
         _fadeImage.gameObject.transform.parent.gameObject.SetActive(false);
-        _isFadeImageActive = false;
+        PlayerPrefs.SetInt("FadeImage", 1);
+        PlayerPrefs.Save();
     }
-
-   
 }
