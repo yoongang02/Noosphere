@@ -7,7 +7,6 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using Cinemachine;
 using TMPro;
-using TMPro.EditorUtilities;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 public class TimeLineSignalManager : MonoBehaviour
