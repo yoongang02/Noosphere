@@ -17,8 +17,14 @@ public class EventTrigger : MonoBehaviour
     public GameObject npcCameraPoint;
     public bool isNpc;
     [Space(5)] [Header("사용자 안내 키 UI 관련")] public bool isDoor;
+    public bool isDoorOpen;
     private RaycastHit[] _frontRayHits;
-    
+
+    private void OnEnable()
+    {
+        isDoorOpen = false;
+    }
+
     //플레이어가 트리거 내에 진입한다면
     public void OnTriggerEnter(Collider other)
     {
@@ -102,6 +108,10 @@ public class EventTrigger : MonoBehaviour
                         {
                             EventManagerYKM.Instance.ExecuteEvent(_curEvent.eventId).Forget();
                             InteractionMarkManager.Instance.DisableInteractionMarkUI(transform);
+                            if (isDoor)
+                            {
+                                this.isDoorOpen = true;
+                            }
                         };
                         InteractionMarkManager.Instance.EnableInteractionMarkUI(this.transform, _curEvent.eventId);
                         break;

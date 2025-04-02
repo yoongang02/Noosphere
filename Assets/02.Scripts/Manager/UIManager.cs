@@ -17,6 +17,7 @@ public class UIManager : Singleton<UIManager>
     public UIBase inventoryUI;
     public UIBase dialogueUI;
     public UIBase inputFieldUI;
+    public GameObject cctvFrame;
     
     public GameObject inventoryIcon;
     
@@ -32,6 +33,7 @@ public class UIManager : Singleton<UIManager>
             if(IsUIOpen(dialogueUI)) return;
             CloseTopUI();
         }
+        
         
         if (IsAnyUIOpen())
         {

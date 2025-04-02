@@ -41,6 +41,7 @@ public class EvidenceDetailUI : UIBase
             return;
         }
         
+        UIManager.Instance.cctvFrame.SetActive(false);
         
         //인벤토리에서 증거물 상세사항을 오픈할 경우에는 UI 순서를 위해 아래의 설정이 필요함.
         if (!UIManager.Instance.isInMap)
@@ -72,6 +73,8 @@ public class EvidenceDetailUI : UIBase
         {
             PlayerController.Instance._uiCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
         }
+        
+        UIManager.Instance.cctvFrame.SetActive(true);
         
         _objectUI.SetActive(false);
         _onePageUI.SetActive(false);
