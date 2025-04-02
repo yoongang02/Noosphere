@@ -37,7 +37,10 @@ public class IntroSceneController : MonoBehaviour
 
         FadeIn().Forget();
     }
-
+    public void OnLoadScene(string sceneName)
+    {
+        SceneManager.LoadSceneAsync(sceneName);
+    }
     private async UniTask FadeIn()
     {
         _fadeImage.color = new Color(0, 0, 0, 1);
@@ -62,7 +65,10 @@ public class IntroSceneController : MonoBehaviour
     {
         _introVideo.Play();
     }
-
+    public void StartVfx(string soundResource)
+    {
+        SoundManager.Instance.PlaySFXNoEffect(soundResource);
+    }
     public void ShowDialogue(string fullText)
     {
         _dialogueGroup.SetActive(true);
@@ -105,7 +111,7 @@ public class IntroSceneController : MonoBehaviour
         dialogueText.text = "";
         dialogueText.alpha = 1;
 
-        // StartDialogueSound(_speakerText.text);
+        StartDialogueSound(_speakerText.text);
 
         if (!isTyping)
         {
@@ -121,7 +127,7 @@ public class IntroSceneController : MonoBehaviour
 
         dialogueText.text = text;
         isTyping = false;
-        // SoundManager.Instance.StopAllSFX();
+        SoundManager.Instance.StopAllSFX();
     }
 
 
