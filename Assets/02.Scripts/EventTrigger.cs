@@ -16,7 +16,7 @@ public class EventTrigger : MonoBehaviour
     [Space(5)][Header("NPC 관련")]
     public GameObject npcCameraPoint;
     public bool isNpc;
-
+    [Space(5)] [Header("사용자 안내 키 UI 관련")] public bool isDoor;
     private RaycastHit[] _frontRayHits;
     
     //플레이어가 트리거 내에 진입한다면
