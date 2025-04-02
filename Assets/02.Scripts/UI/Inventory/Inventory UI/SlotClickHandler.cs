@@ -36,6 +36,7 @@ public class SlotClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnt
             }
             else
             {
+                if(InventoryManager.Instance.isUsingEvidence) return;
                 //현재 선택된 오브젝트와 클릭한 오브젝트가 같을 경우 -> 상세 보기 기능
                 Debug.Log($"슬롯{_navigator.currentIndex} 선택");
                 _navigator.OpenEvidenceDetailUI();
