@@ -32,18 +32,23 @@ public class InteractionMarkManager : Singleton<InteractionMarkManager>
             GameObject interactionKey;
             if (eventTrigger.isDoor)
             {
-                interactionKey = Instantiate(_openDoorKeyPrefab);
+                if (!eventTrigger.isDoorOpen)
+                {
+                    interactionKey = Instantiate(_openDoorKeyPrefab);
+                    interactionKey.transform.SetParent(parent, false);
+                }
             }
             else if (eventTrigger.isNpc)
             {
                 interactionKey = Instantiate(_talkNpcPrefab);
+                interactionKey.transform.SetParent(parent, false);
             }
             else
             {
                 interactionKey = Instantiate(_interactionKeyPrefab);
+                interactionKey.transform.SetParent(parent, false);
             }
-            interactionKey.transform.SetParent(parent, false);
-
+            
             // �ش� �̺�Ʈ�� ���ǿ� ���Ź��� �ִ� ��쿡�� ���Ź� ��� Ű�� ���
             // �̹� �� �Լ��� ������� ���Ź� ���̵� ���� ������ �Ϸ�Ǿ��⿡ �߰������� ���� �������� ����
             EventStructure _event = DataManager.Instance._events[eventID];

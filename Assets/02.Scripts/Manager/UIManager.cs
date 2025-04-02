@@ -41,18 +41,11 @@ public class UIManager : Singleton<UIManager>
             inventoryIcon.SetActive(false);
             //플레이어 Lock
             LockPlayer();
-            if (!IsUIOpen(dialogueUI))
-            {
-                //cctv 프레임 비활성화
-                cctvFrame.SetActive(false);
-            }
         }
         else
         {
             //인벤토리 아이콘 활성화
             inventoryIcon.SetActive(true);
-            //cctv 프레임 활성화
-            cctvFrame.SetActive(true);
         }
     }
     

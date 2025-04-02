@@ -252,7 +252,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             //현재 위치한 곳에 트리거가 있다면 해당 트리거 실행 가능한지 다시 체크
             if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
             {
-                await Task.Delay(500);
+                await Task.Delay(100);
                 PlayerInteract.Instance.curTrigger.CheckTriggerAvail();
             }
         }
