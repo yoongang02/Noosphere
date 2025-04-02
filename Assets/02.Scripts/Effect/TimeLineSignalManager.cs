@@ -43,6 +43,11 @@ public class TimeLineSignalManager : MonoBehaviour
         {
             _cameraData = _mainCamera.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();
         }
+
+        if (_fadeImage != null)
+        {
+            _fadeImage.gameObject.transform.parent.gameObject.SetActive(_isFadeImageActive);
+        }
         // DataManager.Instance.InitializeData().Forget();--> 테스트용
     }
 
@@ -239,7 +244,7 @@ public class TimeLineSignalManager : MonoBehaviour
     }
 
     [SerializeField] private Image _fadeImage;
-
+    private static bool _isFadeImageActive = true;
     public void StartFadeIn()
     {
         FadeIn().Forget();
@@ -250,6 +255,7 @@ public class TimeLineSignalManager : MonoBehaviour
         _fadeImage.color = new Color(0, 0, 0, 1);
         await _fadeImage.DOFade(0, _fadeDuration).AsyncWaitForCompletion();
         _fadeImage.gameObject.transform.parent.gameObject.SetActive(false);
+        _isFadeImageActive = false;
     }
 
    
