@@ -130,10 +130,10 @@ public class EventTrigger : MonoBehaviour
         
         if (angle <= _frontAngle)
         {
-            Debug.Log("플레이어가 정면을 바라보고 들어 옴.");
+            //Debug.Log("플레이어가 정면을 바라보고 들어 옴.");
             return true;
         }
-        Debug.Log("플레이어가 뒤돌거나 옆을 보고 들어오지 않음");
+        //Debug.Log("플레이어가 뒤돌거나 옆을 보고 들어오지 않음");
         //현재 이벤트 초기화하기
         _curEvent = null;
         InteractionMarkManager.Instance.DisableInteractionMarkUI(transform);
