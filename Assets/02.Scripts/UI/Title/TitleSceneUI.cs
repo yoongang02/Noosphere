@@ -14,7 +14,7 @@ public class TitleSceneUI : MonoBehaviour
     [SerializeField] private Button _settingBtn;
     [SerializeField] private Button _exitBtn;
     public EventSystem _eventSys;
-
+    [SerializeField] private GameObject _creditPanel;
     private void OnEnable()
     {
         _eventSys.firstSelectedGameObject = _loadGameBtn.gameObject;
@@ -44,6 +44,7 @@ public class TitleSceneUI : MonoBehaviour
     private void OnClickCreditBtn()
     {
         SoundManager.Instance.PlaySFX("Soundresource_037");
+        _creditPanel.SetActive(true);
     }
 
     private void OnClickSettingBtn()
