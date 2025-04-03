@@ -19,7 +19,8 @@ public class EvidenceDetailUI : UIBase
     
     [Header("증거물 상세내용 공통 UI")]
     [SerializeField] private Image _bgImg;
-    [SerializeField] private Sprite _inventoryBgImg;
+    [SerializeField] private Sprite _inventoryBgImgReal;
+    [SerializeField] private Sprite _inventoryBgImgMental;
 
     [Header("Page 증거물")] [SerializeField] private int _curPage;
     [SerializeField] private int _totalPage;
@@ -124,7 +125,14 @@ public class EvidenceDetailUI : UIBase
         {
             if (!UIManager.Instance.isInMap)
             {
-                _bgImg.sprite = _inventoryBgImg;
+                if (evidence.evidenceType == 'R')
+                {
+                    _bgImg.sprite = _inventoryBgImgReal;
+                }
+                else if (evidence.evidenceType == 'M')
+                {
+                    _bgImg.sprite = _inventoryBgImgMental;
+                }
             }
             else
             {
