@@ -20,5 +20,8 @@ public class DoorOpenEffect : MonoBehaviour
    {
       _block.SetActive(false);
       EffectManager.Instance.OnEffectEnd?.Invoke();
+      
+      // 문 다 열리면 EventTrigger의 isDoorOpen
+      transform.parent.GetComponentInChildren<EventTrigger>().isDoorOpen = true;
    }
 }

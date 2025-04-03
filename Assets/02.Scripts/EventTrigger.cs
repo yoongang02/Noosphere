@@ -108,10 +108,6 @@ public class EventTrigger : MonoBehaviour
                         {
                             EventManagerYKM.Instance.ExecuteEvent(_curEvent.eventId).Forget();
                             InteractionMarkManager.Instance.DisableInteractionMarkUI(transform);
-                            if (isDoor)
-                            {
-                                this.isDoorOpen = true;
-                            }
                         };
                         InteractionMarkManager.Instance.EnableInteractionMarkUI(this.transform, _curEvent.eventId);
                         break;
