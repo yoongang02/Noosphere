@@ -17,7 +17,7 @@ public class TitleSceneUI : MonoBehaviour
     [SerializeField] private GameObject _creditPanel;
     private void OnEnable()
     {
-        _eventSys.firstSelectedGameObject = _loadGameBtn.gameObject;
+        // _eventSys.firstSelectedGameObject = _loadGameBtn.gameObject;
     }
 
     private void Start()
