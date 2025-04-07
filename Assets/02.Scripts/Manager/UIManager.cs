@@ -31,6 +31,7 @@ public class UIManager : Singleton<UIManager>
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if(IsUIOpen(dialogueUI)) return;
+            if(IsUIOpen(investigateUI)) return;
             CloseTopUI();
         }
         
@@ -115,11 +116,6 @@ public class UIManager : Singleton<UIManager>
         if (topUI != dialogueUI)
         {
             SoundManager.Instance.PlaySFX("Soundresource_036");
-        }
-
-        if (topUI == investigateUI)
-        {
-            investigateUI.GetComponent<InvestigateUI>().ClickNoBtn();
         }
         
         topUI.OnClose();
