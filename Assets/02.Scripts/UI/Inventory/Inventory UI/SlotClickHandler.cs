@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Debug = NooSphere.Debug;
-public class SlotClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+public class SlotClickHandler : MonoBehaviour, IPointerClickHandler
 {
     private GameObject _lastEnteredObject;
     private InventoryNavigator _navigator;
@@ -57,6 +57,7 @@ public class SlotClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnt
         }
     }
 
+    /*
     public void OnPointerEnter(PointerEventData eventData)
     {
         //젤 위에 있는 UI 아니면 작동 X
@@ -88,4 +89,5 @@ public class SlotClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnt
             _lastEnteredObject = null;
         }
     }
+    */
 }
