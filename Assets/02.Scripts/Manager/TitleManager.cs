@@ -10,6 +10,7 @@ public class TitleManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("FadeImage",0);
         ActiveRandomMenu();
+        Screen.SetResolution(1920,1080,true);
     }
 
     private void ActiveRandomMenu()
