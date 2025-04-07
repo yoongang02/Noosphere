@@ -44,6 +44,11 @@ public class UIManager : Singleton<UIManager>
         }
         else
         {
+            if (PlayerInteract.Instance.GetComponent<MentalEnterProcess>().IsEnterNow())
+            {
+                inventoryIcon.SetActive(false);
+                return;
+            }
             //인벤토리 아이콘 활성화
             inventoryIcon.SetActive(true);
         }

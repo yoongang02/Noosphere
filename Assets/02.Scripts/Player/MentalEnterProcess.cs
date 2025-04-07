@@ -168,6 +168,7 @@ public class MentalEnterProcess : MonoBehaviour
         //바 초기화
         // InitProgressBar();
         _progressBarUI.SetActive(false);
+        UIManager.Instance.inventoryUI.gameObject.SetActive(true);
         _timer = 0f;
         _progressBarFill.InitFillAmount();
         isComplete = false;
@@ -314,5 +315,10 @@ public class MentalEnterProcess : MonoBehaviour
     public bool CanEnterProcess()
     {
         return _canEnter;
+    }
+
+    public bool IsEnterNow()
+    {
+        return _startEnter;
     }
 }

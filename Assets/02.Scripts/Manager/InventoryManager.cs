@@ -66,6 +66,11 @@ public class InventoryManager : Singleton<InventoryManager>
         {
             if (canOpenInventory)
                 return;
+
+            if (PlayerInteract.Instance.GetComponent<MentalEnterProcess>().IsEnterNow())
+            {
+                return;
+            }
             
             //키보드 입력 - Tab 버튼
             if (Input.GetKeyDown(KeyCode.Tab))
