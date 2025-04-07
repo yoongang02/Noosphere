@@ -8,12 +8,12 @@ using Cysharp.Threading.Tasks;
 
 public class DialogueCSVParser 
 {
-     public async UniTask<Dictionary<string, DialogueStructure>> Parse(string sheetName)
+     public async UniTask<Dictionary<string, DialogueStructure>> Parse(string fileName)
         {
             Dictionary<string, DialogueStructure> dictionary = new Dictionary<string, DialogueStructure>();
-            string csvUrl = $"https://docs.google.com/spreadsheets/d/1rxLYxA5PoZcaMP9xGD0NrBs78GOLY9sKJv7_Ft9oPww/gviz/tq?tqx=out:csv&sheet={sheetName}";
+            // string csvUrl = $"https://docs.google.com/spreadsheets/d/1rxLYxA5PoZcaMP9xGD0NrBs78GOLY9sKJv7_Ft9oPww/gviz/tq?tqx=out:csv&sheet={sheetName}";
             
-            string csvData = await LoadCSVFromURL(csvUrl);
+            string csvData = await LoadCSVFromResources(fileName);
             if (string.IsNullOrWhiteSpace(csvData)) return dictionary;
     
             string[] lines = csvData.Split("\n");
@@ -114,6 +114,30 @@ public class DialogueCSVParser
                     return string.Empty;
                 }
             }
+        }
+        private static Dictionary<string, string> _csvCache = new Dictionary<string, string>();
+    
+        private async UniTask<string> LoadCSVFromResources(string fileName)
+        {
+            if (_csvCache.TryGetValue(fileName, out string cachedData))
+            {
+                return cachedData;
+            }
+            
+            TextAsset textAsset = Resources.Load<TextAsset>($"EventCSV/{fileName}");
+        
+            if (textAsset == null)
+            {
+                Debug.LogError($"리소스에서 CSV 파일을 찾을 수 없습니다: EventCSV/{fileName}");
+                return string.Empty;
+            }
+
+            string csvText = textAsset.text;
+            
+            await UniTask.Delay(200);
+            
+            _csvCache[fileName] = csvText;
+            return csvText;
         }
     
         private string[] GetHeaders(string headerLine)

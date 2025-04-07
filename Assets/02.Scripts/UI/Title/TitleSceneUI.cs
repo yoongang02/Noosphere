@@ -18,7 +18,7 @@ public class TitleSceneUI : MonoBehaviour
     private bool _hasFirstHoverOccurred = false;
     private void OnEnable()
     {
-        _eventSys.firstSelectedGameObject = _loadGameBtn.gameObject;
+        _eventSys.firstSelectedGameObject = _newGameBtn.gameObject;
         _hasFirstHoverOccurred = false; 
     }
 
