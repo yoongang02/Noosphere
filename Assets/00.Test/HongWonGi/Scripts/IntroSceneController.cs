@@ -35,17 +35,24 @@ public class IntroSceneController : MonoBehaviour
         textRectTransform = dialogueText.GetComponent<RectTransform>();
         textRectTransform.pivot = new Vector2(0, 0.5f);
         // SoundManager.Instance.StopAllSFX();
-        FadeIn().Forget();
+        // _introTimeLine.p
+       
     }
     public void OnLoadScene(string sceneName)
     {
         SceneManager.LoadSceneAsync(sceneName);
     }
+
+    public void StartFadeIn()
+    {
+        FadeIn().Forget();
+    }
+
     private async UniTask FadeIn()
     {
         _fadeImage.color = new Color(0, 0, 0, 1);
         await _fadeImage.DOFade(0, _fadeDuration).AsyncWaitForCompletion();
-        _introTimeLine.Play();
+        // _introTimeLine.Play();
     }
 
     public void StartFadeOut(float fadeDuration)
