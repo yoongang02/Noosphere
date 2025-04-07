@@ -111,6 +111,11 @@ public class UIManager : Singleton<UIManager>
         {
             SoundManager.Instance.PlaySFX("Soundresource_036");
         }
+
+        if (topUI == investigateUI)
+        {
+            investigateUI.GetComponent<InvestigateUI>().ClickNoBtn();
+        }
         
         topUI.OnClose();
         

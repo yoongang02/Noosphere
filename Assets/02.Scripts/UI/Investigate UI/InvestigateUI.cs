@@ -35,7 +35,6 @@ public class InvestigateUI : UIBase
     public override void OnClose()
     {
         base.OnClose();
-        UIManager.Instance.OnSelectEnd?.Invoke();
         transform.GetChild(0).gameObject.SetActive(false);
     }
 
