@@ -7,10 +7,14 @@ using UnityEngine;
 public class PointEffect : MonoBehaviour
 {
     [SerializeField] private float _frontAngle = 40f;
+    [SerializeField] private EventTrigger _researchTrigger;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && IsPlayerFront(other.GetComponent<Transform>()))
         {
+            PlayerInteract.Instance.isInsideTrigger = true;
+            PlayerInteract.Instance.curTrigger = _researchTrigger;
+            
             EffectManager.Instance.OnEffectEnd?.Invoke();
             EventManagerYKM.Instance.ExecuteEvent(EventManagerYKM.Instance.nextEventID).Forget();
             gameObject.SetActive(false);
