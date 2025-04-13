@@ -68,7 +68,8 @@ public class InvestigateUI : UIBase
                 ClickNoBtn();
             }
         }
-            
+          
+        /*
         //ESC - NO 선택
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -76,6 +77,7 @@ public class InvestigateUI : UIBase
             //NO 버튼 선택
             ClickNoBtn();
         }
+        */
     }
     
     public void HoverYesBtn()

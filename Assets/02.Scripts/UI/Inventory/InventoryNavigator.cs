@@ -62,6 +62,7 @@ public class InventoryNavigator : UIBase
     {
         base.OnClose();
         UIManager.Instance.isInMap = true;
+        InventoryManager.Instance.isUsingEvidence = false;
         InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curRoomInfo;
         _inventoryWindow.SetActive(false);
     }
