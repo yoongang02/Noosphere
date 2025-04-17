@@ -30,7 +30,7 @@ public class TimeLineSignalManager : MonoBehaviour
     private Camera _mainCamera;
     private UnityEngine.Rendering.Universal.UniversalAdditionalCameraData _cameraData;
     [Header("문틈 대사 관련")] [SerializeField] private TextMeshProUGUI _realText;
-    private float _fadeDuration = 0.5f;
+    private float _fadeDuration = 0.3f;
     private float _displayDuration = 0.8f;
     private Dictionary<string, Animator> _animCacheDic = new Dictionary<string, Animator>();
 

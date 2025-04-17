@@ -8,14 +8,15 @@ using NooSphere;
 using Debug=NooSphere.Debug;
 public class CSVParserYKM
 {
-    public async UniTask<Dictionary<string, T>> Parse<T>(string fileName) where T : new()
+    public async UniTask<Dictionary<string, T>> Parse<T>(string sheetName) where T : new()
     {
         // 딕셔너리 생성
         Dictionary<string, T> dictionary = new Dictionary<string, T>();
-        // string csvUrl = $"https://docs.google.com/spreadsheets/d/1rxLYxA5PoZcaMP9xGD0NrBs78GOLY9sKJv7_Ft9oPww/gviz/tq?tqx=out:csv&sheet={sheetName}";
+        string csvUrl = $"https://docs.google.com/spreadsheets/d/1rxLYxA5PoZcaMP9xGD0NrBs78GOLY9sKJv7_Ft9oPww/gviz/tq?tqx=out:csv&sheet={sheetName}";
         
         // CSV 데이터 가져오기
-        string csvData = await LoadCSVFromResources(fileName);
+        // string csvData = await LoadCSVFromResources(fileName);
+        string csvData=await LoadCSVFromURL(csvUrl);
         if (string.IsNullOrWhiteSpace(csvData))
         {
             Debug.Log("CSV 데이터를 로드할 수 없습니다.");
