@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,8 @@ public class BookShelfManager : UIBase
     public bool isBookClear=false;
     [SerializeField] private List<int> _answer; // 정답 순서
     [SerializeField] private Transform _bookParent;
+
+    private List<Transform> _initialBookOrder;//맨처음 책 위치 저장하기 위한 리스트
 
     public override async void OnOpen(string quizID)
     {
@@ -46,8 +49,30 @@ public class BookShelfManager : UIBase
         }
         
         transform.GetChild(0).gameObject.SetActive(true);
+        
+        if (_initialBookOrder == null)//맨처음에만 책위치 저장
+        {
+            _initialBookOrder = new List<Transform>();
+            foreach (Transform child in _bookParent)
+            {
+                if (child.TryGetComponent<BookDrag>(out _))
+                    _initialBookOrder.Add(child);
+            }
+        }
+        ResetBookOrder();
     }
-
+    private void ResetBookOrder()
+    {
+        for (int i = 0; i < _initialBookOrder.Count; i++)
+        {
+            Transform left = _initialBookOrder[i];
+            left.SetSiblingIndex(i);
+            if (left.TryGetComponent<BookDrag>(out var drag) && drag._syncBook != null)
+            {
+                drag._syncBook.SetSiblingIndex(i);
+            }
+        }
+    }
     public override void OnClose()
     {
         base.OnClose();
