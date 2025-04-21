@@ -1,33 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class InteractionMarkManager : Singleton<InteractionMarkManager>
 {
-    [Header("��ȣ�ۿ� �ȳ� Ű ������")]
-    [SerializeField] private GameObject _interactionKeyPrefab; // ��ȣ�ۿ� Ű
-    [SerializeField] private GameObject _enterMentalKeyPrefab; // ���ż��� ���� Ű
-    [SerializeField] private GameObject _useEvidenceKeyPrefab; // ���Ź� ��� Ű
-    [SerializeField] private GameObject _openDoorKeyPrefab; // 문 열기 UI
-    [SerializeField] private GameObject _talkNpcPrefab; // NPC 대화 UI
+    [Header("키 UI들")]
+    public GameObject _interactionKeyPrefab; // 상호작용 키 UI
+    public GameObject _enterMentalKeyPrefab; // 세계 진입 키 UI
+    public GameObject _useEvidenceKeyPrefab; // 증거물 사용하기 키 UI
+    public GameObject _openDoorKeyPrefab; // 문 열기 UI
+    public GameObject _talkNpcPrefab; // NPC 대화 UI
 
 
-    // �ȳ� Ű UI Ȱ��ȭ �ϱ�
+    // 상호작용 키 활성화 함수
     public void EnableInteractionMarkUI(Transform trigger, string eventID)
     {
-        // EventTrigger ��ũ��Ʈ�� �����Ǿ��ִ� ������Ʈ�� �ڽ� ������Ʈ �� InteractionMark ��ũ��Ʈ�� ���� �ִ� ������Ʈ ã��
+        // EventTrigger 하위에 키 UI를 추가할 부모 오브젝트 찾기
         Transform parent = trigger.GetComponentInChildren<InteractionMark>(true).transform;
 
-        // �ش� ������Ʈ�� �ڽ� ������Ʈ ��� �ı��ϱ� �ʱ�ȭ
+        // 부모 오브젝트 하위에, 키 관련 UI가 있다면 초기화
         foreach (Transform chiild in parent)
         {
             Destroy(chiild.gameObject);
         }
 
-        // ��ȣ�ۿ� Ʈ������ ���
+        // 상호작용 트리거인 경우
         if (trigger.tag == "EventInteractionTrigger")
         {
-            // ��ȣ�ۿ� Ű�� ������ ����
             EventTrigger eventTrigger = trigger.GetComponent<EventTrigger>();
             GameObject interactionKey;
             if (eventTrigger.isDoor)
@@ -49,8 +49,6 @@ public class InteractionMarkManager : Singleton<InteractionMarkManager>
                 interactionKey.transform.SetParent(parent, false);
             }
             
-            // �ش� �̺�Ʈ�� ���ǿ� ���Ź��� �ִ� ��쿡�� ���Ź� ��� Ű�� ���
-            // �̹� �� �Լ��� ������� ���Ź� ���̵� ���� ������ �Ϸ�Ǿ��⿡ �߰������� ���� �������� ����
             EventStructure _event = DataManager.Instance._events[eventID];
 
             PlayerInteract.Instance.canUse = false;
@@ -59,7 +57,6 @@ public class InteractionMarkManager : Singleton<InteractionMarkManager>
                 if (condition.StartsWith("Evidence"))
                 {
                     EvidenceStructure evidence = DataManager.Instance._evidences[condition];
-                    // �ش� ���Ź��� ��� ������ ���Ź��̰� �κ��丮�� �ִ��� üũ
                     if(evidence.canUse == 'Y' && InventoryManager.Instance.IsEvidenceInInventory(evidence.evidenceId))
                     {
                         GameObject evidenceKey = Instantiate(_useEvidenceKeyPrefab);
@@ -70,11 +67,9 @@ public class InteractionMarkManager : Singleton<InteractionMarkManager>
                         PlayerInteract.Instance.OnEvidenceUse = null;
                         PlayerInteract.Instance.OnEvidenceUse += () =>
                         {
-                            // ���Ź� ����ϱ� �������� �κ��丮 �ʱ�ȭ
                             InventoryManager.Instance.isUsingEvidence = true;
                             InventoryManager.Instance.GetComponent<InventoryNavigator>()
                                 .SetEvidenceUseEventID(_event);
-                            // �κ��丮 ���� �ڵ�
                             UIManager.Instance.OpenUI(UIManager.Instance.inventoryUI);
                         };
                         break;
@@ -82,27 +77,23 @@ public class InteractionMarkManager : Singleton<InteractionMarkManager>
                 }
             }
         }
-        else if (trigger.tag == "EventMentalEnterTrigger") // ���ż��� ���� Ʈ������ ���
+        else if (trigger.tag == "EventMentalEnterTrigger") // 정신세계 진입 트리거인 경우
         {
             GameObject mentalKey = Instantiate(_enterMentalKeyPrefab);
             mentalKey.transform.SetParent(parent, false);
         }
         else
         {
-            Debug.LogError("��ȣ�ۿ� mark parent�� �߸��� �±׸� ���� �ֽ��ϴ�.");
+            Debug.LogError("정신세계 트리거의 mark parent가 올바르지 않음");
         }
-
-        // ��ȣ�ۿ� Ű UI �ʱ�ȭ �� Ȱ��ȭ -> �ڵ� �ִϸ��̼� ����
+        
         parent.gameObject.SetActive(true);
     }
 
-    // �ȳ� Ű UI ��Ȱ��ȭ �ϱ�
+    // 키 UI 비활성화
     public void DisableInteractionMarkUI(Transform trigger)
     {
-        // EventTrigger ��ũ��Ʈ�� �����Ǿ��ִ� ������Ʈ�� �ڽ� ������Ʈ �� InteractionMark ��ũ��Ʈ�� ���� �ִ� ������Ʈ ã��
         Transform parent = trigger.GetComponentInChildren<InteractionMark>(true).transform;
-
-        // �ִϸ����Ϳ��� ��Ȱ��ȭ �ִϸ��̼� ����
         parent.GetComponent<Animator>().SetTrigger("Hide");
     }
 }

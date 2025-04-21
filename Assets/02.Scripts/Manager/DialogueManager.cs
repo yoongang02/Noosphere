@@ -161,7 +161,7 @@ public class DialogueManager : UIBase
                 if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
                 {
                     await Task.Delay(100);
-                    PlayerInteract.Instance.curTrigger.CheckTriggerAvail();
+                    PlayerInteract.Instance.curTrigger.OnTriggerEnter(PlayerInteract.Instance.GetComponent<CapsuleCollider>());
                 }
             }
         }

@@ -33,6 +33,9 @@ public class InventoryNavigator : UIBase
     [SerializeField] private GameObject _useBtn;
     [SerializeField] private GameObject _openBtn;
 
+    [Space(5)] [Header("카드 키 사용 정보")] public bool isUsingCardKey = false;
+    public List<EventTrigger.KeyInfo> keyInfos = new List<EventTrigger.KeyInfo>();
+
     public override void OnOpen()
     {
         base.OnOpen();
@@ -347,26 +350,50 @@ public class InventoryNavigator : UIBase
         
         // 증거물 사용 변수 초기화
         InventoryManager.Instance.isUsingEvidence = false;
-        
-        Debug.LogWarning($"{_evidenceUseEvent.eventId} 현재 트리거의 이벤트 아이디");
-        // 현재 선택된 슬롯의 증거물 아이디가 올바른 증거물 아이디인지 체크
-        foreach (var condition in _evidenceUseEvent.conditions)
+
+        // 카드 키 제외 증거물 사용 코드
+        if (!isUsingCardKey)
         {
-            if (condition.StartsWith("Evidence"))
+            Debug.LogWarning($"{_evidenceUseEvent.eventId} 현재 트리거의 이벤트 아이디");
+            // 현재 선택된 슬롯의 증거물 아이디가 올바른 증거물 아이디인지 체크
+            foreach (var condition in _evidenceUseEvent.conditions)
             {
-                if (_curSelectedSlot.GetComponent<InventorySlotInfo>().evidenceId == condition)
+                if (condition.StartsWith("Evidence"))
+                {
+                    if (_curSelectedSlot.GetComponent<InventorySlotInfo>().evidenceId == condition)
+                    {
+                        PlayerInteract.Instance.isUsingEvidence = true;
+                        EventManagerYKM.Instance.ExecuteEvent(_evidenceUseEvent.eventId).Forget();
+                        return;
+                    }
+                    else
+                    {
+                        PlayerInteract.Instance.isUsingEvidence = false;
+                        DialogueManager.Instance.SetDialogue("Dialogue_0064");
+                        return;
+                    }
+                }
+            }
+        }
+        else // 카드 키 관련 증거물 사용 코드
+        {
+            foreach (var key in keyInfos)
+            {
+                if (_curSelectedSlot.GetComponent<InventorySlotInfo>().evidenceId == key.evidenceID)
                 {
                     PlayerInteract.Instance.isUsingEvidence = true;
-                    EventManagerYKM.Instance.ExecuteEvent(_evidenceUseEvent.eventId).Forget();
-                    return;
-                }
-                else
-                {
-                    PlayerInteract.Instance.isUsingEvidence = false;
-                    DialogueManager.Instance.SetDialogue("Dialogue_0064");
+                    EventManagerYKM.Instance.ExecuteEvent(key.resultID).Forget();
+                    
+                    isUsingCardKey = false;
+                    keyInfos = null;
                     return;
                 }
             }
+            PlayerInteract.Instance.isUsingEvidence = false;
+            DialogueManager.Instance.SetDialogue("Dialogue_0064");
+                
+            isUsingCardKey = false;
+            keyInfos = null;
         }
     }
 

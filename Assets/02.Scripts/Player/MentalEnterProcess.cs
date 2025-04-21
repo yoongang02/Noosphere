@@ -228,7 +228,7 @@ public class MentalEnterProcess : MonoBehaviour
         //트리거 내에 있는지 재검사
         if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
         {
-            PlayerInteract.Instance.curTrigger.CheckTriggerAvail();
+            PlayerInteract.Instance.curTrigger.OnTriggerEnter(PlayerInteract.Instance.GetComponent<CapsuleCollider>());
         }
     }
     
