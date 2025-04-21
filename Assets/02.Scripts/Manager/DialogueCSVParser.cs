@@ -8,11 +8,12 @@ using Cysharp.Threading.Tasks;
 
 public class DialogueCSVParser 
 {
-     public async UniTask<Dictionary<string, DialogueStructure>> Parse(string fileName)
+     public async UniTask<Dictionary<string, DialogueStructure>> Parse(string sheetName)
         {
             Dictionary<string, DialogueStructure> dictionary = new Dictionary<string, DialogueStructure>();
-            string csvUrl = $"https://docs.google.com/spreadsheets/d/1rxLYxA5PoZcaMP9xGD0NrBs78GOLY9sKJv7_Ft9oPww/gviz/tq?tqx=out:csv&sheet={fileName}";
+            string csvUrl = $"https://docs.google.com/spreadsheets/d/1rxLYxA5PoZcaMP9xGD0NrBs78GOLY9sKJv7_Ft9oPww/gviz/tq?tqx=out:csv&sheet={sheetName}";
             
+            // string csvData = await LoadCSVFromResources(fileName);// 로컬에서 csv파일 받아오기
             string csvData = await LoadCSVFromURL(csvUrl);
             if (string.IsNullOrWhiteSpace(csvData)) return dictionary;
     
