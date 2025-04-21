@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using Random = UnityEngine.Random;
+using DG.Tweening;
 
 public class SirenEffect : MonoBehaviour
 {
@@ -16,25 +17,17 @@ public class SirenEffect : MonoBehaviour
     private Vector3 _originalPos;
     private Quaternion _originalRot;
     private float _seed;
-    [Header("사이렌 효과")]
-    [SerializeField]private Volume _volume;
-    [SerializeField] [Range(0f, 1f)] private float _minVignetteIntensity = 0.2f; // Vignette 최소 강도
-    [SerializeField] [Range(0f, 1f)] private float _maxVignetteIntensity = 0.8f; // Vignette 최대 강도
-    [SerializeField] [Range(0.1f, 5f)] private float _vignettePulseSpeed = 1f;
-    private Vignette _vignette;
-    private float _originalVignetteIntensity;
-    private bool _isVignetteEffectRunning = false;
+    [Header("사이렌 효과")] 
+    [SerializeField] private Light _sirenLight;
+
+    [Tooltip("최저 intensity (여기서는 1)")] 
+    [SerializeField] private float minIntensity;//최소 빛 밝기
+    [SerializeField] private float maxIntensity;//불 밝기 
+    [SerializeField] private float upDuration;//깜빡거림 시간
+    Tween _sirenTween;
     
     private void Awake()
     {
-        if (!_volume.profile.TryGet<Vignette>(out _vignette))
-        {
-            Debug.Log("volume효과 존재 x");
-        }
-        else
-        {
-            Debug.Log("volume효과 존재");
-        }
         _mainCamera = GetComponent<Camera>();
         _mainCamera = Camera.main;
         _originalPos = _mainCamera.transform.localPosition;
@@ -45,48 +38,21 @@ public class SirenEffect : MonoBehaviour
     private void OnEnable()
     {
         ShakeCamera(_shakePower, _shakeDuration).Forget();
-        StartVignetteEffect().Forget();
+        StartSiren();
     }
-    private async UniTaskVoid StartVignetteEffect()
+    private void StartSiren()
     {
-        if (_vignette == null) return;
-        
-        _isVignetteEffectRunning = true;
-        float time = 0f;
-        
-        while (_isVignetteEffectRunning)
-        {
-            // Sin 함수를 사용하여 -1에서 1 사이의 값 생성 (주기적인 움직임)
-            float pulse = Mathf.Sin(time * _vignettePulseSpeed * Mathf.PI);
-            
-            // -1~1 값을 0~1 범위로 변환
-            float normalizedPulse = (pulse + 1f) * 0.5f;
-            
-            // 최소값과 최대값 사이에서 보간
-            float intensity = Mathf.Lerp(_minVignetteIntensity, _maxVignetteIntensity, normalizedPulse);
-            
-            // Vignette intensity 설정
-            _vignette.intensity.value = intensity;
-            
-            // 시간 업데이트
-            time += Time.deltaTime;
-            
-            await UniTask.Yield(PlayerLoopTiming.Update);
-        }
-        
-        // 원래 값으로 복원
-        if (_vignette != null)
-        {
-            _vignette.intensity.value = _originalVignetteIntensity;
-        }
+        _sirenLight.intensity = minIntensity;
+        _sirenTween = _sirenLight
+            .DOIntensity(maxIntensity, upDuration)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.Linear);
     }
-    
-    // Vignette 효과 중지
-    private void StopVignetteEffect()
+    public void StopBlink()
     {
-        _isVignetteEffectRunning = false;
+        _sirenTween.Kill();
     }
-    
+
     public async UniTaskVoid ShakeCamera(float power, float duration)
     {
         float curPower = Mathf.Clamp01(power);
