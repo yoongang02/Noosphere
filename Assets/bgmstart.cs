@@ -6,7 +6,7 @@ using UnityEngine;
 public class bgmstart : MonoBehaviour
 {
     [SerializeField] private string bgmName;
-    private void Start()
+    private void OnEnable()
     {
         SoundManager.Instance.StopForceBGM();
         SoundManager.Instance.PlayBGM(bgmName);

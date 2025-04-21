@@ -18,8 +18,17 @@ public class EventTrigger : MonoBehaviour
     public bool isNpc;
     [Space(5)] [Header("사용자 안내 키 UI 관련")] public bool isDoor;
     public bool isDoorOpen;
-    private RaycastHit[] _frontRayHits;
-
+    [Space(5)][Header("사용자 카드키 관련")]
+    public bool isCardKeyDoor;
+    [System.Serializable]
+    public class KeyInfo
+    {
+        public string evidenceID;
+        public string resultID;
+    }
+    
+    [Header("사용 증거물 관련")] 
+    public List<KeyInfo> keyInfos = new List<KeyInfo>();
     private void OnEnable()
     {
         isDoorOpen = false;
@@ -33,7 +42,61 @@ public class EventTrigger : MonoBehaviour
             PlayerInteract.Instance.isInsideTrigger = true;
             PlayerInteract.Instance.curTrigger = this;
             if(!IsPlayerFront(other.transform)) return;
-            CheckTriggerAvail();
+
+            if (isCardKeyDoor)
+            {
+                NooSphere.Debug.LogWarning("문과 상호작용 가능");
+                // E 열기는 디폴트로 띄우기
+                // 하위에 키 UI를 추가할 부모 오브젝트 찾기
+                Transform parent = gameObject.GetComponentInChildren<InteractionMark>(true).transform;
+                // 부모 오브젝트 하위에, 키 관련 UI가 있다면 초기화
+                foreach (Transform child in parent)
+                {
+                    Destroy(child.gameObject);
+                }
+                if (isDoor)
+                {
+                    if (!isDoorOpen)
+                    {
+                        GameObject interactionKey = Instantiate(InteractionMarkManager.Instance._openDoorKeyPrefab);
+                        interactionKey.transform.SetParent(parent, false);
+                        // 문 열기 액션 추가
+                        PlayerInteract.Instance.OnInteract = null;
+                        PlayerInteract.Instance.OnInteract += () =>
+                        {
+                            EventManagerYKM.Instance.ExecuteEvent(eventIdList[0]).Forget();
+                        };
+                        
+                        // 플레이어의 인벤토리에 관련 증거물 있는지 체크
+                        foreach (var key in keyInfos)
+                        {
+                            EvidenceStructure evidence = DataManager.Instance._evidences[key.evidenceID];
+                            if(evidence.canUse == 'Y' && InventoryManager.Instance.IsEvidenceInInventory(evidence.evidenceId))
+                            {
+                                GameObject evidenceKey = Instantiate(InteractionMarkManager.Instance._useEvidenceKeyPrefab);
+                                evidenceKey.transform.SetParent(parent, false);
+                                PlayerInteract.Instance.canUse = true;
+                            
+                                Debug.LogWarning("OnEvidenceUse 액션에 메소드 등록");
+                                PlayerInteract.Instance.OnEvidenceUse = null;
+                                PlayerInteract.Instance.OnEvidenceUse += () =>
+                                {
+                                    InventoryManager.Instance.isUsingEvidence = true;
+                                    InventoryManager.Instance.GetComponent<InventoryNavigator>().isUsingCardKey = true;
+                                    InventoryManager.Instance.GetComponent<InventoryNavigator>().keyInfos = this.keyInfos;
+                                    UIManager.Instance.OpenUI(UIManager.Instance.inventoryUI);
+                                };
+                                break;
+                            }
+                        }
+                        parent.gameObject.SetActive(true);
+                    }
+                }
+            }
+            else
+            {
+                CheckTriggerAvail();
+            }
             
             if (isNpc)
             {
@@ -129,7 +192,7 @@ public class EventTrigger : MonoBehaviour
     }
 
     // 플레이어가 트리거를 정면 방향으로 진입했는지 체크하는 함수
-    bool IsPlayerFront(Transform player)
+    protected bool IsPlayerFront(Transform player)
     {
         Vector3 triggerDirection = (transform.GetChild(0).position - player.position).normalized;
         float angle = Vector3.Angle(player.forward, triggerDirection);
