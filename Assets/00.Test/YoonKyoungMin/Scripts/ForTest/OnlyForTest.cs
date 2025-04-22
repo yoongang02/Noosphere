@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class OnlyForTest : MonoBehaviour
+public class OnlyForTest : Singleton<OnlyForTest>
 {
     //스테이지1 빠른 테스트를 위한 임시 마스터 코드
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             Debug.Log("종료");
             Application.Quit();
@@ -62,7 +62,7 @@ public class OnlyForTest : MonoBehaviour
         UIManager.Instance.CloseAllUI();
 
         //씬 스테이지1로 이동
-        SceneManager.LoadScene("Stage1Map_real");
+        SceneManager.LoadScene("Lounge");
         //현재 스테이지 변경
         EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_102;
         EventManagerYKM.Instance.currentEventID = "Event_A031";
@@ -141,7 +141,7 @@ public class OnlyForTest : MonoBehaviour
         UIManager.Instance.CloseAllUI();
 
         //씬 스테이지1로 이동
-        SceneManager.LoadScene("Lounge");
+        SceneManager.LoadScene("Stage1Map_real");
         //현재 스테이지 변경
         EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_104;
         EventManagerYKM.Instance.currentEventID = "Event_C063";
@@ -153,5 +153,4 @@ public class OnlyForTest : MonoBehaviour
         FindObjectOfType<PlayerInteract>().curTrigger = null;
         EventManagerYKM.Instance.nextEventID = "";
     }
-
 }

@@ -195,8 +195,6 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 await DoResult(results);
             }
             
-            Debug.LogWarning($"{eventID} 이벤트의 repeatType {_event.repeatType} , isExecuted : {_event.isExecuted}");
-            
             //이벤트가 성공적으로 실행이 되었다고
             if (!_isRepeatFalse && _isConditionMet)
             {
@@ -216,8 +214,6 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     }
                 }
             }
-
-            Debug.LogWarning($"{eventID} 이벤트의 repeatType {_event.repeatType} , isExecuted : {_event.isExecuted}");
             
             if (_isEventSuccess)
             {
@@ -230,13 +226,18 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 }
                 //예외처리
                 if(currentEventID == "Event_B044") return;
+                //예외처리 - 친구에게 편지 주면 더이상 상호작용하지 못하도록
+                if (currentEventID == "Event_C066")
+                {
+                    DataManager.Instance._events["Event_C082"].repeatType = false;
+                }
             }
             else
             {
                 CloseEventFailure(_event);
             }
             
-            Debug.LogWarning($"{eventID} 이벤트의 repeatType {_event.repeatType} , isExecuted : {_event.isExecuted}");
+            //Debug.LogWarning($"{eventID} 이벤트의 repeatType {_event.repeatType} , isExecuted : {_event.isExecuted}");
 
             if (_isEventSuccess)
             {
@@ -253,7 +254,10 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
             {
                 await Task.Delay(100);
-                PlayerInteract.Instance.curTrigger.OnTriggerEnter(PlayerInteract.Instance.GetComponent<CapsuleCollider>());
+                if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
+                {
+                    PlayerInteract.Instance.curTrigger.OnTriggerEnter(PlayerInteract.Instance.GetComponent<CapsuleCollider>());
+                }
             }
         }
     }

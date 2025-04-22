@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,12 +20,12 @@ public class SetLoungeCamera : MonoBehaviour
        {
            SceneManager.sceneLoaded -= OnSceneLoaded;
        }
-   
+
        private void Start()
        {
            AssignPlayer();
        }
-   
+
        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
        {
            AssignPlayer();

@@ -5,11 +5,23 @@ using UnityEngine;
 
 public class HintImage : MonoBehaviour
 {
+   private void OnEnable()
+   {
+      UIManager.Instance.cctvFrame.SetActive(false);
+      //인벤토리 아이콘 비활성화
+      UIManager.Instance.inventoryIcon.SetActive(false);
+      //플레이어 Lock
+      UIManager.Instance.LockPlayer();
+   }
+
    private void Update()
    {
       if (Input.GetKeyDown(KeyCode.Escape))
       {
          gameObject.SetActive(false);
+         UIManager.Instance.cctvFrame.SetActive(true);
+         UIManager.Instance.inventoryIcon.SetActive(true);
+         UIManager.Instance.UnLockPlayer();
       }
    }
 }

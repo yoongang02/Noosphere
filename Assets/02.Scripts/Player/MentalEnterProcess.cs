@@ -224,6 +224,12 @@ public class MentalEnterProcess : MonoBehaviour
             EventManagerYKM.Instance.nextEventID = "Event_A009";
             DataManager.Instance._events["Event_A009"].isExecuted = false;
         }
+
+        if (EventManagerYKM.Instance.currentEventID == "Event_B057")
+        {
+            EventManagerYKM.Instance.nextEventID = "Event_B057";
+            DataManager.Instance._events["Event_B057"].isExecuted = false;
+        }
         
         //트리거 내에 있는지 재검사
         if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)

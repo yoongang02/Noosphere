@@ -55,15 +55,10 @@ public class RadioManager : UIBase
         _curQuizID = quizID;
         _curQuiz = DataManager.Instance._quiz[_curQuizID];
         Debug.Log($"# quiz id : {quizID}, _curQuiz : {_curQuiz}");
-
-        // 스킵 버튼 상태 설정
-        if (_skipBtn != null)
-        {
-            _skipBtn.gameObject.SetActive(_alreadyShowDialogue);
-        }
-
+        
         //정신세계인데
         //만약 거울이 깨졌는데 기믹을 미리 성공했다면
+        transform.GetChild(0).gameObject.SetActive(false);
         if (_curQuiz.isSolved)
         {
             await UniTask.Yield();
@@ -98,6 +93,12 @@ public class RadioManager : UIBase
 
             return;
         }
+        
+        // 스킵 버튼 상태 설정
+        if (_skipBtn != null)
+        {
+            _skipBtn.gameObject.SetActive(_alreadyShowDialogue);
+        }
 
         ResetText();
         if (_dialBtn != null && _dialBtn.Count >= 3)
@@ -131,6 +132,7 @@ public class RadioManager : UIBase
         }
 
         transform.GetChild(0).gameObject.SetActive(false);
+        UIManager.Instance.cctvFrame.SetActive(true);
     }
 
     private async void CheckAnswer()
@@ -229,7 +231,7 @@ public class RadioManager : UIBase
         }
 
         // 첫 대화 표시 완료 표시
-        // _alreadyShowDialogue = true;
+        _alreadyShowDialogue = true;
 
         // 정리 작업
         _realText.DOKill();
@@ -356,7 +358,7 @@ public class RadioManager : UIBase
         }
 
         // 첫 대화 표시 완료 표시
-        // _alreadyShowDialogue = true;
+        _alreadyShowDialogue = true;
 
         // 정리 작업
         _realText.DOKill();

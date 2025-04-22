@@ -60,6 +60,7 @@ public class ClockManager : UIBase
     {
         base.OnClose(); 
         transform.GetChild(0).gameObject.SetActive(false);
+        UIManager.Instance.cctvFrame.SetActive(true);
         QuizManager.Instance.OnQuizEnd?.Invoke();
     }
     public async UniTaskVoid CheckAnswerWithDelay()
