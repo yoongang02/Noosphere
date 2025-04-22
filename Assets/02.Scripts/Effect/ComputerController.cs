@@ -18,6 +18,7 @@ public class ComputerController : UIBase
     {
         base.OnOpen();
         transform.GetChild(0).gameObject.SetActive(true);
+        UIManager.Instance.cctvFrame.SetActive(false);
         EscapeUI.Instance.Active();
         _eventChannel.RaiseEvent("0");//컴퓨터 열었을때 맨처음 버튼 눌리는 이벤트 전달
         SoundManager.Instance.PlaySFX("Soundresource_091");

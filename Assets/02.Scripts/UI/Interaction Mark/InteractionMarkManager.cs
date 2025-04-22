@@ -94,6 +94,9 @@ public class InteractionMarkManager : Singleton<InteractionMarkManager>
     public void DisableInteractionMarkUI(Transform trigger)
     {
         Transform parent = trigger.GetComponentInChildren<InteractionMark>(true).transform;
-        parent.GetComponent<Animator>().SetTrigger("Hide");
+        if (parent != null)
+        {
+            parent.GetComponent<Animator>().SetTrigger("Hide");
+        }
     }
 }
