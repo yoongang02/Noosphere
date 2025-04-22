@@ -73,7 +73,7 @@ public class InventoryManager : Singleton<InventoryManager>
             }
             
             //키보드 입력 - Tab 버튼
-            if (Input.GetKeyDown(KeyCode.Tab))
+            if (FindObjectOfType<HintImage>() == null && Input.GetKeyDown(KeyCode.Tab))
             {
                 UIManager.Instance.OpenUI(UIManager.Instance.inventoryUI);
             }

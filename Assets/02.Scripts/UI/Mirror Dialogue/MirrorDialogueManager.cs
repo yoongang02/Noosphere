@@ -42,6 +42,7 @@ public class MirrorDialogueManager : UIBase
     {
         base.OnClose();
         transform.GetChild(0).gameObject.SetActive(false);
+        UIManager.Instance.cctvFrame.SetActive(true);
     }
 
     public override void HandleKeyboardInput()
@@ -119,6 +120,12 @@ public class MirrorDialogueManager : UIBase
         UIManager.Instance.CloseTopUI();
         DataManager.Instance._quiz["Quiz_009"].isSolved = true;
         QuizManager.Instance.OnQuizEnd?.Invoke();
+        if (PlayerInteract.Instance.curTrigger != null)
+        {
+            InteractionMarkManager.Instance.DisableInteractionMarkUI(PlayerInteract.Instance.curTrigger.transform);
+            PlayerInteract.Instance.curTrigger = null;
+            PlayerInteract.Instance.isInsideTrigger = false;
+        }
     }
 
     public void ClickNoBtn()
@@ -127,5 +134,11 @@ public class MirrorDialogueManager : UIBase
         UIManager.Instance.CloseTopUI();
         DataManager.Instance._quiz["Quiz_009"].isSolved = false;
         QuizManager.Instance.OnQuizEnd?.Invoke();
+        if (PlayerInteract.Instance.curTrigger != null)
+        {
+            InteractionMarkManager.Instance.DisableInteractionMarkUI(PlayerInteract.Instance.curTrigger.transform);
+            PlayerInteract.Instance.curTrigger = null;
+            PlayerInteract.Instance.isInsideTrigger = false;
+        }
     }
 }

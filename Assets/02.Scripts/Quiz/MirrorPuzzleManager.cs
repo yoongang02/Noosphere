@@ -77,6 +77,7 @@ public class MirrorPuzzleManager : UIBase
         base.OnClose();
         ResetAllPieces();
         transform.GetChild(0).gameObject.SetActive(false);
+        UIManager.Instance.cctvFrame.SetActive(true);
         
         //결과에 따라 실행
         if (_curQuiz.isSolved)
