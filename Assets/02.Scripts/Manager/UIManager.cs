@@ -105,6 +105,7 @@ public class UIManager : Singleton<UIManager>
         uiStack.Push(ui);
         topUI = ui;
         ui.OnOpen(quizID);
+        cctvFrame.SetActive(false);
         EscapeUI.Instance.Active();
     }
     public void CloseTopUI()

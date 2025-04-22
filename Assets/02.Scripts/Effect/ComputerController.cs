@@ -35,6 +35,7 @@ public class ComputerController : UIBase
         SoundManager.Instance.PlaySFX("Soundresource_092");
         transform.GetChild(0).gameObject.SetActive(false);
         gameObject.SetActive(false);
+        UIManager.Instance.cctvFrame.SetActive(true);
         EffectManager.Instance.OnEffectEnd.Invoke();
     }
 }

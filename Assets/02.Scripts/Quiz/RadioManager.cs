@@ -131,6 +131,7 @@ public class RadioManager : UIBase
         }
 
         transform.GetChild(0).gameObject.SetActive(false);
+        UIManager.Instance.cctvFrame.SetActive(true);
     }
 
     private async void CheckAnswer()
@@ -229,7 +230,7 @@ public class RadioManager : UIBase
         }
 
         // 첫 대화 표시 완료 표시
-        // _alreadyShowDialogue = true;
+        _alreadyShowDialogue = true;
 
         // 정리 작업
         _realText.DOKill();
@@ -356,7 +357,7 @@ public class RadioManager : UIBase
         }
 
         // 첫 대화 표시 완료 표시
-        // _alreadyShowDialogue = true;
+        _alreadyShowDialogue = true;
 
         // 정리 작업
         _realText.DOKill();

@@ -42,6 +42,7 @@ public class MirrorDialogueManager : UIBase
     {
         base.OnClose();
         transform.GetChild(0).gameObject.SetActive(false);
+        UIManager.Instance.cctvFrame.SetActive(true);
     }
 
     public override void HandleKeyboardInput()
