@@ -33,6 +33,7 @@ public class RadioManager : UIBase
 
     private bool _isSkipping = false;
     private static bool _alreadyShowDialogue = false;
+    private static bool _alreadyShowOnSpirit = false;
 
     [SerializeField] private Button _skipBtn;
 
@@ -42,7 +43,16 @@ public class RadioManager : UIBase
         {
             if (_alreadyShowDialogue)
             {
-                _isSkipping = true;
+                if (PlayerInteract.Instance.isInMental)
+                {
+                    if (_alreadyShowOnSpirit)
+                        _isSkipping = true;
+                }
+                else
+                {
+                    if (_alreadyShowDialogue)
+                        _isSkipping = true;
+                }
             }
         });
     }
@@ -97,7 +107,13 @@ public class RadioManager : UIBase
         // 스킵 버튼 상태 설정
         if (_skipBtn != null)
         {
-            _skipBtn.gameObject.SetActive(_alreadyShowDialogue);
+            if (_skipBtn != null)
+            {
+                bool showSkip = PlayerInteract.Instance.isInMental
+                    ? _alreadyShowOnSpirit
+                    : _alreadyShowDialogue;
+                _skipBtn.gameObject.SetActive(showSkip);
+            }
         }
 
         ResetText();
@@ -257,7 +273,7 @@ public class RadioManager : UIBase
         // 스킵 버튼 상태 설정
         if (_skipBtn != null)
         {
-            _skipBtn.gameObject.SetActive(_alreadyShowDialogue);
+            _skipBtn.gameObject.SetActive(_alreadyShowOnSpirit);
         }
 
         DialogueStructure realDialogue = DataManager.Instance._dialogue["Dialogue_0027"];
@@ -276,7 +292,7 @@ public class RadioManager : UIBase
         for (int i = 0; i < maxLength; i++)
         {
             // 첫 대화가 아니고 스킵 요청이 있을 경우 체크
-            if (_alreadyShowDialogue && _isSkipping) break;
+            if (_alreadyShowOnSpirit && _isSkipping) break;
 
             DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
 
@@ -308,20 +324,20 @@ public class RadioManager : UIBase
             foreach (var tween in fadeInTweens)
             {
                 await tween.AsyncWaitForCompletion();
-                if (_alreadyShowDialogue && _isSkipping) break;
+                if (_alreadyShowOnSpirit && _isSkipping) break;
             }
 
-            if (_alreadyShowDialogue && _isSkipping) break;
+            if (_alreadyShowOnSpirit && _isSkipping) break;
 
             // 표시 시간 대기
             float startTime = Time.time;
             while (Time.time - startTime < _displayDuration)
             {
-                if (_alreadyShowDialogue && _isSkipping) break;
+                if (_alreadyShowOnSpirit && _isSkipping) break;
                 await UniTask.Yield();
             }
 
-            if (_alreadyShowDialogue && _isSkipping) break;
+            if (_alreadyShowOnSpirit && _isSkipping) break;
 
             // 동시에 페이드 아웃
             List<Tween> fadeOutTweens = new List<Tween>();
@@ -338,10 +354,10 @@ public class RadioManager : UIBase
             foreach (var tween in fadeOutTweens)
             {
                 await tween.AsyncWaitForCompletion();
-                if (_alreadyShowDialogue && _isSkipping) break;
+                if (_alreadyShowOnSpirit && _isSkipping) break;
             }
 
-            if (_alreadyShowDialogue && _isSkipping) break;
+            if (_alreadyShowOnSpirit && _isSkipping) break;
 
             // 마지막이 아니면 잠시 대기
             if (i < maxLength - 1)
@@ -349,16 +365,16 @@ public class RadioManager : UIBase
                 startTime = Time.time;
                 while (Time.time - startTime < 0.5f)
                 {
-                    if (_alreadyShowDialogue && _isSkipping) break;
+                    if (_alreadyShowOnSpirit && _isSkipping) break;
                     await UniTask.Yield();
                 }
 
-                if (_alreadyShowDialogue && _isSkipping) break;
+                if (_alreadyShowOnSpirit && _isSkipping) break;
             }
         }
 
         // 첫 대화 표시 완료 표시
-        _alreadyShowDialogue = true;
+        _alreadyShowOnSpirit = true;
 
         // 정리 작업
         _realText.DOKill();
