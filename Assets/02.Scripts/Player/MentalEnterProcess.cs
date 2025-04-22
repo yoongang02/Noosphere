@@ -22,6 +22,7 @@ public class MentalEnterProcess : MonoBehaviour
     [SerializeField] private GameObject _progressBarUI;
     [SerializeField] private EnterProgressBar _progressBarFill;
     private bool _soundPlayed=false;
+    private bool _isDrainingSoundPlaying = false; 
     
     void Update()
     {
@@ -66,6 +67,12 @@ public class MentalEnterProcess : MonoBehaviour
                         SoundManager.Instance.PlaySFX("Soundresource_029");
                         _soundPlayed = true;
                     }
+                    if (_isDrainingSoundPlaying)
+                    {
+                        SoundManager.Instance.StopSFX("Soundresource_112");
+                        SoundManager.Instance.StopSFX("Soundresource_113");
+                        _isDrainingSoundPlaying = false;
+                    }
 
                     if (value >= 1f)
                     {
@@ -81,6 +88,12 @@ public class MentalEnterProcess : MonoBehaviour
                 }
                 else
                 {
+                    if (!_isDrainingSoundPlaying)
+                    {
+                        SoundManager.Instance.PlaySFX("Soundresource_112");
+                        SoundManager.Instance.PlaySFX("Soundresource_113");
+                        _isDrainingSoundPlaying = true;
+                    }
                     //스페이스에서 손 때면, 현 상태에서 게이지 감소하는 코드
                     float value = _progressBarFill.DrainAmount();
                     EffectManager.Instance.StartMentalEffect(value);
@@ -88,6 +101,12 @@ public class MentalEnterProcess : MonoBehaviour
                     SoundManager.Instance.StopSFX("Soundresource_029");
                     if (value <= 0)
                     {
+                        if (_isDrainingSoundPlaying)
+                        {
+                            SoundManager.Instance.StopSFX("Soundresource_112");
+                            SoundManager.Instance.StopSFX("Soundresource_113");
+                            _isDrainingSoundPlaying = false;
+                        }
                         FailEnter();
                     }
                 }
@@ -145,6 +164,7 @@ public class MentalEnterProcess : MonoBehaviour
         _startEnter = false;
         _isForceQuit = false;
         _soundPlayed = false;
+        _isDrainingSoundPlaying = false;
     }
 
     public void StartEnter(string mentalId)
@@ -175,6 +195,12 @@ public class MentalEnterProcess : MonoBehaviour
         _startEnter = false;
         _isForceQuit = false;
         _soundPlayed = false;
+        if (_isDrainingSoundPlaying)
+        {
+            SoundManager.Instance.StopSFX("Soundresource_112");
+            SoundManager.Instance.StopSFX("Soundresource_113");
+            _isDrainingSoundPlaying = false;
+        }
         //씬 이동
         // StartCoroutine(LoadSceneAsync(mentalInfo.destination));
         LoadSceneAsync(mentalInfo.destination).Forget();
