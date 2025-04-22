@@ -6939,7 +6939,7 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 3578631036437215652, guid: b71399de11bc84aa2a57982cf31c79bd,
         type: 3}
-      insertIndex: -1
+      insertIndex: 0
       addedObject: {fileID: 134018907}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b71399de11bc84aa2a57982cf31c79bd, type: 3}
@@ -7443,6 +7443,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _npc: {fileID: 240159857}
   _friendNpc: {fileID: 173248402}
+  _playerMaterial: []
   _freindMaterial: {fileID: 1484238195}
   _friendMaterial: {fileID: 285459957830487159, guid: 4f42fba5303b3ba40947177dac1c5c67,
     type: 3}
@@ -7458,6 +7459,8 @@ MonoBehaviour:
   _vhsVolume: {fileID: 5203486648497296325}
   _vhsObj: {fileID: 7548253789819266122}
   _duration: 5
+  _realText: {fileID: 0}
+  _fadeImage: {fileID: 0}
 --- !u!4 &551430209
 Transform:
   m_ObjectHideFlags: 0
@@ -15219,6 +15222,11 @@ PrefabInstance:
       propertyPath: m_Radius
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 5334265357545954534, guid: b71399de11bc84aa2a57982cf31c79bd,
+        type: 3}
+      propertyPath: m_Center.x
+      value: -0.21
+      objectReference: {fileID: 0}
     - target: {fileID: 7001910730849322798, guid: b71399de11bc84aa2a57982cf31c79bd,
         type: 3}
       propertyPath: eventIdList.Array.size
@@ -15234,7 +15242,7 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 3578631036437215652, guid: b71399de11bc84aa2a57982cf31c79bd,
         type: 3}
-      insertIndex: -1
+      insertIndex: 0
       addedObject: {fileID: 1756077922}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b71399de11bc84aa2a57982cf31c79bd, type: 3}

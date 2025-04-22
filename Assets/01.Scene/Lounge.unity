@@ -769,10 +769,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1801729625}
     m_Modifications:
+    - target: {fileID: 502610529430975552, guid: 8eaf893e5e2fabb4e88bc043b265a4af,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 6269163092774325288, guid: 8eaf893e5e2fabb4e88bc043b265a4af,
         type: 3}
       propertyPath: m_Name
       value: Prefab_Lounge_Kelp_04 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6269163092774325288, guid: 8eaf893e5e2fabb4e88bc043b265a4af,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 6650508448045586066, guid: 8eaf893e5e2fabb4e88bc043b265a4af,
         type: 3}
@@ -1072,9 +1082,9 @@ GameObject:
   m_Component:
   - component: {fileID: 59495273}
   - component: {fileID: 59495272}
-  - component: {fileID: 59495271}
   - component: {fileID: 59495270}
   - component: {fileID: 59495274}
+  - component: {fileID: 59495275}
   m_Layer: 0
   m_Name: FollowCam
   m_TagString: Untagged
@@ -1103,40 +1113,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &59495271
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 59495269}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ShowDebugText: 0
-  m_ShowCameraFrustum: 1
-  m_IgnoreTimeScale: 0
-  m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 2
-  m_BlendUpdateMethod: 1
-  m_DefaultBlend:
-    m_Style: 1
-    m_Time: 2
-    m_CustomCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-  m_CustomBlends: {fileID: 0}
-  m_CameraCutEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_CameraActivatedEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &59495272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1273,6 +1249,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46f48ba8f0947d144a11e4aef5f83632, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &59495275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 59495269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e501d18bb52cf8c40b1853ca4904654f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CollideAgainst:
+    serializedVersion: 2
+    m_Bits: 1
+  m_IgnoreTag: TransparentEnvironment
+  m_TransparentLayers:
+    serializedVersion: 2
+    m_Bits: 8192
+  m_MinimumDistanceFromTarget: 0.1
+  m_AvoidObstacles: 1
+  m_DistanceLimit: 0
+  m_MinimumOcclusionTime: 0
+  m_CameraRadius: 0.1
+  m_Strategy: 1
+  m_MaximumEffort: 4
+  m_SmoothingTime: 0.3
+  m_Damping: 0.5
+  m_DampingWhenOccluded: 0
+  m_OptimalTargetDistance: 0
 --- !u!1001 &69810016
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2770,7 +2776,7 @@ MonoBehaviour:
   m_HorizontalDamping: 0
   m_VerticalDamping: 0
   m_ScreenX: 0.5
-  m_ScreenY: 0.55
+  m_ScreenY: 0.7
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
   m_SoftZoneWidth: 0.8
@@ -3618,6 +3624,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1801729625}
     m_Modifications:
+    - target: {fileID: 5252098836981294940, guid: 7aeefe7508cafaa48a35e7ec985ca2f7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 6019885571819290445, guid: 7aeefe7508cafaa48a35e7ec985ca2f7,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -3687,6 +3698,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Prefab_Lounge_Kelp_03 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6395461824006448631, guid: 7aeefe7508cafaa48a35e7ec985ca2f7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7550,6 +7566,7 @@ Transform:
   - {fileID: 1655367710}
   - {fileID: 1644352927}
   - {fileID: 1801729625}
+  - {fileID: 1910360253}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &311565585
@@ -10204,6 +10221,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1644352927}
     m_Modifications:
+    - target: {fileID: 721436985644339652, guid: b71399de11bc84aa2a57982cf31c79bd,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 9a9cdc09111974e9da1f2c7234588d62, type: 2}
+    - target: {fileID: 2226079369067704991, guid: b71399de11bc84aa2a57982cf31c79bd,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1.15
+      objectReference: {fileID: 0}
     - target: {fileID: 3498447485585717768, guid: b71399de11bc84aa2a57982cf31c79bd,
         type: 3}
       propertyPath: m_Name
@@ -10858,10 +10885,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1801729625}
     m_Modifications:
+    - target: {fileID: 502610529430975552, guid: 8eaf893e5e2fabb4e88bc043b265a4af,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 6269163092774325288, guid: 8eaf893e5e2fabb4e88bc043b265a4af,
         type: 3}
       propertyPath: m_Name
       value: Prefab_Lounge_Kelp_04 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6269163092774325288, guid: 8eaf893e5e2fabb4e88bc043b265a4af,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 6650508448045586066, guid: 8eaf893e5e2fabb4e88bc043b265a4af,
         type: 3}
@@ -11676,6 +11713,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Prefab_Lounge_Kelp_05
       objectReference: {fileID: 0}
+    - target: {fileID: 529899082734625691, guid: b2885905e0796d344b4332c5f1a72b8a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 869551812125112609, guid: b2885905e0796d344b4332c5f1a72b8a,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -11740,6 +11782,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 935159834469765330, guid: b2885905e0796d344b4332c5f1a72b8a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16232,10 +16279,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1801729625}
     m_Modifications:
+    - target: {fileID: 502610529430975552, guid: 8eaf893e5e2fabb4e88bc043b265a4af,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 6269163092774325288, guid: 8eaf893e5e2fabb4e88bc043b265a4af,
         type: 3}
       propertyPath: m_Name
       value: Prefab_Lounge_Kelp_04
+      objectReference: {fileID: 0}
+    - target: {fileID: 6269163092774325288, guid: 8eaf893e5e2fabb4e88bc043b265a4af,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 6650508448045586066, guid: 8eaf893e5e2fabb4e88bc043b265a4af,
         type: 3}
@@ -30614,6 +30671,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1644352927}
     m_Modifications:
+    - target: {fileID: 721436985644339652, guid: b71399de11bc84aa2a57982cf31c79bd,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 9a9cdc09111974e9da1f2c7234588d62, type: 2}
+    - target: {fileID: 2226079369067704991, guid: b71399de11bc84aa2a57982cf31c79bd,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1.15
+      objectReference: {fileID: 0}
     - target: {fileID: 3498447485585717768, guid: b71399de11bc84aa2a57982cf31c79bd,
         type: 3}
       propertyPath: m_Name
@@ -35755,6 +35822,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1644352927}
     m_Modifications:
+    - target: {fileID: 721436985644339652, guid: b71399de11bc84aa2a57982cf31c79bd,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 9a9cdc09111974e9da1f2c7234588d62, type: 2}
     - target: {fileID: 3498447485585717768, guid: b71399de11bc84aa2a57982cf31c79bd,
         type: 3}
       propertyPath: m_Name
@@ -36913,6 +36985,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1801729625}
     m_Modifications:
+    - target: {fileID: 5252098836981294940, guid: 7aeefe7508cafaa48a35e7ec985ca2f7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 6019885571819290445, guid: 7aeefe7508cafaa48a35e7ec985ca2f7,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -36982,6 +37059,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Prefab_Lounge_Kelp_03
+      objectReference: {fileID: 0}
+    - target: {fileID: 6395461824006448631, guid: 7aeefe7508cafaa48a35e7ec985ca2f7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -37848,6 +37930,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1018956976}
     m_Modifications:
+    - target: {fileID: 721436985644339652, guid: b71399de11bc84aa2a57982cf31c79bd,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 9a9cdc09111974e9da1f2c7234588d62, type: 2}
+    - target: {fileID: 2226079369067704991, guid: b71399de11bc84aa2a57982cf31c79bd,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1.15
+      objectReference: {fileID: 0}
     - target: {fileID: 3498447485585717768, guid: b71399de11bc84aa2a57982cf31c79bd,
         type: 3}
       propertyPath: m_Name
@@ -39494,6 +39586,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4657666739459064522}
     m_Modifications:
+    - target: {fileID: 721436985644339652, guid: b71399de11bc84aa2a57982cf31c79bd,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 9a9cdc09111974e9da1f2c7234588d62, type: 2}
+    - target: {fileID: 2226079369067704991, guid: b71399de11bc84aa2a57982cf31c79bd,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1.15
+      objectReference: {fileID: 0}
     - target: {fileID: 3498447485585717768, guid: b71399de11bc84aa2a57982cf31c79bd,
         type: 3}
       propertyPath: m_Name
@@ -39847,6 +39949,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1644352927}
     m_Modifications:
+    - target: {fileID: 721436985644339652, guid: b71399de11bc84aa2a57982cf31c79bd,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 9a9cdc09111974e9da1f2c7234588d62, type: 2}
+    - target: {fileID: 2226079369067704991, guid: b71399de11bc84aa2a57982cf31c79bd,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2226079369067704991, guid: b71399de11bc84aa2a57982cf31c79bd,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1.1
+      objectReference: {fileID: 0}
     - target: {fileID: 3498447485585717768, guid: b71399de11bc84aa2a57982cf31c79bd,
         type: 3}
       propertyPath: m_Name
@@ -42533,6 +42650,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Prefab_Lounge_Kelp_05 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 529899082734625691, guid: b2885905e0796d344b4332c5f1a72b8a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 869551812125112609, guid: b2885905e0796d344b4332c5f1a72b8a,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -42597,6 +42719,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 935159834469765330, guid: b2885905e0796d344b4332c5f1a72b8a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -45642,9 +45769,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1801729625}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Kelp_Hang
-  m_TagString: Untagged
+  m_TagString: TransparentEnvironment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -45703,6 +45830,7 @@ Transform:
   m_Children:
   - {fileID: 1913778974}
   - {fileID: 59495273}
+  - {fileID: 1971336760}
   - {fileID: 1077513550}
   - {fileID: 1347486254}
   - {fileID: 991921675}
@@ -48035,6 +48163,59 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -3660027665234867084, guid: d997fe4f41477a646afc16b158d106f4, type: 3}
+--- !u!1 &1910360252
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1910360253}
+  - component: {fileID: 1910360254}
+  m_Layer: 0
+  m_Name: CameraCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1910360253
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910360252}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -9.69, y: 0, z: 6.03}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 306180683}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1910360254
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910360252}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 6.61, z: 5}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1910580662
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -48271,7 +48452,8 @@ MonoBehaviour:
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
-  m_Cameras: []
+  m_Cameras:
+  - {fileID: 1971336761}
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
@@ -48346,7 +48528,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 12279
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -49455,6 +49637,91 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1672117113669792182, guid: 63e45588ed651434bb1844121f3347b8,
     type: 3}
   m_PrefabInstance: {fileID: 1970279804}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1971336759
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1805329855}
+    m_Modifications:
+    - target: {fileID: 2929251135544058023, guid: 6925c14675c634d16aac107396b13bf9,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.115
+      objectReference: {fileID: 0}
+    - target: {fileID: 2929251135544058023, guid: 6925c14675c634d16aac107396b13bf9,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 2929251135544058023, guid: 6925c14675c634d16aac107396b13bf9,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.049
+      objectReference: {fileID: 0}
+    - target: {fileID: 2929251135544058023, guid: 6925c14675c634d16aac107396b13bf9,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.38779223
+      objectReference: {fileID: 0}
+    - target: {fileID: 2929251135544058023, guid: 6925c14675c634d16aac107396b13bf9,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.14114481
+      objectReference: {fileID: 0}
+    - target: {fileID: 2929251135544058023, guid: 6925c14675c634d16aac107396b13bf9,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.8559436
+      objectReference: {fileID: 0}
+    - target: {fileID: 2929251135544058023, guid: 6925c14675c634d16aac107396b13bf9,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.31153795
+      objectReference: {fileID: 0}
+    - target: {fileID: 2929251135544058023, guid: 6925c14675c634d16aac107396b13bf9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2929251135544058023, guid: 6925c14675c634d16aac107396b13bf9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2929251135544058023, guid: 6925c14675c634d16aac107396b13bf9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3756211509167542083, guid: 6925c14675c634d16aac107396b13bf9,
+        type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 1913778974}
+    - target: {fileID: 4415030017458498276, guid: 6925c14675c634d16aac107396b13bf9,
+        type: 3}
+      propertyPath: m_Name
+      value: Interaction Key Camera
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6925c14675c634d16aac107396b13bf9, type: 3}
+--- !u!4 &1971336760 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2929251135544058023, guid: 6925c14675c634d16aac107396b13bf9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1971336759}
+  m_PrefabAsset: {fileID: 0}
+--- !u!20 &1971336761 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 5179855188578095883, guid: 6925c14675c634d16aac107396b13bf9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1971336759}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1973775466
 GameObject:
@@ -53208,10 +53475,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1801729625}
     m_Modifications:
+    - target: {fileID: 502610529430975552, guid: 8eaf893e5e2fabb4e88bc043b265a4af,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 6269163092774325288, guid: 8eaf893e5e2fabb4e88bc043b265a4af,
         type: 3}
       propertyPath: m_Name
       value: Prefab_Lounge_Kelp_04 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6269163092774325288, guid: 8eaf893e5e2fabb4e88bc043b265a4af,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 6650508448045586066, guid: 8eaf893e5e2fabb4e88bc043b265a4af,
         type: 3}

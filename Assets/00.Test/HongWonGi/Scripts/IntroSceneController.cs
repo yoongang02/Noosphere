@@ -38,6 +38,14 @@ public class IntroSceneController : MonoBehaviour
         // _introTimeLine.p
        
     }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SceneManager.LoadSceneAsync("PrologueMap_real");
+        }
+    }
     public void OnLoadScene(string sceneName)
     {
         SceneManager.LoadSceneAsync(sceneName);
