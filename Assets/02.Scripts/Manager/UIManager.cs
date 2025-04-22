@@ -18,6 +18,7 @@ public class UIManager : Singleton<UIManager>
     public UIBase dialogueUI;
     public UIBase inputFieldUI;
     public GameObject cctvFrame;
+    public GameObject keyGuideUI;
     
     public GameObject inventoryIcon;
     
@@ -35,6 +36,14 @@ public class UIManager : Singleton<UIManager>
             CloseTopUI();
         }
         
+        if (DataManager.Instance._events["Event_A031"].isExecuted)
+        {
+            keyGuideUI.SetActive(false);
+        }
+        else
+        {
+            keyGuideUI.SetActive(true);
+        }
         
         if (IsAnyUIOpen())
         {
@@ -48,6 +57,7 @@ public class UIManager : Singleton<UIManager>
             if (PlayerInteract.Instance.GetComponent<MentalEnterProcess>().IsEnterNow())
             {
                 inventoryIcon.SetActive(false);
+                keyGuideUI.SetActive(false);
                 return;
             }
 
