@@ -56,7 +56,7 @@ public class InvestigateUI : UIBase
         }
 
         //스페이스 - 버튼 선택
-        if (_curSelectedBtn != null && Input.GetKeyDown(KeyCode.Space))
+        if (_curSelectedBtn != null && InputRouter.Instance.ConsumeSpace())
         {
             SoundManager.Instance.PlaySFX("Soundresource_037");
             if (_curSelectedBtn == _yesBtn)
