@@ -50,9 +50,12 @@ public class UIManager : Singleton<UIManager>
                 inventoryIcon.SetActive(false);
                 return;
             }
-            
-            //인벤토리 아이콘 활성화
-            inventoryIcon.SetActive(true);
+
+            if (FindObjectOfType<HintImage>() == null)
+            {
+                //인벤토리 아이콘 활성화
+                inventoryIcon.SetActive(true);
+            }
         }
     }
     
@@ -106,6 +109,14 @@ public class UIManager : Singleton<UIManager>
         uiStack.Push(ui);
         topUI = ui;
         ui.OnOpen(quizID);
+        if (quizID == "Quiz_007" && DataManager.Instance._quiz["Quiz_007"].isSolved)
+        {
+            return;
+        }
+        if (quizID == "Quiz_004" && DataManager.Instance._quiz["Quiz_004"].isSolved)
+        {
+            return;
+        }
         cctvFrame.SetActive(false);
         EscapeUI.Instance.Active();
     }

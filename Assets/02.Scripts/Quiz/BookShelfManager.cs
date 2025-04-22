@@ -41,9 +41,12 @@ public class BookShelfManager : UIBase
                 }
             }
             //트리거 삭제
+            if (PlayerInteract.Instance.curTrigger != null)
+            {
+                InteractionMarkManager.Instance.DisableInteractionMarkUI(PlayerInteract.Instance.curTrigger.transform);
+            }
             PlayerInteract.Instance.curTrigger = null;
             PlayerInteract.Instance.isInsideTrigger = false;
-            //PlayerInteract.Instance.HideInteractionMark();
             
             return;
         }

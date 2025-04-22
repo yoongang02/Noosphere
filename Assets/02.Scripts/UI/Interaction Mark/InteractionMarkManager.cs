@@ -93,10 +93,14 @@ public class InteractionMarkManager : Singleton<InteractionMarkManager>
     // 키 UI 비활성화
     public void DisableInteractionMarkUI(Transform trigger)
     {
-        Transform parent = trigger.GetComponentInChildren<InteractionMark>(true).transform;
-        if (parent != null)
+        if (trigger != null && (trigger.CompareTag("EventInteractionTrigger") ||
+                                trigger.CompareTag("EventMentalEnterTrigger")))
         {
-            parent.GetComponent<Animator>().SetTrigger("Hide");
+            Transform parent = trigger.GetComponentInChildren<InteractionMark>(true).transform;
+            if (parent != null)
+            {
+                parent.GetComponent<Animator>().SetTrigger("Hide");
+            }
         }
     }
 }
