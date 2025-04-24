@@ -70,6 +70,7 @@ public class DialogueManager : UIBase
     {
         base.OnOpen();
         _dialogueGroup.SetActive(true);
+        EscapeUI.Instance.DisActive();
     }
 
     public override void OnClose()

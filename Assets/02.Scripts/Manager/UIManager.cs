@@ -17,6 +17,7 @@ public class UIManager : Singleton<UIManager>
     public UIBase inventoryUI;
     public UIBase dialogueUI;
     public UIBase inputFieldUI;
+    public UIBase mirrorDialogueUI;
     public GameObject cctvFrame;
     public GameObject keyGuideUI;
     
@@ -31,8 +32,11 @@ public class UIManager : Singleton<UIManager>
         // ESC 버튼 입력 처리
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if(IsUIOpen(dialogueUI)) return;
-            if(IsUIOpen(investigateUI)) return;
+            if (IsUIOpen(dialogueUI) || IsUIOpen(investigateUI) || IsUIOpen(mirrorDialogueUI))
+            {
+                EscapeUI.Instance.DisActive();
+                return;
+            }
             CloseTopUI();
         }
         
