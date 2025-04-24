@@ -21562,6 +21562,7 @@ GameObject:
   m_Component:
   - component: {fileID: 680987932}
   - component: {fileID: 680987933}
+  - component: {fileID: 680987934}
   m_Layer: 0
   m_Name: TimeLineDirector
   m_TagString: Untagged
@@ -21601,8 +21602,85 @@ PlayableDirector:
   m_SceneBindings:
   - key: {fileID: -6570455609574305493, guid: 8575ce922b1cf2c4c987f9e576773a19, type: 2}
     value: {fileID: 1661194340}
+  - key: {fileID: -1592269494397991021, guid: 8575ce922b1cf2c4c987f9e576773a19, type: 2}
+    value: {fileID: 680987934}
   m_ExposedReferences:
     m_References: []
+--- !u!114 &680987934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 680987931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: 58514700c12e5fc4892470cc94982526, type: 2}
+    - {fileID: 11400000, guid: 5d82c52da97af6b4a98e0da48d38d63b, type: 2}
+    - {fileID: 11400000, guid: 1329dc8cc7025eb439b828e51c5fa079, type: 2}
+    - {fileID: 11400000, guid: abe2ba217df8eb3419b6806251b889e1, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: StartPlayerAnim
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: IsWalk
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: EndPlayerAnim
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: IsWalk
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: StartPlayerAnim
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Interact
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: EndPlayerAnim
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Interact
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1001 &688744877
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -48897,7 +48975,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1661194337}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: -1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: -1}
   m_LocalPosition: {x: -0.21000195, y: 0.02114534, z: 6.059998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -54315,7 +54393,7 @@ Transform:
   m_GameObject: {fileID: 1817668855}
   serializedVersion: 2
   m_LocalRotation: {x: 0.16040896, y: 0.6012919, z: -0.3625685, w: 0.69372994}
-  m_LocalPosition: {x: -16.085842, y: 1.6907806, z: 1.2696356}
+  m_LocalPosition: {x: 4.3696002e-10, y: -0.00000022665742, z: 0.00000007395702}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -54601,7 +54679,7 @@ Transform:
   m_GameObject: {fileID: 1839213306}
   serializedVersion: 2
   m_LocalRotation: {x: 0.14047402, y: 0.6114295, z: -0.34519815, w: 0.69803965}
-  m_LocalPosition: {x: -16.085842, y: 1.6907806, z: 1.2696356}
+  m_LocalPosition: {x: 4.3696002e-10, y: -0.00000022665742, z: 0.00000007395702}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
