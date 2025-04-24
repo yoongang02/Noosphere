@@ -6,6 +6,7 @@ using UnityEngine;
 public class LoungeKeyController : MonoBehaviour
 {
     [SerializeField] private GameObject keyTriggerObject;
+    [SerializeField] private GameObject keyLight;
     [SerializeField] private List<GameObject> roomTriggerObjects = new List<GameObject>();
 
     private void OnEnable()
@@ -13,10 +14,12 @@ public class LoungeKeyController : MonoBehaviour
         if (DataManager.Instance._events["Event_C063"].isExecuted)
         {
             keyTriggerObject.SetActive(true);
+            keyLight.SetActive(true);
         }
         else
         {
             keyTriggerObject.SetActive(false);
+            keyLight.SetActive(false);
         }
 
         if (DataManager.Instance._events["Event_C063"].isExecuted)
