@@ -10,7 +10,6 @@ public class InputFieldManager : UIBase
     [Header("Input Field 변수")]
     public bool isAnswer = false;
     [SerializeField] private GameObject _inputFieldUI;
-    [SerializeField] private TextMeshProUGUI _questionText;
     [SerializeField] private TMP_InputField _inputText;
     private string _currentAnswer;
     private string _currentID;
@@ -53,8 +52,6 @@ public class InputFieldManager : UIBase
             Debug.LogWarning($"ID {id}에 해당하는 InputFieldStructure를 찾을 수 없습니다.");
             return;
         }
-
-        _questionText.text = structure.questionText;
         _currentAnswer = structure.correctAnswer;
         InitInputField();
         

@@ -82,15 +82,15 @@ public class InvestigateUI : UIBase
     
     public void HoverYesBtn()
     {
-        SetButtonSelected(_yesBtn, UnityExtension.HexColor(GreenColor));
-        SetButtonSelected(_noBtn, UnityExtension.HexColor(WhiteColor));
+        SetImgSelected(_yesBtn, UnityExtension.HexColor(SkyblueColor));
+        SetImgSelected(_noBtn, UnityExtension.HexColor(WhiteColor));
         _curSelectedBtn = _yesBtn;
     }
 
     public void HoverNoBtn()
     {
-        SetButtonSelected(_noBtn,UnityExtension.HexColor(GreenColor));
-        SetButtonSelected(_yesBtn,UnityExtension.HexColor(WhiteColor));
+        SetImgSelected(_noBtn,UnityExtension.HexColor(SkyblueColor));
+        SetImgSelected(_yesBtn,UnityExtension.HexColor(WhiteColor));
         _curSelectedBtn = _noBtn;
     }
 
