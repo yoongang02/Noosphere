@@ -64,10 +64,9 @@ public class VolumeByDistance : MonoBehaviour
         {
             //끝까지 도달했을 때
             Debug.Log("끝에 도달");
-            // EffectManager.Instance.OnEffectEnd?.Invoke();
+            EffectManager.Instance.OnEffectEnd?.Invoke();
         }
 
-        // targetLight.intensity = Mathf.Lerp(minIntensity, maxIntensity, reversedT);
         if (_vignette != null)
         {
             Color originalColor = _vignette.color.value;
