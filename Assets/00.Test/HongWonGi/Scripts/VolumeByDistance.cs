@@ -34,6 +34,8 @@ public class VolumeByDistance : MonoBehaviour
         {
             Debug.Log("volume효과 존재");
         }
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        _playerTrans = player.transform;
         _mainCam.renderPostProcessing = true;
         _overlayCam.SetActive(true);
     }
