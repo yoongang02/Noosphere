@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 public class OnlyForTest : Singleton<OnlyForTest>
 {
     //스테이지1 빠른 테스트를 위한 임시 마스터 코드
+    private bool _prologuePass = false;
+    private bool _stage1Pass = false;
+    private bool _stage2Pass = false;
 
     void Update()
     {
@@ -17,18 +20,29 @@ public class OnlyForTest : Singleton<OnlyForTest>
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            Debug.Log("스테이지1로 바로 이동");
+            Debug.LogWarning("스테이지1로 바로 이동");
+            SoundManager.Instance.StopAllSFX();
             GoToStage1();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
+            Debug.LogWarning("스테이지2로 바로 이동");
+            SoundManager.Instance.StopAllSFX();
             GoToStage2();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            Debug.LogWarning("최종 스테이지로 바로 이동");
+            SoundManager.Instance.StopAllSFX();
+            GoToFinal();
         }
     }
 
     void GoToStage1()
     {
+        UIManager.Instance.CloseAllUI();
         //이벤트 모두 실행
         foreach (var _event in DataManager.Instance._events)
         {
@@ -52,14 +66,11 @@ public class OnlyForTest : Singleton<OnlyForTest>
                 }
             }
         }
-
+        InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_011"]);
         //퀴즈 모두 정답
         DataManager.Instance._quiz["Quiz_001"].isSolved = true;
         //서브 증거물
         DataManager.Instance._evidences["Evidence_008"].accessCnt = 3;
-
-        DialogueManager.Instance.OnDialogueEnd?.Invoke();
-        UIManager.Instance.CloseAllUI();
 
         //씬 스테이지1로 이동
         SceneManager.LoadScene("Lounge");
@@ -69,42 +80,48 @@ public class OnlyForTest : Singleton<OnlyForTest>
         EventManagerYKM.Instance.nextEventID = "";
 
         //플레이어 찾기
-        FindObjectOfType<PlayerInteract>().transform.position = new Vector3(-7, 1, 3);
+        FindObjectOfType<PlayerInteract>().transform.position = new Vector3(0, 0.7f, 5);
         FindObjectOfType<PlayerInteract>().isInsideTrigger = false;
         FindObjectOfType<PlayerInteract>().curTrigger = null;
-        EventManagerYKM.Instance.nextEventID = "";
+
+        _prologuePass = true;
     }
     
     void GoToStage2()
     {
-        //이벤트 모두 실행
-        foreach (var _event in DataManager.Instance._events)
+        if (!_prologuePass)
         {
-            string chapterIndex = _event.Key;
-            if (chapterIndex[6] == 'A')
+            //이벤트 모두 실행
+            foreach (var _event in DataManager.Instance._events)
             {
-                _event.Value.isExecuted = true;
-                //증거물 모두 수집
-                if (!string.IsNullOrEmpty(_event.Value.evidenceId))
+                string chapterIndex = _event.Key;
+                if (chapterIndex[6] == 'A')
                 {
-                    EvidenceStructure evidence = DataManager.Instance._evidences[_event.Value.evidenceId];
+                    _event.Value.isExecuted = true;
+                    //증거물 모두 수집
+                    if (!string.IsNullOrEmpty(_event.Value.evidenceId))
+                    {
+                        EvidenceStructure evidence = DataManager.Instance._evidences[_event.Value.evidenceId];
 
-                    if (evidence.acquisitionType == 'Y')
-                    {
-                        InventoryManager.Instance.AddEvidence(evidence);
-                    }
-                    else if (evidence.acquisitionType == 'N')
-                    {
-                        evidence.accessCnt = 3;
+                        if (evidence.acquisitionType == 'Y')
+                        {
+                            InventoryManager.Instance.AddEvidence(evidence);
+                        }
+                        else if (evidence.acquisitionType == 'N')
+                        {
+                            evidence.accessCnt = 3;
+                        }
                     }
                 }
             }
+            InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_011"]);
+            //퀴즈 모두 정답
+            DataManager.Instance._quiz["Quiz_001"].isSolved = true;
+            //서브 증거물
+            DataManager.Instance._evidences["Evidence_008"].accessCnt = 3;
+            
+            _prologuePass = true;
         }
-
-        //퀴즈 모두 정답
-        DataManager.Instance._quiz["Quiz_001"].isSolved = true;
-        //서브 증거물
-        DataManager.Instance._evidences["Evidence_008"].accessCnt = 3;
         
         //이벤트 모두 실행
         foreach (var _event in DataManager.Instance._events)
@@ -141,16 +158,94 @@ public class OnlyForTest : Singleton<OnlyForTest>
         UIManager.Instance.CloseAllUI();
 
         //씬 스테이지1로 이동
-        SceneManager.LoadScene("Stage1Map_real");
+        SceneManager.LoadScene("Lounge");
         //현재 스테이지 변경
         EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_104;
         EventManagerYKM.Instance.currentEventID = "Event_C063";
         EventManagerYKM.Instance.nextEventID = "";
 
         //플레이어 찾기
-        FindObjectOfType<PlayerInteract>().transform.position = new Vector3(-7.61f, 0f, 4.96f);
+        FindObjectOfType<PlayerInteract>().transform.position = new Vector3(-7f, 0.7f, 5f);
         FindObjectOfType<PlayerInteract>().isInsideTrigger = false;
         FindObjectOfType<PlayerInteract>().curTrigger = null;
         EventManagerYKM.Instance.nextEventID = "";
+
+        _stage1Pass = true;
+    }
+
+    void GoToFinal()
+    {
+        if (!_prologuePass)
+        {
+            //이벤트 모두 실행
+            foreach (var _event in DataManager.Instance._events)
+            {
+                string chapterIndex = _event.Key;
+                if (chapterIndex[6] == 'A')
+                {
+                    _event.Value.isExecuted = true;
+                    //증거물 모두 수집
+                    if (!string.IsNullOrEmpty(_event.Value.evidenceId))
+                    {
+                        EvidenceStructure evidence = DataManager.Instance._evidences[_event.Value.evidenceId];
+
+                        if (evidence.acquisitionType == 'Y')
+                        {
+                            InventoryManager.Instance.AddEvidence(evidence);
+                        }
+                        else if (evidence.acquisitionType == 'N')
+                        {
+                            evidence.accessCnt = 3;
+                        }
+                    }
+                }
+            }
+            InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_011"]);
+            //퀴즈 모두 정답
+            DataManager.Instance._quiz["Quiz_001"].isSolved = true;
+            //서브 증거물
+            DataManager.Instance._evidences["Evidence_008"].accessCnt = 3;
+            
+            _prologuePass = true;
+        }
+
+        if (!_stage1Pass)
+        {
+            //이벤트 모두 실행
+            foreach (var _event in DataManager.Instance._events)
+            {
+                string chapterIndex = _event.Key;
+                if (chapterIndex[6] == 'B')
+                {
+                    _event.Value.isExecuted = true;
+                    //증거물 모두 수집
+                    if (!string.IsNullOrEmpty(_event.Value.evidenceId))
+                    {
+                        EvidenceStructure evidence = DataManager.Instance._evidences[_event.Value.evidenceId];
+
+                        if (evidence.acquisitionType == 'Y')
+                        {
+                            InventoryManager.Instance.AddEvidence(evidence);
+                        }
+                        else if (evidence.acquisitionType == 'N')
+                        {
+                            evidence.accessCnt = 3;
+                        }
+                    }
+                }
+            }
+
+            //퀴즈 모두 정답
+            DataManager.Instance._quiz["Quiz_003"].isSolved = true;
+            DataManager.Instance._quiz["Quiz_004"].isSolved = true;
+            DataManager.Instance._quiz["Quiz_005"].isSolved = true;
+            DataManager.Instance._quiz["Quiz_006"].isSolved = true;
+            DataManager.Instance._quiz["Quiz_007"].isSolved = true;
+
+            DialogueManager.Instance.OnDialogueEnd?.Invoke();
+            UIManager.Instance.CloseAllUI();
+
+            _stage1Pass = true;
+        }
     }
 }

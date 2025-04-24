@@ -437,6 +437,7 @@ public class RadioManager : UIBase
 
     private async UniTask GetMirrorPiece()
     {
+        /*
         UIManager.Instance.OpenUI(UIManager.Instance.investigateUI, DataManager.Instance._evidences["Evidence_023"]);
         //yes, no 선택 기다리기
         await WaitForInvestigateEndAsync();
@@ -456,7 +457,10 @@ public class RadioManager : UIBase
             //no라면
             Debug.LogWarning("Investigate UI에서 NO를 선택함.");
         }
-
+        */
+        DialogueManager.Instance.SetDialogue("Dialogue_0065");
+        DataManager.Instance._evidences["Evidence_023"].AcquireEvidence();
         MirrorPuzzleManager.Instance.GetMirrorPiece("Evidence_023");
+        await UniTask.Yield();
     }
 }
