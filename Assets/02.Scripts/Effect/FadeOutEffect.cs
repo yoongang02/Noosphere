@@ -17,7 +17,8 @@ public class FadeOutEffect : MonoBehaviour
             .SetEase(Ease.InOutQuad).OnComplete(()=>
             {
                 EffectManager.Instance.OnEffectEnd?.Invoke();
-                SceneManager.LoadScene(_sceneName);
+                if (!string.IsNullOrEmpty(_sceneName))
+                    SceneManager.LoadScene(_sceneName);
             });
         // todo 최종스테이지로
     }
