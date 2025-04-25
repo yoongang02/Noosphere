@@ -41376,10 +41376,12 @@ PlayableDirector:
     value: {fileID: 1773271734}
   - key: {fileID: -7781230306949241800, guid: a34e52afea391c348ad33188f22f4e66, type: 2}
     value: {fileID: 0}
-  - key: {fileID: 7108628272922614593, guid: ce39826ac31b6b342bb066351ccce1db, type: 2}
-    value: {fileID: 1292506251}
-  - key: {fileID: -936496398881599387, guid: ce39826ac31b6b342bb066351ccce1db, type: 2}
+  - key: {fileID: 6165746215500941347, guid: ce39826ac31b6b342bb066351ccce1db, type: 2}
     value: {fileID: 1267191659}
+  - key: {fileID: 8897903625999600010, guid: ce39826ac31b6b342bb066351ccce1db, type: 2}
+    value: {fileID: 1267191659}
+  - key: {fileID: 5639686905532121382, guid: ce39826ac31b6b342bb066351ccce1db, type: 2}
+    value: {fileID: 212550016}
   m_ExposedReferences:
     m_References: []
 --- !u!114 &1267191659
@@ -41399,8 +41401,6 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 58514700c12e5fc4892470cc94982526, type: 2}
     - {fileID: 11400000, guid: ee382337ada1c32418612d4309ad9bc0, type: 2}
     - {fileID: 11400000, guid: 1329dc8cc7025eb439b828e51c5fa079, type: 2}
-    - {fileID: 11400000, guid: 5d82c52da97af6b4a98e0da48d38d63b, type: 2}
-    - {fileID: 0}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -41413,34 +41413,6 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: IsRunning
-            m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 825619516}
-          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
-          m_MethodName: EndPlayerAnim
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: IsRunning
-            m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 825619516}
-          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
-          m_MethodName: StartPlayerAnim
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
             m_StringArgument: IsPushing
             m_BoolArgument: 0
           m_CallState: 2
@@ -41459,7 +41431,19 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
     - m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 825619516}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: StartAnim
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Doctor:IsPushed
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1001 &1269324347
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -42551,7 +42535,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1292506249}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
