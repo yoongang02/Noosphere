@@ -61,7 +61,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
             }
 
             // Z키를 이용한 증거물 사용하기
-            if(canInteract && canUse && Input.GetKeyDown(KeyCode.Z))
+            if(canInteract && canUse && Input.GetKeyDown(KeyCode.Q))
             {
                 if (OnEvidenceUse != null)
                 {

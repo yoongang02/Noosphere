@@ -70,7 +70,6 @@ public class DialogueManager : UIBase
     {
         base.OnOpen();
         _dialogueGroup.SetActive(true);
-        EscapeUI.Instance.DisActive();
     }
 
     public override void OnClose()
@@ -90,6 +89,7 @@ public class DialogueManager : UIBase
         {
             _curDialogue = DataManager.Instance._dialogue[id];
             _currentDialogueId = id;
+            EscapeUI.Instance.DisActive();
             UIManager.Instance.OpenUI(UIManager.Instance.dialogueUI);
             
             if (_curDialogue.triggerType == "interact" && _curDialogue.interactionType == "npc")
@@ -162,7 +162,11 @@ public class DialogueManager : UIBase
                 if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
                 {
                     await Task.Delay(100);
-                    PlayerInteract.Instance.curTrigger.OnTriggerEnter(PlayerInteract.Instance.GetComponent<CapsuleCollider>());
+                    if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
+                    {
+                        if(_curDialogue.dialogueId == "Dialogue_0065") return;
+                        PlayerInteract.Instance.curTrigger.OnTriggerEnter(PlayerInteract.Instance.GetComponent<CapsuleCollider>());
+                    }
                 }
             }
         }
@@ -237,7 +241,10 @@ public class DialogueManager : UIBase
                 SoundManager.Instance.PlayLoopingSound("Soundresource_075");
                 break;
         }
-
+    }
+    public string GetCurDialogueId()
+    {
+        return _currentDialogueId;
     }
 }
 
