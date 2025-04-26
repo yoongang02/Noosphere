@@ -16,6 +16,10 @@ public class EscapeUI : Singleton<EscapeUI>, IPointerClickHandler
             {
                 FindObjectOfType<HintImage>().gameObject.SetActive(false);
                 DisActive();
+                UIManager.Instance.cctvFrame.SetActive(true);
+                UIManager.Instance.inventoryIcon.SetActive(true);
+                UIManager.Instance.UnLockPlayer();
+                
                 return;
             }
             UIManager.Instance.CloseTopUI();

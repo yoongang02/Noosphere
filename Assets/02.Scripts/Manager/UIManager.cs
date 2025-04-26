@@ -44,6 +44,14 @@ public class UIManager : Singleton<UIManager>
             CloseTopUI();
         }
         
+        if (FindObjectOfType<MirrorDialogueManager>() != null)
+        {
+            if (FindObjectOfType<MirrorDialogueManager>().IsTopUI())
+            {
+                cctvFrame.SetActive(true);
+            }
+        }
+        
         if (DataManager.Instance._events["Event_A031"].isExecuted)
         {
             keyGuideUI.SetActive(false);
@@ -53,10 +61,27 @@ public class UIManager : Singleton<UIManager>
             keyGuideUI.SetActive(true);
         }
 
-        if (dialogueUI.IsTopUI() && EventManagerYKM.Instance.currentEventID == "Event_B044" &&
-            DialogueManager.Instance.GetCurDialogueId() == "Dialogue_0065")
+        if (dialogueUI.IsTopUI())
         {
-            UIManager.Instance.cctvFrame.SetActive(true);
+            // 책장에서 거울 조각 습득 시 cctv frame
+            if (EventManagerYKM.Instance.currentEventID == "Event_B044" &&
+                DialogueManager.Instance.GetCurDialogueId() == "Dialogue_0065")
+            {
+                cctvFrame.SetActive(true);
+            }
+            
+            if (EventManagerYKM.Instance.currentEventID == "Event_B065" &&
+                DialogueManager.Instance.GetCurDialogueId() == "Dialogue_0031")
+            {
+                cctvFrame.SetActive(true);
+            }
+            
+            if (EventManagerYKM.Instance.currentEventID == "Event_B066" &&
+                DialogueManager.Instance.GetCurDialogueId() == "Dialogue_0032")
+            {
+                cctvFrame.SetActive(true);
+            }
+            
         }
         
         if (IsAnyUIOpen())
