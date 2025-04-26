@@ -34,8 +34,12 @@ public class UIManager : Singleton<UIManager>
         {
             if (IsUIOpen(dialogueUI) || IsUIOpen(investigateUI) || IsUIOpen(mirrorDialogueUI))
             {
-                EscapeUI.Instance.DisActive();
                 return;
+            }
+
+            if (FindObjectOfType<MirrorDialogueManager>() != null)
+            {
+                if(FindObjectOfType<MirrorDialogueManager>().IsTopUI()) return;
             }
             CloseTopUI();
         }
@@ -47,6 +51,12 @@ public class UIManager : Singleton<UIManager>
         else
         {
             keyGuideUI.SetActive(true);
+        }
+
+        if (dialogueUI.IsTopUI() && EventManagerYKM.Instance.currentEventID == "Event_B044" &&
+            DialogueManager.Instance.GetCurDialogueId() == "Dialogue_0065")
+        {
+            UIManager.Instance.cctvFrame.SetActive(true);
         }
         
         if (IsAnyUIOpen())
@@ -82,6 +92,10 @@ public class UIManager : Singleton<UIManager>
         LockPlayer();
         uiStack.Push(ui);
         topUI = ui;
+        if (IsUIOpen(dialogueUI) || IsUIOpen(mirrorDialogueUI))
+        {
+            EscapeUI.Instance.DisActive();
+        }
         ui.OnOpen();
     }
 
@@ -99,7 +113,6 @@ public class UIManager : Singleton<UIManager>
             //증거물 상세보기가 열려있는 경우, 조사 UI는 열려도, 위에 보이지 않기 때문에
             CloseTopUI();
         }
-        
         
         // 스택에 추가하고 UI를 활성화
         // 상호작용 금지
@@ -132,6 +145,11 @@ public class UIManager : Singleton<UIManager>
             return;
         }
         cctvFrame.SetActive(false);
+        if(dialogueUI.IsTopUI()) return;
+        if (FindObjectOfType<MirrorDialogueManager>() != null)
+        {
+            if(FindObjectOfType<MirrorDialogueManager>().IsTopUI()) return;
+        }
         EscapeUI.Instance.Active();
     }
     public void CloseTopUI()

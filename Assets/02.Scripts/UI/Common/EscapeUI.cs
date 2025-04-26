@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Debug = NooSphere.Debug;
 
 public class EscapeUI : Singleton<EscapeUI>, IPointerClickHandler
 {
@@ -11,6 +12,12 @@ public class EscapeUI : Singleton<EscapeUI>, IPointerClickHandler
         //클릭한 오브젝트가 챕터인지 파악
         if (eventData.button == PointerEventData.InputButton.Left)
         {
+            if (FindObjectOfType<HintImage>() != null)
+            {
+                FindObjectOfType<HintImage>().gameObject.SetActive(false);
+                DisActive();
+                return;
+            }
             UIManager.Instance.CloseTopUI();
             _escapeBtn.SetActive(false);
         }
@@ -18,11 +25,13 @@ public class EscapeUI : Singleton<EscapeUI>, IPointerClickHandler
 
     public void Active()
     {
+        Debug.LogWarning("나가기 버튼 활성화");
         _escapeBtn.SetActive(true);
     }
     
     public void DisActive()
     {
+        Debug.LogWarning("나가기 버튼 비활성화");
         _escapeBtn.SetActive(false);
     }
 }

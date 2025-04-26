@@ -9,6 +9,17 @@ public class LoungeKeyController : MonoBehaviour
     [SerializeField] private GameObject keyLight;
     [SerializeField] private List<GameObject> roomTriggerObjects = new List<GameObject>();
 
+    private void Update()
+    {
+        if (DataManager.Instance._events["Event_C064"].isExecuted)
+        {
+            foreach (var room in roomTriggerObjects)
+            {
+                room.SetActive(false);
+            }
+        }
+    }
+
     private void OnEnable()
     {
         if (DataManager.Instance._events["Event_C063"].isExecuted)
@@ -20,21 +31,6 @@ public class LoungeKeyController : MonoBehaviour
         {
             keyTriggerObject.SetActive(false);
             keyLight.SetActive(false);
-        }
-
-        if (DataManager.Instance._events["Event_C063"].isExecuted)
-        {
-            foreach (var room in roomTriggerObjects)
-            {
-                room.SetActive(false);
-            }
-        }
-        else
-        {
-            foreach (var room in roomTriggerObjects)
-            {
-                room.SetActive(true);
-            }
         }
     }
 }

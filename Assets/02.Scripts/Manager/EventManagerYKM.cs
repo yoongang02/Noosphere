@@ -309,6 +309,11 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     else
                     {
                         await QuizManager.Instance.DoWrongResult(quizStructure);
+                        if (quizStructure.quizId == "Quiz_009")
+                        {
+                            _isQuizSolved = true;
+                            return;
+                        }
                         _isQuizSolved = false;
                     }
                 }
@@ -377,6 +382,13 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 evidenceID == "Evidence_022")
             {
                 DialogueManager.Instance.SetDialogue("Dialogue_0065");
+                if (evidenceID == "Evidence_020")
+                {
+                    Debug.LogWarning("카메라 설정 overlay로 변경.");
+                    PlayerController.Instance._uiCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                    InventoryManager.Instance.GetComponent<InventoryNavigator>().OnClose();
+                    
+                }
                 _evidence.AcquireEvidence();
                 MirrorPuzzleManager.Instance.GetMirrorPiece(evidenceID);
                 await UniTask.Yield();

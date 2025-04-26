@@ -19,6 +19,7 @@ public class HintImage : MonoBehaviour
       if (Input.GetKeyDown(KeyCode.Escape))
       {
          gameObject.SetActive(false);
+         EscapeUI.Instance.DisActive();
          UIManager.Instance.cctvFrame.SetActive(true);
          UIManager.Instance.inventoryIcon.SetActive(true);
          UIManager.Instance.UnLockPlayer();

@@ -166,6 +166,7 @@ public class BookShelfManager : UIBase
         }
         */
         DialogueManager.Instance.SetDialogue("Dialogue_0065");
+        UIManager.Instance.cctvFrame.SetActive(true);
         DataManager.Instance._evidences["Evidence_019"].AcquireEvidence();
         MirrorPuzzleManager.Instance.GetMirrorPiece("Evidence_019");
         
