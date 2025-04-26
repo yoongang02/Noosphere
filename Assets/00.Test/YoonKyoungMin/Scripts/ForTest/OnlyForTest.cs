@@ -43,6 +43,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
     void GoToStage1()
     {
         UIManager.Instance.CloseAllUI();
+        EventManagerYKM.Instance.nextEventID = "";
         //이벤트 모두 실행
         foreach (var _event in DataManager.Instance._events)
         {
@@ -85,12 +86,14 @@ public class OnlyForTest : Singleton<OnlyForTest>
         FindObjectOfType<PlayerInteract>().curTrigger = null;
 
         _prologuePass = true;
+        EventManagerYKM.Instance.curChapterInfo = EventManagerYKM.ChapterInfo.Stage1;
     }
     
     void GoToStage2()
     {
         if (!_prologuePass)
         {
+            EventManagerYKM.Instance.nextEventID = "";
             //이벤트 모두 실행
             foreach (var _event in DataManager.Instance._events)
             {
@@ -153,6 +156,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
         DataManager.Instance._quiz["Quiz_005"].isSolved = true;
         DataManager.Instance._quiz["Quiz_006"].isSolved = true;
         DataManager.Instance._quiz["Quiz_007"].isSolved = true;
+        DataManager.Instance._quiz["Quiz_009"].isSolved = true;
 
         DialogueManager.Instance.OnDialogueEnd?.Invoke();
         UIManager.Instance.CloseAllUI();
@@ -162,6 +166,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
         //현재 스테이지 변경
         EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_104;
         EventManagerYKM.Instance.currentEventID = "Event_C063";
+        DataManager.Instance._events["Event_C063"].isExecuted = true;
         EventManagerYKM.Instance.nextEventID = "";
 
         //플레이어 찾기
@@ -171,6 +176,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
         EventManagerYKM.Instance.nextEventID = "";
 
         _stage1Pass = true;
+        EventManagerYKM.Instance.curChapterInfo = EventManagerYKM.ChapterInfo.Stage2;
     }
 
     void GoToFinal()
@@ -241,6 +247,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
             DataManager.Instance._quiz["Quiz_005"].isSolved = true;
             DataManager.Instance._quiz["Quiz_006"].isSolved = true;
             DataManager.Instance._quiz["Quiz_007"].isSolved = true;
+            DataManager.Instance._quiz["Quiz_009"].isSolved = true;
 
             DialogueManager.Instance.OnDialogueEnd?.Invoke();
             UIManager.Instance.CloseAllUI();
