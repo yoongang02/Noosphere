@@ -253,7 +253,7 @@ public class MentalEnterProcess : MonoBehaviour
 
         if (EventManagerYKM.Instance.currentEventID == "Event_B057")
         {
-            EventManagerYKM.Instance.nextEventID = "Event_B057";
+            //EventManagerYKM.Instance.nextEventID = "Event_B057";
             DataManager.Instance._events["Event_B057"].isExecuted = false;
         }
         

@@ -12,6 +12,12 @@ public class EscapeUI : Singleton<EscapeUI>, IPointerClickHandler
         //클릭한 오브젝트가 챕터인지 파악
         if (eventData.button == PointerEventData.InputButton.Left)
         {
+            if (FindObjectOfType<HintImage>() != null)
+            {
+                FindObjectOfType<HintImage>().gameObject.SetActive(false);
+                DisActive();
+                return;
+            }
             UIManager.Instance.CloseTopUI();
             _escapeBtn.SetActive(false);
         }

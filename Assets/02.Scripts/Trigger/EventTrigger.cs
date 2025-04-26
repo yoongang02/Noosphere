@@ -60,6 +60,18 @@ public class EventTrigger : MonoBehaviour
                     {
                         GameObject interactionKey = Instantiate(InteractionMarkManager.Instance._openDoorKeyPrefab);
                         interactionKey.transform.SetParent(parent, false);
+                        
+                        if (gameObject.name == "EventInteractionTrigger - Experiment Room" && DataManager.Instance._quiz["Quiz_003"].isSolved)
+                        {
+                            // 문 열기 액션 추가
+                            PlayerInteract.Instance.OnInteract = null;
+                            PlayerInteract.Instance.OnInteract += () =>
+                            {
+                                EventManagerYKM.Instance.ExecuteEvent("Event_B036").Forget();
+                            };
+                            parent.gameObject.SetActive(true);
+                            return;
+                        }
                         // 문 열기 액션 추가
                         PlayerInteract.Instance.OnInteract = null;
                         PlayerInteract.Instance.OnInteract += () =>
@@ -137,55 +149,55 @@ public class EventTrigger : MonoBehaviour
             {
                 _curEvent = DataManager.Instance._events[eventID];
                 canExecute = true;
-                break;
-            }
-        }
-
-        if (canExecute && PlayerInteract.Instance.canInteract && PlayerController.Instance.canMove && PlayerController.Instance.GetComponent<MentalEnterProcess>().CanEnterProcess())
-        {
-            string[] results = EventManagerYKM.Instance.CheckConditions(_curEvent);
-
-            //결과 실행
-            if (results != null && results.Length > 0)
-            {
-                if (!EventManagerYKM.Instance.IsConditionMet() &&
-                    string.IsNullOrEmpty(_curEvent.conditionFalseResults[0]))
+                
+                if (canExecute && PlayerInteract.Instance.canInteract && PlayerController.Instance.canMove && PlayerController.Instance.GetComponent<MentalEnterProcess>().CanEnterProcess())
                 {
-                    Debug.LogWarning($"{_curEvent.eventId}는 조건을 만족하지 못했으나 conditionFalseResult도 존재하지 않아 할당하지 않음");
-                    return;
-                }
-                //트리거 종류에 따라 할당하기
-                switch (tag)
-                {
-                    case "EventTrigger":
-                        //바로 실행 메소드 호출
-                        EventManagerYKM.Instance.ExecuteEvent(_curEvent.eventId).Forget();
-                        Debug.Log("바로 실행");
-                        break;
-                    case "EventInteractionTrigger":
-                        //플레이어에게 ? 띄우기
-                        PlayerInteract.Instance.OnInteract = null;
-                        Debug.Log("OnInteract 할당");
-                        //플레이어의 OnInteract 액션에 실행 메소드 할당
-                        PlayerInteract.Instance.OnInteract += () =>
+                    string[] results = EventManagerYKM.Instance.CheckConditions(_curEvent);
+
+                    //결과 실행
+                    if (results != null && results.Length > 0)
+                    {
+                        if (!EventManagerYKM.Instance.IsConditionMet() &&
+                            string.IsNullOrEmpty(_curEvent.conditionFalseResults[0]))
                         {
-                            EventManagerYKM.Instance.ExecuteEvent(_curEvent.eventId).Forget();
-                            InteractionMarkManager.Instance.DisableInteractionMarkUI(transform);
-                        };
-                        InteractionMarkManager.Instance.EnableInteractionMarkUI(this.transform, _curEvent.eventId);
-                        break;
-                    case "EventMentalEnterTrigger":
-                        //플레이어에게 ? 띄우기
-                        PlayerInteract.Instance.OnMentalInteract = null;
-                        Debug.Log("OnMentalInteract에 할당");
-                        //정신세계 진입 프로세스의 OnInteract 액션에 실행 메소드 할당
-                        PlayerInteract.Instance.OnMentalInteract += () =>
+                            Debug.LogWarning($"{_curEvent.eventId}는 조건을 만족하지 못했으나 conditionFalseResult도 존재하지 않아 할당하지 않음");
+                            continue;
+                        }
+                        //트리거 종류에 따라 할당하기
+                        switch (tag)
                         {
-                            EventManagerYKM.Instance.ExecuteEvent(_curEvent.eventId).Forget();
-                            InteractionMarkManager.Instance.DisableInteractionMarkUI(transform);
-                        };
-                        InteractionMarkManager.Instance.EnableInteractionMarkUI(this.transform, _curEvent.eventId);
+                            case "EventTrigger":
+                                //바로 실행 메소드 호출
+                                EventManagerYKM.Instance.ExecuteEvent(_curEvent.eventId).Forget();
+                                Debug.Log("바로 실행");
+                                break;
+                            case "EventInteractionTrigger":
+                                //플레이어에게 ? 띄우기
+                                PlayerInteract.Instance.OnInteract = null;
+                                Debug.Log("OnInteract 할당");
+                                //플레이어의 OnInteract 액션에 실행 메소드 할당
+                                PlayerInteract.Instance.OnInteract += () =>
+                                {
+                                    EventManagerYKM.Instance.ExecuteEvent(_curEvent.eventId).Forget();
+                                    InteractionMarkManager.Instance.DisableInteractionMarkUI(transform);
+                                };
+                                InteractionMarkManager.Instance.EnableInteractionMarkUI(this.transform, _curEvent.eventId);
+                                break;
+                            case "EventMentalEnterTrigger":
+                                //플레이어에게 ? 띄우기
+                                PlayerInteract.Instance.OnMentalInteract = null;
+                                Debug.Log("OnMentalInteract에 할당");
+                                //정신세계 진입 프로세스의 OnInteract 액션에 실행 메소드 할당
+                                PlayerInteract.Instance.OnMentalInteract += () =>
+                                {
+                                    EventManagerYKM.Instance.ExecuteEvent(_curEvent.eventId).Forget();
+                                    InteractionMarkManager.Instance.DisableInteractionMarkUI(transform);
+                                };
+                                InteractionMarkManager.Instance.EnableInteractionMarkUI(this.transform, _curEvent.eventId);
+                                break;
+                        }
                         break;
+                    }
                 }
             }
         }
