@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using TMPro;
@@ -48,7 +49,6 @@ public class DialogueManager : UIBase
 
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private GameObject _dialogueGroup;
-    [SerializeField] private GameObject _toggleIcon;
     [SerializeField] private TextMeshProUGUI _speakerText;
 
     private DialogueStructure _curDialogue;
@@ -57,7 +57,7 @@ public class DialogueManager : UIBase
     private int _currentLineIndex = 0;
     private string _initialDialogueId = "";
 
-    private float _letterDelay = 0.05f;
+    [SerializeField] float _letterDelay = 0.05f;
     private float _currentTextElapsedTime = 0f;
     private int _currentLetterIndex = 0;
     public bool isTyping = false;
@@ -89,6 +89,7 @@ public class DialogueManager : UIBase
         {
             _curDialogue = DataManager.Instance._dialogue[id];
             _currentDialogueId = id;
+            EscapeUI.Instance.DisActive();
             UIManager.Instance.OpenUI(UIManager.Instance.dialogueUI);
             
             if (_curDialogue.triggerType == "interact" && _curDialogue.interactionType == "npc")
@@ -104,7 +105,7 @@ public class DialogueManager : UIBase
     }
     public override void HandleKeyboardInput()
     {
-        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && !string.IsNullOrEmpty(_currentDialogueId))
+        if ((InputRouter.Instance.ConsumeSpace() || Input.GetMouseButtonDown(0)) && !string.IsNullOrEmpty(_currentDialogueId))
         {
             if (isTyping)
             {
@@ -116,15 +117,15 @@ public class DialogueManager : UIBase
             }
         }
     }
-    public async UniTaskVoid ShowNextLine()
+    public async UniTask ShowNextLine()
     {
-        _toggleIcon.SetActive(false);
-        _speakerText.text = _curDialogue.characterId;
+        // _speakerText.text = _curDialogue.characterId;
        if (_currentLineIndex < _curDialogue.Dialogue_Text_List.Count)
         {
             //튜토리얼 있으면 실행
             TutorialManager.Instance.ShowTutorial(_curDialogue.Dialogue_Text_List[_currentLineIndex].tutorialID);
             // 타이핑 시작
+            _speakerText.text = _curDialogue.Dialogue_Text_List[_currentLineIndex].characterId;
             await TypeText(_curDialogue.Dialogue_Text_List[_currentLineIndex].text);
             // 타이핑이 완료되었거나 스킵되었을 때만 다음 라인으로 진행
             _currentLineIndex++;
@@ -156,11 +157,21 @@ public class DialogueManager : UIBase
                     GameObject.Find("Artresource_0002").transform.GetChild(0).gameObject.SetActive(false);
                 }
                 OnDialogueEnd?.Invoke();
+                
+                //현재 위치한 곳에 트리거가 있다면 해당 트리거 실행 가능한지 다시 체크
+                if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
+                {
+                    await Task.Delay(100);
+                    if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
+                    {
+                        if(_curDialogue.dialogueId == "Dialogue_0065") return;
+                        PlayerInteract.Instance.curTrigger.OnTriggerEnter(PlayerInteract.Instance.GetComponent<CapsuleCollider>());
+                    }
+                }
             }
         }
     }
-
-
+    
     private async UniTask TypeText(string text)
     {
         isTyping = true;
@@ -184,7 +195,7 @@ public class DialogueManager : UIBase
         // 텍스트 다시 비우고 알파값 복구
         dialogueText.text = "";
         dialogueText.alpha = 1;
-        StartDialogueSound(_curDialogue.characterId);
+        StartDialogueSound(_curDialogue.Dialogue_Text_List[_currentLineIndex].characterId);
         if (!isTyping)
         {
             dialogueText.text = text;
@@ -200,7 +211,6 @@ public class DialogueManager : UIBase
         dialogueText.text = text;
         isTyping = false;
         SoundManager.Instance.StopAllSFX();
-        _toggleIcon.SetActive(true);
     }
 
     void InitDialogue()
@@ -231,7 +241,10 @@ public class DialogueManager : UIBase
                 SoundManager.Instance.PlayLoopingSound("Soundresource_075");
                 break;
         }
-
+    }
+    public string GetCurDialogueId()
+    {
+        return _currentDialogueId;
     }
 }
 

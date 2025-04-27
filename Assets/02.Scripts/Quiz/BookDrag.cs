@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Cysharp.Threading.Tasks;
 using Random = UnityEngine.Random;
 
 public class BookDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler,IPointerDownHandler
 {
     [SerializeField] private GameObject _placeholderObject;
     [SerializeField] public int bookIdx;
+    [SerializeField] public Transform _syncBook;
     private RectTransform _rectTransform;
     private Canvas _canvas;
     private int _originalSiblingIndex;
@@ -82,18 +84,32 @@ public class BookDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        int newIndex;
         if (IsInsideLayoutGroup(eventData.position) && _placeholderObject.activeSelf)
         {
             transform.SetParent(_originalParent);
-            transform.SetSiblingIndex(_placeholderObject.transform.GetSiblingIndex());
+            newIndex = _placeholderObject.transform.GetSiblingIndex();
         }
         else
         {
             transform.SetParent(_originalParent);
-            transform.SetSiblingIndex(_originalSiblingIndex);
+            newIndex = _originalSiblingIndex;
         }
 
+        // 내 책의 위치 적용
+        transform.SetSiblingIndex(newIndex);
         _placeholderObject.SetActive(false);
+
+        // 동기화 대상도 같은 인덱스로 이동
+        if (_syncBook != null)
+        {
+            _syncBook.SetSiblingIndex(newIndex);
+        }
+        CheckAnswer().Forget();
+    }
+    private async UniTaskVoid CheckAnswer()
+    {
+        await UniTask.Delay(1000);
         _bookShelfManager.CheckBookOrder();
     }
 

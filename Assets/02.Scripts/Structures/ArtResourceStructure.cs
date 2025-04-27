@@ -7,6 +7,7 @@ public class ArtResourceStructure
     public string artresourceType;
     public string filePath;
     public string filePathInventoryThumbnail;
+    public string filePathInventoryDetail;
     public string filePathEvidencePrefab;
     public string filePathMapBackground;
     public string filePathContentBackground;

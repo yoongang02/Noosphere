@@ -35,7 +35,6 @@ public class InvestigateUI : UIBase
     public override void OnClose()
     {
         base.OnClose();
-        UIManager.Instance.OnSelectEnd?.Invoke();
         transform.GetChild(0).gameObject.SetActive(false);
     }
 
@@ -57,7 +56,7 @@ public class InvestigateUI : UIBase
         }
 
         //스페이스 - 버튼 선택
-        if (_curSelectedBtn != null && Input.GetKeyDown(KeyCode.Space))
+        if (_curSelectedBtn != null && InputRouter.Instance.ConsumeSpace())
         {
             SoundManager.Instance.PlaySFX("Soundresource_037");
             if (_curSelectedBtn == _yesBtn)
@@ -69,7 +68,8 @@ public class InvestigateUI : UIBase
                 ClickNoBtn();
             }
         }
-            
+          
+        /*
         //ESC - NO 선택
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -77,19 +77,20 @@ public class InvestigateUI : UIBase
             //NO 버튼 선택
             ClickNoBtn();
         }
+        */
     }
     
     public void HoverYesBtn()
     {
-        SetButtonSelected(_yesBtn, UnityExtension.HexColor(GreenColor));
-        SetButtonSelected(_noBtn, UnityExtension.HexColor(WhiteColor));
+        SetImgSelected(_yesBtn, UnityExtension.HexColor(SkyblueColor));
+        SetImgSelected(_noBtn, UnityExtension.HexColor(WhiteColor));
         _curSelectedBtn = _yesBtn;
     }
 
     public void HoverNoBtn()
     {
-        SetButtonSelected(_noBtn,UnityExtension.HexColor(GreenColor));
-        SetButtonSelected(_yesBtn,UnityExtension.HexColor(WhiteColor));
+        SetImgSelected(_noBtn,UnityExtension.HexColor(SkyblueColor));
+        SetImgSelected(_yesBtn,UnityExtension.HexColor(WhiteColor));
         _curSelectedBtn = _noBtn;
     }
 

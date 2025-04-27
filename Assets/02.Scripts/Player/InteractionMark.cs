@@ -19,4 +19,9 @@ public class InteractionMark : MonoBehaviour
             transform.LookAt(transform.position + _curCamera.transform.forward);
         }
     }
+
+    public void HideMark()
+    {
+        gameObject.SetActive(false);
+    }
 }

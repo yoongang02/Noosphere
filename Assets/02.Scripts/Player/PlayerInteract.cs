@@ -9,9 +9,10 @@ public class PlayerInteract : Singleton<PlayerInteract>
 {
     [Header("상호작용")] 
     public bool canInteract = true; //상호작용을 할 수 있는지(lock 조건에 이용)
-    [SerializeField] private GameObject _interactionMark;
+    public bool canUse = false; // 증거물 사용 상호작용 할 수 있는지(InteractionMarkManager.cs에서 값을 관리함)
     private bool _isRepeatFalseCondition = false;
     public Action OnInteract;
+    public Action OnEvidenceUse;
     public bool isInsideTrigger = false;
     public EventTrigger curTrigger;
 
@@ -53,26 +54,47 @@ public class PlayerInteract : Singleton<PlayerInteract>
                         }
                         SoundManager.Instance.PlaySFX(id);
                         OnInteract.Invoke();
+                        InteractionMarkManager.Instance.DisableInteractionMarkUI(curTrigger.transform);
                     }
                     OnInteract = null;   
                 }
             }
+
+            // Z키를 이용한 증거물 사용하기
+            if(canInteract && canUse && Input.GetKeyDown(KeyCode.Q))
+            {
+                if (OnEvidenceUse != null)
+                {
+                    Debug.LogWarning("OnEvidenceUse 에 등록되어있는 메소드 실행");
+                    if (OnEvidenceUse != null)
+                    {
+                        int random = Random.Range(0, 5);
+                        string id = "";
+                        switch (random)
+                        {
+                            case 0:
+                                id = "Soundresource_030";
+                                break;
+                            case 1:
+                                id = "Soundresource_031";
+                                break;
+                            case 2:
+                                id = "Soundresource_032";
+                                break;
+                            case 3:
+                                id = "Soundresource_033";
+                                break;
+                            case 4:
+                                id = "Soundresource_034";
+                                break;
+                        }
+                        SoundManager.Instance.PlaySFX(id);
+                        OnEvidenceUse.Invoke();
+                        InteractionMarkManager.Instance.DisableInteractionMarkUI(curTrigger.transform);
+                    }
+                    OnEvidenceUse = null;
+                }
+            }
         }
-    }
-
-    public void ShowInteractionMark()
-    {
-        _interactionMark.SetActive(true);
-    }
-
-    public void HideInteractionMark()
-    {
-        _interactionMark.SetActive(false);
-    }
-    
-    public void InitUsingEvidence()
-    {
-        isUsingEvidence = false;
-        InventoryManager.Instance.GetComponent<InventoryNavigator>().InitUsingEvidence();
     }
 }

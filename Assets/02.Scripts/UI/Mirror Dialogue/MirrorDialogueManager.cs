@@ -32,6 +32,8 @@ public class MirrorDialogueManager : UIBase
         _curDialogue = DataManager.Instance._dialogue["Dialogue_0030"];
         SoundManager.Instance.PlaySFX("Soundresource_076");
         transform.GetChild(0).gameObject.SetActive(true);
+        UIManager.Instance.cctvFrame.SetActive(true);
+        EscapeUI.Instance.DisActive();
         await TypeText(_curDialogue.Dialogue_Text_List[0].text);
         SoundManager.Instance.StopSFX("Soundresource_076");
         HoverYesBtn();
@@ -63,7 +65,7 @@ public class MirrorDialogueManager : UIBase
         }
 
         //스페이스 - 버튼 선택
-        if (_curSelectedBtn != null && Input.GetKeyDown(KeyCode.Space))
+        if (_curSelectedBtn != null && InputRouter.Instance.ConsumeSpace())
         {
             SoundManager.Instance.PlaySFX("Soundresource_037");
             if (_curSelectedBtn == _yesBtn)
@@ -119,6 +121,12 @@ public class MirrorDialogueManager : UIBase
         UIManager.Instance.CloseTopUI();
         DataManager.Instance._quiz["Quiz_009"].isSolved = true;
         QuizManager.Instance.OnQuizEnd?.Invoke();
+        if (PlayerInteract.Instance.curTrigger != null)
+        {
+            InteractionMarkManager.Instance.DisableInteractionMarkUI(PlayerInteract.Instance.curTrigger.transform);
+            PlayerInteract.Instance.curTrigger = null;
+            PlayerInteract.Instance.isInsideTrigger = false;
+        }
     }
 
     public void ClickNoBtn()
@@ -127,5 +135,11 @@ public class MirrorDialogueManager : UIBase
         UIManager.Instance.CloseTopUI();
         DataManager.Instance._quiz["Quiz_009"].isSolved = false;
         QuizManager.Instance.OnQuizEnd?.Invoke();
+        if (PlayerInteract.Instance.curTrigger != null)
+        {
+            InteractionMarkManager.Instance.DisableInteractionMarkUI(PlayerInteract.Instance.curTrigger.transform);
+            PlayerInteract.Instance.curTrigger = null;
+            PlayerInteract.Instance.isInsideTrigger = false;
+        }
     }
 }

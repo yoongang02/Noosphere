@@ -10,6 +10,7 @@ public class TimeLineController : MonoBehaviour
     [SerializeField] private PlayableDirector _playableDirector;
     [SerializeField] private GameObject _playerParent;
     private GameObject _player;
+    [SerializeField] private float _angle;
 
     private void Awake()
     {
@@ -28,7 +29,7 @@ public class TimeLineController : MonoBehaviour
             newPosition.z = 0f;
             _player.transform.localPosition = newPosition;
             _player.transform.localRotation = Quaternion.identity;
-            _player.transform.localRotation = Quaternion.Euler(0, -180f, 0);
+            _player.transform.localRotation = Quaternion.Euler(0, _angle, 0);
         }
 
         InventoryManager.Instance.canOpenInventory = true;

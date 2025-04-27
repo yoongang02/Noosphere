@@ -7,8 +7,6 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 public class LoadingSceneUI : MonoBehaviour
 {
-    [SerializeField] private Slider _loadingSlider;
-    [SerializeField] private TextMeshProUGUI _loadingText;
     [SerializeField] private Image _fadeImage;
     [SerializeField] private float _fadeDuration = 0.8f;
     
@@ -18,24 +16,11 @@ public class LoadingSceneUI : MonoBehaviour
     }
     private async UniTaskVoid StartLoading()
     {
-        await LoadData();
-        // SceneChanger.Instance.ChangeScene("PrologueMap_real");
+        await DataManager.Instance.InitializeData();
         await FadeOut();
-        SceneManager.LoadScene("PrologueMap_real");
+        SceneManager.LoadScene("IntroScene");
     }
-
-    private async UniTask LoadData()
-    {
-        await DataManager.Instance.InitializeData(UpdateLoadingProgress);
-    }
-
-    private void UpdateLoadingProgress(float progress)
-    {
-        _loadingSlider.value = progress;
-        _loadingText.text = $"{Mathf.RoundToInt(progress * 100)}%";
-    }
-
-   
+    
     private async UniTask FadeOut()
     {
         _fadeImage.color = new Color(0, 0, 0, 0);
