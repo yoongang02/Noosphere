@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class InitPlayerPos : MonoBehaviour
 {
-    private void Start()
+    private void Awake()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -20,5 +21,7 @@ public class InitPlayerPos : MonoBehaviour
       Transform player = GameObject.FindWithTag("Player").transform;
       player.position = gameObject.transform.position;
       player.rotation = gameObject.transform.rotation;
+
+      EventManagerYKM.Instance.ExecuteEvent("Event_D085").Forget();
     }
 }
