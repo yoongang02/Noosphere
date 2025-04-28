@@ -22,6 +22,10 @@ public class OnlyForTest : Singleton<OnlyForTest>
         {
             Debug.LogWarning("스테이지1로 바로 이동");
             SoundManager.Instance.StopAllSFX();
+            PlayerInteract.Instance.OnInteract = null;
+            PlayerInteract.Instance.OnMentalInteract = null;
+            DialogueManager.Instance.OnDialogueEnd?.Invoke();
+            EffectManager.Instance.OnEffectEnd?.Invoke();
             GoToStage1();
         }
 
@@ -29,6 +33,10 @@ public class OnlyForTest : Singleton<OnlyForTest>
         {
             Debug.LogWarning("스테이지2로 바로 이동");
             SoundManager.Instance.StopAllSFX();
+            PlayerInteract.Instance.OnInteract = null;
+            PlayerInteract.Instance.OnMentalInteract = null;
+            DialogueManager.Instance.OnDialogueEnd?.Invoke();
+            EffectManager.Instance.OnEffectEnd?.Invoke();
             GoToStage2();
         }
         
@@ -36,6 +44,10 @@ public class OnlyForTest : Singleton<OnlyForTest>
         {
             Debug.LogWarning("최종 스테이지로 바로 이동");
             SoundManager.Instance.StopAllSFX();
+            PlayerInteract.Instance.OnInteract = null;
+            PlayerInteract.Instance.OnMentalInteract = null;
+            DialogueManager.Instance.OnDialogueEnd?.Invoke();
+            EffectManager.Instance.OnEffectEnd?.Invoke();
             GoToFinal();
         }
     }
@@ -159,6 +171,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
         DataManager.Instance._quiz["Quiz_009"].isSolved = true;
 
         DialogueManager.Instance.OnDialogueEnd?.Invoke();
+        EffectManager.Instance.OnEffectEnd?.Invoke();
         UIManager.Instance.CloseAllUI();
 
         //씬 스테이지1로 이동
@@ -174,7 +187,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
         FindObjectOfType<PlayerInteract>().isInsideTrigger = false;
         FindObjectOfType<PlayerInteract>().curTrigger = null;
         EventManagerYKM.Instance.nextEventID = "";
-
+    
         _stage1Pass = true;
         EventManagerYKM.Instance.curChapterInfo = EventManagerYKM.ChapterInfo.Stage2;
     }

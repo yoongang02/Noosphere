@@ -256,6 +256,20 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 await Task.Delay(100);
                 if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
                 {
+                    bool canCheck = false;
+                    foreach (var EVENTID in PlayerInteract.Instance.curTrigger.GetComponent<EventTrigger>().eventIdList)
+                    {
+                        if (!DataManager.Instance._events[EVENTID].repeatType && DataManager.Instance._events[EVENTID].isExecuted)
+                        {
+                            canCheck = false;
+                            continue;
+                        }
+
+                        canCheck = true;
+                        break;
+                    }
+                    if(!canCheck) return;
+                    if(currentEventID == "Event_D090") return;
                     PlayerInteract.Instance.curTrigger.OnTriggerEnter(PlayerInteract.Instance.GetComponent<CapsuleCollider>());
                 }
             }

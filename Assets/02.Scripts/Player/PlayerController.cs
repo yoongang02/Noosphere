@@ -192,6 +192,10 @@ public class PlayerController : Singleton<PlayerController>
             Debug.LogWarning("No main camera found in the current scene.");
         }
 
+        if (_uiCanvas == null)
+        {
+            _uiCanvas = GameObject.Find("UI Canvas").GetComponent<Canvas>();
+        }
         if(_uiCanvas.renderMode == RenderMode.ScreenSpaceCamera) _uiCanvas.worldCamera = _mainCamera;
         
         GameObject parent = GameObject.Find("-----[Cameras]");
