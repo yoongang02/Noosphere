@@ -5978,13 +5978,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 216564801}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -13.82, y: 0.069, z: 6.06}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!114 &216564803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46860,6 +46860,8 @@ PlayableDirector:
     value: {fileID: 6034767}
   - key: {fileID: -3565469462110861552, guid: 3c2b014f4bf37eb4689040377649a157, type: 2}
     value: {fileID: 1555691847}
+  - key: {fileID: 2902427268224273388, guid: 3c2b014f4bf37eb4689040377649a157, type: 2}
+    value: {fileID: 1555691847}
   m_ExposedReferences:
     m_References:
     - 44ee959c49af3d44c9c4bf1cfd24c82a: {fileID: 0}
@@ -46886,6 +46888,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 17c842e3f80278840a9e0e64f61badbc, type: 2}
     - {fileID: 11400000, guid: 1329dc8cc7025eb439b828e51c5fa079, type: 2}
     - {fileID: 11400000, guid: abe2ba217df8eb3419b6806251b889e1, type: 2}
+    - {fileID: 11400000, guid: 2beff32a81813cb4480d76be3d617c3b, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -46971,6 +46974,20 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: IsGettingUp
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: EndPlayerAnim
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: IsStunned
             m_BoolArgument: 0
           m_CallState: 2
 --- !u!1 &1561889060 stripped
