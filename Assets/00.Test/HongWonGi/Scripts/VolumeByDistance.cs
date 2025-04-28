@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using Cysharp.Threading.Tasks;
 
 public class VolumeByDistance : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class VolumeByDistance : MonoBehaviour
     [SerializeField] private UniversalAdditionalCameraData _mainCam;
     [SerializeField] private GameObject _overlayCam;
     private Vignette _vignette;
-
+    private bool _isTriggerEnd;
     private void OnEnable()
     {
         InitCamSetting();
@@ -38,6 +39,7 @@ public class VolumeByDistance : MonoBehaviour
         _playerTrans = player.transform;
         _mainCam.renderPostProcessing = true;
         _overlayCam.SetActive(true);
+        _isTriggerEnd = false;
     }
 
     void Update()
@@ -60,11 +62,13 @@ public class VolumeByDistance : MonoBehaviour
         // volume의 weight를 t값으로 조절 (0이면 효과 없음, 1이면 최대 효과)
         _volume.weight = t;
         float reversedT = 1f - t;
-        if (t >= 1)
+        if (t >= 1&&!_isTriggerEnd)
         {
             //끝까지 도달했을 때
+            _isTriggerEnd = true;
             Debug.Log("끝에 도달");
             EffectManager.Instance.OnEffectEnd?.Invoke();
+            EventManagerYKM.Instance.ExecuteEvent(EventManagerYKM.Instance.nextEventID).Forget();
         }
 
         if (_vignette != null)
