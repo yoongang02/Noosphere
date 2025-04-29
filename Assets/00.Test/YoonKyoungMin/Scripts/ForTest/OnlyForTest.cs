@@ -185,7 +185,8 @@ public class OnlyForTest : Singleton<OnlyForTest>
                 }
             }
         }
-
+        InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_016"]);
+        InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_010"]);
         //퀴즈 모두 정답
         DataManager.Instance._quiz["Quiz_003"].isSolved = true;
         DataManager.Instance._quiz["Quiz_004"].isSolved = true;
@@ -286,6 +287,10 @@ public class OnlyForTest : Singleton<OnlyForTest>
             DataManager.Instance._quiz["Quiz_007"].isSolved = true;
             DataManager.Instance._quiz["Quiz_009"].isSolved = true;
 
+            InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_016"]);
+            InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_010"]);
+            InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_025"]);
+            
             DialogueManager.Instance.OnDialogueEnd?.Invoke();
             UIManager.Instance.CloseAllUI();
 
@@ -401,7 +406,6 @@ public class OnlyForTest : Singleton<OnlyForTest>
                     }
                 }
             }
-            
             EvidenceStructure paper = DataManager.Instance._evidences["Evidence_016"];
             InventoryManager.Instance.AddEvidence(paper);
             
@@ -447,7 +451,10 @@ public class OnlyForTest : Singleton<OnlyForTest>
                 }
             }
             _stage2Pass = true; 
-
+            
+            InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_010"]);
+            InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_025"]);
+            
             DialogueManager.Instance.OnDialogueEnd?.Invoke();
             EffectManager.Instance.OnEffectEnd?.Invoke();
             UIManager.Instance.CloseAllUI();
@@ -573,7 +580,10 @@ public class OnlyForTest : Singleton<OnlyForTest>
                 }
             }
             _stage2Pass = true; 
-
+            
+            InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_010"]);
+            InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_025"]);
+            
             DialogueManager.Instance.OnDialogueEnd?.Invoke();
             EffectManager.Instance.OnEffectEnd?.Invoke();
             UIManager.Instance.CloseAllUI();
