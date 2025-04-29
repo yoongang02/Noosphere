@@ -33,6 +33,8 @@ public class SirenEffect : MonoBehaviour
             )
             .SetEase(Ease.Linear)
             .SetLoops(2, LoopType.Yoyo);
+        
+        SoundManager.Instance.PlaySFXNoEffect("Soundresource_099");
     }
     private void StartSiren()
     {

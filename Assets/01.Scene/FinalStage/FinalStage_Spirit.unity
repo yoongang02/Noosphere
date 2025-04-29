@@ -247,7 +247,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6034762}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2961798, y: 0.6420884, z: -0.29617974, w: 0.64208853}
+  m_LocalRotation: {x: 0.29617974, y: 0.64208853, z: -0.2961798, w: 0.6420884}
   m_LocalPosition: {x: -15.889999, y: 1.7990668, z: 16.06}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -9256,6 +9256,9 @@ MonoBehaviour:
     - {fileID: 11400000, guid: abe2ba217df8eb3419b6806251b889e1, type: 2}
     - {fileID: 11400000, guid: 1683f3bbaee4ac545982a7870781d268, type: 2}
     - {fileID: 11400000, guid: fb1767809c11fe5408f8b07b5bbc53cb, type: 2}
+    - {fileID: 11400000, guid: bb82fab2dac42634ca879eddd5b2b285, type: 2}
+    - {fileID: 11400000, guid: 30a6bdbc30c66834d9f9a9fbad6af1da, type: 2}
+    - {fileID: 11400000, guid: 457f4ac35706e184285f47e8f5174d59, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -9411,6 +9414,48 @@ MonoBehaviour:
             m_StringArgument: IsWalk
             m_BoolArgument: 0
           m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: StartRandomSound
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 5
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: StopFootSteps
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: StartVfx
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Soundresource_082
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!320 &326125229
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -9442,6 +9487,10 @@ PlayableDirector:
     value: {fileID: 675591741}
   - key: {fileID: -3015721354361759610, guid: 2af61535f7ac00b41ad930af540efa64, type: 2}
     value: {fileID: 850831487}
+  - key: {fileID: 8897997329758181446, guid: 2af61535f7ac00b41ad930af540efa64, type: 2}
+    value: {fileID: 326125228}
+  - key: {fileID: -8773637088533699249, guid: 2af61535f7ac00b41ad930af540efa64, type: 2}
+    value: {fileID: 326125228}
   m_ExposedReferences:
     m_References:
     - 18835439ea8aa834496d7befb9528935: {fileID: 723517797}
@@ -22656,6 +22705,8 @@ PlayableDirector:
     value: {fileID: 1661194340}
   - key: {fileID: -1592269494397991021, guid: 8575ce922b1cf2c4c987f9e576773a19, type: 2}
     value: {fileID: 680987934}
+  - key: {fileID: -1721396062709208793, guid: 8575ce922b1cf2c4c987f9e576773a19, type: 2}
+    value: {fileID: 680987934}
   m_ExposedReferences:
     m_References: []
 --- !u!114 &680987934
@@ -22676,6 +22727,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 5d82c52da97af6b4a98e0da48d38d63b, type: 2}
     - {fileID: 11400000, guid: 1329dc8cc7025eb439b828e51c5fa079, type: 2}
     - {fileID: 11400000, guid: abe2ba217df8eb3419b6806251b889e1, type: 2}
+    - {fileID: 11400000, guid: bb82fab2dac42634ca879eddd5b2b285, type: 2}
+    - {fileID: 11400000, guid: 30a6bdbc30c66834d9f9a9fbad6af1da, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -22731,6 +22784,34 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: Interact
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: StartRandomSound
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 2
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: StopFootSteps
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
 --- !u!1 &687623314
@@ -30599,7 +30680,13 @@ MonoBehaviour:
   - {fileID: -3582197160846370835, guid: 9a99a98f033e2ad4ebddd2dece79502e, type: 3}
   _freindMaterial: {fileID: 0}
   _friendMaterial: {fileID: 0}
-  footSteps: []
+  footSteps:
+  - Soundresource_020
+  - Soundresource_021
+  - Soundresource_022
+  - Soundresource_023
+  - Soundresource_024
+  - Soundresource_025
   _farLoungCam: {fileID: 0}
   _vhsImage: {fileID: 0}
   _vhsVolume: {fileID: 0}
@@ -56493,7 +56580,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1817668855}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.000000020617762, y: 0.00000003827145, z: -0.000000017653683,
+  m_LocalRotation: {x: -0.000000019135724, y: 0.00000006771606, z: -0.0000000544431,
     w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -62849,6 +62936,8 @@ PlayableDirector:
     value: {fileID: 1602897371}
   - key: {fileID: 5958540501176720602, guid: 656686e7c539ea3459f8349da34671bc, type: 2}
     value: {fileID: 1321256829}
+  - key: {fileID: 8898334071630853022, guid: 656686e7c539ea3459f8349da34671bc, type: 2}
+    value: {fileID: 2038829215}
   m_ExposedReferences:
     m_References:
     - a66b3665f84009048b3bb4df2d69b987: {fileID: 675591743}
@@ -62867,8 +62956,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Events:
-    m_Signals: []
-    m_Events: []
+    m_Signals:
+    - {fileID: 11400000, guid: bb82fab2dac42634ca879eddd5b2b285, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: StartVfx
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Soundresource_082
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1001 &2039078991
 PrefabInstance:
   m_ObjectHideFlags: 0
