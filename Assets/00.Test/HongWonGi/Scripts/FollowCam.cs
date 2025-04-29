@@ -6,7 +6,7 @@ using UnityEngine;
 public class FollowCam : MonoBehaviour
 {
     [SerializeField] private Transform cam;
-     private void Update()
+     private void FixedUpdate()
      {
          transform.localPosition = cam.transform.localPosition;
          transform.localRotation = cam.transform.localRotation;

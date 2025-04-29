@@ -588,6 +588,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
             EventManagerYKM.Instance.nextEventID = "";
             
             EventManagerYKM.Instance.curChapterInfo = EventManagerYKM.ChapterInfo.Final;
+            DataManager.Instance._events["Event_C066"].isExecuted = false;
             Debug.LogWarning($"Event_C066 : {DataManager.Instance._events["Event_C066"].isExecuted}");
         }
     }

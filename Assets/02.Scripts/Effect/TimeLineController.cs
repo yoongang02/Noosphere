@@ -40,16 +40,17 @@ public class TimeLineController : MonoBehaviour
 
     private void EndTimeLine(PlayableDirector obj)
     {
-        Debug.Log("타임라인 끝");
+        Debug.LogWarning(obj.playableAsset.name+"  타임라인 끝남");
 
         if (_playerParent != null)
         {
             _player.transform.SetParent(null);
         }
-        
-        EffectManager.Instance.OnEffectEnd?.Invoke();
+       
         UIManager.Instance.UnLockPlayer();
         UIManager.Instance.inventoryIcon.SetActive(true);
         InventoryManager.Instance.canOpenInventory = false;
+        EffectManager.Instance.OnEffectEnd?.Invoke();
+       
     }
 }
