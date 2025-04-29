@@ -298,6 +298,7 @@ public class SoundManager : Singleton<SoundManager>
 
         source.clip = soundData.soundClip;
         source.volume = soundData.volume;
+        source.loop = false;
 
         for(int i = 0; i < soundData.loopCnt; i++)
         {
