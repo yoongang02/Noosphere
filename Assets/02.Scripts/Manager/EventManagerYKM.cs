@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EventManagerYKM : Singleton<EventManagerYKM>
@@ -234,7 +235,14 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             }
             else
             {
-                CloseEventFailure(_event);
+                if (currentEventID == "Event_D099" || currentEventID == "Event_D100")
+                {
+                    CloseEventSuccess(_event);
+                }
+                else
+                {
+                    CloseEventFailure(_event);
+                }
             }
             
             //Debug.LogWarning($"{eventID} 이벤트의 repeatType {_event.repeatType} , isExecuted : {_event.isExecuted}");
@@ -306,6 +314,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     // 효과가 끝날 때까지 대기
                     await WaitForEffectEndAsync();
                     Debug.Log("#4-2 : " + resultID + " 효과 끝");
+                    if (resultID == "Effect_048") _isEventSuccess = true;
                 }
                 else if (resultType == "Quiz")
                 {
@@ -490,6 +499,14 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     void StartEffect(string effectID)
     {
         Debug.Log($"{effectID} 효과 시작");
+        if (effectID == "Effect_048")
+        {
+            DataManager.Instance._events["Event_D099"].isExecuted = true;
+        }
+        else if (effectID == "Effect_054")
+        {
+            DataManager.Instance._events["Event_D102"].isExecuted = true;
+        }
         EffectManager.Instance.SetEffect(effectID);
     }
     

@@ -2210,6 +2210,7 @@ GameObject:
   - component: {fileID: 64751124}
   - component: {fileID: 64751125}
   - component: {fileID: 64751126}
+  - component: {fileID: 64751127}
   m_Layer: 0
   m_Name: TimeLineDirector
   m_TagString: Untagged
@@ -2255,6 +2256,8 @@ PlayableDirector:
     value: {fileID: 212550016}
   - key: {fileID: -6760594792257285549, guid: a34e52afea391c348ad33188f22f4e66, type: 2}
     value: {fileID: 64751126}
+  - key: {fileID: -8561226291333546971, guid: a34e52afea391c348ad33188f22f4e66, type: 2}
+    value: {fileID: 64751126}
   m_ExposedReferences:
     m_References: []
 --- !u!114 &64751126
@@ -2275,6 +2278,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 5d82c52da97af6b4a98e0da48d38d63b, type: 2}
     - {fileID: 11400000, guid: 1683f3bbaee4ac545982a7870781d268, type: 2}
     - {fileID: 11400000, guid: fb1767809c11fe5408f8b07b5bbc53cb, type: 2}
+    - {fileID: 11400000, guid: b8a035d9e3b51d74a823cd185fc5602b, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -2332,6 +2336,32 @@ MonoBehaviour:
             m_StringArgument: Doctor:AggresiveWalk
             m_BoolArgument: 0
           m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 64751127}
+          m_TargetAssemblyTypeName: FirstEndingBranch, Assembly-CSharp
+          m_MethodName: CheckFirstEndingBranch
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &64751127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 64751123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dda8e9c6181c48c8b63a6b3b096d955, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &65569981
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -43311,9 +43341,10 @@ GameObject:
   - component: {fileID: 1292506251}
   - component: {fileID: 1292506253}
   - component: {fileID: 1292506252}
+  - component: {fileID: 1292506254}
   m_Layer: 0
   m_Name: 0074PlayerParent
-  m_TagString: Untagged
+  m_TagString: FinalPlayer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43404,6 +43435,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1292506249}
   m_Mesh: {fileID: 4300000, guid: 2751bfe6837879649bc54e1823cdf856, type: 3}
+--- !u!135 &1292506254
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1292506249}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.2
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1296525811
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44572,7 +44624,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1316201485
 Transform:
   m_ObjectHideFlags: 0
@@ -58320,6 +58372,7 @@ GameObject:
   - component: {fileID: 1752612275}
   - component: {fileID: 1752612276}
   - component: {fileID: 1752612277}
+  - component: {fileID: 1752612278}
   m_Layer: 0
   m_Name: TimeLineDirector
   m_TagString: Untagged
@@ -58363,6 +58416,8 @@ PlayableDirector:
     value: {fileID: 1292506251}
   - key: {fileID: -8256934655107009643, guid: 644d017f3d975a04ea88b8369202947a, type: 2}
     value: {fileID: 1752612277}
+  - key: {fileID: 5270744380624447914, guid: 644d017f3d975a04ea88b8369202947a, type: 2}
+    value: {fileID: 1752612277}
   m_ExposedReferences:
     m_References: []
 --- !u!114 &1752612277
@@ -58381,6 +58436,7 @@ MonoBehaviour:
     m_Signals:
     - {fileID: 11400000, guid: 58514700c12e5fc4892470cc94982526, type: 2}
     - {fileID: 11400000, guid: 5d82c52da97af6b4a98e0da48d38d63b, type: 2}
+    - {fileID: 11400000, guid: b8a035d9e3b51d74a823cd185fc5602b, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -58410,6 +58466,32 @@ MonoBehaviour:
             m_StringArgument: IsRunning
             m_BoolArgument: 0
           m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1752612278}
+          m_TargetAssemblyTypeName: SecondEndingBranch, Assembly-CSharp
+          m_MethodName: CheckSecondEndingBranch
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &1752612278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752612274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebb9436dd724c4b6fb0b7efdf34ad9e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1753024343
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -59615,9 +59697,10 @@ GameObject:
   - component: {fileID: 1773271734}
   - component: {fileID: 1773271736}
   - component: {fileID: 1773271735}
+  - component: {fileID: 1773271737}
   m_Layer: 0
   m_Name: 0069PlayerParent
-  m_TagString: Untagged
+  m_TagString: FinalPlayer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -59708,6 +59791,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!135 &1773271737
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1773271732}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.2
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1777536535
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -61767,7 +61871,7 @@ GameObject:
   - component: {fileID: 1837998416}
   m_Layer: 0
   m_Name: EndingPlayerParent
-  m_TagString: Untagged
+  m_TagString: FinalPlayer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -61789,9 +61893,9 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.4
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1837998413
 MeshRenderer:
@@ -66717,7 +66821,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!135 &2033538397
 SphereCollider:
   m_ObjectHideFlags: 0
