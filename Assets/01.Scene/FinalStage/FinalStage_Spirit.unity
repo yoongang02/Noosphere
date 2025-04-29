@@ -53008,6 +53008,37 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 7283994051867748434, guid: 17133a119c7193f4abc53db96f4b4024, type: 3}
+--- !u!1 &1735229487
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1735229488}
+  m_Layer: 0
+  m_Name: Flag
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1735229488
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735229487}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.16435088, y: 1.7092214, z: 8.213151}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1737040897
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -64286,6 +64317,8 @@ PlayableDirector:
   m_SceneBindings:
   - key: {fileID: 7841295430791634828, guid: 0e4b6877d7667e74a9ea01e999e45189, type: 2}
     value: {fileID: 2087445710}
+  - key: {fileID: -113497490310205031, guid: 0e4b6877d7667e74a9ea01e999e45189, type: 2}
+    value: {fileID: 1735229487}
   m_ExposedReferences:
     m_References: []
 --- !u!114 &2087445710
@@ -65389,3 +65422,4 @@ SceneRoots:
   - {fileID: 1405922324}
   - {fileID: 610236036}
   - {fileID: 41325737}
+  - {fileID: 1735229488}

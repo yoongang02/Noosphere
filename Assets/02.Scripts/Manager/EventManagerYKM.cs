@@ -538,6 +538,23 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();   
         }
         _event.isExecuted = true;
+        if (_event.eventId == "Event_D102")
+        {
+            Debug.LogWarning("[엔딩 2차 분기점]");
+            // 다프네에게 연구소 도면을 받았다면
+            if (DataManager.Instance._events["Event_B065"].isExecuted && InventoryManager.Instance.IsEvidenceInInventory("Evidence_016"))
+            {
+                Debug.LogWarning("[일반 엔딩] 탈출 성공");
+                DataManager.Instance._events["Event_D102"].nextEventId = "Event_D103";
+            }
+            else
+            {
+                Debug.LogWarning("[일반 엔딩] 탈출 실패");
+                DataManager.Instance._events["Event_D102"].nextEventId = "Event_D104";
+            }     
+        }
+
+       
         nextEventID = _event.nextEventId;
     }
 

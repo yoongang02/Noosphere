@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class FirstEndingBranch : MonoBehaviour
@@ -32,12 +33,13 @@ public class FirstEndingBranch : MonoBehaviour
         if (DataManager.Instance._events["Event_C066"].isExecuted)
         {
             Debug.LogWarning("[진엔딩] 레이 등장");
-            EventManagerYKM.Instance.ExecuteEvent("Event_D100").Forget();
+            DataManager.Instance._events["Event_D099"].nextEventId = "Event_D100";
         }
         else
         {
             Debug.LogWarning("[일반 엔딩] 닥터와의 접촉");
-            EventManagerYKM.Instance.ExecuteEvent("Event_D102").Forget();
+            DataManager.Instance._events["Event_D099"].nextEventId = "Event_D102";
+            // EventManagerYKM.Instance.ExecuteEvent("Event_D102").Forget();
         }
     }
 }
