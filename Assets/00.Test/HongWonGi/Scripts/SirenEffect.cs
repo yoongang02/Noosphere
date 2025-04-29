@@ -4,19 +4,9 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using Random = UnityEngine.Random;
 using DG.Tweening;
-
+using Cinemachine;
 public class SirenEffect : MonoBehaviour
 {
-    [Header("카메라 흔들림 설정")] 
-    [SerializeField] [Range(0f, 1f)] private float _maxOffset = 0.5f; // 최대 위치 오프셋
-    [SerializeField] [Range(0f, 360f)] private float _maxAngle = 10f; // 최대 회전 각도
-    [SerializeField] [Range(0f, 1f)] private float _shakePower = 0.6f; // 기본 트라우마 강도 (0-1)
-    [SerializeField] [Range(0f, 10f)] private float _shakeDuration = 10f; // 기본 지속 시간(초)
-
-    private Camera _mainCamera;
-    private Vector3 _originalPos;
-    private Quaternion _originalRot;
-    private float _seed;
     [Header("사이렌 효과")] 
     [SerializeField] private Light _sirenLight;
 
@@ -25,20 +15,24 @@ public class SirenEffect : MonoBehaviour
     [SerializeField] private float maxIntensity;//불 밝기 
     [SerializeField] private float upDuration;//깜빡거림 시간
     Tween _sirenTween;
-    
+    [SerializeField] private CinemachineVirtualCamera _vcam;
+    private CinemachineBasicMultiChannelPerlin _perlin;
     private void Awake()
     {
-        _mainCamera = GetComponent<Camera>();
-        _mainCamera = Camera.main;
-        _originalPos = _mainCamera.transform.localPosition;
-        _originalRot = _mainCamera.transform.localRotation;
-        _seed = Random.value * 100f;
+        _perlin = _vcam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
     }
 
     private void OnEnable()
     {
-        ShakeCamera(_shakePower, _shakeDuration).Forget();
         StartSiren();
+        DOTween.To(
+                () => _perlin.m_FrequencyGain,
+                x => _perlin.m_FrequencyGain = x,
+                1f,
+                1f 
+            )
+            .SetEase(Ease.Linear)
+            .SetLoops(2, LoopType.Yoyo);
     }
     private void StartSiren()
     {
@@ -52,38 +46,6 @@ public class SirenEffect : MonoBehaviour
     {
         _sirenTween.Kill();
     }
-
-    public async UniTaskVoid ShakeCamera(float power, float duration)
-    {
-        float curPower = Mathf.Clamp01(power);
-        float elapsed = 0f;
-        
-        while (elapsed < duration)
-        {
-            float shake = curPower * curPower;
-            
-            float normalizedTime = elapsed / duration;
-            float currentIntensity = Mathf.Lerp(power, 0f, normalizedTime);
-            shake = currentIntensity * currentIntensity;
-            
-            float offsetX = _maxOffset * shake * (Mathf.PerlinNoise(_seed, Time.time * 10f) * 2f - 1f);
-            float offsetY = _maxOffset * shake * (Mathf.PerlinNoise(_seed + 1f, Time.time * 10f) * 2f - 1f);
-            float rotation = _maxAngle * shake * (Mathf.PerlinNoise(_seed + 2f, Time.time * 10f) * 2f - 1f);
-            
-            _mainCamera.transform.localPosition = _originalPos + new Vector3(offsetX, offsetY, 0f);
-            _mainCamera.transform.localRotation = _originalRot * Quaternion.Euler(0f, 0f, rotation);
-            
-            elapsed += Time.deltaTime;
-            
-            await UniTask.Yield(PlayerLoopTiming.Update);
-        }
-        
-        ResetCamera();
-    }
-    private void ResetCamera()
-    {
-        Debug.Log("ㅇㅇ");
-        _mainCamera.transform.localPosition = _originalPos;
-        _mainCamera.transform.localRotation = _originalRot;
-    }
+    
+ 
 }
