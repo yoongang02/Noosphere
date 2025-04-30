@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Debug = NooSphere.Debug;
-public class SlotClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+public class SlotClickHandler : MonoBehaviour, IPointerClickHandler
 {
     private GameObject _lastEnteredObject;
     private InventoryNavigator _navigator;
@@ -36,6 +36,7 @@ public class SlotClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnt
             }
             else
             {
+                if(InventoryManager.Instance.isUsingEvidence) return;
                 //현재 선택된 오브젝트와 클릭한 오브젝트가 같을 경우 -> 상세 보기 기능
                 Debug.Log($"슬롯{_navigator.currentIndex} 선택");
                 _navigator.OpenEvidenceDetailUI();
@@ -44,7 +45,7 @@ public class SlotClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnt
         }
 
         // 우클릭 감지
-        if (_navigator.canEvidenceUse && eventData.button == PointerEventData.InputButton.Right)
+        if (InventoryManager.Instance.isUsingEvidence && eventData.button == PointerEventData.InputButton.Right)
         {
             //현재 선택된 오브젝트가 우클릭한 오브젝트와 같아야 함. -> 사용하기 기능
             if (_navigator._curSelectedSlot == clickedObject)
@@ -56,6 +57,7 @@ public class SlotClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnt
         }
     }
 
+    /*
     public void OnPointerEnter(PointerEventData eventData)
     {
         //젤 위에 있는 UI 아니면 작동 X
@@ -87,4 +89,5 @@ public class SlotClickHandler : MonoBehaviour, IPointerClickHandler, IPointerEnt
             _lastEnteredObject = null;
         }
     }
+    */
 }

@@ -1,12 +1,14 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using DG.Tweening;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using Cinemachine;
+using TMPro;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class TimeLineSignalManager : MonoBehaviour
 {
@@ -21,8 +23,17 @@ public class TimeLineSignalManager : MonoBehaviour
     [SerializeField] private Material _friendMaterial;
     [SerializeField] private List<string> footSteps;
     [SerializeField] CinemachineVirtualCamera _farLoungCam;
-    
+    [Header("정신세계 이펙트")] [SerializeField] private RawImage _vhsImage;
+    [SerializeField] private Volume _vhsVolume;
+    [SerializeField] private GameObject _vhsObj;
+    [SerializeField] private float _duration = 5f;
+    private Camera _mainCamera;
+    private UnityEngine.Rendering.Universal.UniversalAdditionalCameraData _cameraData;
+    [Header("문틈 대사 관련")] [SerializeField] private TextMeshProUGUI _realText;
+    private float _fadeDuration = 0.3f;
+    private float _displayDuration = 0.8f;
     private Dictionary<string, Animator> _animCacheDic = new Dictionary<string, Animator>();
+
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Animator>();
@@ -32,6 +43,14 @@ public class TimeLineSignalManager : MonoBehaviour
         {
             _cameraData = _mainCamera.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();
         }
+
+        if (_fadeImage != null)
+        {
+            bool showFadeImage = PlayerPrefs.GetInt("FadeImage", 0) == 0;
+            _fadeImage.gameObject.transform.parent.gameObject.SetActive(showFadeImage);
+            
+        }
+        // DataManager.Instance.InitializeData().Forget();--> 테스트용
     }
 
     #region 애니메이션 관련
@@ -67,8 +86,6 @@ public class TimeLineSignalManager : MonoBehaviour
         _friendNpc.SetBool(npcAnim, false);
     }
 
-    #endregion
-
     private Animator GetAnimator(string npcObjectName)
     {
         if (!_animCacheDic.ContainsKey(npcObjectName))
@@ -76,6 +93,7 @@ public class TimeLineSignalManager : MonoBehaviour
             Animator anim = GameObject.Find(npcObjectName)?.GetComponent<Animator>();
             _animCacheDic[npcObjectName] = anim;
         }
+
         return _animCacheDic[npcObjectName];
     }
 
@@ -84,8 +102,7 @@ public class TimeLineSignalManager : MonoBehaviour
         string objectName = command.Split(':')[0];
         string animName = command.Split(':')[1];
         Animator anim = GetAnimator(objectName);
-        anim.SetBool(animName,true);
-
+        anim.SetBool(animName, true);
     }
 
     public void EndAnim(string command)
@@ -96,21 +113,14 @@ public class TimeLineSignalManager : MonoBehaviour
         anim.SetBool(animName, false);
     }
 
+    #endregion
+
+
     public void SetPlayerMaterial(Material material)
     {
         _playerSkin.material = material;
     }
-    
-    /// <summary>
-    /// ///////////////////////////////////////////////////
-    /// </summary>
-    [Header("정신세계 이펙트")] [SerializeField] private RawImage _vhsImage;
 
-    [SerializeField] private Volume _vhsVolume;
-    [SerializeField] private GameObject _vhsObj;
-    [SerializeField] private float _duration = 5f;
-    private Camera _mainCamera;
-    private UnityEngine.Rendering.Universal.UniversalAdditionalCameraData _cameraData;
 
     private async UniTaskVoid StartAutoEffect()
     {
@@ -150,6 +160,8 @@ public class TimeLineSignalManager : MonoBehaviour
         SceneManager.LoadSceneAsync(SceneName);
     }
 
+    #region 사운드 관련
+
     public void StartVfx(string SoundResource)
     {
         SoundManager.Instance.PlaySFXNoEffect(SoundResource);
@@ -187,6 +199,9 @@ public class TimeLineSignalManager : MonoBehaviour
         PlayRandomFootSteps(duration).Forget();
     }
 
+    #endregion
+
+
     public void StopFootSteps()
     {
         isPlayingFootsteps = true;
@@ -195,5 +210,53 @@ public class TimeLineSignalManager : MonoBehaviour
     public void CameraON()
     {
         _farLoungCam.Priority = 12;
+    }
+
+    public void StartDialogueOnWorld(string ID)
+    {
+        ShowRealDialogue(ID).Forget();
+    }
+
+    private async UniTask ShowRealDialogue(string dialogueID)
+    {
+        DialogueStructure doorDialogue = DataManager.Instance._dialogue[dialogueID];
+        DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
+        _realText.gameObject.SetActive(true);
+        for (int i = 0; i < doorDialogue.Dialogue_Text_List.Count; i++)
+        {
+            DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
+            string processedText = doorDialogue.Dialogue_Text_List[i].text.Replace("\\n", "<br>");
+            _realText.text = $"<mark=#00000055>{processedText}</mark>";
+
+            await _realText.DOFade(1f, _fadeDuration).AsyncWaitForCompletion();
+
+            await UniTask.Delay(TimeSpan.FromSeconds(_displayDuration));
+
+            await _realText.DOFade(0f, _fadeDuration).AsyncWaitForCompletion();
+
+            if (i < doorDialogue.Dialogue_Text_List.Count - 1)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(_fadeDuration));
+            }
+        }
+
+        _realText.gameObject.SetActive(false);
+        DataManager.Instance._lockConditions["Lock_condition_003"].UnLock();
+    }
+
+    [SerializeField] private Image _fadeImage;
+
+    public void StartFadeIn()
+    {
+        FadeIn().Forget();
+    }
+
+    private async UniTask FadeIn()
+    {
+        _fadeImage.color = new Color(0, 0, 0, 1);
+        await _fadeImage.DOFade(0, _fadeDuration).AsyncWaitForCompletion();
+        _fadeImage.gameObject.transform.parent.gameObject.SetActive(false);
+        PlayerPrefs.SetInt("FadeImage", 1);
+        PlayerPrefs.Save();
     }
 }

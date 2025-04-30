@@ -13,6 +13,7 @@ public class DialogueCSVParser
             Dictionary<string, DialogueStructure> dictionary = new Dictionary<string, DialogueStructure>();
             string csvUrl = $"https://docs.google.com/spreadsheets/d/1rxLYxA5PoZcaMP9xGD0NrBs78GOLY9sKJv7_Ft9oPww/gviz/tq?tqx=out:csv&sheet={sheetName}";
             
+            // string csvData = await LoadCSVFromResources(fileName);// 로컬에서 csv파일 받아오기
             string csvData = await LoadCSVFromURL(csvUrl);
             if (string.IsNullOrWhiteSpace(csvData)) return dictionary;
     
@@ -51,6 +52,7 @@ public class DialogueCSVParser
                     DialogueStructure.DialougeText dialougeText = new DialogueStructure.DialougeText();
                     dialougeText.text = currentDialogue.dialogueText;
                     dialougeText.tutorialID = currentDialogue.tutorialId;
+                    dialougeText.characterId = currentDialogue.characterId;
                     
                     currentDialogue.Dialogue_Text_List.Add(dialougeText);
                     dictionary[currentDialogueId] = currentDialogue;
@@ -59,15 +61,32 @@ public class DialogueCSVParser
                 {
                     int textIndex = Array.FindIndex(headers, h => h.Trim().Replace("\"", "") == "dialogueText");
                     int tutorialIndex = Array.FindIndex(headers, h => h.Trim().Replace("\"", "") == "tutorialId");
-                    if (textIndex >= 0 && textIndex < values.Length && tutorialIndex >= 0 && tutorialIndex < values.Length)
+                    int characterIndex = Array.FindIndex(headers, h => h.Trim().Replace("\"", "") == "characterId");
+    
+                    if (textIndex >= 0 && textIndex < values.Length)
                     {
                         string additionalText = values[textIndex].Trim().Replace("\"", "");
-                        string tutorialID = values[tutorialIndex].Trim().Replace("\"", "");
-                        
+                        string tutorialID = (tutorialIndex >= 0 && tutorialIndex < values.Length) 
+                            ? values[tutorialIndex].Trim().Replace("\"", "") 
+                            : "";
+            
+                        string characterID = "";
+                        // 추가 행에 characterId가 있으면 그 값을 사용
+                        if (characterIndex >= 0 && characterIndex < values.Length && !string.IsNullOrEmpty(values[characterIndex]))
+                        {
+                            characterID = values[characterIndex].Trim().Replace("\"", "");
+                        }
+                        // 없으면 대화의 기본 characterId 사용
+                        else
+                        {
+                            characterID = currentDialogue.characterId;
+                        }
+        
                         DialogueStructure.DialougeText dialougeText = new DialogueStructure.DialougeText();
                         dialougeText.text = additionalText;
                         dialougeText.tutorialID = tutorialID;
-                        
+                        dialougeText.characterId = characterID;
+        
                         currentDialogue.Dialogue_Text_List.Add(dialougeText);
                     }
                 }
@@ -96,6 +115,30 @@ public class DialogueCSVParser
                     return string.Empty;
                 }
             }
+        }
+        private static Dictionary<string, string> _csvCache = new Dictionary<string, string>();
+    
+        private async UniTask<string> LoadCSVFromResources(string fileName)
+        {
+            if (_csvCache.TryGetValue(fileName, out string cachedData))
+            {
+                return cachedData;
+            }
+            
+            TextAsset textAsset = Resources.Load<TextAsset>($"EventCSV/{fileName}");
+        
+            if (textAsset == null)
+            {
+                Debug.LogError($"리소스에서 CSV 파일을 찾을 수 없습니다: EventCSV/{fileName}");
+                return string.Empty;
+            }
+
+            string csvText = textAsset.text;
+            
+            await UniTask.Delay(200);
+            
+            _csvCache[fileName] = csvText;
+            return csvText;
         }
     
         private string[] GetHeaders(string headerLine)

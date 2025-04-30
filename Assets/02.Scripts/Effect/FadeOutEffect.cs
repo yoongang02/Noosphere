@@ -8,14 +8,18 @@ using UnityEngine.SceneManagement;
 public class FadeOutEffect : MonoBehaviour
 {
     [SerializeField] private Image _fadeImage;
-
+    [SerializeField] private string _sceneName;
     private void OnEnable()
     {
         SoundManager.Instance.StopAllSFX();
-        SoundManager.Instance.PlayLoopingSound("Soundresource_090");
         _fadeImage.color = new Color(0, 0, 0, 0);
         _fadeImage.DOFade(1f, 5f)
-            .SetEase(Ease.InOutQuad).OnComplete(()=>SceneManager.LoadScene("StartScene"));
+            .SetEase(Ease.InOutQuad).OnComplete(()=>
+            {
+                EffectManager.Instance.OnEffectEnd?.Invoke();
+                if (!string.IsNullOrEmpty(_sceneName))
+                    SceneManager.LoadScene(_sceneName);
+            });
         // todo 최종스테이지로
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -194,8 +195,6 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 await DoResult(results);
             }
             
-            Debug.LogWarning($"{eventID} 이벤트의 repeatType {_event.repeatType} , isExecuted : {_event.isExecuted}");
-            
             //이벤트가 성공적으로 실행이 되었다고
             if (!_isRepeatFalse && _isConditionMet)
             {
@@ -215,8 +214,6 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     }
                 }
             }
-
-            Debug.LogWarning($"{eventID} 이벤트의 repeatType {_event.repeatType} , isExecuted : {_event.isExecuted}");
             
             if (_isEventSuccess)
             {
@@ -229,13 +226,18 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 }
                 //예외처리
                 if(currentEventID == "Event_B044") return;
+                //예외처리 - 친구에게 편지 주면 더이상 상호작용하지 못하도록
+                if (currentEventID == "Event_C066")
+                {
+                    DataManager.Instance._events["Event_C082"].repeatType = false;
+                }
             }
             else
             {
                 CloseEventFailure(_event);
             }
             
-            Debug.LogWarning($"{eventID} 이벤트의 repeatType {_event.repeatType} , isExecuted : {_event.isExecuted}");
+            //Debug.LogWarning($"{eventID} 이벤트의 repeatType {_event.repeatType} , isExecuted : {_event.isExecuted}");
 
             if (_isEventSuccess)
             {
@@ -243,7 +245,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 {
                     if (DataManager.Instance._events[nextEventID].isAuto)
                     {
-                        ExecuteEvent(nextEventID).Forget();
+                        await ExecuteEvent(nextEventID);
                     }
                 }
             }
@@ -251,7 +253,11 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             //현재 위치한 곳에 트리거가 있다면 해당 트리거 실행 가능한지 다시 체크
             if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
             {
-                PlayerInteract.Instance.curTrigger.CheckTriggerAvail();
+                await Task.Delay(100);
+                if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
+                {
+                    PlayerInteract.Instance.curTrigger.OnTriggerEnter(PlayerInteract.Instance.GetComponent<CapsuleCollider>());
+                }
             }
         }
     }
@@ -303,6 +309,11 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     else
                     {
                         await QuizManager.Instance.DoWrongResult(quizStructure);
+                        if (quizStructure.quizId == "Quiz_009")
+                        {
+                            _isQuizSolved = true;
+                            return;
+                        }
                         _isQuizSolved = false;
                     }
                 }
@@ -366,6 +377,23 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             {
                 return;
             }
+
+            if (evidenceID == "Evidence_020" || evidenceID == "Evidence_021" ||
+                evidenceID == "Evidence_022")
+            {
+                DialogueManager.Instance.SetDialogue("Dialogue_0065");
+                if (evidenceID == "Evidence_020")
+                {
+                    Debug.LogWarning("카메라 설정 overlay로 변경.");
+                    PlayerController.Instance._uiCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                    InventoryManager.Instance.GetComponent<InventoryNavigator>().OnClose();
+                    
+                }
+                _evidence.AcquireEvidence();
+                MirrorPuzzleManager.Instance.GetMirrorPiece(evidenceID);
+                await UniTask.Yield();
+                return;
+            }
             
             //Investigate UI를 열수 있으면 열기
             if (_evidence.canInvestigate == 'Y')
@@ -405,12 +433,6 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     Debug.LogWarning("Investigate UI에서 NO를 선택함.");
                 }
                 
-
-                if (evidenceID == "Evidence_020" || evidenceID == "Evidence_021" ||
-                    evidenceID == "Evidence_022")
-                {
-                    MirrorPuzzleManager.Instance.GetMirrorPiece(evidenceID);
-                }
                 
                 //습득할 수 있는 증거물의 이벤트 type이 true이고 repeat fasle result가 없으면 repeatType을 false로 변경
                 if (_event.repeatType && _evidence.acquisitionType == 'Y' && string.IsNullOrEmpty(_event.repeatFalseResult))
@@ -442,95 +464,6 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             _isEventSuccess = false;
         }
     }
-    
-    /*
-     //5. evidenceID가 비어있지 않으면 증거물 습득
-       if (!string.IsNullOrEmpty(eventStructure.evidenceId) && DataManager.Instance._evidences.ContainsKey(eventStructure.evidenceId))
-       {
-       Debug.Log("#5 : "+eventStructure.eventId+"의 증거물"+eventStructure.evidenceId+" 습득");
-       
-       // 증거물 조사 UI 띄우기
-       EvidenceStructure evidence = DataManager.Instance._evidences[eventStructure.evidenceId];
-       
-       if(!evidence.CanAcquireEvidence()) yield break;
-       
-       //임시로 사진만 예외처리 함. 기획과 논의 필요!!
-       if (evidence.evidenceId == "Evidence_008")
-       {
-       evidence.AcquireEvidence();
-       }
-       else if (evidence.evidenceId == "Evidence_019" || evidence.evidenceId == "Evidence_020" || evidence.evidenceId == "Evidence_021" ||
-       evidence.evidenceId == "Evidence_022" || evidence.evidenceId == "Evidence_023")
-       {
-       //거울 조각이고
-       //인벤토리에 거울조각이 없다면 습득 시도
-       if (!InventoryManager.Instance.IsAcquiredEvidence(evidence.evidenceId))
-       {
-       Debug.Log($"#{evidence.evidenceId}가 인벤토리에 없기에 거울조각 습득 시도");
-       
-       //Investigate UI 창 열기
-       UIManager.Instance.OpenUI(UIManager.Instance.investigateUI,evidence);
-       }
-       else
-       {
-       CloseEventSuccess(eventStructure);
-       yield break;
-       }
-       }
-       else
-       {
-       UIManager.Instance.OpenUI(UIManager.Instance.investigateUI, evidence);
-       }
-       
-       
-       // UI에서 입력을 기다림
-       bool isSelectEnd = false;
-       UIManager.Instance.OnSelectEnd += () =>
-       {
-       isSelectEnd = true;
-       };
-       yield return new WaitUntil(() => isSelectEnd);
-       Debug.Log("#5-1 : "+eventStructure.eventId+"의 증거물"+eventStructure.evidenceId+" 선택 완료");
-       
-       yield return null;
-       
-       //Investigate UI에서 NO를 선택한 경우
-       if (!UIManager.Instance.IsAcquiredInInvestigateUI())
-       {
-       Debug.Log($"No 버튼을 눌렀으니 {eventStructure} 실행 false");
-       _isEventSuccess = false;
-       CloseEventFailure(eventStructure);
-       
-       //예외처리
-       if(currentEventID == "Event_A007") nextEventID = "Event_A007";
-       yield break;
-       }
-       
-       //Investigate UI에서 YES를 선택한 경우
-       Debug.Log($"YES 버튼을 눌렀으니 {eventStructure} 실행 true");
-       _isEventSuccess = true;
-       if (currentEventID == "Event_A018")
-       {
-       //일기 습득 성공하면 더이상 캐비넷에 접근할 수 없도록
-       Debug.LogWarning($"캐비넷 더이상 접근 불가능하도록 설정");
-       DataManager.Instance._events["Event_A025"].repeatType = false;
-       DataManager.Instance._events["Event_A025"].isExecuted = true;
-       DataManager.Instance._events["Event_A017"].isExecuted = true;
-       DataManager.Instance._events["Event_A017"].repeatType = false;
-       }
-       else if (evidence.evidenceId == "Evidence_019" || evidence.evidenceId == "Evidence_020" ||
-       evidence.evidenceId == "Evidence_021" ||
-       evidence.evidenceId == "Evidence_022" || evidence.evidenceId == "Evidence_023")
-       {
-       MirrorPuzzleManager.Instance.GetMirrorPiece(evidence.evidenceId);
-       //책장 UI에 ? 안 뜨도록
-       DataManager.Instance._events["Event_B064"].repeatType = false;
-       }
-       }
-       
-       if (_isEventSuccess) CloseEventSuccess(eventStructure);
-       else CloseEventFailure(eventStructure);
-     */
 
     //dialogue 시작
     void StartDialogue(string dialogueID)

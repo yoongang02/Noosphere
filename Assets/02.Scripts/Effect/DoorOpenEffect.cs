@@ -14,6 +14,12 @@ public class DoorOpenEffect : MonoBehaviour
       _closeDoor.SetActive(false);
       _clearTrigger.SetActive(true);
       SoundManager.Instance.PlaySFX("Soundresource_082");
+      
+      // 문 다 열리면 EventTrigger의 isDoorOpen
+      if (transform.parent.GetComponentInChildren<EventTrigger>() != null)
+      {
+         transform.parent.GetComponentInChildren<EventTrigger>().isDoorOpen = true;
+      }
    }
 
    public void OnAnimationEnd()

@@ -19,7 +19,8 @@ public class EvidenceDetailUI : UIBase
     
     [Header("증거물 상세내용 공통 UI")]
     [SerializeField] private Image _bgImg;
-    [SerializeField] private Sprite _inventoryBgImg;
+    [SerializeField] private Sprite _inventoryBgImgReal;
+    [SerializeField] private Sprite _inventoryBgImgMental;
 
     [Header("Page 증거물")] [SerializeField] private int _curPage;
     [SerializeField] private int _totalPage;
@@ -41,18 +42,20 @@ public class EvidenceDetailUI : UIBase
             return;
         }
         
+        UIManager.Instance.cctvFrame.SetActive(false);
         
         //인벤토리에서 증거물 상세사항을 오픈할 경우에는 UI 순서를 위해 아래의 설정이 필요함.
         if (!UIManager.Instance.isInMap)
         {
-            PlayerController.Instance._uiCanvas.renderMode = RenderMode.ScreenSpaceCamera;
-            PlayerController.Instance._uiCanvas.worldCamera = PlayerController.Instance._mainCamera;
-
+            /*
             if (evidence.evidenceId == "Evidence_020")
             {
                 evidence.AcquireEvidence();
                 InventoryManager.Instance.UpdateInventoryUI();
             }
+            */
+            PlayerController.Instance._uiCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            PlayerController.Instance._uiCanvas.worldCamera = PlayerController.Instance._mainCamera;
         }
         
         SetDetailEvidence(evidence);
@@ -73,12 +76,19 @@ public class EvidenceDetailUI : UIBase
             PlayerController.Instance._uiCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
         }
         
+        UIManager.Instance.cctvFrame.SetActive(true);
+        
         _objectUI.SetActive(false);
         _onePageUI.SetActive(false);
         _twoPageUI.SetActive(false);
         _keyUI.SetActive(false);
         
         transform.GetChild(0).gameObject.SetActive(false);
+
+        if (_curEvidence != null)
+        {
+            if(_curEvidence.evidenceId == "Evidence_018") UIManager.Instance.CloseAllUI();
+        }
         
         _curEvidenceID = "";
         _curEvidence = null;
@@ -88,6 +98,9 @@ public class EvidenceDetailUI : UIBase
     public override void HandleKeyboardInput()
     {
         base.HandleKeyboardInput();
+        
+        // Object UI이면 페이지 넘기는 소리 나오지 않도록
+        if(_objectUI.activeSelf) return;
         
         //키보드 A - 이전 페이지 버튼 
         if (_prevPageBtn != null && _nextPageBtn != null)
@@ -118,7 +131,14 @@ public class EvidenceDetailUI : UIBase
         {
             if (!UIManager.Instance.isInMap)
             {
-                _bgImg.sprite = _inventoryBgImg;
+                if (evidence.evidenceType == 'R')
+                {
+                    _bgImg.sprite = _inventoryBgImgReal;
+                }
+                else if (evidence.evidenceType == 'M')
+                {
+                    _bgImg.sprite = _inventoryBgImgMental;
+                }
             }
             else
             {

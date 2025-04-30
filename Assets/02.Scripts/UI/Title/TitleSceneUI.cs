@@ -14,10 +14,12 @@ public class TitleSceneUI : MonoBehaviour
     [SerializeField] private Button _settingBtn;
     [SerializeField] private Button _exitBtn;
     public EventSystem _eventSys;
-
+    [SerializeField] private GameObject _creditPanel;
+    private bool _hasFirstHoverOccurred = false;
     private void OnEnable()
     {
-        _eventSys.firstSelectedGameObject = _loadGameBtn.gameObject;
+        _eventSys.firstSelectedGameObject = _newGameBtn.gameObject;
+        _hasFirstHoverOccurred = false; 
     }
 
     private void Start()
@@ -44,6 +46,7 @@ public class TitleSceneUI : MonoBehaviour
     private void OnClickCreditBtn()
     {
         SoundManager.Instance.PlaySFX("Soundresource_037");
+        _creditPanel.SetActive(true);
     }
 
     private void OnClickSettingBtn()
@@ -65,5 +68,15 @@ public class TitleSceneUI : MonoBehaviour
     public void OnHoverSound()
     {
         SoundManager.Instance.PlaySFX("Soundresource_035");
+    }
+
+    public void OnFirstHover()
+    {
+        if (!_hasFirstHoverOccurred)
+        {
+            _eventSys.SetSelectedGameObject(null);
+            _hasFirstHoverOccurred = false;
+        }
+
     }
 }

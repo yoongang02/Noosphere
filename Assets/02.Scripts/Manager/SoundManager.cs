@@ -193,7 +193,7 @@ public class SoundManager : Singleton<SoundManager>
 
         source.clip = soundData.soundClip;
         source.volume = soundData.volume;
-
+        source.loop = false;
         for(int i = 0; i < soundData.loopCnt; i++)
         {
             source.Play();
@@ -240,7 +240,8 @@ public class SoundManager : Singleton<SoundManager>
         {
             if (source.clip == soundData.soundClip && source.isPlaying)
             {
-                source.Stop();
+                source.clip = null;
+                //source.Stop();
                 Debug.Log($"{source}의 SFX가 중지되었습니다.");
                 return;
             }
@@ -253,7 +254,7 @@ public class SoundManager : Singleton<SoundManager>
 
         if (source != null && source.isPlaying)
         {
-            source.Stop();
+            source.clip = null;
         }
     }
     
@@ -261,7 +262,7 @@ public class SoundManager : Singleton<SoundManager>
     {
         foreach (AudioSource source in _sfxSources)
         {
-            source.Stop();
+            source.clip = null;
         }
     }
 

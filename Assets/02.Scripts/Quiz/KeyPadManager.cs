@@ -56,6 +56,7 @@ public class KeyPadManager : UIBase
     {
         base.OnClose();
         transform.GetChild(0).gameObject.SetActive(false);
+        UIManager.Instance.cctvFrame.SetActive(true);
         QuizManager.Instance.OnQuizEnd?.Invoke();
     }
     public void SetDialText(string number)
