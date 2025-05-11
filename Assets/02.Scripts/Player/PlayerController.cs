@@ -18,12 +18,14 @@ public class PlayerController : Singleton<PlayerController>
     public Camera _mainCamera;
     public Canvas _uiCanvas;
     [SerializeField] private CinemachineVirtualCamera _dialogueCamera;
-    [Header("플레이어 사운드")] [SerializeField] private List<AudioClip> _walkSounds;
+    [Header("플레이어 사운드")] 
+    [SerializeField] private List<AudioClip> _walkSounds;
     [SerializeField] private List<AudioClip> runSounds;
+    [SerializeField] private List<AudioClip> _waterWalkSounds;
     [SerializeField] private AudioSource footstepSource;
     [SerializeField] private float stepInterval = 0.5f;
     [SerializeField] private float runInterval = 0.2f;
-
+    private bool _isWater;
     private Vector3 _moveDirection;
     private Animator _animator;
     private float _defaultSpeed;
@@ -116,7 +118,15 @@ public class PlayerController : Singleton<PlayerController>
             // 발소리 처리
             bool isRunning = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
             float currentInterval = isRunning ? runInterval : stepInterval;
-            List<AudioClip> currentSounds = isRunning ? runSounds : _walkSounds;
+            List<AudioClip> currentSounds;
+            if (_isWater)
+            {
+                currentSounds = _waterWalkSounds;
+            }
+            else
+            {
+                currentSounds = isRunning ? runSounds : _walkSounds;
+            }
 
             if (Time.time >= lastStepTime + currentInterval)
             {
@@ -178,6 +188,14 @@ public class PlayerController : Singleton<PlayerController>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         AssignMainCamera();
+        if (scene.name == "FinalStage_Spirit")
+        {
+            _isWater = true;
+        }
+        else
+        {
+            _isWater = false;
+        }
     }
 
     public void AssignMainCamera()
