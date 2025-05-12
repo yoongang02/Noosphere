@@ -161,8 +161,7 @@ public class SoundManager : Singleton<SoundManager>
         }
 
         StopBGM();
-        _bgmSource.clip = soundData.soundClip;
-        _bgmSource.volume = 0f;
+        SetAudioSource(_bgmSource, soundData);
         _bgmSource.loop = true;
   
         _bgmSource.Play();
@@ -191,8 +190,7 @@ public class SoundManager : Singleton<SoundManager>
         // 재사용 가능한 AudioSource 가져오기
         AudioSource source = GetAvailableSFXSource();
 
-        source.clip = soundData.soundClip;
-        source.volume = soundData.volume;
+        SetAudioSource(source, soundData);
         source.loop = false;
         for(int i = 0; i < soundData.loopCnt; i++)
         {
@@ -307,5 +305,29 @@ public class SoundManager : Singleton<SoundManager>
             float clipLength = soundData.soundClip.length; // 클립의 길이 가져오기
             StartCoroutine(StopAndReleaseSourceAfterDelay(source, clipLength));
         }
+    }
+
+    public void SetAudioSource(AudioSource audioSource, SoundData data)
+    {
+        // 오디오 일반 설정
+        audioSource.clip = data.soundClip;
+        audioSource.volume = data.volume;
+        audioSource.priority = data.priority;
+        audioSource.pitch = data.pitch;
+        audioSource.panStereo = data.stereoPan;
+        audioSource.spatialBlend = data.spatialBlend;
+        audioSource.reverbZoneMix = data.reverbZoneMix;
+        
+        // bypass 관련 설정
+        audioSource.bypassEffects = data.bypassEffects;
+        audioSource.bypassListenerEffects = data.bypassListenerEffects;
+        audioSource.bypassReverbZones = data.bypassReverbZones;
+        
+        // 3d 공간 설정
+        audioSource.dopplerLevel = data.dopplerLevel;
+        audioSource.spread = data.spread;
+        audioSource.rolloffMode = data.volumeRolloff;
+        audioSource.minDistance = data.minDistance;
+        audioSource.maxDistance = data.maxDistance;
     }
 }
