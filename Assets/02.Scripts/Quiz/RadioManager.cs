@@ -39,22 +39,8 @@ public class RadioManager : UIBase
 
     private void Awake()
     {
-        _skipBtn.onClick.AddListener(() =>
-        {
-            if (_alreadyShowDialogue)
-            {
-                if (PlayerInteract.Instance.isInMental)
-                {
-                    if (_alreadyShowOnSpirit)
-                        _isSkipping = true;
-                }
-                else
-                {
-                    if (_alreadyShowDialogue)
-                        _isSkipping = true;
-                }
-            }
-        });
+        _skipBtn.onClick.RemoveAllListeners();
+        _skipBtn.onClick.AddListener(() => _isSkipping = true);
     }
 
     public override async void OnOpen(string quizID)
