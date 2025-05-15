@@ -285,7 +285,7 @@ public class MentalEnterProcess : MonoBehaviour
         {
             eventId = null;
         }
-
+        SceneTracker.previousMentalState = PlayerInteract.Instance.isInMental;
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
     
         while (!operation.isDone)

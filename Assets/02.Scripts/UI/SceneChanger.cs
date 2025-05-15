@@ -42,12 +42,13 @@ public class SceneChanger : Singleton<SceneChanger>
                 SoundManager.Instance.StopBGM();
             })
             .AsyncWaitForCompletion();
-
+        
         await LoadScene(sceneName);
     }
     
     private async UniTask LoadScene(string sceneName)
     {
+        SceneTracker.previousMentalState = PlayerInteract.Instance.isInMental;
         AsyncOperation async = SceneManager.LoadSceneAsync(sceneName);
        
         while (!async.isDone)
