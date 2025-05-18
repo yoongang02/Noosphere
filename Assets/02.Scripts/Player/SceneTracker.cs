@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class SceneTracker
 {
-   public static bool previousMentalState=true;
+   public static bool previousMentalState=true;//
+   public static string previousSceneName="";
 }
