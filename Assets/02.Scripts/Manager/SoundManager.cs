@@ -5,6 +5,7 @@ using System.Collections;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Unity.VisualScripting;
+using UnityEngine.Audio;
 
 public class SoundManager : Singleton<SoundManager>
 {
@@ -13,7 +14,8 @@ public class SoundManager : Singleton<SoundManager>
     private Dictionary<string, SoundData> _sfxDictionary = new Dictionary<string, SoundData>();
     [SerializeField] private List<SoundData> _bgmList = new List<SoundData>();
     [SerializeField] private List<SoundData> _sfxList = new List<SoundData>();
-    
+
+    [SerializeField] private AudioMixerGroup _SFXGroup;
     [SerializeField]
     private AudioSource _bgmSource = null;
     [SerializeField]
@@ -189,7 +191,6 @@ public class SoundManager : Singleton<SoundManager>
 
         // 재사용 가능한 AudioSource 가져오기
         AudioSource source = GetAvailableSFXSource();
-
         SetAudioSource(source, soundData);
         source.loop = false;
         for(int i = 0; i < soundData.loopCnt; i++)
@@ -210,6 +211,7 @@ public class SoundManager : Singleton<SoundManager>
         {
             if (!source.isPlaying)
             {
+                source.outputAudioMixerGroup = _SFXGroup;
                 return source; // 재사용 가능한 소스를 반환
             }
         }
@@ -218,6 +220,7 @@ public class SoundManager : Singleton<SoundManager>
         if (_sfxSources.Count < _maxSFXPoolSize)
         {
             AudioSource newSource = gameObject.AddComponent<AudioSource>();
+            newSource.outputAudioMixerGroup = _SFXGroup;
             _sfxSources.Add(newSource);
             return newSource;
         }
