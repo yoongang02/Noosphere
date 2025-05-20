@@ -125,13 +125,18 @@ public class MentalEnterProcess : MonoBehaviour
             {
                 Debug.Log($"#{mentalInfo.mentalId} 진입 중에 움직여서 초기화 됨.");
                 // 소리 초기화
-                SoundManager.Instance.StopSFXWithFade("Soundresource_029",1f);
+                SoundManager.Instance.StopSFXWithFade("Soundresource_029",0.5f);
+                SoundManager.Instance.StopSFXWithFade("Soundresource_112",0.5f);
+                SoundManager.Instance.StopSFXWithFade("Soundresource_113",0.5f);
                 FailEnter();
             }
 
             if (_isForceQuit)
             {
                 Debug.Log($"#{mentalInfo.mentalId} 진입 강제 종료");
+                SoundManager.Instance.StopSFXWithFade("Soundresource_029",0.5f);
+                SoundManager.Instance.StopSFXWithFade("Soundresource_112",0.5f);
+                SoundManager.Instance.StopSFXWithFade("Soundresource_113",0.5f);
                 FailEnter();
             }
         }
