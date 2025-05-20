@@ -8,7 +8,6 @@ public class MentalEnterProcess : MonoBehaviour
 {
     //정신세계 진입 관련 변수
     [Header("정신세계 진입")]
-    [SerializeField] private float _enterTime = 5.0f;
     [SerializeField] bool _startEnter = false;
     [SerializeField] float _timer = 0f;
     public bool isComplete = false;
@@ -134,15 +133,6 @@ public class MentalEnterProcess : MonoBehaviour
                 // 소리 초기화
                 SoundManager.Instance.StopSFX("Soundresource_029");
                 FailEnter();
-            }
-
-            if (_timer >= _enterTime)
-            {
-                if (!isComplete)
-                {
-                    Debug.Log($"#{mentalInfo.mentalId} 시간 내에 진입하지 못함.");
-                    FailEnter();
-                }
             }
 
             if (_isForceQuit)
