@@ -47,13 +47,6 @@ public class EvidenceDetailUI : UIBase
         //인벤토리에서 증거물 상세사항을 오픈할 경우에는 UI 순서를 위해 아래의 설정이 필요함.
         if (!UIManager.Instance.isInMap)
         {
-            /*
-            if (evidence.evidenceId == "Evidence_020")
-            {
-                evidence.AcquireEvidence();
-                InventoryManager.Instance.UpdateInventoryUI();
-            }
-            */
             PlayerController.Instance._uiCanvas.renderMode = RenderMode.ScreenSpaceCamera;
             PlayerController.Instance._uiCanvas.worldCamera = PlayerController.Instance._mainCamera;
         }
@@ -84,11 +77,6 @@ public class EvidenceDetailUI : UIBase
         _keyUI.SetActive(false);
         
         transform.GetChild(0).gameObject.SetActive(false);
-
-        if (_curEvidence != null)
-        {
-            if(_curEvidence.evidenceId == "Evidence_018") UIManager.Instance.CloseAllUI();
-        }
         
         _curEvidenceID = "";
         _curEvidence = null;
@@ -521,11 +509,6 @@ public class EvidenceDetailUI : UIBase
                     if (_subEvidence.evidenceId == "Evidence_008" && _subEvidence.accessCnt >= 1)
                     {
                         resultID = "Event_A024";
-                    }
-
-                    if (DataManager.Instance._evidences["Evidence_020"].isAcquired)
-                    {
-                        return;
                     }
                     
                     await EventManagerYKM.Instance.ExecuteEvent(resultID);
