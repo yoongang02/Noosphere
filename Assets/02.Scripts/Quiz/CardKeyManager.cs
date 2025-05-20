@@ -29,8 +29,14 @@ public class CardKeyManager : UIBase
     {
         base.OnClose();
         UIManager.Instance.cctvFrame.SetActive(true);
+        PlayerInteract.Instance.CheckTriggerOnceAgain();
         transform.GetChild(0).gameObject.SetActive(false);
         this.gameObject.SetActive(false);
+    }
+
+    void Update()
+    {
+        if(IsTopUI()) EscapeUI.Instance.Active();
     }
 
     void InitCardKey()

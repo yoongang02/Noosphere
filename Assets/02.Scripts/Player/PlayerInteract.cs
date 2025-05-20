@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -95,6 +96,26 @@ public class PlayerInteract : Singleton<PlayerInteract>
                     OnEvidenceUse = null;
                 }
             }
+        }
+    }
+    
+    public void CheckTriggerOnceAgain()
+    {
+        //현재 위치한 곳에 트리거가 있다면 해당 트리거 실행 가능한지 다시 체크
+        if (isInsideTrigger && curTrigger != null)
+        {
+            StartCoroutine(CheckTrigger(0.3f));
+        }
+    }
+
+    IEnumerator CheckTrigger(float second)
+    {
+        yield return new WaitForSeconds(second);
+        
+        if (isInsideTrigger && curTrigger != null)
+        {
+            Debug.LogWarning("체크");
+            curTrigger.OnTriggerEnter(GetComponent<CapsuleCollider>());
         }
     }
 }
