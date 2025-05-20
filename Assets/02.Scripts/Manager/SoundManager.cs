@@ -194,6 +194,7 @@ public class SoundManager : Singleton<SoundManager>
         source.loop = false;
         for(int i = 0; i < soundData.loopCnt; i++)
         {
+            source.time = 0f;
             source.Play();
             // AudioClip의 길이만큼 대기 후 오디오 소스 중지 및 반환
             float clipLength = soundData.soundClip.length; // 클립의 길이 가져오기
@@ -239,7 +240,32 @@ public class SoundManager : Singleton<SoundManager>
             if (source.clip == soundData.soundClip && source.isPlaying)
             {
                 source.clip = null;
-                //source.Stop();
+                source.Stop();
+                Debug.Log($"{source}의 SFX가 중지되었습니다.");
+                return;
+            }
+        }
+    }
+
+    public void StopSFXWithFade(string id, float duration)
+    {
+        SoundData soundData = _sfxDictionary[id];
+        if (soundData == null || soundData.soundClip == null)
+        {
+            Debug.LogWarning("SoundData 유효하지 않습니다.");
+            return;
+        }
+        
+        foreach (var source in _sfxSources)
+        {
+            if (source.clip == soundData.soundClip && source.isPlaying)
+            {
+                DOTween.To(() => source.volume, x => source.volume = x, 0f, duration)
+                    .OnComplete(() =>
+                    {
+                        source.clip = null;
+                        source.Stop();
+                    });
                 Debug.Log($"{source}의 SFX가 중지되었습니다.");
                 return;
             }

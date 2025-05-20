@@ -109,7 +109,7 @@ public class RadioManager : UIBase
             _dialBtn[1].OnValueChanged += OnOneDigitChanged;
             _dialBtn[2].OnValueChanged += OnDecimalDigitChanged;
         }
-
+        _powerBtn.onClick.RemoveListener(CheckAnswer);
         _powerBtn.onClick.AddListener(CheckAnswer);
         transform.GetChild(0).gameObject.SetActive(true);
     }
@@ -167,6 +167,7 @@ public class RadioManager : UIBase
         else
         {
             SoundManager.Instance.PlaySFX("Soundresource_001");
+            SoundManager.Instance.StopSFXWithFade("Soundresource_001", 2f);
             Debug.Log("오답");
         }
     }
