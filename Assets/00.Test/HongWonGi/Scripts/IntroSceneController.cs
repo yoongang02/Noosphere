@@ -15,7 +15,7 @@ public class IntroSceneController : MonoBehaviour
     [SerializeField] private float _fadeDuration = 0.8f;
     [SerializeField] private PlayableDirector _introTimeLine;
     [SerializeField] private VideoPlayer _introVideo;
-
+    [SerializeField] private Button _skipBtn;
     [Header("대사관련")] 
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private GameObject _dialogueGroup;
@@ -60,6 +60,7 @@ public class IntroSceneController : MonoBehaviour
     {
         _fadeImage.color = new Color(0, 0, 0, 1);
         await _fadeImage.DOFade(0, _fadeDuration).AsyncWaitForCompletion();
+        _skipBtn.gameObject.SetActive(true);
         // _introTimeLine.Play();
     }
 
