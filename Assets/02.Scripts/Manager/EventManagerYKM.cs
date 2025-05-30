@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EventManagerYKM : Singleton<EventManagerYKM>
@@ -234,7 +235,14 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             }
             else
             {
-                CloseEventFailure(_event);
+                if (currentEventID == "Event_D099" || currentEventID == "Event_D100")
+                {
+                    CloseEventSuccess(_event);
+                }
+                else
+                {
+                    CloseEventFailure(_event);
+                }
             }
             
             //Debug.LogWarning($"{eventID} 이벤트의 repeatType {_event.repeatType} , isExecuted : {_event.isExecuted}");
@@ -256,6 +264,20 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 await Task.Delay(100);
                 if (PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.curTrigger != null)
                 {
+                    bool canCheck = false;
+                    foreach (var EVENTID in PlayerInteract.Instance.curTrigger.GetComponent<EventTrigger>().eventIdList)
+                    {
+                        if (!DataManager.Instance._events[EVENTID].repeatType && DataManager.Instance._events[EVENTID].isExecuted)
+                        {
+                            canCheck = false;
+                            continue;
+                        }
+
+                        canCheck = true;
+                        break;
+                    }
+                    if(!canCheck) return;
+                    if(currentEventID == "Event_D090") return;
                     PlayerInteract.Instance.curTrigger.OnTriggerEnter(PlayerInteract.Instance.GetComponent<CapsuleCollider>());
                 }
             }
@@ -292,6 +314,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     // 효과가 끝날 때까지 대기
                     await WaitForEffectEndAsync();
                     Debug.Log("#4-2 : " + resultID + " 효과 끝");
+                    if (resultID == "Effect_048") _isEventSuccess = true;
                 }
                 else if (resultType == "Quiz")
                 {
@@ -382,13 +405,6 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 evidenceID == "Evidence_022")
             {
                 DialogueManager.Instance.SetDialogue("Dialogue_0065");
-                if (evidenceID == "Evidence_020")
-                {
-                    Debug.LogWarning("카메라 설정 overlay로 변경.");
-                    PlayerController.Instance._uiCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-                    InventoryManager.Instance.GetComponent<InventoryNavigator>().OnClose();
-                    
-                }
                 _evidence.AcquireEvidence();
                 MirrorPuzzleManager.Instance.GetMirrorPiece(evidenceID);
                 await UniTask.Yield();
@@ -476,6 +492,14 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     void StartEffect(string effectID)
     {
         Debug.Log($"{effectID} 효과 시작");
+        if (effectID == "Effect_048")
+        {
+            DataManager.Instance._events["Event_D099"].isExecuted = true;
+        }
+        else if (effectID == "Effect_054")
+        {
+            DataManager.Instance._events["Event_D102"].isExecuted = true;
+        }
         EffectManager.Instance.SetEffect(effectID);
     }
     
@@ -507,6 +531,23 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();   
         }
         _event.isExecuted = true;
+        if (_event.eventId == "Event_D102")
+        {
+            Debug.LogWarning("[엔딩 2차 분기점]");
+            // 다프네에게 연구소 도면을 받았다면
+            if (DataManager.Instance._events["Event_B065"].isExecuted && InventoryManager.Instance.IsEvidenceInInventory("Evidence_016"))
+            {
+                Debug.LogWarning("[일반 엔딩] 탈출 성공");
+                DataManager.Instance._events["Event_D102"].nextEventId = "Event_D103";
+            }
+            else
+            {
+                Debug.LogWarning("[일반 엔딩] 탈출 실패");
+                DataManager.Instance._events["Event_D102"].nextEventId = "Event_D104";
+            }     
+        }
+
+       
         nextEventID = _event.nextEventId;
     }
 

@@ -8,7 +8,7 @@ public class ClueObjectController : MonoBehaviour
      [SerializeField] private float _scaleSpeed = 0.1f; 
      [SerializeField] private float _minScale = 0.1f;   
      [SerializeField] private float _maxScale = 3f;    
-     [SerializeField] private float _rotationSpeed = 100f;
+     [SerializeField] private float _rotationSpeed = 30f;
      private Vector3 _previousMousePosition;
      [SerializeField] private RectTransform parentPanel;
      [SerializeField] private Canvas parentCanvas;

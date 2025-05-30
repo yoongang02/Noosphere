@@ -19,6 +19,7 @@ public class ClearTrigger : MonoBehaviour
          Debug.Log("트리거 엔터");
          EventManagerYKM.Instance.ExecuteEvent(eventID).Forget();
          EventManagerYKM.Instance.curChapterInfo = _chapterInfo;
+         SceneTracker.previousSceneName = SceneManager.GetActiveScene().name;
          // SceneManager.LoadScene(nextScene);
          SceneChanger.Instance.ChangeScene(nextScene);
       }

@@ -22,6 +22,7 @@ public class EscapeUI : Singleton<EscapeUI>, IPointerClickHandler
                 
                 return;
             }
+            Debug.LogWarning("나가기 버튼 누름");
             UIManager.Instance.CloseTopUI();
             _escapeBtn.SetActive(false);
         }

@@ -8,7 +8,6 @@ public class MentalEnterProcess : MonoBehaviour
 {
     //정신세계 진입 관련 변수
     [Header("정신세계 진입")]
-    [SerializeField] private float _enterTime = 5.0f;
     [SerializeField] bool _startEnter = false;
     [SerializeField] float _timer = 0f;
     public bool isComplete = false;
@@ -21,8 +20,8 @@ public class MentalEnterProcess : MonoBehaviour
     [Header("정신세계 진입 UI")]
     [SerializeField] private GameObject _progressBarUI;
     [SerializeField] private EnterProgressBar _progressBarFill;
-    private bool _soundPlayed=false;
-    private bool _isDrainingSoundPlaying = false; 
+    [SerializeField] private bool _soundPlayed=false;
+    [SerializeField] private bool _isDrainingSoundPlaying = false; 
     
     void Update()
     {
@@ -64,48 +63,42 @@ public class MentalEnterProcess : MonoBehaviour
                     EffectManager.Instance.StartMentalEffect(value);
                     if(!_soundPlayed)
                     {
+                        SoundManager.Instance.StopSFX("Soundresource_113");
                         SoundManager.Instance.PlaySFX("Soundresource_029");
                         _soundPlayed = true;
-                    }
-                    if (_isDrainingSoundPlaying)
-                    {
-                        SoundManager.Instance.StopSFX("Soundresource_112");
-                        SoundManager.Instance.StopSFX("Soundresource_113");
                         _isDrainingSoundPlaying = false;
                     }
 
-                    if (value >= 1f)
+                    if (value >= 1f && !isComplete)
                     {
+                        _soundPlayed = false;
+                        _isDrainingSoundPlaying = false;
                         isComplete = true;
                         // 완료되면 소리 재생
-                        SoundManager.Instance.StopSFX("Soundresource_029");
+                        SoundManager.Instance.StopSFXWithFade("Soundresource_029",0.5f);
                         SoundManager.Instance.PlaySFX("Soundresource_028");
-                    }
-                    if (value >= 1f)
-                    {
-                        isComplete = true;
                     }
                 }
                 else
                 {
                     if (!_isDrainingSoundPlaying)
                     {
-                        SoundManager.Instance.PlaySFX("Soundresource_112");
+                        SoundManager.Instance.StopSFX("Soundresource_029");
                         SoundManager.Instance.PlaySFX("Soundresource_113");
                         _isDrainingSoundPlaying = true;
+                        _soundPlayed = false; 
                     }
                     //스페이스에서 손 때면, 현 상태에서 게이지 감소하는 코드
                     float value = _progressBarFill.DrainAmount();
                     EffectManager.Instance.StartMentalEffect(value);
-                    _soundPlayed = false; 
-                    SoundManager.Instance.StopSFX("Soundresource_029");
                     if (value <= 0)
                     {
                         if (_isDrainingSoundPlaying)
                         {
-                            SoundManager.Instance.StopSFX("Soundresource_112");
-                            SoundManager.Instance.StopSFX("Soundresource_113");
+                            SoundManager.Instance.StopSFXWithFade("Soundresource_113",0.5f);
+                            SoundManager.Instance.PlaySFX("Soundresource_112");
                             _isDrainingSoundPlaying = false;
+                            _soundPlayed = false;
                         }
                         FailEnter();
                     }
@@ -132,22 +125,18 @@ public class MentalEnterProcess : MonoBehaviour
             {
                 Debug.Log($"#{mentalInfo.mentalId} 진입 중에 움직여서 초기화 됨.");
                 // 소리 초기화
-                SoundManager.Instance.StopSFX("Soundresource_029");
+                SoundManager.Instance.StopSFXWithFade("Soundresource_029",0.5f);
+                SoundManager.Instance.StopSFXWithFade("Soundresource_112",0.5f);
+                SoundManager.Instance.StopSFXWithFade("Soundresource_113",0.5f);
                 FailEnter();
-            }
-
-            if (_timer >= _enterTime)
-            {
-                if (!isComplete)
-                {
-                    Debug.Log($"#{mentalInfo.mentalId} 시간 내에 진입하지 못함.");
-                    FailEnter();
-                }
             }
 
             if (_isForceQuit)
             {
                 Debug.Log($"#{mentalInfo.mentalId} 진입 강제 종료");
+                SoundManager.Instance.StopSFXWithFade("Soundresource_029",0.5f);
+                SoundManager.Instance.StopSFXWithFade("Soundresource_112",0.5f);
+                SoundManager.Instance.StopSFXWithFade("Soundresource_113",0.5f);
                 FailEnter();
             }
         }
@@ -285,7 +274,7 @@ public class MentalEnterProcess : MonoBehaviour
         {
             eventId = null;
         }
-
+        SceneTracker.previousMentalState = PlayerInteract.Instance.isInMental;
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
     
         while (!operation.isDone)

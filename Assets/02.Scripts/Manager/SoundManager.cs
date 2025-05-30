@@ -5,6 +5,7 @@ using System.Collections;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Unity.VisualScripting;
+using UnityEngine.Audio;
 
 public class SoundManager : Singleton<SoundManager>
 {
@@ -13,7 +14,8 @@ public class SoundManager : Singleton<SoundManager>
     private Dictionary<string, SoundData> _sfxDictionary = new Dictionary<string, SoundData>();
     [SerializeField] private List<SoundData> _bgmList = new List<SoundData>();
     [SerializeField] private List<SoundData> _sfxList = new List<SoundData>();
-    
+
+    [SerializeField] private AudioMixerGroup _SFXGroup;
     [SerializeField]
     private AudioSource _bgmSource = null;
     [SerializeField]
@@ -161,8 +163,7 @@ public class SoundManager : Singleton<SoundManager>
         }
 
         StopBGM();
-        _bgmSource.clip = soundData.soundClip;
-        _bgmSource.volume = 0f;
+        SetAudioSource(_bgmSource, soundData);
         _bgmSource.loop = true;
   
         _bgmSource.Play();
@@ -190,12 +191,11 @@ public class SoundManager : Singleton<SoundManager>
 
         // 재사용 가능한 AudioSource 가져오기
         AudioSource source = GetAvailableSFXSource();
-
-        source.clip = soundData.soundClip;
-        source.volume = soundData.volume;
+        SetAudioSource(source, soundData);
         source.loop = false;
         for(int i = 0; i < soundData.loopCnt; i++)
         {
+            source.time = 0f;
             source.Play();
             // AudioClip의 길이만큼 대기 후 오디오 소스 중지 및 반환
             float clipLength = soundData.soundClip.length; // 클립의 길이 가져오기
@@ -211,6 +211,7 @@ public class SoundManager : Singleton<SoundManager>
         {
             if (!source.isPlaying)
             {
+                source.outputAudioMixerGroup = _SFXGroup;
                 return source; // 재사용 가능한 소스를 반환
             }
         }
@@ -219,6 +220,7 @@ public class SoundManager : Singleton<SoundManager>
         if (_sfxSources.Count < _maxSFXPoolSize)
         {
             AudioSource newSource = gameObject.AddComponent<AudioSource>();
+            newSource.outputAudioMixerGroup = _SFXGroup;
             _sfxSources.Add(newSource);
             return newSource;
         }
@@ -241,7 +243,32 @@ public class SoundManager : Singleton<SoundManager>
             if (source.clip == soundData.soundClip && source.isPlaying)
             {
                 source.clip = null;
-                //source.Stop();
+                source.Stop();
+                Debug.Log($"{source}의 SFX가 중지되었습니다.");
+                return;
+            }
+        }
+    }
+
+    public void StopSFXWithFade(string id, float duration)
+    {
+        SoundData soundData = _sfxDictionary[id];
+        if (soundData == null || soundData.soundClip == null)
+        {
+            Debug.LogWarning("SoundData 유효하지 않습니다.");
+            return;
+        }
+        
+        foreach (var source in _sfxSources)
+        {
+            if (source.clip == soundData.soundClip && source.isPlaying)
+            {
+                DOTween.To(() => source.volume, x => source.volume = x, 0f, duration)
+                    .OnComplete(() =>
+                    {
+                        source.clip = null;
+                        source.Stop();
+                    });
                 Debug.Log($"{source}의 SFX가 중지되었습니다.");
                 return;
             }
@@ -298,6 +325,7 @@ public class SoundManager : Singleton<SoundManager>
 
         source.clip = soundData.soundClip;
         source.volume = soundData.volume;
+        source.loop = false;
 
         for(int i = 0; i < soundData.loopCnt; i++)
         {
@@ -306,5 +334,29 @@ public class SoundManager : Singleton<SoundManager>
             float clipLength = soundData.soundClip.length; // 클립의 길이 가져오기
             StartCoroutine(StopAndReleaseSourceAfterDelay(source, clipLength));
         }
+    }
+
+    public void SetAudioSource(AudioSource audioSource, SoundData data)
+    {
+        // 오디오 일반 설정
+        audioSource.clip = data.soundClip;
+        audioSource.volume = data.volume;
+        audioSource.priority = data.priority;
+        audioSource.pitch = data.pitch;
+        audioSource.panStereo = data.stereoPan;
+        audioSource.spatialBlend = data.spatialBlend;
+        audioSource.reverbZoneMix = data.reverbZoneMix;
+        
+        // bypass 관련 설정
+        audioSource.bypassEffects = data.bypassEffects;
+        audioSource.bypassListenerEffects = data.bypassListenerEffects;
+        audioSource.bypassReverbZones = data.bypassReverbZones;
+        
+        // 3d 공간 설정
+        audioSource.dopplerLevel = data.dopplerLevel;
+        audioSource.spread = data.spread;
+        audioSource.rolloffMode = data.volumeRolloff;
+        audioSource.minDistance = data.minDistance;
+        audioSource.maxDistance = data.maxDistance;
     }
 }
