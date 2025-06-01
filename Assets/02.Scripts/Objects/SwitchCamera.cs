@@ -13,7 +13,7 @@ public class SwitchCamera : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera cutSceneCamera;
     [SerializeField] private bool _onCam3;
     [SerializeField] private bool isMainCamTrigger; // true면 메인카메라(camera1), false면 나머지 카메라 조건 활성화
-
+    public bool isTest;
     void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player"))
@@ -25,7 +25,8 @@ public class SwitchCamera : MonoBehaviour
         }
         else
         {
-            bool isEventExecuted = DataManager.Instance._events["Event_C082"].isExecuted;
+            // bool isEventExecuted = DataManager.Instance._events["Event_C082"].isExecuted;
+            bool isEventExecuted =isTest;
             if (isEventExecuted)
                 ActivateCamera(cutSceneCamera);
             else
