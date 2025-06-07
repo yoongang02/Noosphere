@@ -8,33 +8,43 @@ public class RoomInfoManager : MonoBehaviour
 {
     public EventManagerYKM.RoomInfo roomInfo;
 
-    private void OnTriggerEnter(Collider other)
+    private void OnEnable()
     {
-        if (other.CompareTag("Player"))
-        {
-            EventManagerYKM.Instance.curRoomInfo = this.roomInfo;
+        EventManagerYKM.Instance.curRoomInfo = this.roomInfo;
 
-            if (SceneManager.GetActiveScene().name == "Lounge")
+        if (SceneManager.GetActiveScene().name == "Lounge")
+        {
+            if (EventManagerYKM.Instance.curChapterInfo == EventManagerYKM.ChapterInfo.Stage1)
             {
-                if (EventManagerYKM.Instance.curChapterInfo == EventManagerYKM.ChapterInfo.Stage1)
+                EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_102;
+            }
+            else if (EventManagerYKM.Instance.curChapterInfo == EventManagerYKM.ChapterInfo.Stage2)
+            {
+                // 스테이지1 클리어 안하고 나왔으면
+                if (!DataManager.Instance._events["Event_B067"].isExecuted)
                 {
+                    EventManagerYKM.Instance.curChapterInfo = EventManagerYKM.ChapterInfo.Stage1;
                     EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_102;
                 }
-                else if (EventManagerYKM.Instance.curChapterInfo == EventManagerYKM.ChapterInfo.Stage2)
+                else
                 {
-                    // 스테이지1 클리어 안하고 나왔으면
-                    if (!DataManager.Instance._events["Event_B067"].isExecuted)
-                    {
-                        EventManagerYKM.Instance.curChapterInfo = EventManagerYKM.ChapterInfo.Stage1;
-                        EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_102;
-                    }
-                    else
-                    {
-                        EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_104;
-                    }
+                    EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_104;
                 }
             }
-            Debug.LogWarning($"현재 방 정보 : {roomInfo}");
+        }
+        else
+        {
+            StartCoroutine(ShowRoomNumber());
+        }
+        Debug.LogWarning($"현재 방 정보 : {roomInfo}");
+    }
+
+    IEnumerator ShowRoomNumber()
+    {
+        yield return new WaitForSeconds(2f);
+        if (transform.GetChild(0) != null)
+        {
+            transform.GetChild(0).gameObject.SetActive(true);
         }
     }
 }

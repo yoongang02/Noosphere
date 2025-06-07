@@ -259,4 +259,9 @@ public class TimeLineSignalManager : MonoBehaviour
         PlayerPrefs.SetInt("FadeImage", 1);
         PlayerPrefs.Save();
     }
+
+    public void StartLastEffect(string effectID)
+    {
+        EffectManager.Instance.SetEffect(effectID);
+    }
 }

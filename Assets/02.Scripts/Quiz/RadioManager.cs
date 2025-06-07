@@ -39,22 +39,8 @@ public class RadioManager : UIBase
 
     private void Awake()
     {
-        _skipBtn.onClick.AddListener(() =>
-        {
-            if (_alreadyShowDialogue)
-            {
-                if (PlayerInteract.Instance.isInMental)
-                {
-                    if (_alreadyShowOnSpirit)
-                        _isSkipping = true;
-                }
-                else
-                {
-                    if (_alreadyShowDialogue)
-                        _isSkipping = true;
-                }
-            }
-        });
+        _skipBtn.onClick.RemoveAllListeners();
+        _skipBtn.onClick.AddListener(() => _isSkipping = true);
     }
 
     public override async void OnOpen(string quizID)
@@ -123,7 +109,7 @@ public class RadioManager : UIBase
             _dialBtn[1].OnValueChanged += OnOneDigitChanged;
             _dialBtn[2].OnValueChanged += OnDecimalDigitChanged;
         }
-
+        _powerBtn.onClick.RemoveListener(CheckAnswer);
         _powerBtn.onClick.AddListener(CheckAnswer);
         transform.GetChild(0).gameObject.SetActive(true);
     }
@@ -181,6 +167,7 @@ public class RadioManager : UIBase
         else
         {
             SoundManager.Instance.PlaySFX("Soundresource_001");
+            SoundManager.Instance.StopSFXWithFade("Soundresource_001", 2f);
             Debug.Log("오답");
         }
     }

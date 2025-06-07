@@ -93,7 +93,7 @@ public class UIManager : Singleton<UIManager>
         }
         else
         {
-            if (PlayerInteract.Instance.GetComponent<MentalEnterProcess>().IsEnterNow())
+            if (PlayerInteract.Instance.GetComponent<MentalEnterProcess>().IsEnterNow() || InventoryManager.Instance.canOpenInventory)
             {
                 inventoryIcon.SetActive(false);
                 keyGuideUI.SetActive(false);

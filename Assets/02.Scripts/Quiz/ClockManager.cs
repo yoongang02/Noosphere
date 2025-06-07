@@ -73,6 +73,8 @@ public class ClockManager : UIBase
         {
             _curQuiz.isSolved = true;
             Debug.Log($"정답입니다! {_hour}시 {_minute}분");
+            DataManager.Instance._events["Event_C079"].repeatType = false;
+            DataManager.Instance._events["Event_C079"].isExecuted = true;
             UIManager.Instance.CloseTopUI();
         }
     }
