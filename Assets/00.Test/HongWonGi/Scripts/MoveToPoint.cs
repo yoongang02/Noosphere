@@ -13,6 +13,8 @@ public class MoveToPoint : MonoBehaviour
         if (other.CompareTag("Player") && isTest/*DataManager.Instance._events["Event_C082"].isExecuted*/)
         {
             other.transform.DOMove(_point.position, 1f);
+            gameObject.SetActive(false);
+            
         }
     }
 }
