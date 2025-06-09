@@ -3425,12 +3425,12 @@ Transform:
   m_GameObject: {fileID: 139276088}
   serializedVersion: 2
   m_LocalRotation: {x: -0.2131248, y: -0.6718334, z: 0.21979676, w: -0.6744681}
-  m_LocalPosition: {x: 10.86, y: 1.9299998, z: 16}
+  m_LocalPosition: {x: 10.86, y: 2.9299998, z: 6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1220249116}
-  m_Father: {fileID: 1805329855}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 35.65, y: 89.546, z: -0.714}
 --- !u!114 &139276090
 MonoBehaviour:
@@ -55780,7 +55780,6 @@ Transform:
   - {fileID: 6034765}
   - {fileID: 1682318872}
   - {fileID: 675591742}
-  - {fileID: 139276089}
   - {fileID: 501088578}
   - {fileID: 1317456235}
   - {fileID: 294630856}
@@ -56316,7 +56315,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c0cd146a86f94bedb7d493a1291e223, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enterTime: 5
   _startEnter: 0
   _timer: 0
   isComplete: 0
@@ -56326,6 +56324,8 @@ MonoBehaviour:
   _isForceQuit: 0
   _progressBarUI: {fileID: 0}
   _progressBarFill: {fileID: 0}
+  _soundPlayed: 0
+  _isDrainingSoundPlaying: 0
 --- !u!4 &1809127108 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6806632386057320720, guid: 788ed82389619477a98998d9611c4b32,
@@ -65676,6 +65676,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 174737682}
   - {fileID: 521356014}
+  - {fileID: 139276089}
   - {fileID: 1805329855}
   - {fileID: 1926601204}
   - {fileID: 481707499}
