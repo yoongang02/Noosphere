@@ -7,14 +7,27 @@ using DG.Tweening;
 public class MoveToPoint : MonoBehaviour
 {
     [SerializeField] private Transform _point;
-    public bool isTest;
-    private void OnTriggerEnter(Collider other)
+    [SerializeField] private float _walkDuration;
+    private Animator _playerAnim;
+    private GameObject _player;
+
+    private void Awake()
     {
-        if (other.CompareTag("Player") && isTest/*DataManager.Instance._events["Event_C082"].isExecuted*/)
+        _player = GameObject.FindGameObjectWithTag("Player");
+        _playerAnim = _player.GetComponent<Animator>();
+    }
+
+    private void OnEnable()
+    {
+        PlayerController.Instance.canMove = false;
+        _playerAnim.SetBool("IsWalk", true);
+        _player.transform.LookAt(_point.position);
+        _player.transform.DOMove(_point.transform.position, _walkDuration).OnComplete(() =>
         {
-            other.transform.DOMove(_point.position, 1f);
+            PlayerController.Instance.canMove = true;
+            _playerAnim.SetBool("IsWalk", false);
+            EffectManager.Instance?.OnEffectEnd.Invoke();
             gameObject.SetActive(false);
-            
-        }
+        });
     }
 }

@@ -25,8 +25,8 @@ public class SwitchCamera : MonoBehaviour
         }
         else
         {
-            // bool isEventExecuted = DataManager.Instance._events["Event_C082"].isExecuted;
-            bool isEventExecuted =isTest;
+            bool isEventExecuted = DataManager.Instance._events["Event_C082"].isExecuted;
+            // bool isEventExecuted =isTest;
             if (isEventExecuted)
                 ActivateCamera(cutSceneCamera);
             else
