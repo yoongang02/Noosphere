@@ -199,20 +199,20 @@ Camera:
   serializedVersion: 2
   m_ClearFlags: 2
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
-  m_projectionMatrixMode: 1
+  m_projectionMatrixMode: 2
   m_GateFitMode: 2
   m_FOVAxisMode: 0
   m_Iso: 200
   m_ShutterSpeed: 0.005
   m_Aperture: 16
   m_FocusDistance: 10
-  m_FocalLength: 20.78461
+  m_FocalLength: 0.6
   m_BladeCount: 5
   m_Curvature: {x: 2, y: 11}
   m_BarrelClipping: 0.25
   m_Anamorphism: 0
-  m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
+  m_SensorSize: {x: 1.13, y: 1}
+  m_LensShift: {x: 0, y: 0.08}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -221,7 +221,7 @@ Camera:
     height: 1
   near clip plane: 0.15
   far clip plane: 5000
-  field of view: 60
+  field of view: 79.611145
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -247,8 +247,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6034762}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.29617974, y: 0.64208853, z: -0.2961798, w: 0.6420884}
-  m_LocalPosition: {x: -15.889999, y: 1.7990668, z: 16.06}
+  m_LocalRotation: {x: 0.2810514, y: 0.64885294, z: -0.2810514, w: 0.648853}
+  m_LocalPosition: {x: -15.737151, y: 1.5293248, z: 16.06}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2126,7 +2126,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &51484347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3453,7 +3453,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 60
+    FieldOfView: 79.611145
     OrthographicSize: 10
     NearClipPlane: 1.4
     FarClipPlane: 5000
@@ -6287,7 +6287,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 60.000004
+    FieldOfView: 79.611145
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -22335,8 +22335,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 675591741}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2961798, y: 0.6420884, z: -0.29617974, w: 0.64208853}
-  m_LocalPosition: {x: -15.889999, y: 1.7990668, z: 16.06}
+  m_LocalRotation: {x: 0.28105134, y: 0.648853, z: -0.2810514, w: 0.64885294}
+  m_LocalPosition: {x: -15.737151, y: 1.5293248, z: 16.06}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -22368,16 +22368,16 @@ MonoBehaviour:
   m_Follow: {fileID: 1809127108}
   m_CommonLens: 1
   m_Lens:
-    FieldOfView: 60
+    FieldOfView: 79.611145
     OrthographicSize: 10
     NearClipPlane: 0.15
     FarClipPlane: 5000
     Dutch: 0
-    ModeOverride: 0
-    LensShift: {x: 0, y: 0}
+    ModeOverride: 3
+    LensShift: {x: 0, y: 0.08}
     GateFit: 2
     FocusDistance: 10
-    m_SensorSize: {x: 1, y: 1}
+    m_SensorSize: {x: 1.13, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -22386,7 +22386,7 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_YAxis:
-    Value: 0.5
+    Value: 0.45
     m_SpeedMode: 0
     m_MaxSpeed: 2
     m_AccelTime: 0.2
@@ -22443,9 +22443,9 @@ MonoBehaviour:
   - m_Height: 4.5
     m_Radius: 1.75
   - m_Height: 2.73
-    m_Radius: 2.5
+    m_Radius: 1.9
   - m_Height: 0.4
-    m_Radius: 1.3
+    m_Radius: 2
   m_LegacyHeadingBias: 3.4028235e+38
   m_Rigs:
   - {fileID: 1648479696}
@@ -23640,7 +23640,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 60.000004
+    FieldOfView: 79.611145
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -24010,7 +24010,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 60.000004
+    FieldOfView: 79.611145
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -24413,7 +24413,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 60
+    FieldOfView: 79.611145
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -33165,7 +33165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 2.73, z: -2.5}
+  m_FollowOffset: {x: 0, y: 2.4603248, z: -1.9171516}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -38932,7 +38932,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 60.000004
+    FieldOfView: 79.611145
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -49380,7 +49380,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 2.73, z: -2.5}
+  m_FollowOffset: {x: 0, y: 2.4603248, z: -1.9171516}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -50146,7 +50146,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1648479694}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.028831488, y: 0.000000077361115, z: -0.00000013117125, w: 0.9995843}
+  m_LocalRotation: {x: 0.04565515, y: -0.000000019369313, z: 0.000000056369704, w: 0.99895734}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -50182,16 +50182,16 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 60
+    FieldOfView: 79.611145
     OrthographicSize: 10
     NearClipPlane: 0.15
     FarClipPlane: 5000
     Dutch: 0
-    ModeOverride: 0
-    LensShift: {x: 0, y: 0}
+    ModeOverride: 3
+    LensShift: {x: 0, y: 0.08}
     GateFit: 2
     FocusDistance: 10
-    m_SensorSize: {x: 1, y: 1}
+    m_SensorSize: {x: 1.13, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -51330,20 +51330,20 @@ Camera:
   serializedVersion: 2
   m_ClearFlags: 2
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
-  m_projectionMatrixMode: 1
+  m_projectionMatrixMode: 2
   m_GateFitMode: 2
   m_FOVAxisMode: 0
   m_Iso: 200
   m_ShutterSpeed: 0.005
   m_Aperture: 16
   m_FocusDistance: 10
-  m_FocalLength: 50
+  m_FocalLength: 20.78461
   m_BladeCount: 5
   m_Curvature: {x: 2, y: 11}
   m_BarrelClipping: 0.25
   m_Anamorphism: 0
   m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
+  m_LensShift: {x: 0, y: 0.1}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -51352,7 +51352,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 60
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -56580,9 +56580,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1817668855}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.000000019135724, y: 0.00000006771606, z: -0.0000000544431,
-    w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.0041003725, y: -0.000000021695229, z: 0.00000005551604, w: 0.99999166}
+  m_LocalPosition: {x: 0, y: 0.0000008415991, z: 0.0000004485595}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -56617,16 +56616,16 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 60
+    FieldOfView: 79.611145
     OrthographicSize: 10
     NearClipPlane: 0.15
     FarClipPlane: 5000
     Dutch: 0
-    ModeOverride: 0
-    LensShift: {x: 0, y: 0}
+    ModeOverride: 3
+    LensShift: {x: 0, y: 0.08}
     GateFit: 2
     FocusDistance: 10
-    m_SensorSize: {x: 1, y: 1}
+    m_SensorSize: {x: 1.13, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -56898,8 +56897,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1839213306}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.02864107, y: 0.0000000815902, z: -0.00000012778715, w: 0.9995898}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0.036894962, y: -0.000000023952717, z: 0.000000054580035,
+    w: 0.99931914}
+  m_LocalPosition: {x: 0, y: 0.0000008415991, z: 0.0000004485595}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -56934,16 +56934,16 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 60
+    FieldOfView: 79.611145
     OrthographicSize: 10
     NearClipPlane: 0.15
     FarClipPlane: 5000
     Dutch: 0
-    ModeOverride: 0
-    LensShift: {x: 0, y: 0}
+    ModeOverride: 3
+    LensShift: {x: 0, y: 0.08}
     GateFit: 2
     FocusDistance: 10
-    m_SensorSize: {x: 1, y: 1}
+    m_SensorSize: {x: 1.13, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -62005,7 +62005,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 2.73, z: -2.5}
+  m_FollowOffset: {x: 0, y: 2.4603248, z: -1.9171516}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
