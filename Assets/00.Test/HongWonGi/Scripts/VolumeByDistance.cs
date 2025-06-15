@@ -8,9 +8,9 @@ using Cysharp.Threading.Tasks;
 
 public class VolumeByDistance : MonoBehaviour
 {
-    [Header("시작점과 도착점 설정")] [SerializeField]
-    private Transform _startPoint;
-
+    [Header("시작점과 도착점 설정")]
+    [SerializeField] private Transform _startPoint;
+    [SerializeField] private Transform _middlePoint;
     [SerializeField] private Transform _endPoint;
     [SerializeField] private Transform _playerTrans;
 
@@ -50,38 +50,59 @@ public class VolumeByDistance : MonoBehaviour
     private void OnDark()
     {
         // 시작점과 도착점 사이의 전체 거리
-        float totalDistance = Vector3.Distance(_startPoint.position, _endPoint.position);
-        if (totalDistance == 0f) return;
+        float startToMiddle = Vector3.Distance(_startPoint.position, _middlePoint.position);
+        float middleToEnd = Vector3.Distance(_middlePoint.position, _endPoint.position);
+        if (startToMiddle == 0f) return;
 
         // 대상이 시작점으로부터 떨어진 거리
         float currentDistance = Vector3.Distance(_startPoint.position, _playerTrans.position);
 
-        // 거리에 따른 비율을 0~1 사이로 계산
-        float t = Mathf.Clamp01(currentDistance / totalDistance);
-
-        // volume의 weight를 t값으로 조절 (0이면 효과 없음, 1이면 최대 효과)
-        _volume.weight = t;
-        float reversedT = 1f - t;
-        if (t >= 1&&!_isTriggerEnd)
+        if (currentDistance <= startToMiddle)
         {
-            //끝까지 도달했을 때
+            Vector3 startToMiddleDir = (_middlePoint.position - _startPoint.position).normalized;
+            Vector3 startToPlayer = _playerTrans.position - _startPoint.position;
+            float projection = Vector3.Dot(startToPlayer, startToMiddleDir); // 투영 길이 (음수 가능)
+            // float t = Mathf.Clamp01(currentDistance / startToMiddle); // 0~1
+            float t = Mathf.Clamp01(projection / startToMiddle);
+            _volume.weight = t;
+
+            // 비네트 색상도 점점 어둡게
+            if (_vignette != null)
+            {
+                Color originalColor = _vignette.color.value;
+                float h, s, v;
+                Color.RGBToHSV(originalColor, out h, out s, out v);
+                float newV = Mathf.Lerp(1f, 0f, t);
+                Color newColor = Color.HSVToRGB(h, s, newV);
+                newColor.a = originalColor.a;
+                _vignette.color.value = newColor;
+            }
+        }
+        // 2. middle ~ end: 완전 어둠 유지
+        else
+        {
+            _volume.weight = 1f;
+            if (_vignette != null)
+            {
+                Color originalColor = _vignette.color.value;
+                float h, s, v;
+                Color.RGBToHSV(originalColor, out h, out s, out v);
+                Color newColor = Color.HSVToRGB(h, s, 0f);
+                newColor.a = originalColor.a;
+                _vignette.color.value = newColor;
+            }
+        }
+
+        // 3. end 도달 체크
+        float totalDistanceToEndCheck = Vector3.Distance(_startPoint.position, _endPoint.position);
+        float endT = Mathf.Clamp01(currentDistance / totalDistanceToEndCheck);
+
+        if (endT >= 1 && !_isTriggerEnd)
+        {
             _isTriggerEnd = true;
             Debug.Log("끝에 도달");
             EffectManager.Instance.OnEffectEnd?.Invoke();
             EventManagerYKM.Instance.ExecuteEvent(EventManagerYKM.Instance.nextEventID).Forget();
         }
-
-        if (_vignette != null)
-        {
-            Color originalColor = _vignette.color.value;
-            float h, s, v;
-            Color.RGBToHSV(originalColor, out h, out s, out v);
-            // t가 0이면 V=1, t가 1이면 V=0 (즉, 100%에서 0%)
-            float newV = Mathf.Lerp(1f, 0f, t);
-            Color newColor = Color.HSVToRGB(h, s, newV);
-            newColor.a = originalColor.a; // 기존 알파값 유지
-            _vignette.color.value = newColor;
-        }
-      
     }
 }
