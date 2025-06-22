@@ -25,14 +25,43 @@ public class SirenEffect : MonoBehaviour
     private void OnEnable()
     {
         StartSiren();
-        DOTween.To(
-                () => _perlin.m_FrequencyGain,
-                x => _perlin.m_FrequencyGain = x,
-                1f,
-                1f 
-            )
-            .SetEase(Ease.Linear)
-            .SetLoops(2, LoopType.Yoyo);
+        // DOTween.To(
+        //         () => _perlin.m_FrequencyGain,
+        //         x => _perlin.m_FrequencyGain = x,
+        //         1f,
+        //         2f 
+        //     )
+        //     .SetEase(Ease.Linear)
+        //     .SetLoops(2, LoopType.Yoyo);
+         DOTween.Kill(_perlin);
+        
+            // 시퀀스 생성
+            Sequence seq = DOTween.Sequence();
+            seq.Append(
+                DOTween.To(
+                    () => _perlin.m_FrequencyGain,
+                    x => _perlin.m_FrequencyGain = x,
+                    1f,
+                    2f // 0→1
+                ).SetEase(Ease.Linear)
+            );
+            seq.Append(
+                DOTween.To(
+                    () => _perlin.m_FrequencyGain,
+                    x => _perlin.m_FrequencyGain = x,
+                    2f,
+                    2f // 1→2
+                ).SetEase(Ease.Linear).From(1f)
+            );
+            seq.Append(
+                DOTween.To(
+                    () => _perlin.m_FrequencyGain,
+                    x => _perlin.m_FrequencyGain = x,
+                    0f,
+                    2f // 2→0
+                ).SetEase(Ease.Linear).From(2f)
+            );
+            seq.Play();
         
         SoundManager.Instance.PlaySFXNoEffect("Soundresource_099");
     }
