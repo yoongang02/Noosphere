@@ -196,7 +196,7 @@ public class EventTrigger : MonoBehaviour
                                 InteractionMarkManager.Instance.EnableInteractionMarkUI(this.transform, _curEvent.eventId);
                                 break;
                         }
-                        break;
+                        return;
                     }
                 }
             }

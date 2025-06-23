@@ -396,13 +396,13 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         if (_evidence.CanAcquireEvidence())
         {
             //거울 조각이면 유리 UI에 반영하기
-            if (evidenceID == "Evidence_019" || evidenceID == "Evidence_023")
+            if (evidenceID == "Evidence_023")
             {
                 return;
             }
 
             if (evidenceID == "Evidence_020" || evidenceID == "Evidence_021" ||
-                evidenceID == "Evidence_022")
+                evidenceID == "Evidence_022" || evidenceID == "Evidence_019")
             {
                 DialogueManager.Instance.SetDialogue("Dialogue_0065");
                 _evidence.AcquireEvidence();

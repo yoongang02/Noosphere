@@ -105,16 +105,14 @@ public class BookShelfManager : UIBase
             _curQuiz.isSolved = true;
             SoundManager.Instance.PlaySFX("Soundresource_083");
             UIManager.Instance.CloseTopUI();
-            
-            //거울이 깨져있는지 확인
-            if (MirrorPuzzleManager.Instance.isMirrorBroke)
-            {
-                //증거물 획득
-                await GetMirrorPiece();
-            }
+
             //트리거 삭제
-            PlayerInteract.Instance.curTrigger = null;
-            PlayerInteract.Instance.isInsideTrigger = false;
+            if (!DataManager.Instance._events["Event_B045"].isExecuted)
+            {
+                PlayerInteract.Instance.curTrigger = null;
+                PlayerInteract.Instance.isInsideTrigger = false;
+            }
+            
             //PlayerInteract.Instance.HideInteractionMark();
             await UniTask.Yield();
             DataManager.Instance._events["Event_B044"].repeatType = false;
