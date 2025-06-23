@@ -33,6 +33,7 @@ public class TimeLineController : MonoBehaviour
         }
 
         InventoryManager.Instance.canOpenInventory = true;
+        PlayerController.Instance.canMove = false;
         UIManager.Instance.LockPlayer();
         UIManager.Instance.inventoryIcon.SetActive(false);
         _playableDirector.Play();
@@ -50,6 +51,7 @@ public class TimeLineController : MonoBehaviour
         UIManager.Instance.UnLockPlayer();
         UIManager.Instance.inventoryIcon.SetActive(true);
         InventoryManager.Instance.canOpenInventory = false;
+        PlayerController.Instance.canMove = true;
         EffectManager.Instance.OnEffectEnd?.Invoke();
        
     }

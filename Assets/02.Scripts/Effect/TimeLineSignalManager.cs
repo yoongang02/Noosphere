@@ -65,6 +65,11 @@ public class TimeLineSignalManager : MonoBehaviour
         _player.SetBool(playerAnim, false);
     }
 
+    public void PlayerAnimTrigger(string playerAnim)
+    {
+        _player.SetTrigger(playerAnim);
+    }
+
     public void StartNpcAnim(string npcAnim)
     {
         _npc.SetBool(npcAnim, true);
