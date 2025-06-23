@@ -63,7 +63,6 @@ public class SirenEffect : MonoBehaviour
             );
             seq.Play();
         
-        SoundManager.Instance.PlaySFXNoEffect("Soundresource_099");
     }
     private void StartSiren()
     {
