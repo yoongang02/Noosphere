@@ -126,6 +126,10 @@ public class TimeLineSignalManager : MonoBehaviour
         _playerSkin.material = material;
     }
 
+    public void SetNpcMaterial(Material material)
+    {
+        _freindMaterial.material = material;
+    }
 
     private async UniTaskVoid StartAutoEffect()
     {

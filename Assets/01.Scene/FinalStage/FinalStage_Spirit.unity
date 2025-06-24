@@ -17069,6 +17069,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 1683f3bbaee4ac545982a7870781d268, type: 2}
     - {fileID: 11400000, guid: fb1767809c11fe5408f8b07b5bbc53cb, type: 2}
     - {fileID: 11400000, guid: 86e2f654c8cafff439c853b47a5da636, type: 2}
+    - {fileID: 11400000, guid: c7a9dcb204367004cb2062bc2956f497, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -17110,6 +17111,21 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: Daughter:IsIdle
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: SetNpcMaterial
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 2100000, guid: dffa37e74be93aa428e0ae995b35cc5c,
+              type: 2}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Material, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
 --- !u!1001 &566805349
@@ -30912,7 +30928,7 @@ MonoBehaviour:
   _playerMaterial:
   - {fileID: 2100000, guid: fd0c9f2929d3053419e66da69148b8ea, type: 2}
   - {fileID: -3582197160846370835, guid: 9a99a98f033e2ad4ebddd2dece79502e, type: 3}
-  _freindMaterial: {fileID: 0}
+  _freindMaterial: {fileID: 1539023642}
   _friendMaterial: {fileID: 0}
   footSteps:
   - Soundresource_020
@@ -47044,6 +47060,12 @@ PrefabInstance:
 --- !u!4 &1539023641 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3215388747798706645, guid: 8891724a8659d104a94ab9a7542b6d87,
+    type: 3}
+  m_PrefabInstance: {fileID: 1539023640}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &1539023642 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8527855099224922081, guid: 8891724a8659d104a94ab9a7542b6d87,
     type: 3}
   m_PrefabInstance: {fileID: 1539023640}
   m_PrefabAsset: {fileID: 0}
