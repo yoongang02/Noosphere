@@ -23,34 +23,6 @@ public class BookShelfManager : UIBase
         _curQuiz = DataManager.Instance._quiz[_curQuizID];
         Debug.Log($"# quiz id : {quizID}, _curQuiz : {_curQuiz}");
         
-        //정신세계인데
-        //만약 거울이 깨졌는데 기믹을 미리 성공했다면
-        if (_curQuiz.isSolved)
-        {
-            //퀴즈 실행되지 않음
-            UIManager.Instance.CloseTopUI();
-            
-            //거울이 깨져있다면
-            if (MirrorPuzzleManager.Instance.isMirrorBroke)
-            {
-                DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
-                //조각을 습득하지 않았다면 습득 먼저 진행
-                if (!DataManager.Instance._evidences["Evidence_019"].isAcquired)
-                {
-                    await GetMirrorPiece();
-                }
-            }
-            //트리거 삭제
-            if (PlayerInteract.Instance.curTrigger != null)
-            {
-                InteractionMarkManager.Instance.DisableInteractionMarkUI(PlayerInteract.Instance.curTrigger.transform);
-            }
-            PlayerInteract.Instance.curTrigger = null;
-            PlayerInteract.Instance.isInsideTrigger = false;
-            
-            return;
-        }
-        
         transform.GetChild(0).gameObject.SetActive(true);
         
         if (_initialBookOrder == null)//맨처음에만 책위치 저장
@@ -104,7 +76,6 @@ public class BookShelfManager : UIBase
             //퀴즈 해결되었다고 표시
             _curQuiz.isSolved = true;
             SoundManager.Instance.PlaySFX("Soundresource_083");
-            UIManager.Instance.CloseTopUI();
 
             //트리거 삭제
             if (!DataManager.Instance._events["Event_B045"].isExecuted)
@@ -114,8 +85,10 @@ public class BookShelfManager : UIBase
             }
             
             //PlayerInteract.Instance.HideInteractionMark();
-            await UniTask.Yield();
             DataManager.Instance._events["Event_B044"].repeatType = false;
+            DataManager.Instance._events["Event_B044"].isExecuted = true;
+            await UniTask.Yield();
+            UIManager.Instance.CloseTopUI();
         }
     }
 

@@ -212,6 +212,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     {
                         await AcquireEvidence(_event, _event.evidenceId);
                         Debug.LogWarning($"{_event.evidenceId} 증거물 획득 다 실행 됨.");
+                        _isEventSuccess = true;
                     }
                 }
             }
