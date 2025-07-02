@@ -247,8 +247,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6034762}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.23612073, y: 0.6665187, z: -0.23612085, w: 0.6665184}
-  m_LocalPosition: {x: 7.3900003, y: 1.799, z: 15.316}
+  m_LocalRotation: {x: 0.2655221, y: 0.655361, z: -0.26552215, w: 0.65536094}
+  m_LocalPosition: {x: -15.889999, y: 1.7990415, z: 15.32}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9322,6 +9322,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: bb82fab2dac42634ca879eddd5b2b285, type: 2}
     - {fileID: 11400000, guid: 30a6bdbc30c66834d9f9a9fbad6af1da, type: 2}
     - {fileID: 11400000, guid: 457f4ac35706e184285f47e8f5174d59, type: 2}
+    - {fileID: 11400000, guid: 86e2f654c8cafff439c853b47a5da636, type: 2}
+    - {fileID: 11400000, guid: 2beff32a81813cb4480d76be3d617c3b, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -9517,6 +9519,34 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: Soundresource_082
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: StartAnim
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Daughter:IsInteract
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: EndAnim
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Daughter:IsInteract
             m_BoolArgument: 0
           m_CallState: 2
 --- !u!320 &326125229
@@ -14845,7 +14875,7 @@ PrefabInstance:
     - target: {fileID: 6144576796130808513, guid: 8891724a8659d104a94ab9a7542b6d87,
         type: 3}
       propertyPath: m_Name
-      value: Daughter (1)
+      value: TestTexture
       objectReference: {fileID: 0}
     - target: {fileID: 6144576796130808513, guid: 8891724a8659d104a94ab9a7542b6d87,
         type: 3}
@@ -17656,6 +17686,10 @@ PlayableDirector:
     value: {fileID: 718272246}
   - key: {fileID: 7495460773149727976, guid: 1b904daf48ce0324887a7dcc7ae790ce, type: 2}
     value: {fileID: 566009660}
+  - key: {fileID: -2825393798278628444, guid: 1b904daf48ce0324887a7dcc7ae790ce, type: 2}
+    value: {fileID: 599938052}
+  - key: {fileID: 8235121564789168775, guid: 1b904daf48ce0324887a7dcc7ae790ce, type: 2}
+    value: {fileID: 566009660}
   m_ExposedReferences:
     m_References: []
 --- !u!114 &566009660
@@ -17676,6 +17710,9 @@ MonoBehaviour:
     - {fileID: 11400000, guid: fb1767809c11fe5408f8b07b5bbc53cb, type: 2}
     - {fileID: 11400000, guid: 86e2f654c8cafff439c853b47a5da636, type: 2}
     - {fileID: 11400000, guid: c7a9dcb204367004cb2062bc2956f497, type: 2}
+    - {fileID: 11400000, guid: b8a035d9e3b51d74a823cd185fc5602b, type: 2}
+    - {fileID: 11400000, guid: ee382337ada1c32418612d4309ad9bc0, type: 2}
+    - {fileID: 11400000, guid: 3704a179c1719854ea1973d0c7e40827, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -17732,6 +17769,48 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: StartAnim
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Daughter:IsWalking
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: EndAnim
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Daughter:IsWalking
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: StartAnim
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Daughter:IsIdle
             m_BoolArgument: 0
           m_CallState: 2
 --- !u!1001 &566805349
@@ -21359,6 +21438,53 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 7754059832020573801, guid: 7662f308b103cd043a845b436992d70a, type: 3}
+--- !u!1 &625167379
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 625167380}
+  - component: {fileID: 625167381}
+  m_Layer: 0
+  m_Name: TimeLineStart
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &625167380
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625167379}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1467692199}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &625167381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625167379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5ac158ecbf3cbb49951304cec559f0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playableDirector: {fileID: 1417518168}
+  _playerParent: {fileID: 0}
+  _angle: 0
 --- !u!1001 &628965098
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22994,8 +23120,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 675591741}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.23612073, y: 0.6665187, z: -0.23612085, w: 0.6665184}
-  m_LocalPosition: {x: 7.3900003, y: 1.799, z: 15.316}
+  m_LocalRotation: {x: 0.2655221, y: 0.655361, z: -0.26552215, w: 0.65536094}
+  m_LocalPosition: {x: -15.889999, y: 1.7990415, z: 15.32}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -23388,6 +23514,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: abe2ba217df8eb3419b6806251b889e1, type: 2}
     - {fileID: 11400000, guid: bb82fab2dac42634ca879eddd5b2b285, type: 2}
     - {fileID: 11400000, guid: 30a6bdbc30c66834d9f9a9fbad6af1da, type: 2}
+    - {fileID: 11400000, guid: 183d86aac06d84f4c982ab62614145d3, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -23470,6 +23597,20 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: LookAtTarget
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 4
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
@@ -44207,6 +44348,135 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!1 &1417518166
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1417518167}
+  - component: {fileID: 1417518168}
+  - component: {fileID: 1417518169}
+  m_Layer: 0
+  m_Name: TimeLineDirector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1417518167
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1417518166}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1467692199}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!320 &1417518168
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1417518166}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 576af8fc48a563443b8dc4bb3c56431a, type: 2}
+  m_InitialState: 0
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: -4953416925520843794, guid: 576af8fc48a563443b8dc4bb3c56431a, type: 2}
+    value: {fileID: 599938052}
+  - key: {fileID: -4411877537590390955, guid: 576af8fc48a563443b8dc4bb3c56431a, type: 2}
+    value: {fileID: 1417518169}
+  m_ExposedReferences:
+    m_References: []
+--- !u!114 &1417518169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1417518166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: 1683f3bbaee4ac545982a7870781d268, type: 2}
+    - {fileID: 11400000, guid: fb1767809c11fe5408f8b07b5bbc53cb, type: 2}
+    - {fileID: 11400000, guid: 2beff32a81813cb4480d76be3d617c3b, type: 2}
+    - {fileID: 11400000, guid: ee382337ada1c32418612d4309ad9bc0, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: StartAnim
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Daughter:IsWalking
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: EndAnim
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Daughter:IsWalking
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: StartAnim
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Daughter:IsIdle
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: EndAnim
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Daughter:IsIdle
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!4 &1419388307 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7944287451276026334, guid: db95cecbab320ea458c8d9917dceefbd,
@@ -45319,6 +45589,39 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -2769604163327434663, guid: c5c4979264ad26d4f975bb2f19b3b973, type: 3}
+--- !u!1 &1467692198
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1467692199}
+  m_Layer: 0
+  m_Name: Artresource_0084
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1467692199
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467692198}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 625167380}
+  - {fileID: 1417518167}
+  m_Father: {fileID: 1523908042}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1474425515
 GameObject:
   m_ObjectHideFlags: 3
@@ -46419,6 +46722,7 @@ Transform:
   - {fileID: 3112624}
   - {fileID: 843159017}
   - {fileID: 152747518}
+  - {fileID: 1467692199}
   - {fileID: 1745949559}
   - {fileID: 1251165058}
   - {fileID: 1274871324}
@@ -47455,7 +47759,7 @@ PrefabInstance:
     - target: {fileID: 3215388747798706645, guid: 8891724a8659d104a94ab9a7542b6d87,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3215388747798706645, guid: 8891724a8659d104a94ab9a7542b6d87,
         type: 3}
@@ -47465,17 +47769,17 @@ PrefabInstance:
     - target: {fileID: 3215388747798706645, guid: 8891724a8659d104a94ab9a7542b6d87,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3215388747798706645, guid: 8891724a8659d104a94ab9a7542b6d87,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3215388747798706645, guid: 8891724a8659d104a94ab9a7542b6d87,
         type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 359.4031
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215388747798706645, guid: 8891724a8659d104a94ab9a7542b6d87,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -90
+      value: 57.24942
       objectReference: {fileID: 0}
     - target: {fileID: 3215388747798706645, guid: 8891724a8659d104a94ab9a7542b6d87,
         type: 3}
@@ -51200,8 +51504,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1648479694}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.14045916, y: -0.00000010802821, z: 0.00000015821242, w: 0.9900865}
-  m_LocalPosition: {x: 5.1159077e-13, y: 0.0000003520638, z: 0.00000032159724}
+  m_LocalRotation: {x: 0.13634105, y: -0.000000046684995, z: 0.000000092902035, w: 0.990662}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -52006,7 +52310,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1661194337}
-  m_Mesh: {fileID: 4300000, guid: 144fafb731a4b4944b48596f3688afb4, type: 3}
+  m_Mesh: {fileID: -6481788103248277994, guid: 8da57c15521c8ff4f9621b9841e8375f, type: 3}
 --- !u!95 &1661194340
 Animator:
   serializedVersion: 5
@@ -57225,7 +57529,7 @@ PrefabInstance:
     - target: {fileID: 6806632386057320720, guid: 788ed82389619477a98998d9611c4b32,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.29
+      value: -14.3
       objectReference: {fileID: 0}
     - target: {fileID: 6806632386057320720, guid: 788ed82389619477a98998d9611c4b32,
         type: 3}
@@ -57235,7 +57539,7 @@ PrefabInstance:
     - target: {fileID: 6806632386057320720, guid: 788ed82389619477a98998d9611c4b32,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.316
+      value: 5.32
       objectReference: {fileID: 0}
     - target: {fileID: 6806632386057320720, guid: 788ed82389619477a98998d9611c4b32,
         type: 3}
@@ -57697,9 +58001,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1817668855}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.00000010181308, y: -0.00000016345328, z: 0.00000016968846,
+  m_LocalRotation: {x: 0.000000023236206, y: -0.000000023236206, z: 0.000000054888915,
     w: 1}
-  m_LocalPosition: {x: 5.1159077e-13, y: 0.0000003520638, z: 0.00000032159724}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -58015,8 +58319,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1839213306}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.08334789, y: -0.00000011768182, z: 0.00000014943947, w: 0.9965205}
-  m_LocalPosition: {x: 5.1159077e-13, y: 0.0000003520638, z: 0.00000032159724}
+  m_LocalRotation: {x: 0.07920353, y: -0.000000049965195, z: 0.000000091914494, w: 0.9968585}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
