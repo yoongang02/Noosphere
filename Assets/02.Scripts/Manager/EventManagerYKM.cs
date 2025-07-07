@@ -547,9 +547,14 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 DataManager.Instance._events["Event_D102"].nextEventId = "Event_D104";
             }     
         }
-
-       
         nextEventID = _event.nextEventId;
+
+        // autoSave가 true라면, 자동 저장 진행
+        if (_event.autoSave)
+        {
+            Debug.Log(_event.eventId + "자동 저장 실행");
+            NooSphere.SaveManager.Instance.DoAutoSave();
+        }
     }
 
     public bool IsConditionMet()
