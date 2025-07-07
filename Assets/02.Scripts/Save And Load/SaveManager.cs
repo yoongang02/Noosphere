@@ -12,6 +12,28 @@ namespace NooSphere
         public event Action OnSaveStart;
         public event Action<int> OnSaveFinish;
 
+
+        // 세이브 슬롯2 또는 3에 현재 진행상황을 사용자가 수동 저장 시 호출되는 함수
+        public IEnumerator DoManualSave(int slotIndex)
+        {
+            // Root 하위에 Saves 폴더로 이어지는 경로 찾기
+            string folderPath = Path.Combine(Application.persistentDataPath, "Saves");
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            // 저장 시작 준비 -> 저장 중 UI 활성화 & 상호작용 막기
+            OnSaveStart?.Invoke();
+            yield return null;
+
+            SaveCurrentState(folderPath, slotIndex);
+
+            yield return null;
+            // 저장 끝 -> 저장 중 UI 비활성화 & 상호작용 풀기
+            OnSaveFinish?.Invoke(slotIndex);
+        }
+
         // 세이브 슬롯1에 현재 진행상황을 자동 저장 시 호출되는 함수
         // TODO : 상태 값이 모두 저장되는 동안 플레이어의 상호작용을 막은 채, 저장 중 UI를 띄우는 작업 연결 해야 함.
         public IEnumerator DoAutoSave()
