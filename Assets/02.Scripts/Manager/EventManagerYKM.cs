@@ -553,7 +553,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         if (_event.autoSave)
         {
             Debug.Log(_event.eventId + "자동 저장 실행");
-            NooSphere.SaveManager.Instance.DoAutoSave();
+            StartCoroutine(NooSphere.SaveManager.Instance.DoAutoSave());
         }
     }
 
