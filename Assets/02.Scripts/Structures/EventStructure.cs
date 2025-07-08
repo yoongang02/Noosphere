@@ -17,6 +17,7 @@ public class EventStructure
     public string lockConditionId; //이벤트 실행 시 락되는 조건
     public string locationId;
     public string nextEventId;
+    public bool autoSave;
     
     //이벤트 실행 여부
     public bool isExecuted = false;

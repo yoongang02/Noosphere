@@ -212,6 +212,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                     {
                         await AcquireEvidence(_event, _event.evidenceId);
                         Debug.LogWarning($"{_event.evidenceId} 증거물 획득 다 실행 됨.");
+                        _isEventSuccess = true;
                     }
                 }
             }
@@ -396,13 +397,13 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         if (_evidence.CanAcquireEvidence())
         {
             //거울 조각이면 유리 UI에 반영하기
-            if (evidenceID == "Evidence_019" || evidenceID == "Evidence_023")
+            if (evidenceID == "Evidence_023")
             {
                 return;
             }
 
             if (evidenceID == "Evidence_020" || evidenceID == "Evidence_021" ||
-                evidenceID == "Evidence_022")
+                evidenceID == "Evidence_022" || evidenceID == "Evidence_019")
             {
                 DialogueManager.Instance.SetDialogue("Dialogue_0065");
                 _evidence.AcquireEvidence();
@@ -546,9 +547,14 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
                 DataManager.Instance._events["Event_D102"].nextEventId = "Event_D104";
             }     
         }
-
-       
         nextEventID = _event.nextEventId;
+
+        // autoSave가 true라면, 자동 저장 진행
+        if (_event.autoSave)
+        {
+            Debug.Log(_event.eventId + "자동 저장 실행");
+            StartCoroutine(NooSphere.SaveManager.Instance.DoAutoSave());
+        }
     }
 
     public bool IsConditionMet()

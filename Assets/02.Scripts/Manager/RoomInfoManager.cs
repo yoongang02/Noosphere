@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using Debug = NooSphere.Debug;
 public class RoomInfoManager : MonoBehaviour
 {
+    public string roomName;
     public EventManagerYKM.RoomInfo roomInfo;
 
     private void OnEnable()

@@ -65,6 +65,11 @@ public class TimeLineSignalManager : MonoBehaviour
         _player.SetBool(playerAnim, false);
     }
 
+    public void PlayerAnimTrigger(string playerAnim)
+    {
+        _player.SetTrigger(playerAnim);
+    }
+
     public void StartNpcAnim(string npcAnim)
     {
         _npc.SetBool(npcAnim, true);
@@ -121,6 +126,10 @@ public class TimeLineSignalManager : MonoBehaviour
         _playerSkin.material = material;
     }
 
+    public void SetNpcMaterial(Material material)
+    {
+        _freindMaterial.material = material;
+    }
 
     private async UniTaskVoid StartAutoEffect()
     {
@@ -264,4 +273,23 @@ public class TimeLineSignalManager : MonoBehaviour
     {
         EffectManager.Instance.SetEffect(effectID);
     }
+
+    private async UniTaskVoid LookTarget(float duration)
+    { 
+        Transform playerTrans=_player.transform;
+        Transform daugterTrans = GameObject.Find("Daughter").transform;
+        float elapsed = 0f;
+        while (elapsed < duration && playerTrans != null)
+        {
+            daugterTrans.LookAt(playerTrans.position);
+            await UniTask.Yield();
+            elapsed += Time.deltaTime;
+        }
+    }
+
+    public void LookAtTarget(float second)
+    {
+        LookTarget(second).Forget();
+    }
+
 }

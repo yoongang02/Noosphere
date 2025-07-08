@@ -41,7 +41,16 @@ public class EventTrigger : MonoBehaviour
         {
             PlayerInteract.Instance.isInsideTrigger = true;
             PlayerInteract.Instance.curTrigger = this;
-            if(!IsPlayerFront(other.transform)) return;
+            if (!IsPlayerFront(other.transform))
+            {
+                TriggerDebugScript.Instance.WhenNotFront();
+                return;
+            }
+            else
+            {
+                TriggerDebugScript.Instance.WhenFront();
+            }
+
 
             if (isCardKeyDoor)
             {
@@ -60,7 +69,7 @@ public class EventTrigger : MonoBehaviour
                     {
                         GameObject interactionKey = Instantiate(InteractionMarkManager.Instance._openDoorKeyPrefab);
                         interactionKey.transform.SetParent(parent, false);
-                        
+
                         if (gameObject.name == "EventInteractionTrigger - Experiment Room" && DataManager.Instance._quiz["Quiz_003"].isSolved)
                         {
                             // 문 열기 액션 추가
@@ -78,17 +87,17 @@ public class EventTrigger : MonoBehaviour
                         {
                             EventManagerYKM.Instance.ExecuteEvent(eventIdList[0]).Forget();
                         };
-                        
+
                         // 플레이어의 인벤토리에 관련 증거물 있는지 체크
                         foreach (var key in keyInfos)
                         {
                             EvidenceStructure evidence = DataManager.Instance._evidences[key.evidenceID];
-                            if(evidence.canUse == 'Y' && InventoryManager.Instance.IsEvidenceInInventory(evidence.evidenceId))
+                            if (evidence.canUse == 'Y' && InventoryManager.Instance.IsEvidenceInInventory(evidence.evidenceId))
                             {
                                 GameObject evidenceKey = Instantiate(InteractionMarkManager.Instance._useEvidenceKeyPrefab);
                                 evidenceKey.transform.SetParent(parent, false);
                                 PlayerInteract.Instance.canUse = true;
-                            
+
                                 Debug.LogWarning("OnEvidenceUse 액션에 메소드 등록");
                                 PlayerInteract.Instance.OnEvidenceUse = null;
                                 PlayerInteract.Instance.OnEvidenceUse += () =>
@@ -196,7 +205,7 @@ public class EventTrigger : MonoBehaviour
                                 InteractionMarkManager.Instance.EnableInteractionMarkUI(this.transform, _curEvent.eventId);
                                 break;
                         }
-                        break;
+                        return;
                     }
                 }
             }
