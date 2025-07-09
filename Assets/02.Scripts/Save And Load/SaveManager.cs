@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -13,64 +13,64 @@ namespace NooSphere
         public event Action<int> OnSaveFinish;
 
 
-        // ¼¼ÀÌºê ½½·Ô2 ¶Ç´Â 3¿¡ ÇöÀç ÁøÇà»óÈ²À» »ç¿ëÀÚ°¡ ¼öµ¿ ÀúÀå ½Ã È£ÃâµÇ´Â ÇÔ¼ö
+        // ì„¸ì´ë¸Œ ìŠ¬ë¡¯2 ë˜ëŠ” 3ì— í˜„ì¬ ì§„í–‰ìƒí™©ì„ ì‚¬ìš©ìê°€ ìˆ˜ë™ ì €ì¥ ì‹œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
         public IEnumerator DoManualSave(int slotIndex)
         {
-            // Root ÇÏÀ§¿¡ Saves Æú´õ·Î ÀÌ¾îÁö´Â °æ·Î Ã£±â
+            // Root í•˜ìœ„ì— Saves í´ë”ë¡œ ì´ì–´ì§€ëŠ” ê²½ë¡œ ì°¾ê¸°
             string folderPath = Path.Combine(Application.persistentDataPath, "Saves");
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
             }
 
-            // ÀúÀå ½ÃÀÛ ÁØºñ -> ÀúÀå Áß UI È°¼ºÈ­ & »óÈ£ÀÛ¿ë ¸·±â
+            // ì €ì¥ ì‹œì‘ ì¤€ë¹„ -> ì €ì¥ ì¤‘ UI í™œì„±í™” & ìƒí˜¸ì‘ìš© ë§‰ê¸°
             OnSaveStart?.Invoke();
             yield return null;
 
             SaveCurrentState(folderPath, slotIndex);
 
             yield return null;
-            // ÀúÀå ³¡ -> ÀúÀå Áß UI ºñÈ°¼ºÈ­ & »óÈ£ÀÛ¿ë Ç®±â
+            // ì €ì¥ ë -> ì €ì¥ ì¤‘ UI ë¹„í™œì„±í™” & ìƒí˜¸ì‘ìš© í’€ê¸°
             OnSaveFinish?.Invoke(slotIndex);
         }
 
-        // ¼¼ÀÌºê ½½·Ô1¿¡ ÇöÀç ÁøÇà»óÈ²À» ÀÚµ¿ ÀúÀå ½Ã È£ÃâµÇ´Â ÇÔ¼ö
-        // TODO : »óÅÂ °ªÀÌ ¸ğµÎ ÀúÀåµÇ´Â µ¿¾È ÇÃ·¹ÀÌ¾îÀÇ »óÈ£ÀÛ¿ëÀ» ¸·Àº Ã¤, ÀúÀå Áß UI¸¦ ¶ç¿ì´Â ÀÛ¾÷ ¿¬°á ÇØ¾ß ÇÔ.
+        // ì„¸ì´ë¸Œ ìŠ¬ë¡¯1ì— í˜„ì¬ ì§„í–‰ìƒí™©ì„ ìë™ ì €ì¥ ì‹œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
+        // TODO : ìƒíƒœ ê°’ì´ ëª¨ë‘ ì €ì¥ë˜ëŠ” ë™ì•ˆ í”Œë ˆì´ì–´ì˜ ìƒí˜¸ì‘ìš©ì„ ë§‰ì€ ì±„, ì €ì¥ ì¤‘ UIë¥¼ ë„ìš°ëŠ” ì‘ì—… ì—°ê²° í•´ì•¼ í•¨.
         public IEnumerator DoAutoSave()
         {
-            // Root ÇÏÀ§¿¡ Saves Æú´õ·Î ÀÌ¾îÁö´Â °æ·Î Ã£±â
+            // Root í•˜ìœ„ì— Saves í´ë”ë¡œ ì´ì–´ì§€ëŠ” ê²½ë¡œ ì°¾ê¸°
             string folderPath = Path.Combine(Application.persistentDataPath, "Saves");
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
             }
 
-            // ÀúÀå ½ÃÀÛ ÁØºñ -> ÀúÀå Áß UI È°¼ºÈ­ & »óÈ£ÀÛ¿ë ¸·±â
+            // ì €ì¥ ì‹œì‘ ì¤€ë¹„ -> ì €ì¥ ì¤‘ UI í™œì„±í™” & ìƒí˜¸ì‘ìš© ë§‰ê¸°
             OnSaveStart?.Invoke();
             yield return null;
 
             SaveCurrentState(folderPath, 1);
 
             yield return null;
-            // ÀúÀå ³¡ -> ÀúÀå Áß UI ºñÈ°¼ºÈ­ & »óÈ£ÀÛ¿ë Ç®±â
+            // ì €ì¥ ë -> ì €ì¥ ì¤‘ UI ë¹„í™œì„±í™” & ìƒí˜¸ì‘ìš© í’€ê¸°
             OnSaveFinish?.Invoke(1);
         }
 
-        // ÀÚµ¿ ÀúÀå È¤Àº »ç¿ëÀÚ ÀÓÀÇ ÀúÀå ½Ã, ÇöÀç »óÅÂ¸¦ ÀúÀåÇÏ´Â ÇÔ¼ö
-        // Æú´õ °æ·Î¿Í, ÀúÀåÇÏ·Á´Â ÆÄÀÏ ÀÌ¸§À» ÆÄ¶ó¹ÌÅÍ·Î ¹ŞÀ½
+        // ìë™ ì €ì¥ í˜¹ì€ ì‚¬ìš©ì ì„ì˜ ì €ì¥ ì‹œ, í˜„ì¬ ìƒíƒœë¥¼ ì €ì¥í•˜ëŠ” í•¨ìˆ˜
+        // í´ë” ê²½ë¡œì™€, ì €ì¥í•˜ë ¤ëŠ” íŒŒì¼ ì´ë¦„ì„ íŒŒë¼ë¯¸í„°ë¡œ ë°›ìŒ
 
-        // TODO : ÇÃ·¹ÀÌÅ¸ÀÓ °ª ºÒ·¯¿Í¼­ ÀúÀåÇÏ´Â ÀÛ¾÷ ÁøÇàÇØ¾ß ÇÔ.
+        // TODO : í”Œë ˆì´íƒ€ì„ ê°’ ë¶ˆëŸ¬ì™€ì„œ ì €ì¥í•˜ëŠ” ì‘ì—… ì§„í–‰í•´ì•¼ í•¨.
         void SaveCurrentState(string folderPath, int slotIndex)
         {
-            // ÀúÀåÇÒ ÆÄÀÏ °æ·Î Ã£±â
+            // ì €ì¥í•  íŒŒì¼ ê²½ë¡œ ì°¾ê¸°
             string filePath = Path.Combine(folderPath, $"slot{slotIndex}.es3");
 
-            // ÇöÀç »óÅÂ ÀúÀåÇÏ±â, ÀúÀåÇÒ µ¥ÀÌÅÍ´Â ´ÙÀ½°ú °°À½.
-            // DataManagerÀÇ _events, _evidences, _quiz ¸®½ºÆ®.
-            // ÀúÀå ´ç½Ã ÇÃ·¹ÀÌ¾îÀÇ Transform Á¤º¸
-            // ÀúÀå ´ç½Ã ÇÃ·¹ÀÌ¾î°¡ À§Ä¡ÇÑ °ø°£ Á¤º¸
-            // ÀúÀå ÀÏ½Ã(YYYY - MM - DD  HH: MM:SS Çü½Ä)
-            // ÀúÀå ´ç½Ã±îÁöÀÇ ÇÃ·¹ÀÌ Å¸ÀÓ
+            // í˜„ì¬ ìƒíƒœ ì €ì¥í•˜ê¸°, ì €ì¥í•  ë°ì´í„°ëŠ” ë‹¤ìŒê³¼ ê°™ìŒ.
+            // DataManagerì˜ _events, _evidences, _quiz ë¦¬ìŠ¤íŠ¸.
+            // ì €ì¥ ë‹¹ì‹œ í”Œë ˆì´ì–´ì˜ Transform ì •ë³´
+            // ì €ì¥ ë‹¹ì‹œ í”Œë ˆì´ì–´ê°€ ìœ„ì¹˜í•œ ê³µê°„ ì •ë³´
+            // ì €ì¥ ì¼ì‹œ(YYYY - MM - DD  HH: MM:SS í˜•ì‹)
+            // ì €ì¥ ë‹¹ì‹œê¹Œì§€ì˜ í”Œë ˆì´ íƒ€ì„
             try
             {
                 ES3.Save("EventDatas", DataManager.Instance._events, filePath);
@@ -84,21 +84,21 @@ namespace NooSphere
                 }
                 else
                 {
-                    Debug.LogError("ÇÃ·¹ÀÌ¾îÀÇ ÇöÀç Location °ªÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+                    Debug.LogError("í”Œë ˆì´ì–´ì˜ í˜„ì¬ Location ê°’ì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
                 }
 
                 string currentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 ES3.Save("DateTime", currentTime, filePath);
 
-                // ÀÌ °÷¿¡ ÇÃ·¹ÀÌÅ¸ÀÓ ºÒ·¯¿Í¼­ ÀúÀåÇØ¾ß ÇÔ.
+                // ì´ ê³³ì— í”Œë ˆì´íƒ€ì„ ë¶ˆëŸ¬ì™€ì„œ ì €ì¥í•´ì•¼ í•¨.
             }
             catch (System.IO.IOException)
             {
-                Debug.LogError("ÆÄÀÏÀÌ ¿­·ÁÀÖ°Å³ª, ÃæºĞÇÑ ÀúÀå°ø°£ÀÌ ¾ø½À´Ï´Ù.");
+                Debug.LogError("íŒŒì¼ì´ ì—´ë ¤ìˆê±°ë‚˜, ì¶©ë¶„í•œ ì €ì¥ê³µê°„ì´ ì—†ìŠµë‹ˆë‹¤.");
             }
             catch (System.Security.SecurityException)
             {
-                Debug.LogError("±ÇÇÑÀÌ ¾ø´Â »ç¿ëÀÚÀÔ´Ï´Ù.");
+                Debug.LogError("ê¶Œí•œì´ ì—†ëŠ” ì‚¬ìš©ìì…ë‹ˆë‹¤.");
             }
         }
     }

@@ -1,4 +1,4 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using TMPro;
@@ -41,13 +41,13 @@ public class SaveUI : Singleton<SaveUI>
         if (ES3.KeyExists("Location", filePath))
         {
             string location = ES3.Load<string>("Location",filePath);
-            _locationTexts[slotIndex - 1].text = "¿˙¿Â ¿ßƒ° : " + location;
+            _locationTexts[slotIndex - 1].text = "Ï†ÄÏû• ÏúÑÏπò : " + location;
         }
 
         if (ES3.KeyExists("DateTime", filePath))
         {
             string dateTime = ES3.Load<string>("DateTime", filePath);
-            _dateTimeTexts[slotIndex - 1].text = "¿˙¿Â ¿œΩ√ : " + dateTime;
+            _dateTimeTexts[slotIndex - 1].text = "Ï†ÄÏû• ÏùºÏãú : " + dateTime;
         }
     }
 }
