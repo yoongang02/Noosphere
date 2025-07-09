@@ -16,9 +16,17 @@ public class LoadingSceneUI : MonoBehaviour
     }
     private async UniTaskVoid StartLoading()
     {
-        await DataManager.Instance.InitializeData();
-        await FadeOut();
-        SceneManager.LoadScene("IntroScene");
+        // 새 게임 로딩이면
+        if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.NewGame)
+        {
+            await DataManager.Instance.InitializeData();
+            await FadeOut();
+            SceneManager.LoadScene("IntroScene");
+        }
+        else // 이어하기 로딩이면
+        {
+            NooSphere.SaveManager.Instance.LoadSaveData();
+        }
     }
     
     private async UniTask FadeOut()

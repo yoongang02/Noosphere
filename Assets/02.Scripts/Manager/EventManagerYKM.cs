@@ -529,18 +529,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         if (!string.IsNullOrEmpty(_event.lockConditionId) &&
             DataManager.Instance._lockConditions.ContainsKey(_event.lockConditionId))
         {
-            if (_event.eventId != "Event_D098" || _event.eventId != "Event_D099")
-            {
-                if (_event.eventId != "Event_D098" || _event.eventId != "Event_D099")
-                {
-                    DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();
-                }
-                else
-                {
-                    Debug.LogWarning($"{_event.eventId}여서 여기가 실행되는거야");
-                    DataManager.Instance._lockConditions[_event.lockConditionId].Lock();
-                }
-            }
+            DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();   
         }
         _event.isExecuted = true;
         if (_event.eventId == "Event_D102")
@@ -561,11 +550,12 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         nextEventID = _event.nextEventId;
 
         // autoSave가 true라면, 자동 저장 진행
-        /*if (_event.autoSave)
+        if (_event.autoSave)
         {
             Debug.Log(_event.eventId + "자동 저장 실행");
-            StartCoroutine(NooSphere.SaveManager.Instance.DoAutoSave());
-        }*/
+            NooSphere.SaveManager.Instance.SetSlotIndex(1);
+            StartCoroutine(NooSphere.SaveManager.Instance.DoSave());
+        }
     }
 
     public bool IsConditionMet()

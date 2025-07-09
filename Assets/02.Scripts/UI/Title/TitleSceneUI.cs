@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,9 +37,11 @@ public class TitleSceneUI : MonoBehaviour
         
     }
 
+    // TODO : 세이브데이터가 있는 경우와 없는 경우를 구분해서 기획에 따라 다르게 구현해야 함.
     private void OnClickNewGameBtn()
     {
         SoundManager.Instance.PlaySFX("Soundresource_037");
+        NooSphere.SaveManager.Instance.SetLoadType(NooSphere.GameLoadType.NewGame);
         SceneManager.LoadScene("LoadingScene");
     }
 

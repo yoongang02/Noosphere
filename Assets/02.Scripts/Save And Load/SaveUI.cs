@@ -53,7 +53,8 @@ public class SaveUI : Singleton<SaveUI>
 
     public void ClickSaveBtn(int slotIndex)
     {
-        StartCoroutine(NooSphere.SaveManager.Instance.DoManualSave(slotIndex));
+        NooSphere.SaveManager.Instance.SetSlotIndex(slotIndex);
+        StartCoroutine(NooSphere.SaveManager.Instance.DoSave());
     }
 
     public void ClickLoadBtn(int slotIndex)
