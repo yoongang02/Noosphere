@@ -50,4 +50,14 @@ public class SaveUI : Singleton<SaveUI>
             _dateTimeTexts[slotIndex - 1].text = "저장 일시 : " + dateTime;
         }
     }
+
+    public void ClickSaveBtn(int slotIndex)
+    {
+        StartCoroutine(NooSphere.SaveManager.Instance.DoManualSave(slotIndex));
+    }
+
+    public void ClickLoadBtn(int slotIndex)
+    {
+
+    }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -10,13 +9,13 @@ namespace NooSphere
     {
         public event Action OnSaveStart;
         public event Action<int> OnSaveFinish;
+        private string folderPath = Path.Combine(Application.persistentDataPath, "Saves");
 
 
         // 세이브 슬롯2 또는 3에 현재 진행상황을 사용자가 수동 저장 시 호출되는 함수
         public IEnumerator DoManualSave(int slotIndex)
         {
             // Root 하위에 Saves 폴더로 이어지는 경로 찾기
-            string folderPath = Path.Combine(Application.persistentDataPath, "Saves");
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
@@ -26,7 +25,7 @@ namespace NooSphere
             OnSaveStart?.Invoke();
             yield return null;
 
-            SaveCurrentState(folderPath, slotIndex);
+            SaveCurrentState(slotIndex);
 
             yield return null;
             // 저장 끝 -> 저장 중 UI 비활성화 & 상호작용 풀기
@@ -38,7 +37,6 @@ namespace NooSphere
         public IEnumerator DoAutoSave()
         {
             // Root 하위에 Saves 폴더로 이어지는 경로 찾기
-            string folderPath = Path.Combine(Application.persistentDataPath, "Saves");
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
@@ -48,7 +46,7 @@ namespace NooSphere
             OnSaveStart?.Invoke();
             yield return null;
 
-            SaveCurrentState(folderPath, 1);
+            SaveCurrentState(1);
 
             yield return null;
             // 저장 끝 -> 저장 중 UI 비활성화 & 상호작용 풀기
@@ -59,7 +57,7 @@ namespace NooSphere
         // 폴더 경로와, 저장하려는 파일 이름을 파라미터로 받음
 
         // TODO : 플레이타임 값 불러와서 저장하는 작업 진행해야 함.
-        void SaveCurrentState(string folderPath, int slotIndex)
+        void SaveCurrentState(int slotIndex)
         {
             // 저장할 파일 경로 찾기
             string filePath = Path.Combine(folderPath, $"slot{slotIndex}.es3");
@@ -98,6 +96,35 @@ namespace NooSphere
             catch (System.Security.SecurityException)
             {
                 Debug.LogError("권한이 없는 사용자입니다.");
+            }
+        }
+
+        // 슬롯에 저장된 데이터를 불러와 반영하는 함수
+        // TODO : 저장되어 있는 값을 반영하는 동안, 로딩 화면 띄워야 함.
+        // TODO : 플레이타임 값을 반영하여, 다시 플레이타임을 재개해야 함.
+        void LoadSaveData(int slotIndex)
+        {
+            // 슬롯에 해당하는 세이브 파일이 있는지 확인
+            string filePath = Path.Combine(folderPath, $"slot{slotIndex}.es3");
+            if (File.Exists(filePath))
+            {
+                // 데이터들 반영
+                DataManager.Instance._events = ES3.Load("EventDatas", filePath, DataManager.Instance._events);
+                DataManager.Instance._evidences = ES3.Load("EvidenceDatas", filePath, DataManager.Instance._evidences);
+                DataManager.Instance._quiz = ES3.Load("QuizDatas", filePath, DataManager.Instance._quiz);
+
+                // 플레이어 transform 반영
+                Transform playerTransform = ES3.Load("PlayerTransform", filePath, PlayerController.Instance.transform);
+                PlayerController.Instance.transform.position = playerTransform.position;
+                PlayerController.Instance.transform.rotation = playerTransform.rotation;
+
+                // 플레이타임 반영 후 재개
+
+                
+            }
+            else
+            {
+                Debug.LogError($"{filePath}에 파일이 존재하지 않습니다.");
             }
         }
     }
