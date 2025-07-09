@@ -18,7 +18,7 @@ public class FadeOutEffect : MonoBehaviour
             {
                 EffectManager.Instance.OnEffectEnd?.Invoke();
                 if (!string.IsNullOrEmpty(_sceneName))
-                    SceneManager.LoadScene(_sceneName);
+                    SceneManager.LoadSceneAsync(_sceneName);
             });
         // todo 최종스테이지로
     }
