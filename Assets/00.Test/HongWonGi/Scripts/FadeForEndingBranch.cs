@@ -4,11 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
-
-public class FadeOutEffect : MonoBehaviour
+public class FadeForEndingBranch : MonoBehaviour
 {
     [SerializeField] private Image _fadeImage;
-    [SerializeField] private string _sceneName;
     private void OnEnable()
     {
         SoundManager.Instance.StopAllSFX();
@@ -17,8 +15,14 @@ public class FadeOutEffect : MonoBehaviour
             .SetEase(Ease.InOutQuad).OnComplete(()=>
             {
                 EffectManager.Instance.OnEffectEnd?.Invoke();
-                if (!string.IsNullOrEmpty(_sceneName))
-                    SceneManager.LoadSceneAsync(_sceneName);
+                if (DataManager.Instance._evidences["Evidence_016"].isAcquired)
+                {
+                    SceneManager.LoadSceneAsync("EndingScene");
+                }
+                else
+                {
+                    SceneManager.LoadSceneAsync("CreditScene");
+                }
             });
         // todo 최종스테이지로
     }
