@@ -16,6 +16,7 @@ public class TimeLineController : MonoBehaviour
     {
         _player = FindObjectOfType<PlayerController>().gameObject;
         _playableDirector.stopped += EndTimeLine;
+        _playableDirector.played += StartTimeLine;
     }
 
 
@@ -32,11 +33,20 @@ public class TimeLineController : MonoBehaviour
             _player.transform.localRotation = Quaternion.Euler(0, _angle, 0);
         }
 
+        // InventoryManager.Instance.canOpenInventory = true;
+        // PlayerController.Instance.canMove = false;
+        // UIManager.Instance.LockPlayer();
+        // UIManager.Instance.inventoryIcon.SetActive(false);
+        _playableDirector.Play();
+    }
+
+    private void StartTimeLine(PlayableDirector obj)
+    {
+        Debug.LogWarning(obj.playableAsset.name+"  타임라인 시작");
         InventoryManager.Instance.canOpenInventory = true;
         PlayerController.Instance.canMove = false;
         UIManager.Instance.LockPlayer();
         UIManager.Instance.inventoryIcon.SetActive(false);
-        _playableDirector.Play();
     }
 
     private void EndTimeLine(PlayableDirector obj)

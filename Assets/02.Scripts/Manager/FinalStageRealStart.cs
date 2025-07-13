@@ -6,7 +6,11 @@ using UnityEngine;
 
 public class FinalStageRealStart : MonoBehaviour
 {
-    private void OnEnable()
+    private void Awake()
+    {
+        PlayerController.Instance.canMove = false;
+    }
+    private void Start()
     {
         EventManagerYKM.Instance.ExecuteEvent("Event_D098").Forget();
     }
