@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class EndingScene : MonoBehaviour
@@ -50,5 +51,10 @@ public class EndingScene : MonoBehaviour
     {
         _fadeImage.color = new Color(0, 0, 0, 0);
         await _fadeImage.DOFade(1, _fadeDuration).AsyncWaitForCompletion();
+    }
+
+    public void LoadScene(string scene)
+    {
+        SceneManager.LoadSceneAsync(scene);
     }
 }
