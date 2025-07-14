@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -140,7 +140,7 @@ public class PlayerController : Singleton<PlayerController>
             if (PlayerInteract.Instance.curTrigger != null && PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.canInteract)
             {
                 PlayerInteract.Instance.curTrigger.GetComponent<EventTrigger>().OnTriggerEnter(GetComponent<CapsuleCollider>());
-                NooSphere.Debug.LogWarning("트리거 내에서 이동했을 때 강제로 다시 트리거 엔터 호출");
+                //NooSphere.Debug.LogWarning("트리거 내에서 이동했을 때 강제로 다시 트리거 엔터 호출");
             }
             
         }

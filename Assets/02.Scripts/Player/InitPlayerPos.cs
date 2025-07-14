@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -18,10 +18,9 @@ public class InitPlayerPos : MonoBehaviour
     
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-      Transform player = GameObject.FindWithTag("Player").transform;
-      player.position = gameObject.transform.position;
-      player.rotation = gameObject.transform.rotation;
-
-      EventManagerYKM.Instance.ExecuteEvent("Event_D085").Forget();
+        Transform player = GameObject.FindWithTag("Player").transform;
+        player.position = gameObject.transform.position;
+        player.rotation = gameObject.transform.rotation;
+        if(scene.name == "FinalStage_Spirit") EventManagerYKM.Instance.ExecuteEvent("Event_D085").Forget();
     }
 }

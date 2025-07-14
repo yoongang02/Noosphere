@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Debug = NooSphere.Debug;
@@ -36,6 +37,11 @@ public class RoomInfoManager : MonoBehaviour
         else
         {
             StartCoroutine(ShowRoomNumber());
+        }
+
+        if(EventManagerYKM.Instance.currentEventID == "Event_D097")
+        {
+            DataManager.Instance._lockConditions["Lock_condition_001"].Lock();
         }
         Debug.LogWarning($"현재 방 정보 : {roomInfo}");
     }

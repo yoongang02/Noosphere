@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -529,7 +529,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         if (!string.IsNullOrEmpty(_event.lockConditionId) &&
             DataManager.Instance._lockConditions.ContainsKey(_event.lockConditionId))
         {
-            DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();   
+            DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();
         }
         _event.isExecuted = true;
         if (_event.eventId == "Event_D102")
@@ -550,11 +550,11 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         nextEventID = _event.nextEventId;
 
         // autoSave가 true라면, 자동 저장 진행
-        if (_event.autoSave)
+        /*if (_event.autoSave)
         {
             Debug.Log(_event.eventId + "자동 저장 실행");
             StartCoroutine(NooSphere.SaveManager.Instance.DoAutoSave());
-        }
+        }*/
     }
 
     public bool IsConditionMet()
