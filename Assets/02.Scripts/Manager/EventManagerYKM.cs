@@ -529,7 +529,18 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         if (!string.IsNullOrEmpty(_event.lockConditionId) &&
             DataManager.Instance._lockConditions.ContainsKey(_event.lockConditionId))
         {
-            DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();
+            if (_event.eventId != "Event_D098" || _event.eventId != "Event_D099")
+            {
+                if (_event.eventId != "Event_D098" || _event.eventId != "Event_D099")
+                {
+                    DataManager.Instance._lockConditions[_event.lockConditionId].UnLock();
+                }
+                else
+                {
+                    Debug.LogWarning($"{_event.eventId}여서 여기가 실행되는거야");
+                    DataManager.Instance._lockConditions[_event.lockConditionId].Lock();
+                }
+            }
         }
         _event.isExecuted = true;
         if (_event.eventId == "Event_D102")

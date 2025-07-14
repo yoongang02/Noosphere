@@ -1,14 +1,14 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class OnlyForTest : Singleton<OnlyForTest>
 {
-    //스테이지1 빠른 테스트를 위한 임시 마스터 코드
-    private bool _prologuePass = false;
-    private bool _stage1Pass = false;
-    private bool _stage2Pass = false;
+    ////스테이지1 빠른 테스트를 위한 임시 마스터 코드
+    //private bool _prologuePass = false;
+    //private bool _stage1Pass = false;
+    //private bool _stage2Pass = false;
 
     void Update()
     {
@@ -18,111 +18,111 @@ public class OnlyForTest : Singleton<OnlyForTest>
             Application.Quit();
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            Debug.LogWarning("스테이지1로 바로 이동");
-            SoundManager.Instance.StopAllSFX();
-            PlayerInteract.Instance.OnInteract = null;
-            PlayerInteract.Instance.OnMentalInteract = null;
-            DialogueManager.Instance.OnDialogueEnd?.Invoke();
-            EffectManager.Instance.OnEffectEnd?.Invoke();
-            GoToStage1();
-        }
+    //    if (Input.GetKeyDown(KeyCode.Alpha2))
+    //    {
+    //        Debug.LogWarning("스테이지1로 바로 이동");
+    //        SoundManager.Instance.StopAllSFX();
+    //        PlayerInteract.Instance.OnInteract = null;
+    //        PlayerInteract.Instance.OnMentalInteract = null;
+    //        DialogueManager.Instance.OnDialogueEnd?.Invoke();
+    //        EffectManager.Instance.OnEffectEnd?.Invoke();
+    //        GoToStage1();
+    //    }
 
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            Debug.LogWarning("스테이지2로 바로 이동");
-            SoundManager.Instance.StopAllSFX();
-            PlayerInteract.Instance.OnInteract = null;
-            PlayerInteract.Instance.OnMentalInteract = null;
-            DialogueManager.Instance.OnDialogueEnd?.Invoke();
-            EffectManager.Instance.OnEffectEnd?.Invoke();
-            GoToStage2();
-        }
+    //    if (Input.GetKeyDown(KeyCode.Alpha3))
+    //    {
+    //        Debug.LogWarning("스테이지2로 바로 이동");
+    //        SoundManager.Instance.StopAllSFX();
+    //        PlayerInteract.Instance.OnInteract = null;
+    //        PlayerInteract.Instance.OnMentalInteract = null;
+    //        DialogueManager.Instance.OnDialogueEnd?.Invoke();
+    //        EffectManager.Instance.OnEffectEnd?.Invoke();
+    //        GoToStage2();
+    //    }
         
-        // 진엔딩
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            Debug.LogWarning("진엔딩으로 바로 이동");
-            SoundManager.Instance.StopAllSFX();
-            PlayerInteract.Instance.OnInteract = null;
-            PlayerInteract.Instance.OnMentalInteract = null;
-            DialogueManager.Instance.OnDialogueEnd?.Invoke();
-            EffectManager.Instance.OnEffectEnd?.Invoke();
-            GoToRealEnding();
-        }
+    //    // 진엔딩
+    //    if (Input.GetKeyDown(KeyCode.Alpha4))
+    //    {
+    //        Debug.LogWarning("진엔딩으로 바로 이동");
+    //        SoundManager.Instance.StopAllSFX();
+    //        PlayerInteract.Instance.OnInteract = null;
+    //        PlayerInteract.Instance.OnMentalInteract = null;
+    //        DialogueManager.Instance.OnDialogueEnd?.Invoke();
+    //        EffectManager.Instance.OnEffectEnd?.Invoke();
+    //        GoToRealEnding();
+    //    }
         
-        // 일반엔딩 - 탈출 성공
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            Debug.LogWarning("일반엔딩 탈출 성공 으로 바로 이동");
-            SoundManager.Instance.StopAllSFX();
-            PlayerInteract.Instance.OnInteract = null;
-            PlayerInteract.Instance.OnMentalInteract = null;
-            DialogueManager.Instance.OnDialogueEnd?.Invoke();
-            EffectManager.Instance.OnEffectEnd?.Invoke();
-            GoToCommonEnding1();
-        }
-        // 일반엔딩 - 탈출 실패
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            Debug.LogWarning("일반엔딩 탈출 실패로 바로 이동");
-            SoundManager.Instance.StopAllSFX();
-            PlayerInteract.Instance.OnInteract = null;
-            PlayerInteract.Instance.OnMentalInteract = null;
-            DialogueManager.Instance.OnDialogueEnd?.Invoke();
-            EffectManager.Instance.OnEffectEnd?.Invoke();
-            GoToCommonEnding2();
-        }
-    }
+    //    // 일반엔딩 - 탈출 성공
+    //    if (Input.GetKeyDown(KeyCode.Alpha5))
+    //    {
+    //        Debug.LogWarning("일반엔딩 탈출 성공 으로 바로 이동");
+    //        SoundManager.Instance.StopAllSFX();
+    //        PlayerInteract.Instance.OnInteract = null;
+    //        PlayerInteract.Instance.OnMentalInteract = null;
+    //        DialogueManager.Instance.OnDialogueEnd?.Invoke();
+    //        EffectManager.Instance.OnEffectEnd?.Invoke();
+    //        GoToCommonEnding1();
+    //    }
+    //    // 일반엔딩 - 탈출 실패
+    //    if (Input.GetKeyDown(KeyCode.Alpha6))
+    //    {
+    //        Debug.LogWarning("일반엔딩 탈출 실패로 바로 이동");
+    //        SoundManager.Instance.StopAllSFX();
+    //        PlayerInteract.Instance.OnInteract = null;
+    //        PlayerInteract.Instance.OnMentalInteract = null;
+    //        DialogueManager.Instance.OnDialogueEnd?.Invoke();
+    //        EffectManager.Instance.OnEffectEnd?.Invoke();
+    //        GoToCommonEnding2();
+    //    }
+    //}
 
-    void GoToStage1()
-    {
-        UIManager.Instance.CloseAllUI();
-        EventManagerYKM.Instance.nextEventID = "";
-        //이벤트 모두 실행
-        foreach (var _event in DataManager.Instance._events)
-        {
-            string chapterIndex = _event.Key;
-            if (chapterIndex[6] == 'A')
-            {
-                _event.Value.isExecuted = true;
-                //증거물 모두 수집
-                if (!string.IsNullOrEmpty(_event.Value.evidenceId))
-                {
-                    EvidenceStructure evidence = DataManager.Instance._evidences[_event.Value.evidenceId];
+    //void GoToStage1()
+    //{
+    //    UIManager.Instance.CloseAllUI();
+    //    EventManagerYKM.Instance.nextEventID = "";
+    //    //이벤트 모두 실행
+    //    foreach (var _event in DataManager.Instance._events)
+    //    {
+    //        string chapterIndex = _event.Key;
+    //        if (chapterIndex[6] == 'A')
+    //        {
+    //            _event.Value.isExecuted = true;
+    //            //증거물 모두 수집
+    //            if (!string.IsNullOrEmpty(_event.Value.evidenceId))
+    //            {
+    //                EvidenceStructure evidence = DataManager.Instance._evidences[_event.Value.evidenceId];
 
-                    if (evidence.acquisitionType == 'Y')
-                    {
-                        InventoryManager.Instance.AddEvidence(evidence);
-                    }
-                    else if (evidence.acquisitionType == 'N')
-                    {
-                        evidence.accessCnt = 3;
-                    }
-                }
-            }
-        }
-        InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_011"]);
-        //퀴즈 모두 정답
-        DataManager.Instance._quiz["Quiz_001"].isSolved = true;
-        //서브 증거물
-        DataManager.Instance._evidences["Evidence_008"].accessCnt = 3;
+    //                if (evidence.acquisitionType == 'Y')
+    //                {
+    //                    InventoryManager.Instance.AddEvidence(evidence);
+    //                }
+    //                else if (evidence.acquisitionType == 'N')
+    //                {
+    //                    evidence.accessCnt = 3;
+    //                }
+    //            }
+    //        }
+    //    }
+    //    InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_011"]);
+    //    //퀴즈 모두 정답
+    //    DataManager.Instance._quiz["Quiz_001"].isSolved = true;
+    //    //서브 증거물
+    //    DataManager.Instance._evidences["Evidence_008"].accessCnt = 3;
 
-        //씬 스테이지1로 이동
-        SceneManager.LoadScene("Lounge");
-        //현재 스테이지 변경
-        EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_102;
-        EventManagerYKM.Instance.currentEventID = "Event_A031";
-        EventManagerYKM.Instance.nextEventID = "";
+    //    //씬 스테이지1로 이동
+    //    SceneManager.LoadScene("Lounge");
+    //    //현재 스테이지 변경
+    //    EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_102;
+    //    EventManagerYKM.Instance.currentEventID = "Event_A031";
+    //    EventManagerYKM.Instance.nextEventID = "";
 
-        //플레이어 찾기
-        FindObjectOfType<PlayerInteract>().transform.position = new Vector3(0, 0.7f, 5);
-        FindObjectOfType<PlayerInteract>().isInsideTrigger = false;
-        FindObjectOfType<PlayerInteract>().curTrigger = null;
+    //    //플레이어 찾기
+    //    FindObjectOfType<PlayerInteract>().transform.position = new Vector3(0, 0.7f, 5);
+    //    FindObjectOfType<PlayerInteract>().isInsideTrigger = false;
+    //    FindObjectOfType<PlayerInteract>().curTrigger = null;
 
-        _prologuePass = true;
-        EventManagerYKM.Instance.curChapterInfo = EventManagerYKM.ChapterInfo.Stage1;
+    //    _prologuePass = true;
+    //    EventManagerYKM.Instance.curChapterInfo = EventManagerYKM.ChapterInfo.Stage1;
     }
     
     void GoToStage2()
