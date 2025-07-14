@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -39,13 +39,13 @@ public class IntroSceneController : MonoBehaviour
        
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            SceneManager.LoadSceneAsync("PrologueMap_real");
-        }
-    }
+    //void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Alpha1))
+    //    {
+    //        SceneManager.LoadSceneAsync("PrologueMap_real");
+    //    }
+    //}
     public void OnLoadScene(string sceneName)
     {
         SceneManager.LoadSceneAsync(sceneName);
