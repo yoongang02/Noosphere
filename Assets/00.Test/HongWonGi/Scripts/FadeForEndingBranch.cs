@@ -21,7 +21,7 @@ public class FadeForEndingBranch : MonoBehaviour
                 }
                 else
                 {
-                    SceneManager.LoadSceneAsync("CreditScene");
+                    SceneManager.LoadSceneAsync("DemoEndScene");
                 }
             });
         // todo 최종스테이지로
