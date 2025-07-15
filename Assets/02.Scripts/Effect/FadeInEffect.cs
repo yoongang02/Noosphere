@@ -13,6 +13,7 @@ public class FadeInEffect : MonoBehaviour
     private void OnEnable()
     {
         SoundManager.Instance.StopAllSFX();
+        PlayerController.Instance.canMove = false;
         _fadeImage.color = new Color(0, 0, 0, 1);
         _fadeImage.DOFade(0f, _fadeDuration)
             .SetEase(Ease.InOutQuad).OnComplete(() => _fadeImage.gameObject.SetActive(false));
