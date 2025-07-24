@@ -53,6 +53,7 @@ public class TitleSceneUI : MonoBehaviour
     private void OnClickSettingBtn()
     {
         SoundManager.Instance.PlaySFX("Soundresource_037");
+        _eventSys.sendNavigationEvents = false;
         _settingPanel.SetActive(true);
     }
 

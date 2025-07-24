@@ -9,24 +9,27 @@ using UnityEngine.UI;
 public class SettingUI : MonoBehaviour
 {
     [SerializeField] private GameObject _creditUI;
-    [Header("세팅 버튼")] [SerializeField] private Button _windowBtn;
-    [SerializeField] private Button _fullScreenBtn;
+    [SerializeField] private EventSystem _eventSystem;
+    [Header("세팅 버튼")]
     [SerializeField] private Button _exitBtn;
     [SerializeField] private Button _creditBtn;
     [SerializeField] private Button _okBtn;
     [SerializeField] private Slider _soundVolumeSlider;
     [SerializeField] private Slider _bgmVolumeSlider;
     [SerializeField] private Toggle _fullScreenToggle;
-    [SerializeField]private Toggle _windowToggle;
-    [Header("텍스트")] [SerializeField] private TextMeshProUGUI _soundText;
+    [SerializeField] private Toggle _windowToggle;
+    [Header("텍스트")] 
+    [SerializeField] private TextMeshProUGUI _soundText;
     [SerializeField] private TextMeshProUGUI _bgmText;
 
     private void Awake()
     {
         Init();
     }
+
     private void Init()
-    {
+    {  
+        _okBtn.interactable = false; 
         _soundVolumeSlider.onValueChanged.AddListener(SoundVolumeChanged);
         _bgmVolumeSlider.onValueChanged.AddListener(BgmVolumeChanged);
         _okBtn.onClick.AddListener(OnClickOkBtn);
@@ -44,10 +47,28 @@ public class SettingUI : MonoBehaviour
 
     private void OnEnable()
     {
-        _okBtn.interactable = false;
+        
+        bool screenMode = true; // 기본 전체화면
+        if (ES3.KeyExists("ScreenMode", "Setting.es3"))
+            screenMode = ES3.Load<bool>("ScreenMode", "Setting.es3");
+        _fullScreenToggle.isOn = screenMode;
+        _windowToggle.isOn = !screenMode;
+        // 잠깐 리스너 빼고 값 세팅
+        _bgmVolumeSlider.onValueChanged.RemoveListener(BgmVolumeChanged);
+        _soundVolumeSlider.onValueChanged.RemoveListener(SoundVolumeChanged);
+
         _bgmVolumeSlider.value = SoundManager.Instance.bgmVolume;
         _soundVolumeSlider.value = SoundManager.Instance.sfxVolume;
         
+        int bgmText = Mathf.RoundToInt(_bgmVolumeSlider.value * 100);
+        int soundText= Mathf.RoundToInt(_soundVolumeSlider.value * 100);
+        _bgmText.text = $"{bgmText}%";
+        _soundText.text = $"{soundText}%";
+
+        // 다시 리스너 추가
+        _bgmVolumeSlider.onValueChanged.AddListener(BgmVolumeChanged);
+        _soundVolumeSlider.onValueChanged.AddListener(SoundVolumeChanged);
+        _okBtn.interactable = false;
     }
 
     private void OnClickOkBtn()
@@ -56,34 +77,51 @@ public class SettingUI : MonoBehaviour
         float soundVolume = _soundVolumeSlider.value;
         ES3.Save("BgmVolume", bgmVolume, "Setting.es3");
         ES3.Save("SoundVolume", soundVolume, "Setting.es3");
-        ES3.Save("ScreenMode", _fullScreenToggle.isOn, "Setting.bgmVolume");
+        ES3.Save("ScreenMode", _fullScreenToggle.isOn, "Setting.es3");
         gameObject.SetActive(false);
     }
 
     public void OnClickFullScreenBtn()
     {
-        Screen.SetResolution(1920,1080,true);
+        Screen.SetResolution(1920, 1080, true);
+        _okBtn.interactable = true;
     }
+
     public void OnClickWindowBtn()
     {
         Screen.SetResolution(1280, 720, false);
+        _okBtn.interactable = true;
     }
+
     private void OnClickExitBtn()
     {
-        if (ES3.KeyExists("SoundVolume","Setting.es3") || ES3.KeyExists("BgmVolume","Setting.es3"))
+        float bgmVolume = 0.5f;
+        float soundVolume = 0.5f;
+        bool screenMode = true; //true ==> 풀스크린 모드
+        if (ES3.KeyExists("BgmVolume", "Setting.es3"))
+            bgmVolume = ES3.Load<float>("BgmVolume", "Setting.es3");
+        if (ES3.KeyExists("SoundVolume", "Setting.es3"))
+            soundVolume = ES3.Load<float>("SoundVolume", "Setting.es3");
+        if (ES3.KeyExists("ScreenMode", "Setting.es3"))
+            screenMode = ES3.Load<bool>("ScreenMode", "Setting.es3");
+
+        SoundManager.Instance.bgmVolume = bgmVolume;
+        SoundManager.Instance._bgmSource.volume = bgmVolume;
+        SoundManager.Instance.sfxVolume = soundVolume;
+
+        _fullScreenToggle.isOn = screenMode;
+        _windowToggle.isOn = !screenMode;
+        
+        if (screenMode)
         {
-            float BgmVolume = ES3.Load<float>("BgmVolume","Setting.es3");
-            float SoundVolume = ES3.Load<float>("SoundVolume", "Setting.es3");
-            SoundManager.Instance.bgmVolume = BgmVolume;
-            SoundManager.Instance._bgmSource.volume = BgmVolume;
-            SoundManager.Instance.sfxVolume = SoundVolume;
+            Screen.SetResolution(1920, 1080, true);
         }
         else
         {
-            SoundManager.Instance._bgmSource.volume = 0.5f;
-            SoundManager.Instance.bgmVolume = 0.5f;
-            SoundManager.Instance.sfxVolume = 0.5f;
+            Screen.SetResolution(1280, 720, false);
         }
+
+        _eventSystem.sendNavigationEvents = true;
         gameObject.SetActive(false);
     }
 
@@ -94,7 +132,7 @@ public class SettingUI : MonoBehaviour
         _soundText.text = $"{intValue}%";
         _okBtn.interactable = true;
     }
-    
+
     private void BgmVolumeChanged(float value)
     {
         SoundManager.Instance.bgmVolume = value;
