@@ -132,6 +132,7 @@ public class PlayerController : Singleton<PlayerController>
             {
                 int randomIndex = UnityEngine.Random.Range(0, currentSounds.Count);
                 footstepSource.clip = currentSounds[randomIndex];
+                footstepSource.volume = SoundManager.Instance.sfxVolume;
                 footstepSource.Play();
                 lastStepTime = Time.time;
             }

@@ -17,11 +17,13 @@ public class SoundManager : Singleton<SoundManager>
 
     [SerializeField] private AudioMixerGroup _SFXGroup;
     [SerializeField]
-    private AudioSource _bgmSource = null;
+    public AudioSource _bgmSource = null;
     [SerializeField]
     private List<AudioSource> _sfxSources = new List<AudioSource>(); // SFX를 재생하는 AudioSource 리스트
     [SerializeField] private int _maxSFXPoolSize = 10;
-    
+
+    public float sfxVolume;
+    public float bgmVolume;
     /* 사운드 Data 시트에 따라 업데이트 하고 싶으면, 이 주석 제거한 뒤 실행하면 생성됨.
     async void Awake()
     {
@@ -54,6 +56,24 @@ public class SoundManager : Singleton<SoundManager>
             {
                 _sfxDictionary[sfxData.soundID] = sfxData;
             }
+        }
+
+        if (!ES3.KeyExists("BgmVolume","Setting.es3"))
+        {
+            bgmVolume = 0.5f;
+        }
+        else
+        {
+            bgmVolume = ES3.Load<float>("BgmVolume","Setting.es3");
+        }
+        
+        if (!ES3.KeyExists("SoundVolume","Setting.es3"))
+        {
+            sfxVolume = 0.5f;
+        }
+        else
+        {
+            sfxVolume = ES3.Load<float>("SoundVolume","Setting.es3");
         }
     }
     
@@ -165,9 +185,10 @@ public class SoundManager : Singleton<SoundManager>
         StopBGM();
         SetAudioSource(_bgmSource, soundData);
         _bgmSource.loop = true;
+        _bgmSource.volume = soundData.volume*bgmVolume;
   
         _bgmSource.Play();
-        DOTween.To(() => _bgmSource.volume, x => _bgmSource.volume = x, soundData.volume, 1f);
+        DOTween.To(() => _bgmSource.volume, x => _bgmSource.volume = x, soundData.volume * bgmVolume, 1f);
     }
 
     public void StopForceBGM() => _bgmSource.Stop();
@@ -192,6 +213,7 @@ public class SoundManager : Singleton<SoundManager>
         // 재사용 가능한 AudioSource 가져오기
         AudioSource source = GetAvailableSFXSource();
         SetAudioSource(source, soundData);
+        source.volume = soundData.volume*sfxVolume;
         source.loop = false;
         for(int i = 0; i < soundData.loopCnt; i++)
         {
@@ -203,7 +225,30 @@ public class SoundManager : Singleton<SoundManager>
         }
         EffectManager.Instance.OnEffectEnd?.Invoke();
     }
-    
+    public void PlaySFXNoEffect(string id)
+    {
+        SoundData soundData = _sfxDictionary[id];
+        if (soundData == null || soundData.soundClip == null)
+        {
+            Debug.LogWarning("SoundData 유효하지 않습니다.");
+            return;
+        }
+        // 재사용 가능한 AudioSource 가져오기
+        AudioSource source = GetAvailableSFXSource();
+        SetAudioSource(source, soundData);
+        // source.clip = soundData.soundClip;
+        source.volume = soundData.volume*sfxVolume;
+        source.loop = false;
+
+        for(int i = 0; i < soundData.loopCnt; i++)
+        {
+            source.time = 0f;
+            source.Play();
+            // AudioClip의 길이만큼 대기 후 오디오 소스 중지 및 반환
+            float clipLength = soundData.soundClip.length; // 클립의 길이 가져오기
+            StartCoroutine(StopAndReleaseSourceAfterDelay(source, clipLength));
+        }
+    }
     private AudioSource GetAvailableSFXSource()
     {
         // 사용 가능한 오디오 소스 찾기
@@ -306,35 +351,12 @@ public class SoundManager : Singleton<SoundManager>
         AudioSource source = GetAvailableSFXSource();
 
         source.clip = soundData.soundClip;
-        source.volume = soundData.volume;
+        source.volume = soundData.volume*sfxVolume;
         source.loop = true; // 루프 활성화
         source.Play();
     }
     
-    public void PlaySFXNoEffect(string id)
-    {
-        SoundData soundData = _sfxDictionary[id];
-        if (soundData == null || soundData.soundClip == null)
-        {
-            Debug.LogWarning("SoundData 유효하지 않습니다.");
-            return;
-        }
-
-        // 재사용 가능한 AudioSource 가져오기
-        AudioSource source = GetAvailableSFXSource();
-
-        source.clip = soundData.soundClip;
-        source.volume = soundData.volume;
-        source.loop = false;
-
-        for(int i = 0; i < soundData.loopCnt; i++)
-        {
-            source.Play();
-            // AudioClip의 길이만큼 대기 후 오디오 소스 중지 및 반환
-            float clipLength = soundData.soundClip.length; // 클립의 길이 가져오기
-            StartCoroutine(StopAndReleaseSourceAfterDelay(source, clipLength));
-        }
-    }
+   
 
     public void SetAudioSource(AudioSource audioSource, SoundData data)
     {

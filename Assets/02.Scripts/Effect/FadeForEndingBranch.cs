@@ -10,6 +10,7 @@ public class FadeForEndingBranch : MonoBehaviour
     private void OnEnable()
     {
         SoundManager.Instance.StopAllSFX();
+        PlayerController.Instance.canMove = false;
         _fadeImage.color = new Color(0, 0, 0, 0);
         _fadeImage.DOFade(1f, 5f)
             .SetEase(Ease.InOutQuad).OnComplete(()=>

@@ -6,11 +6,36 @@ using UnityEngine;
 public class TitleManager : MonoBehaviour
 {
     [SerializeField] private List<GameObject> _objects;
+
     private void Start()
     {
-        PlayerPrefs.SetInt("FadeImage",0);
+        PlayerPrefs.SetInt("FadeImage", 0);
         ActiveRandomMenu();
-        Screen.SetResolution(1920,1080,true);
+        Init();
+        // Screen.SetResolution(1920,1080,true);
+    }
+
+    private void Init()
+    {
+        int width, height;
+        bool isFullScreen = true;
+
+        if (ES3.KeyExists("ScreenMode", "Setting.es3"))
+        {
+            isFullScreen = ES3.Load<bool>("ScreenMode", "Setting.es3");
+        }
+        if (isFullScreen)
+        {
+            width = 1920;
+            height = 1080;
+        }
+        else
+        {
+            width = 1280;
+            height = 720;
+        }
+
+        Screen.SetResolution(width, height, isFullScreen);
     }
 
     private void ActiveRandomMenu()
