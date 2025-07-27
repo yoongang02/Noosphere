@@ -241,6 +241,9 @@ public class DialogueManager : UIBase
             case "" :
                 SoundManager.Instance.PlayLoopingSound("Soundresource_075");
                 break;
+            case "(엘리즈 레인)":
+                SoundManager.Instance.PlayLoopingSound("Soundresource_075");
+                break;
         }
     }
     public string GetCurDialogueId()
