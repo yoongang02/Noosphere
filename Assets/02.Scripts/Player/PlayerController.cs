@@ -37,14 +37,15 @@ public class PlayerController : Singleton<PlayerController>
 
     public GameObject npcCam;
     public NpcState npcState;
-    
-    
+
+    private Vector3 _lastPos;
     private void Start()
     {
         _animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody>();
         _defaultSpeed = _moveSpeed;
         InputManager.Instance.moveAction += HandleInput;
+        _lastPos = transform.position;
         if (_rigidbody != null)
         {
             _rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
@@ -114,7 +115,6 @@ public class PlayerController : Singleton<PlayerController>
             }
 
             Move(_moveDirection, currentSpeed);
-            
             // 발소리 처리
             bool isRunning = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
             float currentInterval = isRunning ? runInterval : stepInterval;
@@ -127,8 +127,8 @@ public class PlayerController : Singleton<PlayerController>
             {
                 currentSounds = isRunning ? runSounds : _walkSounds;
             }
-
-            if (Time.time >= lastStepTime + currentInterval)
+            float movedDistance = Vector3.Distance(transform.position, _lastPos);
+            if (movedDistance>0.01f&&Time.time >= lastStepTime + currentInterval)
             {
                 int randomIndex = UnityEngine.Random.Range(0, currentSounds.Count);
                 footstepSource.clip = currentSounds[randomIndex];
@@ -152,6 +152,7 @@ public class PlayerController : Singleton<PlayerController>
             currentVelocity.z = 0f;
             _rigidbody.velocity = currentVelocity;
         }
+        _lastPos = transform.position; 
     }
 
     private void Move(Vector3 direction,float speed)
