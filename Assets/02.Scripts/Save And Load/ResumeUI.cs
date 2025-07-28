@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class ResumeUI : MonoBehaviour
 {
+    [Header("Slot 관련")]
+    [Space(5)]
     [SerializeField] private List<Image> slotContents = new List<Image>();
     [SerializeField] private List<Image> slotBackgrounds = new List<Image>();
     [SerializeField] private List<TextMeshProUGUI> slotEmptyTexts = new List<TextMeshProUGUI>();
@@ -20,12 +22,19 @@ public class ResumeUI : MonoBehaviour
     }
     [SerializeField] private List<SlotInfoTexts> slotInfoTexts = new List<SlotInfoTexts>();
     [SerializeField] private List<Sprite> slotContentSprites = new List<Sprite>(); // 0 디폴트, 1 호버
-    
+
+    [Header("Button 관련")]
+    [Space(5)]
+    [SerializeField] private List<Image> buttonBackgrounds = new List<Image>();
+    [SerializeField] private List<Image> buttonContents = new List<Image>();
+    [SerializeField] private List<Sprite> buttonContentSprites = new List<Sprite>(); // 0 비활성화, 1 활성화
 
     private void Start()
     {
         // 슬롯 상태 초기화
         InitSlotState();
+        // 버튼 상태 초기화
+        InitBtnState();
     }
 
     // 슬롯 상태에 따라 문구를 설정하는 함수
@@ -48,13 +57,13 @@ public class ResumeUI : MonoBehaviour
 
     }
 
-    // 슬롯 배경 설정 함수
-    void SetSlotBackgroundOpacity(int slotIndex, float opacity)
+    // 배경 이미지 투명도 설정 함수
+    void SetBackgroundOpacity(List<Image> list, int slotIndex, float opacity)
     {
-        Color _color = slotBackgrounds[slotIndex-1].color;
-        
+        Color _color = list[slotIndex - 1].color;
+
         _color.a = opacity;
-        slotBackgrounds[slotIndex-1].color = _color;
+        list[slotIndex - 1].color = _color;
     }
 
     // 슬롯을 한번 클릭하였을 때 함수
@@ -67,11 +76,11 @@ public class ResumeUI : MonoBehaviour
             if (slotIndex == i)
             {
                 NooSphere.SaveManager.Instance.SetSlotIndex(slotIndex);
-                SetSlotBackgroundOpacity(slotIndex, 1);
+                SetBackgroundOpacity(slotBackgrounds, slotIndex, 1);
             }
             else
             {
-                SetSlotBackgroundOpacity(i, 0);
+                SetBackgroundOpacity(slotBackgrounds, i, 0);
             }
             slotContents[i - 1].sprite = slotContentSprites[0];
         }
@@ -80,7 +89,7 @@ public class ResumeUI : MonoBehaviour
     // 슬롯에 호버 진입했을 때
     public void HoverEnterLoadSlot(int slotIndex)
     {
-        for(int i=1; i<=3; i++)
+        for (int i = 1; i <= 3; i++)
         {
             if (slotIndex == i)
             {
@@ -90,16 +99,17 @@ public class ResumeUI : MonoBehaviour
             else
             {
                 if (NooSphere.SaveManager.Instance.selectSlotIndex == i) continue;
-                slotContents[i-1].sprite = slotContentSprites[0];
+                slotContents[i - 1].sprite = slotContentSprites[0];
             }
         }
     }
 
     // 슬롯을 더블 클릭하였을 때 = 게임 시작
     // TODO : 해당 슬롯 데이터를 바탕으로 로딩 씬에서 로드하는 것과 연결
-    public void DoubleClickLoadSlot(int slotIndex)
+    public void DoubleClickLoadSlot()
     {
-
+        if (!CanInteractWithBtn()) return;
+        Debug.LogWarning("슬롯 더블 클릭");
     }
 
     // 슬롯 상태 초기화 함수
@@ -113,7 +123,6 @@ public class ResumeUI : MonoBehaviour
     }
 
     // 이어하기 UI 업데이트 할 때 사용하는 함수
-    // TODO : 버튼 업데이트 연동해야 함.
     public void UpdateAllSlotState()
     {
         int curSelectedSlotIndex = NooSphere.SaveManager.Instance.selectSlotIndex;
@@ -127,7 +136,87 @@ public class ResumeUI : MonoBehaviour
         ClickLoadSlot(curSelectedSlotIndex);
     }
 
-    // 슬롯 삭제할 경우
+    // 버튼 호버 진입할 때
+    public void HoverEnterBtn(int btnIndex)
+    {
+        if (btnIndex != 3 && !CanInteractWithBtn()) return;
+
+        for (int i = 1; i <= 3; i++)
+        {
+            if (btnIndex == i)
+            {
+                SetBackgroundOpacity(buttonBackgrounds, btnIndex, 1);
+            }
+            else
+            {
+                SetBackgroundOpacity(buttonBackgrounds, i, 0);
+            }
+        }
+    }
+
+    // 버튼 초기화 상태
+    public void InitBtnState()
+    {
+        // 버튼 상태 업데이트
+        UpdateAllBtnState();
+    }
+
+    // 슬롯 삭제 버튼을 클릭할 경우
+    public void ClickSlotDeleteBtn()
+    {
+        if (!CanInteractWithBtn()) return;
+        Debug.LogWarning("슬롯 삭제 클릭");
+    }
 
     // 돌아가기 버튼 클릭할 경우 혹은 ESC 클릭할 경우
+    public void ClickPrevBtn()
+    {
+        Debug.LogWarning("돌아가기 클릭");
+    }
+
+    // 슬롯에 대해 모든 버튼 상태를 업데이트하는 함수
+    void UpdateAllBtnState()
+    {
+        int curSelectedSlotIndex = NooSphere.SaveManager.Instance.selectSlotIndex;
+
+        for (int i = 1; i <= 3; i++)
+        {
+            SetBackgroundOpacity(buttonBackgrounds, i, 0);
+        }
+
+        if (CanInteractWithBtn())
+        {
+            SetBtnState(1, true);
+            SetBtnState(2, true);
+        }
+        else
+        {
+            SetBtnState(1, false);
+            SetBtnState(2, false);
+        }
+    }
+
+    // 버튼의 상태를 설정하는 함수
+    void SetBtnState(int btnIndex, bool state)
+    {
+        buttonContents[btnIndex - 1].GetComponentInParent<ResumeBtn>().isActive = state;
+        if (state)
+        {
+            // 활성화 상태로 스프라이트 교체
+            buttonContents[btnIndex - 1].sprite = buttonContentSprites[1];
+        }
+        else
+        {
+            buttonContents[btnIndex - 1].sprite = buttonContentSprites[0];
+        }
+    }
+
+    // 현재 선택된 슬롯이 있는지 -> 즉, 버튼이 활성화 될 수 있는지를 알려 줌
+    public bool CanInteractWithBtn()
+    {
+        int curSelectedSlotIndex = NooSphere.SaveManager.Instance.selectSlotIndex;
+
+        if (curSelectedSlotIndex == 1 || curSelectedSlotIndex == 2 || curSelectedSlotIndex == 3) return true;
+        return false;
+    }
 }

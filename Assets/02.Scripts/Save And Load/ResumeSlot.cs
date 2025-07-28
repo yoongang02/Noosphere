@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class ResumeSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    public bool isActive;
     public int slotIndex;
     private ResumeUI resumeUI;
     void Start()
@@ -27,7 +28,7 @@ public class ResumeSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
         }
         else if(eventData.clickCount == 2)
         {
-            resumeUI.DoubleClickLoadSlot(slotIndex);
+            resumeUI.DoubleClickLoadSlot();
         }
     }
 
