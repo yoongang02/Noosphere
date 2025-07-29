@@ -127,12 +127,24 @@ public class ResumeUI : DefaultUIBase
         Debug.LogWarning("슬롯 더블 클릭");
     }
 
+    public void UpdateResumeUI()
+    {
+        // 슬롯 상태 초기화
+        InitSlotState();
+        // 버튼 상태 초기화
+        InitBtnState();
+    }
+
     // 슬롯 상태 초기화 함수
     // auto 슬롯이 선택되어 있는 기본 상태
     void InitSlotState()
     {
-        bool hasData = NooSphere.SaveManager.Instance.HasSaveData(1);
-        if (hasData) NooSphere.SaveManager.Instance.SetSlotIndex(1);
+        bool hasData1 = NooSphere.SaveManager.Instance.HasSaveData(1);
+        bool hasData2 = NooSphere.SaveManager.Instance.HasSaveData(2);
+        bool hasData3 = NooSphere.SaveManager.Instance.HasSaveData(3);
+        if (hasData1) NooSphere.SaveManager.Instance.SetSlotIndex(1);
+        else if(hasData2) NooSphere.SaveManager.Instance.SetSlotIndex(2);
+        else if(hasData3) NooSphere.SaveManager.Instance.SetSlotIndex(3);
 
         UpdateAllSlotState();
     }
