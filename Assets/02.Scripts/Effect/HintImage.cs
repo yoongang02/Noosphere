@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,7 +16,7 @@ public class HintImage : MonoBehaviour
 
    private void Update()
    {
-      if (Input.GetKeyDown(KeyCode.Escape))
+      if (InputRouter.Instance.ConsumeEscape())
       {
          gameObject.SetActive(false);
          EscapeUI.Instance.DisActive();

@@ -15,8 +15,6 @@ public class TitleSceneUI : MonoBehaviour
     [SerializeField] private Button _settingBtn;
     [SerializeField] private Button _exitBtn;
     public EventSystem _eventSys;
-    [SerializeField] private GameObject _creditPanel;
-    [SerializeField] private GameObject _settingPanel;
     private bool _hasFirstHoverOccurred = false;
     private void OnEnable()
     {
@@ -50,14 +48,14 @@ public class TitleSceneUI : MonoBehaviour
     private void OnClickCreditBtn()
     {
         SoundManager.Instance.PlaySFX("Soundresource_037");
-        _creditPanel.SetActive(true);
+        DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.creditUI);
     }
 
     private void OnClickSettingBtn()
     {
         SoundManager.Instance.PlaySFX("Soundresource_037");
         _eventSys.sendNavigationEvents = false;
-        _settingPanel.SetActive(true);
+        DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.settingUI);
     }
 
     private void OnClickExitBtn()

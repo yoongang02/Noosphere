@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -26,7 +26,8 @@ public class SceneChanger : Singleton<SceneChanger>
             .OnComplete(() =>
             {
                 _fadeImg.blocksRaycasts = false;
-                PlayerController.Instance.canMove =true;
+                if (FindAnyObjectByType<PlayerController>() != null)
+                    PlayerController.Instance.canMove =true;
             });
     }
 
@@ -35,7 +36,7 @@ public class SceneChanger : Singleton<SceneChanger>
         await _fadeImg.DOFade(1, fadeDuration)
             .OnStart(() => {
                 _fadeImg.blocksRaycasts = true;
-                if (PlayerController.Instance!=null)
+            if (FindAnyObjectByType < PlayerController>()!=null)
                 {
                     PlayerController.Instance.canMove = false;
                 }

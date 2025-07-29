@@ -40,9 +40,7 @@ namespace NooSphere
         }
         public void SetLoadType(GameLoadType type)
         {
-            Debug.Log(type);
             CurrentLoadType = type;
-            Debug.Log(CurrentLoadType);
         }
 
         public void SetSlotIndex(int index)

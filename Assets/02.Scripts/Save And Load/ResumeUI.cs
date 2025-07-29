@@ -51,6 +51,11 @@ public class ResumeUI : DefaultUIBase
     public override void HandleKeyboardInput()
     {
         base.HandleKeyboardInput();
+
+        if (InputRouter.Instance.ConsumeEscape())
+        {
+            DefaultUIController.Instance.CloseTopUI();
+        }
     }
 
     // 슬롯 상태에 따라 문구를 설정하는 함수

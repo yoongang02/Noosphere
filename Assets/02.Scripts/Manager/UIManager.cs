@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,7 +30,7 @@ public class UIManager : Singleton<UIManager>
     private void Update()
     {
         // ESC 버튼 입력 처리
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (InputRouter.Instance.ConsumeEscape())
         {
             if (IsUIOpen(dialogueUI) || IsUIOpen(investigateUI) || IsUIOpen(mirrorDialogueUI))
             {
@@ -111,6 +111,7 @@ public class UIManager : Singleton<UIManager>
     public void OpenUI(UIBase ui)
     {
         if (ui == null) return;
+        if (DefaultUIController.Instance.IsAnyUIOpen()) return;
 
         // 스택에 추가하고 UI를 활성화
         // 상호작용 금지
@@ -127,7 +128,8 @@ public class UIManager : Singleton<UIManager>
     public void OpenUI(UIBase ui, EvidenceStructure evidence)
     {
         if (ui == null) return;
-        
+        if (DefaultUIController.Instance.IsAnyUIOpen()) return;
+
         if (evidence == null)
         {
             return;
@@ -150,7 +152,8 @@ public class UIManager : Singleton<UIManager>
     public void OpenUI(UIBase ui, string quizID)
     {
         if (ui == null) return;
-        
+        if (DefaultUIController.Instance.IsAnyUIOpen()) return;
+
         if (string.IsNullOrEmpty(quizID) || !DataManager.Instance._quiz.ContainsKey(quizID))
         {
             return;
