@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -56,7 +56,7 @@ public class InventoryNavigator : UIBase
         _inventoryWindow.SetActive(true);
         SoundManager.Instance.PlaySFX("Soundresource_042");
         EscapeUI.Instance.Active();
-        InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curRoomInfo;
+        //InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curRoomInfo;
         //인벤토리 열었을 때, 현재 상태를 바탕으로 인벤토리 업데이트 진행
         SetChapterSelected(InventoryManager.Instance.currentViewChapter);
     }
@@ -75,29 +75,29 @@ public class InventoryNavigator : UIBase
         if (_curSelectedSlot != null)
         {
             //슬롯 상하좌우 이동 - 키보드 WASD
-            if (Input.GetKeyDown(KeyCode.W))
+            if (InputRouter.Instance.ConsumeW())
             {
                 PlaySlotMoveSound();
                 MoveUp();
             }
-            if (Input.GetKeyDown(KeyCode.A))
+            if (InputRouter.Instance.ConsumeA())
             {
                 PlaySlotMoveSound();
                 MoveLeft();
             }
-            if (Input.GetKeyDown(KeyCode.S))
+            if (InputRouter.Instance.ConsumeS())
             {
                 PlaySlotMoveSound();
                 MoveDown();
             }
-            if (Input.GetKeyDown(KeyCode.D))
+            if (InputRouter.Instance.ConsumeD())
             {
                 PlaySlotMoveSound();
                 MoveRight();
             }
                 
             //증거물 상세 정보 열기 - 키보드 E
-            if (!InventoryManager.Instance.isUsingEvidence && Input.GetKeyDown(KeyCode.E))
+            if (!InventoryManager.Instance.isUsingEvidence && InputRouter.Instance.ConsumeE())
             {
                 PlayClickSound();
                 OpenEvidenceDetailUI();
@@ -112,7 +112,7 @@ public class InventoryNavigator : UIBase
             }
         }
         // Tab 키로 인벤토리 챕터 변경
-        if (UIManager.Instance.IsUIOpen(UIManager.Instance.inventoryUI) && Input.GetKeyDown(KeyCode.Tab))
+        if (UIManager.Instance.IsUIOpen(UIManager.Instance.inventoryUI) && InputRouter.Instance.ConsumeTab())
         {
             NooSphere.Debug.LogWarning($"Tab 키를 통해 챕터 이동! 현재 챕터 {InventoryManager.Instance.currentViewChapter}");
             PlayClickSound();

@@ -16,7 +16,7 @@ public class InputManager : Singleton<InputManager>
         if (InputRouter.Instance.ConsumeEscape())
             exitBtnAction?.Invoke();
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (InputRouter.Instance.ConsumeE())
             selectBtnAction?.Invoke();
     }
     public void FixedUpdate()

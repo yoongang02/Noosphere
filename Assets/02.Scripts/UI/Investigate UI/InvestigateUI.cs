@@ -42,14 +42,14 @@ public class InvestigateUI : UIBase
     {
         base.HandleKeyboardInput();
         //키보드 A - YES 버튼
-        if (Input.GetKeyDown(KeyCode.A))
+        if (InputRouter.Instance.ConsumeA())
         {
             SoundManager.Instance.PlaySFX("Soundresource_035");
             HoverYesBtn();
         }
 
         //키보드 D - NO 버튼
-        if (Input.GetKeyDown(KeyCode.D))
+        if (InputRouter.Instance.ConsumeD())
         { 
             SoundManager.Instance.PlaySFX("Soundresource_035");
             HoverNoBtn();

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +15,7 @@ public class DisappearEffect : MonoBehaviour
     }
     private void Update()
     {
-        if ( _playerTrigger && Input.GetKeyDown(KeyCode.E))
+        if ( _playerTrigger && InputRouter.Instance.ConsumeE())
         {
            Destroy(gameObject);
         }

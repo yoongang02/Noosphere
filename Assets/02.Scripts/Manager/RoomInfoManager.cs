@@ -48,6 +48,7 @@ public class RoomInfoManager : MonoBehaviour
             DataManager.Instance._lockConditions["Lock_condition_001"].Lock();
         }
         Debug.LogWarning($"현재 방 정보 : {roomInfo}");
+        InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curRoomInfo;
     }
 
 

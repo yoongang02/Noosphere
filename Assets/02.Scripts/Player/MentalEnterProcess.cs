@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -27,7 +27,7 @@ public class MentalEnterProcess : MonoBehaviour
     {
         if (!UIManager.Instance.IsAnyUIOpen())
         {
-            if (PlayerInteract.Instance.canInteract && _canEnter && !_startEnter && Input.GetKeyDown(KeyCode.R))
+            if (PlayerInteract.Instance.canInteract && _canEnter && !_startEnter && InputRouter.Instance.ConsumeR())
             {
                 if (PlayerInteract.Instance.isInMental)
                 {

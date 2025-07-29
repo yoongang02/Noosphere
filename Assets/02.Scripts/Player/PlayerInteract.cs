@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,7 +26,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
         if (!UIManager.Instance.IsAnyUIOpen())
         {
             //E키를 이용한 상호작용
-            if (canInteract && Input.GetKeyDown(KeyCode.E))
+            if (canInteract && InputRouter.Instance.ConsumeE())
             {
                 if (OnInteract != null)
                 {
@@ -62,7 +62,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
             }
 
             // Z키를 이용한 증거물 사용하기
-            if(canInteract && canUse && Input.GetKeyDown(KeyCode.Q))
+            if(canInteract && canUse && InputRouter.Instance.ConsumeQ())
             {
                 if (OnEvidenceUse != null)
                 {
