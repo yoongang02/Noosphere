@@ -13,6 +13,9 @@ public class CreditUI : DefaultUIBase
     {
         base.OnOpen();
 
+        _creditImg.rectTransform.anchoredPosition = new Vector2(0, -1024);
+        _creditImg.rectTransform.DOAnchorPosY(2048f, 30f).SetEase(Ease.Linear);
+
         transform.GetChild(0).gameObject.SetActive(true);
     }
 
@@ -28,22 +31,14 @@ public class CreditUI : DefaultUIBase
     public override void OnClose()
     {
         base.OnClose();
+
+        DOTween.Kill(_creditImg.rectTransform);
+
         transform.GetChild(0).gameObject.SetActive(false);
     }
 
     private void Start()
     {
         _exitBtn.onClick.AddListener(() => { DefaultUIController.Instance.CloseTopUI();});
-    }
-
-    private void OnEnable()
-    {
-        _creditImg.rectTransform.anchoredPosition = new Vector2(0, -1024);
-        _creditImg.rectTransform.DOAnchorPosY(2048f, 30f).SetEase(Ease.Linear);
-    }
-
-    private void OnDisable()
-    {
-        DOTween.Kill(_creditImg.rectTransform);
     }
 }
