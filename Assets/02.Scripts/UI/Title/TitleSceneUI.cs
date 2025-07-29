@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.XR;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -35,7 +36,7 @@ public class TitleSceneUI : MonoBehaviour
     private void OnClickLoadBtn()
     {
         SoundManager.Instance.PlaySFX("Soundresource_037");
-        
+        DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.resumeUI);
     }
 
     // TODO : 세이브데이터가 있는 경우와 없는 경우를 구분해서 기획에 따라 다르게 구현해야 함.

@@ -2,17 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SlotDeleteUI : UIBase
+public class SlotDeleteUI : DefaultUIBase
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void OnOpen()
     {
-        
+        base.OnOpen();
+
+        transform.GetChild(0).gameObject.SetActive(true);
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void OnClose()
     {
-        
+        base.OnClose();
+        transform.GetChild(0).gameObject.SetActive(false);
+    }
+
+    public override void HandleKeyboardInput()
+    {
+        base.HandleKeyboardInput();
     }
 }

@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ResumeUI : UIBase
+public class ResumeUI : DefaultUIBase
 {
     [Header("Slot 관련")]
     [Space(5)]
@@ -29,12 +29,27 @@ public class ResumeUI : UIBase
     [SerializeField] private List<Image> buttonContents = new List<Image>();
     [SerializeField] private List<Sprite> buttonContentSprites = new List<Sprite>(); // 0 비활성화, 1 활성화
 
-    private void Start()
+    public override void OnOpen()
     {
+        base.OnOpen();
+
+        transform.GetChild(0).gameObject.SetActive(true);
+
         // 슬롯 상태 초기화
         InitSlotState();
         // 버튼 상태 초기화
         InitBtnState();
+    }
+
+    public override void OnClose()
+    {
+        base.OnClose();
+        transform.GetChild(0).gameObject.SetActive(false);
+    }
+
+    public override void HandleKeyboardInput()
+    {
+        base.HandleKeyboardInput();
     }
 
     // 슬롯 상태에 따라 문구를 설정하는 함수
@@ -166,12 +181,14 @@ public class ResumeUI : UIBase
     {
         if (!CanInteractWithBtn()) return;
         Debug.LogWarning("슬롯 삭제 클릭");
+        DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.slotDeleteUI);
     }
 
     // 돌아가기 버튼 클릭할 경우 혹은 ESC 클릭할 경우
     public void ClickPrevBtn()
     {
         Debug.LogWarning("돌아가기 클릭");
+        DefaultUIController.Instance.CloseTopUI();
     }
 
     // 슬롯에 대해 모든 버튼 상태를 업데이트하는 함수

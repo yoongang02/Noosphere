@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResumeUIController : MonoBehaviour
+public class DefaultUIController : Singleton<DefaultUIController>
 {
-    //여러 UI 창을 관리하기 위해 스택 이용
-    private Stack<UIBase> uiStack = new Stack<UIBase>();
-    public UIBase topUI;
+    public DefaultUIBase resumeUI;
+    public DefaultUIBase slotDeleteUI;
 
-    public void OpenUI(UIBase ui)
+    //여러 UI 창을 관리하기 위해 스택 이용
+    private Stack<DefaultUIBase> uiStack = new Stack<DefaultUIBase>();
+    public DefaultUIBase topUI;
+
+    public void OpenUI(DefaultUIBase ui)
     {
         if (ui == null) return;
 
@@ -22,7 +25,7 @@ public class ResumeUIController : MonoBehaviour
     {
         if (uiStack.Count == 0) return;
 
-        UIBase topUI = uiStack.Pop();
+        DefaultUIBase topUI = uiStack.Pop();
 
         topUI.OnClose();
 
@@ -45,7 +48,7 @@ public class ResumeUIController : MonoBehaviour
         }
     }
 
-    public UIBase GetTopUI()
+    public DefaultUIBase GetTopUI()
     {
         if (uiStack.Count == 0) return null;
         return uiStack.Peek();
@@ -56,7 +59,7 @@ public class ResumeUIController : MonoBehaviour
         return uiStack.Count > 0;
     }
 
-    public bool IsUIOpen(UIBase ui)
+    public bool IsUIOpen(DefaultUIBase ui)
     {
         return uiStack.Contains(ui);
     }
