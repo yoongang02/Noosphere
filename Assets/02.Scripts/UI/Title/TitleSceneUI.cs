@@ -41,7 +41,7 @@ public class TitleSceneUI : MonoBehaviour
     {
         SoundManager.Instance.PlaySFX("Soundresource_037");
         NooSphere.SaveManager.Instance.SetLoadType(NooSphere.GameLoadType.NewGame);
-        SceneManager.LoadScene("LoadingScene");
+        SceneChanger.Instance.ChangeScene("LoadingScene").Forget();
     }
 
     private void OnClickCreditBtn()
