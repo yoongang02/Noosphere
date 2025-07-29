@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ResumeUI : MonoBehaviour
+public class ResumeUI : UIBase
 {
     [Header("Slot 관련")]
     [Space(5)]
