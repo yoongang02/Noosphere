@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.XR;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -14,8 +15,6 @@ public class TitleSceneUI : MonoBehaviour
     [SerializeField] private Button _settingBtn;
     [SerializeField] private Button _exitBtn;
     public EventSystem _eventSys;
-    [SerializeField] private GameObject _creditPanel;
-    [SerializeField] private GameObject _settingPanel;
     private bool _hasFirstHoverOccurred = false;
     private void OnEnable()
     {
@@ -34,8 +33,7 @@ public class TitleSceneUI : MonoBehaviour
 
     private void OnClickLoadBtn()
     {
-        SoundManager.Instance.PlaySFX("Soundresource_037");
-        
+        DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.resumeUI);
     }
 
     // TODO : 세이브데이터가 있는 경우와 없는 경우를 구분해서 기획에 따라 다르게 구현해야 함.
@@ -48,21 +46,18 @@ public class TitleSceneUI : MonoBehaviour
 
     private void OnClickCreditBtn()
     {
-        SoundManager.Instance.PlaySFX("Soundresource_037");
-        _creditPanel.SetActive(true);
+        DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.creditUI);
     }
 
     private void OnClickSettingBtn()
     {
-        SoundManager.Instance.PlaySFX("Soundresource_037");
         _eventSys.sendNavigationEvents = false;
-        _settingPanel.SetActive(true);
+        DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.settingUI);
     }
 
     private void OnClickExitBtn()
     {
-        SoundManager.Instance.PlaySFX("Soundresource_037");
-        Application.Quit();
+        DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.exitGameUI);
     }
 
     public void OnClickSound()

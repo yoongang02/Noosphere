@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace NooSphere
 {
@@ -16,8 +19,25 @@ namespace NooSphere
         public int selectSlotIndex { get; private set; }
         public event Action OnSaveStart;
         public event Action<int> OnSaveFinish;
-        private string folderPath = Path.Combine(Application.persistentDataPath, "Saves");
-
+        private string folderPath;
+        [SerializeField] private GameObject _player;
+        [SerializeField] private List<GameObject> _essentialUIs = new List<GameObject>();
+        private void Awake()
+        {
+            // 싱글톤 인스턴스가 이미 존재하는 경우, 중복 생성 방지
+            if (Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            // 초기화 작업
+            DontDestroyOnLoad(gameObject);
+        }
+        private void Start()
+        {
+            folderPath = Path.Combine(Application.persistentDataPath, "Saves");
+            selectSlotIndex = -1;
+        }
         public void SetLoadType(GameLoadType type)
         {
             CurrentLoadType = type;
@@ -51,8 +71,6 @@ namespace NooSphere
 
         // 자동 저장 혹은 사용자 임의 저장 시, 현재 상태를 저장하는 함수
         // 폴더 경로와, 저장하려는 파일 이름을 파라미터로 받음
-
-        // TODO : 플레이타임 값 불러와서 저장하는 작업 진행해야 함.
         void SaveCurrentState()
         {
             // 저장할 파일 경로 찾기
@@ -70,6 +88,7 @@ namespace NooSphere
                 ES3.Save("EvidenceDatas", DataManager.Instance._evidences, filePath);
                 ES3.Save("QuizDatas", DataManager.Instance._quiz, filePath);
                 ES3.Save("PlayerTransform", PlayerController.Instance.transform, filePath);
+                ES3.Save("SceneName", SceneManager.GetActiveScene().name, filePath);
 
                 if (FindObjectOfType<RoomInfoManager>() is RoomInfoManager roomInfoManager)
                 {
@@ -80,10 +99,12 @@ namespace NooSphere
                     Debug.LogError("플레이어의 현재 Location 값을 찾을 수 없습니다.");
                 }
 
-                string currentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                string currentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
                 ES3.Save("DateTime", currentTime, filePath);
 
                 // 이 곳에 플레이타임 불러와서 저장해야 함.
+                float playTime = PlayTime.Instance.GetPlayTime();
+                ES3.Save("PlayTime", playTime, filePath);
             }
             catch (System.IO.IOException)
             {
@@ -96,6 +117,7 @@ namespace NooSphere
         }
 
         // 슬롯에 저장된 데이터를 불러와 반영하는 함수
+        // 슬롯에 세이브 파일이 있는지 HasSaveData 메소드로 체크했다는 가정.
         // TODO : 저장되어 있는 값을 반영하는 동안, 로딩 화면 띄워야 함.
         // TODO : 플레이타임 값을 반영하여, 다시 플레이타임을 재개해야 함.
         public void LoadSaveData()
@@ -108,19 +130,66 @@ namespace NooSphere
                 DataManager.Instance._events = ES3.Load("EventDatas", filePath, DataManager.Instance._events);
                 DataManager.Instance._evidences = ES3.Load("EvidenceDatas", filePath, DataManager.Instance._evidences);
                 DataManager.Instance._quiz = ES3.Load("QuizDatas", filePath, DataManager.Instance._quiz);
-
-                // 플레이어 transform 반영 -> 이건 모두 로딩 된 후, 게임 씬으로 넘어가면 진행해야 함
-                //Transform playerTransform = ES3.Load("PlayerTransform", filePath, PlayerController.Instance.transform);
-                //PlayerController.Instance.transform.position = playerTransform.position;
-                //PlayerController.Instance.transform.rotation = playerTransform.rotation;
-
-                // 플레이타임 반영 후 재개
-
-                
             }
             else
             {
                 Debug.LogError($"{filePath}에 파일이 존재하지 않습니다.");
+            }
+        }
+
+        // 마지막 저장 씬 이름 가져오기
+        public string GetSceneName(int index)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{index}.es3");
+            return ES3.Load<string>("SceneName", filePath);
+        }
+
+        // 슬롯에 해당하는 세이브 파일이 있는지 확인하는 함수
+        public bool HasSaveData(int index)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{index}.es3");
+            bool value = File.Exists(filePath) ? true : false;
+            return value;
+        }
+
+        // 위치, 플레이타임, 저장일시 등 텍스트 데이터 불러오기
+        // 데이터 존재를 검증(HasSaveData) 후 호출하는 함수. 유효성 검증 완료되었다고 가정하에 작성.
+        public string GetLocationData(int index)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{index}.es3");
+            return ES3.Load<string>("Location", filePath);
+        }
+        public string GetPlayTimeData(int index)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{index}.es3");
+            return PlayTime.Instance.FormatPlayTime(ES3.Load<float>("PlayTime", filePath));
+        }
+        public string GetDateTimeData(int index)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{index}.es3");
+            return ES3.Load<string>("DateTime", filePath);
+        }
+
+        public Transform GetPlayerTransform(int index)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{index}.es3");
+            return ES3.Load<Transform>("PlayerTransform", filePath);
+        }
+
+        // 슬롯 데이터 삭제하는 함수
+        public void DeleteSlotData(int index)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{index}.es3");
+            ES3.DeleteFile(filePath);
+            selectSlotIndex = -1;
+        }
+
+        public void WhenContinueSceneLoaded()
+        {
+            Instantiate(_player, GetPlayerTransform(selectSlotIndex).position, GetPlayerTransform(selectSlotIndex).rotation);
+            foreach(GameObject ui in _essentialUIs)
+            {
+                Instantiate(ui);
             }
         }
     }

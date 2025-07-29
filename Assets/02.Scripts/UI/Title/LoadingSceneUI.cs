@@ -16,6 +16,7 @@ public class LoadingSceneUI : MonoBehaviour
     }
     private async UniTaskVoid StartLoading()
     {
+        Debug.LogWarning(NooSphere.SaveManager.Instance.CurrentLoadType);
         // 새 게임 로딩이면
         if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.NewGame)
         {
@@ -23,12 +24,15 @@ public class LoadingSceneUI : MonoBehaviour
             await FadeOut();
             SceneManager.LoadScene("IntroScene");
         }
-        else // 이어하기 로딩이면
+        else if(NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.ContinueGame) // 이어하기 로딩이면
         {
-            NooSphere.SaveManager.Instance.LoadSaveData();
+            await DataManager.Instance.LoadSaveData();
+            await FadeOut();
+            string sceneName = NooSphere.SaveManager.Instance.GetSceneName(NooSphere.SaveManager.Instance.selectSlotIndex);
+            SceneManager.LoadScene(sceneName);
         }
     }
-    
+
     private async UniTask FadeOut()
     {
         _fadeImage.color = new Color(0, 0, 0, 0);

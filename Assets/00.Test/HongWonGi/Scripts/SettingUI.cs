@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,10 +6,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class SettingUI : MonoBehaviour
+public class SettingUI : DefaultUIBase
 {
     [SerializeField] private GameObject _creditUI;
-    [SerializeField] private EventSystem _eventSystem;
     [Header("세팅 버튼")]
     [SerializeField] private Button _exitBtn;
     [SerializeField] private Button _creditBtn;
@@ -27,6 +26,29 @@ public class SettingUI : MonoBehaviour
         Init();
     }
 
+    public override void OnOpen()
+    {
+        base.OnOpen();
+
+        transform.GetChild(0).gameObject.SetActive(true);
+    }
+
+    public override void HandleKeyboardInput()
+    {
+        base.HandleKeyboardInput();
+
+        if (InputRouter.Instance.ConsumeEscape())
+        {
+            OnClickExitBtn();
+        }
+    }
+
+    public override void OnClose()
+    {
+        base.OnClose();
+        transform.GetChild(0).gameObject.SetActive(false);
+    }
+
     private void Init()
     {  
         _okBtn.interactable = false; 
@@ -34,17 +56,8 @@ public class SettingUI : MonoBehaviour
         _bgmVolumeSlider.onValueChanged.AddListener(BgmVolumeChanged);
         _okBtn.onClick.AddListener(OnClickOkBtn);
         _exitBtn.onClick.AddListener(OnClickExitBtn);
-        _creditBtn.onClick.AddListener(() => { _creditUI.SetActive(true); });
+        _creditBtn.onClick.AddListener(() => { DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.creditUI); });
     }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            OnClickExitBtn();
-        }
-    }
-
     private void OnEnable()
     {
         
@@ -78,7 +91,8 @@ public class SettingUI : MonoBehaviour
         ES3.Save("BgmVolume", bgmVolume, "Setting.es3");
         ES3.Save("SoundVolume", soundVolume, "Setting.es3");
         ES3.Save("ScreenMode", _fullScreenToggle.isOn, "Setting.es3");
-        gameObject.SetActive(false);
+
+        DefaultUIController.Instance.CloseTopUI();
     }
 
     public void OnClickFullScreenBtn()
@@ -121,8 +135,8 @@ public class SettingUI : MonoBehaviour
             Screen.SetResolution(1280, 720, false);
         }
 
-        _eventSystem.sendNavigationEvents = true;
-        gameObject.SetActive(false);
+        EventSystem.current.sendNavigationEvents = true;
+        DefaultUIController.Instance.CloseTopUI();
     }
 
     private void SoundVolumeChanged(float value)

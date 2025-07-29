@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
@@ -27,6 +27,30 @@ public class DataManager : Singleton<DataManager>
             async () => { _evidences = await LoadData<EvidenceStructure>("Evidence"); },
             async () => { _artResources = await LoadData<ArtResourceStructure>("ArtResource"); },
             async () => { _quiz = await LoadData<QuizStructure>("Quiz"); },
+            async () => { _effect = await LoadData<EffectStructure>("Effect"); },
+            async () => { _dialogue = await LoadDialogueData(); },
+            async () => { _sound = await LoadData<SoundResourceStructure>("SoundResource"); },
+            async () => { _mental = await LoadData<MentalStructure>("Mental"); }
+        };
+
+        int totalSteps = loadSteps.Count;
+        int currentStep = 0;
+
+        foreach (var loadStep in loadSteps)
+        {
+            await loadStep.Invoke();
+            currentStep++;
+            onProgressUpdated?.Invoke((float)currentStep / totalSteps);
+        }
+    }
+
+    public async UniTask LoadSaveData(Action<float> onProgressUpdated = null)
+    {
+        NooSphere.SaveManager.Instance.LoadSaveData();
+        List<Func<UniTask>> loadSteps = new List<Func<UniTask>>()
+        {
+            async () => { _lockConditions = await LoadData<LockConditionStructure>("LockCondition"); },
+            async () => { _artResources = await LoadData<ArtResourceStructure>("ArtResource"); },
             async () => { _effect = await LoadData<EffectStructure>("Effect"); },
             async () => { _dialogue = await LoadDialogueData(); },
             async () => { _sound = await LoadData<SoundResourceStructure>("SoundResource"); },
