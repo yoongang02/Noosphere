@@ -50,6 +50,19 @@ public class InGameOptionUI : DefaultUIBase
     public void OnClickStartScene()
     {
         DefaultUIController.Instance.CloseTopUI();
+
+        //dontdestroyonload에서 사운드매니저하고 dotween만 남겨놓기
+        GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj.scene.name == "DontDestroyOnLoad" &&
+                obj.GetComponent<SoundManager>() == null &&
+                !obj.name.Contains("[DOTween]") && !obj.name.Contains("SceneChanger"))
+            {
+                Destroy(obj);
+            }
+        }
+
         SceneChanger.Instance.ChangeScene("StartScene").Forget();
     }
 }

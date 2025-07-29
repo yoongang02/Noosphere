@@ -22,6 +22,7 @@ public class SceneChanger : Singleton<SceneChanger>
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        _fadeImg = transform.GetComponentInChildren<CanvasGroup>();
         _fadeImg.DOFade(0, fadeDuration)
             .OnComplete(() =>
             {
@@ -33,6 +34,7 @@ public class SceneChanger : Singleton<SceneChanger>
 
     public async UniTaskVoid ChangeScene(string sceneName)
     {
+        _fadeImg = transform.GetComponentInChildren<CanvasGroup>();
         await _fadeImg.DOFade(1, fadeDuration)
             .OnStart(() => {
                 _fadeImg.blocksRaycasts = true;
