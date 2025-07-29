@@ -29,7 +29,7 @@ public class SettingUI : DefaultUIBase
     public override void OnOpen()
     {
         base.OnOpen();
-
+        InitSetting();
         transform.GetChild(0).gameObject.SetActive(true);
     }
 
@@ -58,9 +58,8 @@ public class SettingUI : DefaultUIBase
         _exitBtn.onClick.AddListener(OnClickExitBtn);
         _creditBtn.onClick.AddListener(() => { DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.creditUI); });
     }
-    private void OnEnable()
+    private void InitSetting()
     {
-        
         bool screenMode = true; // 기본 전체화면
         if (ES3.KeyExists("ScreenMode", "Setting.es3"))
             screenMode = ES3.Load<bool>("ScreenMode", "Setting.es3");
