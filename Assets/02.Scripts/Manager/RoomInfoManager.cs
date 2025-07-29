@@ -13,6 +13,11 @@ public class RoomInfoManager : MonoBehaviour
     {
         EventManagerYKM.Instance.curRoomInfo = this.roomInfo;
 
+        if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.ContinueGame)
+        {
+            WhenContinueGame();
+        }
+
         if (SceneManager.GetActiveScene().name == "Lounge")
         {
             if (EventManagerYKM.Instance.curChapterInfo == EventManagerYKM.ChapterInfo.Stage1)
@@ -43,6 +48,14 @@ public class RoomInfoManager : MonoBehaviour
             DataManager.Instance._lockConditions["Lock_condition_001"].Lock();
         }
         Debug.LogWarning($"현재 방 정보 : {roomInfo}");
+    }
+
+
+    // 이어하기를 통해 이동된 씬일 경우의 작업
+    void WhenContinueGame()
+    {
+        NooSphere.SaveManager.Instance.WhenContinueSceneLoaded();
+        NooSphere.SaveManager.Instance.SetSlotIndex(-1);
     }
 
     IEnumerator ShowRoomNumber()

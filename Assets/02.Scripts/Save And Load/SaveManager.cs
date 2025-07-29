@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace NooSphere
 {
@@ -18,17 +20,29 @@ namespace NooSphere
         public event Action OnSaveStart;
         public event Action<int> OnSaveFinish;
         private string folderPath;
-
+        [SerializeField] private GameObject _player;
+        [SerializeField] private List<GameObject> _essentialUIs = new List<GameObject>();
         private void Awake()
         {
-            base.Awake();
+            // 싱글톤 인스턴스가 이미 존재하는 경우, 중복 생성 방지
+            if (Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            // 초기화 작업
+            DontDestroyOnLoad(gameObject);
+        }
+        private void Start()
+        {
             folderPath = Path.Combine(Application.persistentDataPath, "Saves");
             selectSlotIndex = -1;
         }
-
         public void SetLoadType(GameLoadType type)
         {
+            Debug.Log(type);
             CurrentLoadType = type;
+            Debug.Log(CurrentLoadType);
         }
 
         public void SetSlotIndex(int index)
@@ -76,6 +90,7 @@ namespace NooSphere
                 ES3.Save("EvidenceDatas", DataManager.Instance._evidences, filePath);
                 ES3.Save("QuizDatas", DataManager.Instance._quiz, filePath);
                 ES3.Save("PlayerTransform", PlayerController.Instance.transform, filePath);
+                ES3.Save("SceneName", SceneManager.GetActiveScene().name, filePath);
 
                 if (FindObjectOfType<RoomInfoManager>() is RoomInfoManager roomInfoManager)
                 {
@@ -117,20 +132,18 @@ namespace NooSphere
                 DataManager.Instance._events = ES3.Load("EventDatas", filePath, DataManager.Instance._events);
                 DataManager.Instance._evidences = ES3.Load("EvidenceDatas", filePath, DataManager.Instance._evidences);
                 DataManager.Instance._quiz = ES3.Load("QuizDatas", filePath, DataManager.Instance._quiz);
-
-                // 플레이어 transform 반영 -> 이건 모두 로딩 된 후, 게임 씬으로 넘어가면 진행해야 함
-                //Transform playerTransform = ES3.Load("PlayerTransform", filePath, PlayerController.Instance.transform);
-                //PlayerController.Instance.transform.position = playerTransform.position;
-                //PlayerController.Instance.transform.rotation = playerTransform.rotation;
-
-                // 플레이타임 반영 후 재개
-
-                
             }
             else
             {
                 Debug.LogError($"{filePath}에 파일이 존재하지 않습니다.");
             }
+        }
+
+        // 마지막 저장 씬 이름 가져오기
+        public string GetSceneName(int index)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{index}.es3");
+            return ES3.Load<string>("SceneName", filePath);
         }
 
         // 슬롯에 해당하는 세이브 파일이 있는지 확인하는 함수
@@ -159,12 +172,27 @@ namespace NooSphere
             return ES3.Load<string>("DateTime", filePath);
         }
 
+        public Transform GetPlayerTransform(int index)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{index}.es3");
+            return ES3.Load<Transform>("PlayerTransform", filePath);
+        }
+
         // 슬롯 데이터 삭제하는 함수
         public void DeleteSlotData(int index)
         {
             string filePath = Path.Combine(folderPath, $"slot{index}.es3");
             ES3.DeleteFile(filePath);
             selectSlotIndex = -1;
+        }
+
+        public void WhenContinueSceneLoaded()
+        {
+            Instantiate(_player, GetPlayerTransform(selectSlotIndex).position, GetPlayerTransform(selectSlotIndex).rotation);
+            foreach(GameObject ui in _essentialUIs)
+            {
+                Instantiate(ui);
+            }
         }
     }
 }

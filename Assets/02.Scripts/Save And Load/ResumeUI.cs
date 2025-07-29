@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ResumeUI : DefaultUIBase
@@ -125,6 +126,10 @@ public class ResumeUI : DefaultUIBase
     {
         if (!CanInteractWithBtn()) return;
         Debug.LogWarning("슬롯 더블 클릭");
+        NooSphere.SaveManager.Instance.SetLoadType(NooSphere.GameLoadType.ContinueGame);
+        DefaultUIController.Instance.CloseAllUI();
+        PlayTime.Instance.SetPlayTimeTracking(true); // 플레이타임 추적 가능하게 설정
+        SceneManager.LoadScene("LoadingScene");
     }
 
     public void UpdateResumeUI()
