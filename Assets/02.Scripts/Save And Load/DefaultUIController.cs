@@ -10,6 +10,7 @@ public class DefaultUIController : Singleton<DefaultUIController>
     public DefaultUIBase settingUI;
     public DefaultUIBase creditUI;
     public DefaultUIBase inGameOptionUI;
+    public DefaultUIBase exitGameUI;
 
     public List<string> excludedOptionScenes = new List<string>();
 

@@ -33,7 +33,6 @@ public class TitleSceneUI : MonoBehaviour
 
     private void OnClickLoadBtn()
     {
-        SoundManager.Instance.PlaySFX("Soundresource_037");
         DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.resumeUI);
     }
 
@@ -47,21 +46,18 @@ public class TitleSceneUI : MonoBehaviour
 
     private void OnClickCreditBtn()
     {
-        SoundManager.Instance.PlaySFX("Soundresource_037");
         DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.creditUI);
     }
 
     private void OnClickSettingBtn()
     {
-        SoundManager.Instance.PlaySFX("Soundresource_037");
         _eventSys.sendNavigationEvents = false;
         DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.settingUI);
     }
 
     private void OnClickExitBtn()
     {
-        SoundManager.Instance.PlaySFX("Soundresource_037");
-        Application.Quit();
+        DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.exitGameUI);
     }
 
     public void OnClickSound()
