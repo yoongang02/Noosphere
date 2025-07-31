@@ -127,8 +127,8 @@ public class IntroSceneController : MonoBehaviour
         dialogueText.text = "";
         dialogueText.alpha = 1;
 
-        // StartDialogueSound(_speakerText.text);
-        SoundManager.Instance.PlayLoopingSound("Soundresource_027");
+        StartDialogueSound(_speakerText.text);
+        // SoundManager.Instance.PlayLoopingSound("Soundresource_027");
         if (!isTyping)
         {
             dialogueText.text = text;
@@ -164,6 +164,9 @@ public class IntroSceneController : MonoBehaviour
                 SoundManager.Instance.PlayLoopingSound("Soundresource_076");
                 break;
             case "":
+                SoundManager.Instance.PlayLoopingSound("Soundresource_075");
+                break;
+            case "(엘리즈 레인)":
                 SoundManager.Instance.PlayLoopingSound("Soundresource_075");
                 break;
         }
