@@ -247,7 +247,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6034762}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.30919275, y: 0.6359241, z: -0.30919236, w: 0.635925}
+  m_LocalRotation: {x: 0.30919248, y: 0.63592464, z: -0.30919257, w: 0.6359244}
   m_LocalPosition: {x: -15.179999, y: 1.799, z: 15.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -21770,7 +21770,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 675591741}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3091924, y: 0.6359248, z: -0.30919266, w: 0.6359242}
+  m_LocalRotation: {x: 0.30919236, y: 0.6359247, z: -0.3091925, w: 0.63592446}
   m_LocalPosition: {x: -15.179999, y: 1.799, z: 15.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -42898,7 +42898,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1447127957
 Transform:
   m_ObjectHideFlags: 0
@@ -42926,7 +42926,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b44f8d3c5fefa140bca7d11dfbcd8c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmName: 
+  bgmName: Soundresource_101
 --- !u!1001 &1450486540
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -49540,8 +49540,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1648479694}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.02883146, y: -0.00000026732508, z: 0.00000040115515, w: 0.9995843}
-  m_LocalPosition: {x: -0.00000085243295, y: 0.00000033631426, z: 0.00000026409373}
+  m_LocalRotation: {x: 0.02883161, y: -0.00000012933103, z: 0.00000020883164, w: 0.9995843}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -56417,9 +56417,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1817668855}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0000000752854, y: -0.00000025820464, z: 0.00000033643204,
+  m_LocalRotation: {x: 0.00000009476013, y: -0.000000105542945, z: 0.00000016847737,
     w: 1}
-  m_LocalPosition: {x: -0.00000085243295, y: 0.00000033631426, z: 0.00000026409373}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -56735,8 +56735,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1839213306}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.028641116, y: -0.0000002877215, z: 0.00000038413896, w: 0.9995898}
-  m_LocalPosition: {x: -0.00000085243295, y: 0.00000033631426, z: 0.00000026409373}
+  m_LocalRotation: {x: -0.028640928, y: -0.00000013901442, z: 0.00000020276673, w: 0.9995898}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -62748,6 +62748,7 @@ MonoBehaviour:
   m_Events:
     m_Signals:
     - {fileID: 11400000, guid: bb82fab2dac42634ca879eddd5b2b285, type: 2}
+    - {fileID: 11400000, guid: 83aa0d88db9195141b0fb33e6520d590, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -62761,6 +62762,20 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: Soundresource_082
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 931742074}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: LockLeftRight
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
 --- !u!1001 &2039078991
