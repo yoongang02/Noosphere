@@ -6,8 +6,13 @@ using UnityEngine;
 public class PlayTime : Singleton<PlayTime>
 {
     private bool canTrackPlayTime = false;
-    private float _playTime;
+    [SerializeField] float _playTime = 0f;
 
+    void Start()
+    {
+        canTrackPlayTime = false;
+        _playTime = 0f;
+    }
     private void Update()
     {
         if (canTrackPlayTime) _playTime += Time.deltaTime;

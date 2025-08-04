@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -51,17 +52,21 @@ public class UIManager : Singleton<UIManager>
                 cctvFrame.SetActive(true);
             }
         }
-        
-        if (DataManager.Instance._events["Event_A031"].isExecuted)
+
+
+        if (DataManager.Instance._events.ContainsKey("Event_A031"))
         {
-            keyGuideUI.SetActive(false);
-        }
-        else
-        {
-            keyGuideUI.SetActive(true);
+            if (DataManager.Instance._events["Event_A031"].isExecuted)
+            {
+                keyGuideUI.SetActive(false);
+            }
+            else
+            {
+                keyGuideUI.SetActive(true);
+            }
         }
 
-        if (dialogueUI.IsTopUI())
+        if (dialogueUI != null && dialogueUI.IsTopUI())
         {
             // 책장에서 거울 조각 습득 시 cctv frame
             if (EventManagerYKM.Instance.currentEventID == "Event_B044" &&
@@ -93,12 +98,15 @@ public class UIManager : Singleton<UIManager>
         }
         else
         {
+
             if (PlayerInteract.Instance.GetComponent<MentalEnterProcess>().IsEnterNow() || InventoryManager.Instance.canOpenInventory)
             {
                 inventoryIcon.SetActive(false);
                 keyGuideUI.SetActive(false);
                 return;
             }
+            
+            
 
             if (FindObjectOfType<HintImage>() == null)
             {

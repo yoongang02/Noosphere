@@ -40,14 +40,20 @@ public class SaveUI : Singleton<SaveUI>
 
         if (ES3.KeyExists("Location", filePath))
         {
-            string location = ES3.Load<string>("Location",filePath);
+            string location = NooSphere.SaveManager.Instance.GetLocationData(slotIndex);
             _locationTexts[slotIndex - 1].text = "저장 위치 : " + location;
         }
 
         if (ES3.KeyExists("DateTime", filePath))
         {
-            string dateTime = ES3.Load<string>("DateTime", filePath);
+            string dateTime = NooSphere.SaveManager.Instance.GetDateTimeData(slotIndex);
             _dateTimeTexts[slotIndex - 1].text = "저장 일시 : " + dateTime;
+        }
+        
+        if (ES3.KeyExists("PlayTime", filePath))
+        {
+            string playTime = NooSphere.SaveManager.Instance.GetPlayTimeData(slotIndex);
+            _playTimeTexts[slotIndex - 1].text = "플레이 타임 : " + playTime;
         }
     }
 

@@ -30,13 +30,13 @@ public class EscapeUI : Singleton<EscapeUI>, IPointerClickHandler
 
     public void Active()
     {
-        Debug.LogWarning("나가기 버튼 활성화");
+        //Debug.LogWarning("나가기 버튼 활성화");
         _escapeBtn.SetActive(true);
     }
     
     public void DisActive()
     {
-        Debug.LogWarning("나가기 버튼 비활성화");
+        //Debug.LogWarning("나가기 버튼 비활성화");
         _escapeBtn.SetActive(false);
     }
 }

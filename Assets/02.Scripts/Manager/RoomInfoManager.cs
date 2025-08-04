@@ -56,7 +56,6 @@ public class RoomInfoManager : MonoBehaviour
     void WhenContinueGame()
     {
         NooSphere.SaveManager.Instance.WhenContinueSceneLoaded();
-        NooSphere.SaveManager.Instance.SetSlotIndex(-1);
     }
 
     IEnumerator ShowRoomNumber()

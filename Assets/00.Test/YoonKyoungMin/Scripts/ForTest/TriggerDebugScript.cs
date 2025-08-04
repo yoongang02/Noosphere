@@ -7,7 +7,6 @@ public class TriggerDebugScript : Singleton<TriggerDebugScript>
 {
     public TextMeshProUGUI triggerText;
     public TextMeshProUGUI frontText;
-    public TextMeshProUGUI inventoryChapterText;
 
     void Update()
     {
@@ -19,8 +18,6 @@ public class TriggerDebugScript : Singleton<TriggerDebugScript>
         {
             triggerText.text = "Cur Trigger : " + PlayerInteract.Instance.curTrigger.name;
         }
-
-        inventoryChapterText.text = "Cur Chapter : " + EventManagerYKM.Instance.curChapterInfo.ToString() + " "+ EventManagerYKM.Instance.curRoomInfo + " " + InventoryManager.Instance.currentViewChapter;
     }
 
     public void WhenFront()

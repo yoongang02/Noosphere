@@ -1,7 +1,9 @@
 ﻿ using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
+ using System.IO;
+ using NooSphere;
+ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -32,7 +34,7 @@ public class ChapterInventory
 public class InventoryManager : Singleton<InventoryManager>
 {
     //key : 챕터 숫자
-    Dictionary<int, ChapterInventory> chapterInventories = new Dictionary<int, ChapterInventory>();
+    public Dictionary<int, ChapterInventory> chapterInventories = new Dictionary<int, ChapterInventory>();
     
     //인벤토리 UI
     [Header("인벤토리 UI 오브젝트")]
@@ -55,8 +57,13 @@ public class InventoryManager : Singleton<InventoryManager>
     public bool canOpenInventory = false;//컷씬 진행도중 인벤토리 열리는거 막기위함
     void Start()
     {
-        //인벤토리 초기화
         InitInventory();
+
+        if(NooSphere.SaveManager.Instance.CurrentLoadType == GameLoadType.ContinueGame)
+        {
+            Debug.LogWarning("여기 실행 안되나?");
+            LoadInventoryData();
+        }
     }
 
     void Update()
@@ -243,5 +250,19 @@ public class InventoryManager : Singleton<InventoryManager>
         }
 
         return false;
+    }
+
+    void LoadInventoryData()
+    {
+        int index = NooSphere.SaveManager.Instance.selectSlotIndex;
+        chapterInventories[0].evidences = NooSphere.SaveManager.Instance.GetInventoryData(1);
+        chapterInventories[1].evidences = NooSphere.SaveManager.Instance.GetInventoryData(2);
+        chapterInventories[2].evidences = NooSphere.SaveManager.Instance.GetInventoryData(3);
+        chapterInventories[3].evidences = NooSphere.SaveManager.Instance.GetInventoryData(4);
+
+        foreach (var item in NooSphere.SaveManager.Instance.GetInventoryData(1))
+        {
+            Debug.Log(item.evidenceId);
+        }
     }
 }

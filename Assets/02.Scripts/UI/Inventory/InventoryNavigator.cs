@@ -114,15 +114,11 @@ public class InventoryNavigator : UIBase
         // Tab 키로 인벤토리 챕터 변경
         if (UIManager.Instance.IsUIOpen(UIManager.Instance.inventoryUI) && InputRouter.Instance.ConsumeTab())
         {
-            NooSphere.Debug.LogWarning($"Tab 키를 통해 챕터 이동! 현재 챕터 {InventoryManager.Instance.currentViewChapter}");
             PlayClickSound();
             int chapterIndex = InventoryManager.Instance.currentViewChapter + 1;
-            NooSphere.Debug.LogWarning($"넘어갈 챕터 {chapterIndex}");
             if (chapterIndex > 3)
             {
-                NooSphere.Debug.LogWarning($"{chapterIndex} 챕터 끝 도달");
                 chapterIndex = 0;
-                NooSphere.Debug.LogWarning($"{chapterIndex} 처음 챕터로 이동");
             }
             SetChapterSelected(chapterIndex);
         }

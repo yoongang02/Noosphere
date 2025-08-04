@@ -53,6 +53,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     //현재 실행될 수 있는 이벤트인지 검사 -> 실행 가능하다면 플레이어에게 ? 띄우기
     public bool CheckExecutable(string eventID)
     {
+        if (string.IsNullOrEmpty(eventID)) return false;
         //변수 초기화
         _isRepeatFalse = false;
         
