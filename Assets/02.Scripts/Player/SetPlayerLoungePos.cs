@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using NooSphere;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,6 +19,8 @@ public class SetPlayerLoungePos : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if(NooSphere.SaveManager.Instance.CurrentLoadType == GameLoadType.ContinueGame) return;
+        
         GameObject player = GameObject.FindWithTag("Player");
         if (SceneTracker.previousSceneName == "PrologueMap_real")
         {
@@ -28,6 +31,13 @@ public class SetPlayerLoungePos : MonoBehaviour
         {
             player.transform.position = _loungeInitTrans[1].position;
             player.transform.rotation = _loungeInitTrans[1].rotation;
+        }
+        
+        if (NooSphere.SaveManager.Instance.OnDoorAutoSave)
+        {
+            NooSphere.Debug.LogWarning("문 상호작용 자동 저장");
+            NooSphere.SaveManager.Instance.OnDoorAutoSave = false;
+            NooSphere.SaveManager.Instance.DoAutoSaveDelay();
         }
     }
 }

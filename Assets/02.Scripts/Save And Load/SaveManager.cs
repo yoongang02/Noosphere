@@ -193,7 +193,7 @@ namespace NooSphere
         public List<InventorySlot> GetInventoryData(int chapterIndex)
         {
             string filePath = Path.Combine(folderPath, $"slot{selectSlotIndex}.es3");
-            Debug.LogWarning(selectSlotIndex);
+            Debug.LogWarning("현재 선택 슬롯 : " + selectSlotIndex);
             return ES3.Load($"InventoryData{chapterIndex}", filePath, new List<InventorySlot>());
         }
 
@@ -212,11 +212,6 @@ namespace NooSphere
             {
                 Instantiate(ui);
             }
-            
-            InventoryManager.Instance.LoadInventoryData();
-
-            CurrentLoadType = GameLoadType.NewGame;
-            selectSlotIndex = -1;
         }
 
         public void DoAutoSaveDelay()

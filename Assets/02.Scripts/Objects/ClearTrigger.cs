@@ -23,8 +23,10 @@ public class ClearTrigger : MonoBehaviour
          
          // 자동 저장 트리거인데, 문과의 상호작용일 경우
          EventStructure _event = DataManager.Instance._events[eventID];
+         Debug.Log(_event.eventId + " 자동 저장 트리거" + _event.autoSave + _event.autoSaveDelay);
          if (_event.autoSave && _event.autoSaveDelay == 1)
          {
+            Debug.Log(_event.eventId + " 자동 저장 트리거 트루");
             NooSphere.SaveManager.Instance.OnDoorAutoSave = true;
          }
          

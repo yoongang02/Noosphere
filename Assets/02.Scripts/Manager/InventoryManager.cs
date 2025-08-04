@@ -4,7 +4,8 @@ using System.Collections.Generic;
  using System.IO;
  using NooSphere;
  using TMPro;
-using UnityEngine;
+ using Unity.VisualScripting;
+ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Debug = NooSphere.Debug;
@@ -58,6 +59,10 @@ public class InventoryManager : Singleton<InventoryManager>
     void Start()
     {
         InitInventory();
+        if (NooSphere.SaveManager.Instance.CurrentLoadType == GameLoadType.ContinueGame)
+        {
+            LoadInventoryData();
+        }
     }
 
     void Update()
@@ -246,11 +251,18 @@ public class InventoryManager : Singleton<InventoryManager>
         return false;
     }
 
-    public void LoadInventoryData()
+    void LoadInventoryData()
     {
         chapterInventories[0].evidences = NooSphere.SaveManager.Instance.GetInventoryData(1);
         chapterInventories[1].evidences = NooSphere.SaveManager.Instance.GetInventoryData(2);
         chapterInventories[2].evidences = NooSphere.SaveManager.Instance.GetInventoryData(3);
         chapterInventories[3].evidences = NooSphere.SaveManager.Instance.GetInventoryData(4);
+
+        foreach (var item in NooSphere.SaveManager.Instance.GetInventoryData(1))
+        {
+            Debug.LogWarning(item.evidenceId);
+        }
+        NooSphere.SaveManager.Instance.SetLoadType(GameLoadType.NewGame);
+        NooSphere.SaveManager.Instance.SetSlotIndex(-1);
     }
 }
