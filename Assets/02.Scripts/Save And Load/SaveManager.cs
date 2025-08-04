@@ -19,11 +19,13 @@ namespace NooSphere
         public int selectSlotIndex { get; private set; }
         public event Action OnSaveStart;
         public event Action<int> OnSaveFinish;
+        public bool OnDoorAutoSave = false;
         private string folderPath;
         [SerializeField] private GameObject _player;
         [SerializeField] private List<GameObject> _essentialUIs = new List<GameObject>();
         private void Awake()
         {
+            CurrentLoadType = GameLoadType.NewGame;
             // 싱글톤 인스턴스가 이미 존재하는 경우, 중복 생성 방지
             if (Instance != this)
             {
@@ -89,7 +91,13 @@ namespace NooSphere
                 ES3.Save("QuizDatas", DataManager.Instance._quiz, filePath);
                 ES3.Save("PlayerTransform", PlayerController.Instance.transform, filePath);
                 ES3.Save("SceneName", SceneManager.GetActiveScene().name, filePath);
-
+                
+                // 인벤토리 챕터 별로 저장
+                ES3.Save("InventoryData1", InventoryManager.Instance.chapterInventories[0].evidences, filePath);
+                ES3.Save("InventoryData2", InventoryManager.Instance.chapterInventories[1].evidences, filePath);
+                ES3.Save("InventoryData3", InventoryManager.Instance.chapterInventories[2].evidences, filePath);
+                ES3.Save("InventoryData4", InventoryManager.Instance.chapterInventories[3].evidences, filePath);
+                
                 if (FindObjectOfType<RoomInfoManager>() is RoomInfoManager roomInfoManager)
                 {
                     ES3.Save("Location",roomInfoManager.roomName, filePath);
@@ -164,6 +172,12 @@ namespace NooSphere
             string filePath = Path.Combine(folderPath, $"slot{index}.es3");
             return PlayTime.Instance.FormatPlayTime(ES3.Load<float>("PlayTime", filePath));
         }
+
+        public float GetPlayTimeFloatData(int index)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{index}.es3");
+            return ES3.Load<float>("PlayTime", filePath);
+        }
         public string GetDateTimeData(int index)
         {
             string filePath = Path.Combine(folderPath, $"slot{index}.es3");
@@ -174,6 +188,13 @@ namespace NooSphere
         {
             string filePath = Path.Combine(folderPath, $"slot{index}.es3");
             return ES3.Load<Transform>("PlayerTransform", filePath);
+        }
+
+        public List<InventorySlot> GetInventoryData(int chapterIndex)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{selectSlotIndex}.es3");
+            Debug.LogWarning("현재 선택 슬롯 : " + selectSlotIndex);
+            return ES3.Load($"InventoryData{chapterIndex}", filePath, new List<InventorySlot>());
         }
 
         // 슬롯 데이터 삭제하는 함수
@@ -191,6 +212,12 @@ namespace NooSphere
             {
                 Instantiate(ui);
             }
+        }
+
+        public void DoAutoSaveDelay()
+        {
+            NooSphere.SaveManager.Instance.SetSlotIndex(1);
+            StartCoroutine(DoSave());
         }
     }
 }

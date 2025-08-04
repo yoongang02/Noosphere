@@ -18,6 +18,7 @@ public class EventStructure
     public string locationId;
     public string nextEventId;
     public bool autoSave;
+    public int autoSaveDelay; // 1 : 문, 2 : N초 딜레이
     
     //이벤트 실행 여부
     public bool isExecuted = false;

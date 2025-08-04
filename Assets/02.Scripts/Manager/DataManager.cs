@@ -56,7 +56,7 @@ public class DataManager : Singleton<DataManager>
             async () => { _sound = await LoadData<SoundResourceStructure>("SoundResource"); },
             async () => { _mental = await LoadData<MentalStructure>("Mental"); }
         };
-
+        
         int totalSteps = loadSteps.Count;
         int currentStep = 0;
 

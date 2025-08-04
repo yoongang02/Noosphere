@@ -53,6 +53,9 @@ public class PlayerController : Singleton<PlayerController>
         }
         if (_mainCamera == null)
             _mainCamera = Camera.main;
+        
+        // ui canvas 할당
+        _uiCanvas = InventoryManager.Instance.transform.GetComponentInParent<Canvas>();
     }
 
     private void Update()
