@@ -19,6 +19,7 @@ namespace NooSphere
         public int selectSlotIndex { get; private set; }
         public event Action OnSaveStart;
         public event Action<int> OnSaveFinish;
+        public bool OnDoorAutoSave = false;
         private string folderPath;
         [SerializeField] private GameObject _player;
         [SerializeField] private List<GameObject> _essentialUIs = new List<GameObject>();
@@ -211,6 +212,17 @@ namespace NooSphere
             {
                 Instantiate(ui);
             }
+            
+            InventoryManager.Instance.LoadInventoryData();
+
+            CurrentLoadType = GameLoadType.NewGame;
+            selectSlotIndex = -1;
+        }
+
+        public void DoAutoSaveDelay()
+        {
+            NooSphere.SaveManager.Instance.SetSlotIndex(1);
+            StartCoroutine(DoSave());
         }
     }
 }

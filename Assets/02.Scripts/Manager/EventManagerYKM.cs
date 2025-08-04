@@ -37,6 +37,9 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     [SerializeField] private bool _isRepeatFalse = false;
     [SerializeField] private bool _isConditionMet = false;
     
+    //자동저장 딜레이 시간
+    [SerializeField] private float _autoSaveDelayTime = 3f;
+    
     void Awake()
     {
         //게임 시작 시, 스테이지 정보 초기화
@@ -553,14 +556,29 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         // autoSave가 true라면, 자동 저장 진행
         if (_event.autoSave)
         {
-            Debug.Log(_event.eventId + "자동 저장 실행");
-            NooSphere.SaveManager.Instance.SetSlotIndex(1);
-            StartCoroutine(NooSphere.SaveManager.Instance.DoSave());
+            if (_event.autoSaveDelay == 2)
+            {
+                StartCoroutine(DoAutoSaveDelay(_event));
+            }
+            else if(_event.autoSaveDelay != 1)
+            {
+                Debug.Log(_event.eventId + "자동 저장 실행");
+                NooSphere.SaveManager.Instance.SetSlotIndex(1);
+                StartCoroutine(NooSphere.SaveManager.Instance.DoSave());
+            }
         }
     }
 
     public bool IsConditionMet()
     {
         return _isConditionMet;
+    }
+
+    IEnumerator DoAutoSaveDelay(EventStructure _event)
+    {
+        yield return new WaitForSeconds(_autoSaveDelayTime);
+        Debug.Log(_event.eventId + "자동 저장 실행");
+        NooSphere.SaveManager.Instance.SetSlotIndex(1);
+        StartCoroutine(NooSphere.SaveManager.Instance.DoSave());
     }
 }

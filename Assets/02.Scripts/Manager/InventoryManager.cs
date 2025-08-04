@@ -58,12 +58,6 @@ public class InventoryManager : Singleton<InventoryManager>
     void Start()
     {
         InitInventory();
-
-        if(NooSphere.SaveManager.Instance.CurrentLoadType == GameLoadType.ContinueGame)
-        {
-            Debug.LogWarning("여기 실행 안되나?");
-            LoadInventoryData();
-        }
     }
 
     void Update()
@@ -252,17 +246,11 @@ public class InventoryManager : Singleton<InventoryManager>
         return false;
     }
 
-    void LoadInventoryData()
+    public void LoadInventoryData()
     {
-        int index = NooSphere.SaveManager.Instance.selectSlotIndex;
         chapterInventories[0].evidences = NooSphere.SaveManager.Instance.GetInventoryData(1);
         chapterInventories[1].evidences = NooSphere.SaveManager.Instance.GetInventoryData(2);
         chapterInventories[2].evidences = NooSphere.SaveManager.Instance.GetInventoryData(3);
         chapterInventories[3].evidences = NooSphere.SaveManager.Instance.GetInventoryData(4);
-
-        foreach (var item in NooSphere.SaveManager.Instance.GetInventoryData(1))
-        {
-            Debug.Log(item.evidenceId);
-        }
     }
 }
