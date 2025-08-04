@@ -100,6 +100,7 @@ public class VolumeByDistance : MonoBehaviour
         if (endT >= 1 && !_isTriggerEnd)
         {
             _isTriggerEnd = true;
+            PlayerController.Instance.blockLeftRight = false;
             Debug.Log("끝에 도달");
             EffectManager.Instance.OnEffectEnd?.Invoke();
             EventManagerYKM.Instance.ExecuteEvent(EventManagerYKM.Instance.nextEventID).Forget();

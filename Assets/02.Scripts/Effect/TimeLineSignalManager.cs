@@ -292,4 +292,8 @@ public class TimeLineSignalManager : MonoBehaviour
         LookTarget(second).Forget();
     }
 
+    public void LockLeftRight()
+    {
+        PlayerController.Instance.blockLeftRight = true;
+    }
 }

@@ -30,7 +30,7 @@ public class PlayerController : Singleton<PlayerController>
     private Animator _animator;
     private float _defaultSpeed;
     public bool canMove = false; //대화시작
-    // public bool isNpcRayOn=false;
+    public bool blockLeftRight=false;//좌우 input 막기
     public GameObject _currentNPC;
     public GameObject _swapNpc;
     private float lastStepTime = 0f;
@@ -90,8 +90,8 @@ public class PlayerController : Singleton<PlayerController>
         // WASD 키 입력 처리
         if (Input.GetKey(KeyCode.W)) moveY = 1f;
         if (Input.GetKey(KeyCode.S)) moveY = -1f;
-        if (Input.GetKey(KeyCode.A)) moveX = -1f;
-        if (Input.GetKey(KeyCode.D)) moveX = 1f;
+        if (Input.GetKey(KeyCode.A)&&!blockLeftRight) moveX = -1f;
+        if (Input.GetKey(KeyCode.D)&&!blockLeftRight) moveX = 1f;
 
         Vector3 inputDirection = new Vector3(moveX, 0f, moveY).normalized;
         
