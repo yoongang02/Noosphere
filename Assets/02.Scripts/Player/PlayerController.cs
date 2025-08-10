@@ -29,7 +29,36 @@ public class PlayerController : Singleton<PlayerController>
     private Vector3 _moveDirection;
     private Animator _animator;
     private float _defaultSpeed;
-    public bool canMove = false; //대화시작
+    private bool _timelineStarted = false; // 타임라인 시작시 canmove 함수 못바꾸게
+    public bool IsTimelineLocked
+    {
+        get => _timelineStarted;
+        set
+        {
+            _timelineStarted = value;
+            if (_timelineStarted)
+            {
+                _canMove = false;
+            }
+        }
+    }
+
+    private bool _canMove = false;
+    public bool canMove
+    {
+        get => _canMove;
+        set
+        {
+            if (_timelineStarted && value)
+            {
+                _canMove = false;
+                return;
+            }
+
+            if (_canMove == value) return;
+            _canMove = value;
+        }
+    }
     public bool blockLeftRight=false;//좌우 input 막기
     public GameObject _currentNPC;
     public GameObject _swapNpc;
