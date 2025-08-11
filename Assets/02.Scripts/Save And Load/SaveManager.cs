@@ -97,7 +97,11 @@ namespace NooSphere
                 ES3.Save("InventoryData2", InventoryManager.Instance.chapterInventories[1].evidences, filePath);
                 ES3.Save("InventoryData3", InventoryManager.Instance.chapterInventories[2].evidences, filePath);
                 ES3.Save("InventoryData4", InventoryManager.Instance.chapterInventories[3].evidences, filePath);
-                
+
+                // 현재 이벤트 상태 저장
+                ES3.Save("CurrentEventID", EventManagerYKM.Instance.currentEventID, filePath);
+                ES3.Save("NextEventID", EventManagerYKM.Instance.nextEventID, filePath);
+
                 if (FindObjectOfType<RoomInfoManager>() is RoomInfoManager roomInfoManager)
                 {
                     ES3.Save("Location",roomInfoManager.roomName, filePath);
@@ -138,6 +142,10 @@ namespace NooSphere
                 DataManager.Instance._events = ES3.Load("EventDatas", filePath, DataManager.Instance._events);
                 DataManager.Instance._evidences = ES3.Load("EvidenceDatas", filePath, DataManager.Instance._evidences);
                 DataManager.Instance._quiz = ES3.Load("QuizDatas", filePath, DataManager.Instance._quiz);
+
+                // 이벤트 상태 반영
+                EventManagerYKM.Instance.currentEventID = ES3.Load<string>("CurrentEventID", filePath);
+                EventManagerYKM.Instance.nextEventID = ES3.Load<string>("NextEventID", filePath);
             }
             else
             {
