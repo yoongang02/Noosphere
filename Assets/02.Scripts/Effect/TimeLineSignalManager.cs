@@ -296,4 +296,9 @@ public class TimeLineSignalManager : MonoBehaviour
     {
         PlayerController.Instance.blockLeftRight = true;
     }
+
+    public void ForceBlockPlayerMove()
+    {
+        PlayerController.Instance.canMove = false;
+    }
 }

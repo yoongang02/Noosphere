@@ -24,6 +24,7 @@ public class TimeLineController : MonoBehaviour
     {
         if (_playerParent != null)
         {
+            
             _player.transform.SetParent(_playerParent.transform);
             Vector3 newPosition = _player.transform.position;
             newPosition.x = 0f;
@@ -43,6 +44,7 @@ public class TimeLineController : MonoBehaviour
     private void StartTimeLine(PlayableDirector obj)
     {
         Debug.LogWarning(obj.playableAsset.name+"  타임라인 시작");
+        PlayerController.Instance.IsTimelineLocked = true;
         InventoryManager.Instance.canOpenInventory = true;
         PlayerController.Instance.canMove = false;
         UIManager.Instance.LockPlayer();
@@ -52,7 +54,7 @@ public class TimeLineController : MonoBehaviour
     private void EndTimeLine(PlayableDirector obj)
     {
         Debug.LogWarning(obj.playableAsset.name+"  타임라인 끝남");
-
+        PlayerController.Instance.IsTimelineLocked = false;
         if (_playerParent != null)
         {
             _player.transform.SetParent(null);
