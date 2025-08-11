@@ -20,6 +20,9 @@ public class MoveToPoint : MonoBehaviour
     private void OnEnable()
     {
         PlayerController.Instance.canMove = false;
+        InventoryManager.Instance.canOpenInventory = true;
+        UIManager.Instance.LockPlayer();
+        UIManager.Instance.inventoryIcon.SetActive(false);
         _playerAnim.SetBool("IsWalk", true);
         _player.transform.LookAt(_point.position);
         _player.transform.DOMove(_point.transform.position, _walkDuration).OnComplete(() =>
