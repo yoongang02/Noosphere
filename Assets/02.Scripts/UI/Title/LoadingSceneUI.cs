@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
@@ -16,11 +16,33 @@ public class LoadingSceneUI : MonoBehaviour
     }
     private async UniTaskVoid StartLoading()
     {
-        await DataManager.Instance.InitializeData();
-        await FadeOut();
-        SceneManager.LoadScene("IntroScene");
+        Debug.LogWarning(NooSphere.SaveManager.Instance.CurrentLoadType);
+        // 새 게임 로딩이면
+        if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.NewGame)
+        {
+            await DataManager.Instance.InitializeData();
+            await FadeOut();
+            
+            // 플레이타임 설정
+            PlayTime.Instance.SetPlayTimeTracking(true); // 플레이타임 추적 가능하게 설정
+            
+            SceneManager.LoadScene("IntroScene");
+        }
+        else if(NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.ContinueGame) // 이어하기 로딩이면
+        {
+            await DataManager.Instance.LoadSaveData();
+            await FadeOut();
+            
+            // 플레이타임 설정
+            int index = NooSphere.SaveManager.Instance.selectSlotIndex;
+            PlayTime.Instance.SetPlayTime(NooSphere.SaveManager.Instance.GetPlayTimeFloatData(index));
+            PlayTime.Instance.SetPlayTimeTracking(true); // 플레이타임 추적 가능하게 설정
+            
+            string sceneName = NooSphere.SaveManager.Instance.GetSceneName(NooSphere.SaveManager.Instance.selectSlotIndex);
+            SceneManager.LoadScene(sceneName);
+        }
     }
-    
+
     private async UniTask FadeOut()
     {
         _fadeImage.color = new Color(0, 0, 0, 0);

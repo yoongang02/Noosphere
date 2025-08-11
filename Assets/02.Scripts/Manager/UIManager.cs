@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -30,7 +31,7 @@ public class UIManager : Singleton<UIManager>
     private void Update()
     {
         // ESC 버튼 입력 처리
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (InputRouter.Instance.ConsumeEscape())
         {
             if (IsUIOpen(dialogueUI) || IsUIOpen(investigateUI) || IsUIOpen(mirrorDialogueUI))
             {
@@ -51,17 +52,21 @@ public class UIManager : Singleton<UIManager>
                 cctvFrame.SetActive(true);
             }
         }
-        
-        if (DataManager.Instance._events["Event_A031"].isExecuted)
+
+
+        if (DataManager.Instance._events.ContainsKey("Event_A031"))
         {
-            keyGuideUI.SetActive(false);
-        }
-        else
-        {
-            keyGuideUI.SetActive(true);
+            if (DataManager.Instance._events["Event_A031"].isExecuted)
+            {
+                keyGuideUI.SetActive(false);
+            }
+            else
+            {
+                keyGuideUI.SetActive(true);
+            }
         }
 
-        if (dialogueUI.IsTopUI())
+        if (dialogueUI != null && dialogueUI.IsTopUI())
         {
             // 책장에서 거울 조각 습득 시 cctv frame
             if (EventManagerYKM.Instance.currentEventID == "Event_B044" &&
@@ -93,12 +98,15 @@ public class UIManager : Singleton<UIManager>
         }
         else
         {
+
             if (PlayerInteract.Instance.GetComponent<MentalEnterProcess>().IsEnterNow() || InventoryManager.Instance.canOpenInventory)
             {
                 inventoryIcon.SetActive(false);
                 keyGuideUI.SetActive(false);
                 return;
             }
+            
+            
 
             if (FindObjectOfType<HintImage>() == null)
             {
@@ -111,6 +119,7 @@ public class UIManager : Singleton<UIManager>
     public void OpenUI(UIBase ui)
     {
         if (ui == null) return;
+        if (DefaultUIController.Instance.IsAnyUIOpen()) return;
 
         // 스택에 추가하고 UI를 활성화
         // 상호작용 금지
@@ -127,7 +136,8 @@ public class UIManager : Singleton<UIManager>
     public void OpenUI(UIBase ui, EvidenceStructure evidence)
     {
         if (ui == null) return;
-        
+        if (DefaultUIController.Instance.IsAnyUIOpen()) return;
+
         if (evidence == null)
         {
             return;
@@ -150,7 +160,8 @@ public class UIManager : Singleton<UIManager>
     public void OpenUI(UIBase ui, string quizID)
     {
         if (ui == null) return;
-        
+        if (DefaultUIController.Instance.IsAnyUIOpen()) return;
+
         if (string.IsNullOrEmpty(quizID) || !DataManager.Instance._quiz.ContainsKey(quizID))
         {
             return;

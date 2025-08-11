@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -75,6 +75,7 @@ public class EffectManager : Singleton<EffectManager>
             //effectType에 따라 onEffectEnd 호출
             if (effect.effectType == "sound" || effect.effectType == "ui" || string.IsNullOrEmpty(effect.effectType))
             {
+                Debug.LogWarning($"여기서 {effect.effectType}EndEffect가 출력되는건가???");
                 StartCoroutine(EndEffect());
             }
         }

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -17,7 +17,7 @@ public class TriggerDebugScript : Singleton<TriggerDebugScript>
         else
         {
             triggerText.text = "Cur Trigger : " + PlayerInteract.Instance.curTrigger.name;
-        }        
+        }
     }
 
     public void WhenFront()

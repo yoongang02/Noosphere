@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 public class InputManager : Singleton<InputManager>
@@ -13,10 +13,10 @@ public class InputManager : Singleton<InputManager>
         //     return;
         // moveAction?.Invoke();
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (InputRouter.Instance.ConsumeEscape())
             exitBtnAction?.Invoke();
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (InputRouter.Instance.ConsumeE())
             selectBtnAction?.Invoke();
     }
     public void FixedUpdate()

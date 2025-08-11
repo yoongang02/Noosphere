@@ -1,11 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class OnlyForTest : Singleton<OnlyForTest>
 {
-    //스테이지1 빠른 테스트를 위한 임시 마스터 코드
+    ////스테이지1 빠른 테스트를 위한 임시 마스터 코드
     private bool _prologuePass = false;
     private bool _stage1Pass = false;
     private bool _stage2Pass = false;
@@ -18,7 +18,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
             Application.Quit();
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKeyDown(KeyCode.F2))
         {
             Debug.LogWarning("스테이지1로 바로 이동");
             SoundManager.Instance.StopAllSFX();
@@ -29,7 +29,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
             GoToStage1();
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        if (Input.GetKeyDown(KeyCode.F3))
         {
             Debug.LogWarning("스테이지2로 바로 이동");
             SoundManager.Instance.StopAllSFX();
@@ -39,9 +39,9 @@ public class OnlyForTest : Singleton<OnlyForTest>
             EffectManager.Instance.OnEffectEnd?.Invoke();
             GoToStage2();
         }
-        
+
         // 진엔딩
-        if (Input.GetKeyDown(KeyCode.Alpha4))
+        if (Input.GetKeyDown(KeyCode.F4))
         {
             Debug.LogWarning("진엔딩으로 바로 이동");
             SoundManager.Instance.StopAllSFX();
@@ -51,9 +51,9 @@ public class OnlyForTest : Singleton<OnlyForTest>
             EffectManager.Instance.OnEffectEnd?.Invoke();
             GoToRealEnding();
         }
-        
+
         // 일반엔딩 - 탈출 성공
-        if (Input.GetKeyDown(KeyCode.Alpha5))
+        if (Input.GetKeyDown(KeyCode.F5))
         {
             Debug.LogWarning("일반엔딩 탈출 성공 으로 바로 이동");
             SoundManager.Instance.StopAllSFX();
@@ -63,8 +63,9 @@ public class OnlyForTest : Singleton<OnlyForTest>
             EffectManager.Instance.OnEffectEnd?.Invoke();
             GoToCommonEnding1();
         }
+
         // 일반엔딩 - 탈출 실패
-        if (Input.GetKeyDown(KeyCode.Alpha6))
+        if (Input.GetKeyDown(KeyCode.F6))
         {
             Debug.LogWarning("일반엔딩 탈출 실패로 바로 이동");
             SoundManager.Instance.StopAllSFX();
@@ -103,6 +104,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
                 }
             }
         }
+
         InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_011"]);
         //퀴즈 모두 정답
         DataManager.Instance._quiz["Quiz_001"].isSolved = true;
@@ -124,7 +126,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
         _prologuePass = true;
         EventManagerYKM.Instance.curChapterInfo = EventManagerYKM.ChapterInfo.Stage1;
     }
-    
+
     void GoToStage2()
     {
         if (!_prologuePass)
@@ -153,15 +155,16 @@ public class OnlyForTest : Singleton<OnlyForTest>
                     }
                 }
             }
+
             InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_011"]);
             //퀴즈 모두 정답
             DataManager.Instance._quiz["Quiz_001"].isSolved = true;
             //서브 증거물
             DataManager.Instance._evidences["Evidence_008"].accessCnt = 3;
-            
+
             _prologuePass = true;
         }
-        
+
         //이벤트 모두 실행
         foreach (var _event in DataManager.Instance._events)
         {
@@ -185,6 +188,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
                 }
             }
         }
+
         InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_016"]);
         InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_010"]);
         //퀴즈 모두 정답
@@ -212,7 +216,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
         FindObjectOfType<PlayerInteract>().isInsideTrigger = false;
         FindObjectOfType<PlayerInteract>().curTrigger = null;
         EventManagerYKM.Instance.nextEventID = "";
-    
+
         _stage1Pass = true;
         EventManagerYKM.Instance.curChapterInfo = EventManagerYKM.ChapterInfo.Stage2;
     }
@@ -244,12 +248,13 @@ public class OnlyForTest : Singleton<OnlyForTest>
                     }
                 }
             }
+
             InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_011"]);
             //퀴즈 모두 정답
             DataManager.Instance._quiz["Quiz_001"].isSolved = true;
             //서브 증거물
             DataManager.Instance._evidences["Evidence_008"].accessCnt = 3;
-            
+
             _prologuePass = true;
         }
 
@@ -290,14 +295,14 @@ public class OnlyForTest : Singleton<OnlyForTest>
             InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_016"]);
             InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_010"]);
             InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_025"]);
-            
+
             DialogueManager.Instance.OnDialogueEnd?.Invoke();
             UIManager.Instance.CloseAllUI();
 
             _stage1Pass = true;
         }
-        
-        
+
+
         if (!_stage2Pass)
         {
             //이벤트 모두 실행
@@ -306,7 +311,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
                 string chapterIndex = _event.Key;
                 if (chapterIndex[6] == 'C')
                 {
-                    if(_event.Value.evidenceId == "Event_C067") continue;
+                    if (_event.Value.evidenceId == "Event_C067") continue;
                     _event.Value.isExecuted = true;
                     //증거물 모두 수집
                     if (!string.IsNullOrEmpty(_event.Value.evidenceId))
@@ -324,12 +329,13 @@ public class OnlyForTest : Singleton<OnlyForTest>
                     }
                 }
             }
-            _stage2Pass = true; 
+
+            _stage2Pass = true;
 
             DialogueManager.Instance.OnDialogueEnd?.Invoke();
             EffectManager.Instance.OnEffectEnd?.Invoke();
             UIManager.Instance.CloseAllUI();
-            
+
             SceneManager.LoadScene("FinalStage_Spirit");
             //현재 스테이지 변경
             EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_103;
@@ -338,11 +344,11 @@ public class OnlyForTest : Singleton<OnlyForTest>
             FindObjectOfType<PlayerInteract>().isInsideTrigger = false;
             FindObjectOfType<PlayerInteract>().curTrigger = null;
             EventManagerYKM.Instance.nextEventID = "";
-            
+
             EventManagerYKM.Instance.curChapterInfo = EventManagerYKM.ChapterInfo.Final;
         }
     }
-    
+
     // 일반 엔딩 - 탈출 성공
     void GoToCommonEnding1()
     {
@@ -371,12 +377,13 @@ public class OnlyForTest : Singleton<OnlyForTest>
                     }
                 }
             }
+
             InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_011"]);
             //퀴즈 모두 정답
             DataManager.Instance._quiz["Quiz_001"].isSolved = true;
             //서브 증거물
             DataManager.Instance._evidences["Evidence_008"].accessCnt = 3;
-            
+
             _prologuePass = true;
         }
 
@@ -388,7 +395,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
                 string chapterIndex = _event.Key;
                 if (chapterIndex[6] == 'B')
                 {
-                    if(_event.Value.evidenceId == "Event_B066") continue;
+                    if (_event.Value.evidenceId == "Event_B066") continue;
                     _event.Value.isExecuted = true;
                     //증거물 모두 수집
                     if (!string.IsNullOrEmpty(_event.Value.evidenceId))
@@ -406,9 +413,10 @@ public class OnlyForTest : Singleton<OnlyForTest>
                     }
                 }
             }
+
             EvidenceStructure paper = DataManager.Instance._evidences["Evidence_016"];
             InventoryManager.Instance.AddEvidence(paper);
-            
+
             //퀴즈 모두 정답
             DataManager.Instance._quiz["Quiz_003"].isSolved = true;
             DataManager.Instance._quiz["Quiz_004"].isSolved = true;
@@ -422,8 +430,8 @@ public class OnlyForTest : Singleton<OnlyForTest>
 
             _stage1Pass = true;
         }
-        
-        
+
+
         if (!_stage2Pass)
         {
             //이벤트 모두 실행
@@ -432,7 +440,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
                 string chapterIndex = _event.Key;
                 if (chapterIndex[6] == 'C')
                 {
-                    if(_event.Value.evidenceId == "Event_C066") continue;
+                    if (_event.Value.evidenceId == "Event_C066") continue;
                     _event.Value.isExecuted = true;
                     //증거물 모두 수집
                     if (!string.IsNullOrEmpty(_event.Value.evidenceId))
@@ -450,15 +458,16 @@ public class OnlyForTest : Singleton<OnlyForTest>
                     }
                 }
             }
-            _stage2Pass = true; 
-            
+
+            _stage2Pass = true;
+
             InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_010"]);
             InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_025"]);
-            
+
             DialogueManager.Instance.OnDialogueEnd?.Invoke();
             EffectManager.Instance.OnEffectEnd?.Invoke();
             UIManager.Instance.CloseAllUI();
-            
+
             SceneManager.LoadScene("FinalStage_Spirit");
             //현재 스테이지 변경
             EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_103;
@@ -467,13 +476,13 @@ public class OnlyForTest : Singleton<OnlyForTest>
             FindObjectOfType<PlayerInteract>().isInsideTrigger = false;
             FindObjectOfType<PlayerInteract>().curTrigger = null;
             EventManagerYKM.Instance.nextEventID = "";
-            
+
             EventManagerYKM.Instance.curChapterInfo = EventManagerYKM.ChapterInfo.Final;
             DataManager.Instance._events["Event_C066"].isExecuted = false;
             Debug.LogWarning($"Event_C066 : {DataManager.Instance._events["Event_C066"].isExecuted}");
         }
     }
-    
+
     // 일반 엔딩 - 탈출 실패
     void GoToCommonEnding2()
     {
@@ -502,12 +511,13 @@ public class OnlyForTest : Singleton<OnlyForTest>
                     }
                 }
             }
+
             InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_011"]);
             //퀴즈 모두 정답
             DataManager.Instance._quiz["Quiz_001"].isSolved = true;
             //서브 증거물
             DataManager.Instance._evidences["Evidence_008"].accessCnt = 3;
-            
+
             _prologuePass = true;
         }
 
@@ -519,7 +529,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
                 string chapterIndex = _event.Key;
                 if (chapterIndex[6] == 'B')
                 {
-                    if(_event.Value.evidenceId == "Event_B065") continue;
+                    if (_event.Value.evidenceId == "Event_B065") continue;
                     _event.Value.isExecuted = true;
                     //증거물 모두 수집
                     if (!string.IsNullOrEmpty(_event.Value.evidenceId))
@@ -537,7 +547,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
                     }
                 }
             }
-            
+
             //퀴즈 모두 정답
             DataManager.Instance._quiz["Quiz_003"].isSolved = true;
             DataManager.Instance._quiz["Quiz_004"].isSolved = true;
@@ -551,8 +561,8 @@ public class OnlyForTest : Singleton<OnlyForTest>
 
             _stage1Pass = true;
         }
-        
-        
+
+
         if (!_stage2Pass)
         {
             //이벤트 모두 실행
@@ -561,7 +571,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
                 string chapterIndex = _event.Key;
                 if (chapterIndex[6] == 'C')
                 {
-                    if(_event.Value.evidenceId == "Event_C066") continue;
+                    if (_event.Value.evidenceId == "Event_C066") continue;
                     _event.Value.isExecuted = true;
                     //증거물 모두 수집
                     if (!string.IsNullOrEmpty(_event.Value.evidenceId))
@@ -579,15 +589,16 @@ public class OnlyForTest : Singleton<OnlyForTest>
                     }
                 }
             }
-            _stage2Pass = true; 
-            
+
+            _stage2Pass = true;
+
             InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_010"]);
             InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences["Evidence_025"]);
-            
+
             DialogueManager.Instance.OnDialogueEnd?.Invoke();
             EffectManager.Instance.OnEffectEnd?.Invoke();
             UIManager.Instance.CloseAllUI();
-            
+
             SceneManager.LoadScene("FinalStage_Spirit");
             //현재 스테이지 변경
             EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_103;
@@ -596,7 +607,7 @@ public class OnlyForTest : Singleton<OnlyForTest>
             FindObjectOfType<PlayerInteract>().isInsideTrigger = false;
             FindObjectOfType<PlayerInteract>().curTrigger = null;
             EventManagerYKM.Instance.nextEventID = "";
-            
+
             EventManagerYKM.Instance.curChapterInfo = EventManagerYKM.ChapterInfo.Final;
             DataManager.Instance._events["Event_C066"].isExecuted = false;
             Debug.LogWarning($"Event_C066 : {DataManager.Instance._events["Event_C066"].isExecuted}");

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using TMPro;
@@ -51,14 +51,14 @@ public class MirrorDialogueManager : UIBase
         base.HandleKeyboardInput();
         
         //키보드 A - YES 버튼
-        if (Input.GetKeyDown(KeyCode.W))
+        if (InputRouter.Instance.ConsumeW())
         {
             SoundManager.Instance.PlaySFX("Soundresource_035");
             HoverYesBtn();
         }
 
         //키보드 D - NO 버튼
-        if (Input.GetKeyDown(KeyCode.S))
+        if (InputRouter.Instance.ConsumeS())
         { 
             SoundManager.Instance.PlaySFX("Soundresource_035");
             HoverNoBtn();

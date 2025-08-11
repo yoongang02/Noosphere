@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -42,14 +42,14 @@ public class InvestigateUI : UIBase
     {
         base.HandleKeyboardInput();
         //키보드 A - YES 버튼
-        if (Input.GetKeyDown(KeyCode.A))
+        if (InputRouter.Instance.ConsumeA())
         {
             SoundManager.Instance.PlaySFX("Soundresource_035");
             HoverYesBtn();
         }
 
         //키보드 D - NO 버튼
-        if (Input.GetKeyDown(KeyCode.D))
+        if (InputRouter.Instance.ConsumeD())
         { 
             SoundManager.Instance.PlaySFX("Soundresource_035");
             HoverNoBtn();
@@ -68,10 +68,10 @@ public class InvestigateUI : UIBase
                 ClickNoBtn();
             }
         }
-          
+
         /*
         //ESC - NO 선택
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (InputRouter.Instance.ConsumeEscape())
         {
             SoundManager.Instance.PlaySFX("Soundresource_036");
             //NO 버튼 선택
@@ -79,7 +79,7 @@ public class InvestigateUI : UIBase
         }
         */
     }
-    
+
     public void HoverYesBtn()
     {
         SetImgSelected(_yesBtn, UnityExtension.HexColor(SkyblueColor));

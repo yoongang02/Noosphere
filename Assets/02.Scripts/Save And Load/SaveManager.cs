@@ -1,82 +1,106 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor.PackageManager;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace NooSphere
 {
+    public enum GameLoadType
+    {
+        NewGame,
+        ContinueGame
+    }
     public class SaveManager : Singleton<SaveManager>
     {
+        public GameLoadType CurrentLoadType { get; private set; }
+        public int selectSlotIndex { get; private set; }
         public event Action OnSaveStart;
         public event Action<int> OnSaveFinish;
-
-
-        // ¼¼ÀÌºê ½½·Ô2 ¶Ç´Â 3¿¡ ÇöÀç ÁøÇà»óÈ²À» »ç¿ëÀÚ°¡ ¼öµ¿ ÀúÀå ½Ã È£ÃâµÇ´Â ÇÔ¼ö
-        public IEnumerator DoManualSave(int slotIndex)
+        public bool OnDoorAutoSave = false;
+        private string folderPath;
+        [SerializeField] private GameObject _player;
+        [SerializeField] private List<GameObject> _essentialUIs = new List<GameObject>();
+        private void Awake()
         {
-            // Root ÇÏÀ§¿¡ Saves Æú´õ·Î ÀÌ¾îÁö´Â °æ·Î Ã£±â
-            string folderPath = Path.Combine(Application.persistentDataPath, "Saves");
+            CurrentLoadType = GameLoadType.NewGame;
+            // ì‹±ê¸€í†¤ ì¸ìŠ¤í„´ìŠ¤ê°€ ì´ë¯¸ ì¡´ì¬í•˜ëŠ” ê²½ìš°, ì¤‘ë³µ ìƒì„± ë°©ì§€
+            if (Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            // ì´ˆê¸°í™” ì‘ì—…
+            DontDestroyOnLoad(gameObject);
+        }
+        private void Start()
+        {
+            folderPath = Path.Combine(Application.persistentDataPath, "Saves");
+            selectSlotIndex = -1;
+        }
+        public void SetLoadType(GameLoadType type)
+        {
+            CurrentLoadType = type;
+        }
+
+        public void SetSlotIndex(int index)
+        {
+            selectSlotIndex = index;
+        }
+
+        // ì„¸ì´ë¸Œ ìŠ¬ë¡¯1ì— í˜„ì¬ ì§„í–‰ìƒí™©ì„ ìë™ ì €ì¥ ì‹œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
+        // TODO : ìƒíƒœ ê°’ì´ ëª¨ë‘ ì €ì¥ë˜ëŠ” ë™ì•ˆ í”Œë ˆì´ì–´ì˜ ìƒí˜¸ì‘ìš©ì„ ë§‰ì€ ì±„, ì €ì¥ ì¤‘ UIë¥¼ ë„ìš°ëŠ” ì‘ì—… ì—°ê²° í•´ì•¼ í•¨.
+        public IEnumerator DoSave()
+        {
+            // Root í•˜ìœ„ì— Saves í´ë”ë¡œ ì´ì–´ì§€ëŠ” ê²½ë¡œ ì°¾ê¸°
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
             }
 
-            // ÀúÀå ½ÃÀÛ ÁØºñ -> ÀúÀå Áß UI È°¼ºÈ­ & »óÈ£ÀÛ¿ë ¸·±â
+            // ì €ì¥ ì‹œì‘ ì¤€ë¹„ -> ì €ì¥ ì¤‘ UI í™œì„±í™” & ìƒí˜¸ì‘ìš© ë§‰ê¸°
             OnSaveStart?.Invoke();
             yield return null;
 
-            SaveCurrentState(folderPath, slotIndex);
+            SaveCurrentState();
 
             yield return null;
-            // ÀúÀå ³¡ -> ÀúÀå Áß UI ºñÈ°¼ºÈ­ & »óÈ£ÀÛ¿ë Ç®±â
-            OnSaveFinish?.Invoke(slotIndex);
+            // ì €ì¥ ë -> ì €ì¥ ì¤‘ UI ë¹„í™œì„±í™” & ìƒí˜¸ì‘ìš© í’€ê¸°
+            OnSaveFinish?.Invoke(selectSlotIndex);
         }
 
-        // ¼¼ÀÌºê ½½·Ô1¿¡ ÇöÀç ÁøÇà»óÈ²À» ÀÚµ¿ ÀúÀå ½Ã È£ÃâµÇ´Â ÇÔ¼ö
-        // TODO : »óÅÂ °ªÀÌ ¸ğµÎ ÀúÀåµÇ´Â µ¿¾È ÇÃ·¹ÀÌ¾îÀÇ »óÈ£ÀÛ¿ëÀ» ¸·Àº Ã¤, ÀúÀå Áß UI¸¦ ¶ç¿ì´Â ÀÛ¾÷ ¿¬°á ÇØ¾ß ÇÔ.
-        public IEnumerator DoAutoSave()
+        // ìë™ ì €ì¥ í˜¹ì€ ì‚¬ìš©ì ì„ì˜ ì €ì¥ ì‹œ, í˜„ì¬ ìƒíƒœë¥¼ ì €ì¥í•˜ëŠ” í•¨ìˆ˜
+        // í´ë” ê²½ë¡œì™€, ì €ì¥í•˜ë ¤ëŠ” íŒŒì¼ ì´ë¦„ì„ íŒŒë¼ë¯¸í„°ë¡œ ë°›ìŒ
+        void SaveCurrentState()
         {
-            // Root ÇÏÀ§¿¡ Saves Æú´õ·Î ÀÌ¾îÁö´Â °æ·Î Ã£±â
-            string folderPath = Path.Combine(Application.persistentDataPath, "Saves");
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
+            // ì €ì¥í•  íŒŒì¼ ê²½ë¡œ ì°¾ê¸°
+            string filePath = Path.Combine(folderPath, $"slot{selectSlotIndex}.es3");
 
-            // ÀúÀå ½ÃÀÛ ÁØºñ -> ÀúÀå Áß UI È°¼ºÈ­ & »óÈ£ÀÛ¿ë ¸·±â
-            OnSaveStart?.Invoke();
-            yield return null;
-
-            SaveCurrentState(folderPath, 1);
-
-            yield return null;
-            // ÀúÀå ³¡ -> ÀúÀå Áß UI ºñÈ°¼ºÈ­ & »óÈ£ÀÛ¿ë Ç®±â
-            OnSaveFinish?.Invoke(1);
-        }
-
-        // ÀÚµ¿ ÀúÀå È¤Àº »ç¿ëÀÚ ÀÓÀÇ ÀúÀå ½Ã, ÇöÀç »óÅÂ¸¦ ÀúÀåÇÏ´Â ÇÔ¼ö
-        // Æú´õ °æ·Î¿Í, ÀúÀåÇÏ·Á´Â ÆÄÀÏ ÀÌ¸§À» ÆÄ¶ó¹ÌÅÍ·Î ¹ŞÀ½
-
-        // TODO : ÇÃ·¹ÀÌÅ¸ÀÓ °ª ºÒ·¯¿Í¼­ ÀúÀåÇÏ´Â ÀÛ¾÷ ÁøÇàÇØ¾ß ÇÔ.
-        void SaveCurrentState(string folderPath, int slotIndex)
-        {
-            // ÀúÀåÇÒ ÆÄÀÏ °æ·Î Ã£±â
-            string filePath = Path.Combine(folderPath, $"slot{slotIndex}.es3");
-
-            // ÇöÀç »óÅÂ ÀúÀåÇÏ±â, ÀúÀåÇÒ µ¥ÀÌÅÍ´Â ´ÙÀ½°ú °°À½.
-            // DataManagerÀÇ _events, _evidences, _quiz ¸®½ºÆ®.
-            // ÀúÀå ´ç½Ã ÇÃ·¹ÀÌ¾îÀÇ Transform Á¤º¸
-            // ÀúÀå ´ç½Ã ÇÃ·¹ÀÌ¾î°¡ À§Ä¡ÇÑ °ø°£ Á¤º¸
-            // ÀúÀå ÀÏ½Ã(YYYY - MM - DD  HH: MM:SS Çü½Ä)
-            // ÀúÀå ´ç½Ã±îÁöÀÇ ÇÃ·¹ÀÌ Å¸ÀÓ
+            // í˜„ì¬ ìƒíƒœ ì €ì¥í•˜ê¸°, ì €ì¥í•  ë°ì´í„°ëŠ” ë‹¤ìŒê³¼ ê°™ìŒ.
+            // DataManagerì˜ _events, _evidences, _quiz ë¦¬ìŠ¤íŠ¸.
+            // ì €ì¥ ë‹¹ì‹œ í”Œë ˆì´ì–´ì˜ Transform ì •ë³´
+            // ì €ì¥ ë‹¹ì‹œ í”Œë ˆì´ì–´ê°€ ìœ„ì¹˜í•œ ê³µê°„ ì •ë³´
+            // ì €ì¥ ì¼ì‹œ(YYYY - MM - DD  HH: MM:SS í˜•ì‹)
+            // ì €ì¥ ë‹¹ì‹œê¹Œì§€ì˜ í”Œë ˆì´ íƒ€ì„
             try
             {
                 ES3.Save("EventDatas", DataManager.Instance._events, filePath);
                 ES3.Save("EvidenceDatas", DataManager.Instance._evidences, filePath);
                 ES3.Save("QuizDatas", DataManager.Instance._quiz, filePath);
                 ES3.Save("PlayerTransform", PlayerController.Instance.transform, filePath);
+                ES3.Save("SceneName", SceneManager.GetActiveScene().name, filePath);
+                
+                // ì¸ë²¤í† ë¦¬ ì±•í„° ë³„ë¡œ ì €ì¥
+                ES3.Save("InventoryData1", InventoryManager.Instance.chapterInventories[0].evidences, filePath);
+                ES3.Save("InventoryData2", InventoryManager.Instance.chapterInventories[1].evidences, filePath);
+                ES3.Save("InventoryData3", InventoryManager.Instance.chapterInventories[2].evidences, filePath);
+                ES3.Save("InventoryData4", InventoryManager.Instance.chapterInventories[3].evidences, filePath);
+
+                // í˜„ì¬ ì´ë²¤íŠ¸ ìƒíƒœ ì €ì¥
+                ES3.Save("CurrentEventID", EventManagerYKM.Instance.currentEventID, filePath);
+                ES3.Save("NextEventID", EventManagerYKM.Instance.nextEventID, filePath);
 
                 if (FindObjectOfType<RoomInfoManager>() is RoomInfoManager roomInfoManager)
                 {
@@ -84,22 +108,124 @@ namespace NooSphere
                 }
                 else
                 {
-                    Debug.LogError("ÇÃ·¹ÀÌ¾îÀÇ ÇöÀç Location °ªÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+                    Debug.LogError("í”Œë ˆì´ì–´ì˜ í˜„ì¬ Location ê°’ì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
                 }
 
-                string currentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                string currentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
                 ES3.Save("DateTime", currentTime, filePath);
 
-                // ÀÌ °÷¿¡ ÇÃ·¹ÀÌÅ¸ÀÓ ºÒ·¯¿Í¼­ ÀúÀåÇØ¾ß ÇÔ.
+                // ì´ ê³³ì— í”Œë ˆì´íƒ€ì„ ë¶ˆëŸ¬ì™€ì„œ ì €ì¥í•´ì•¼ í•¨.
+                float playTime = PlayTime.Instance.GetPlayTime();
+                ES3.Save("PlayTime", playTime, filePath);
             }
             catch (System.IO.IOException)
             {
-                Debug.LogError("ÆÄÀÏÀÌ ¿­·ÁÀÖ°Å³ª, ÃæºĞÇÑ ÀúÀå°ø°£ÀÌ ¾ø½À´Ï´Ù.");
+                Debug.LogError("íŒŒì¼ì´ ì—´ë ¤ìˆê±°ë‚˜, ì¶©ë¶„í•œ ì €ì¥ê³µê°„ì´ ì—†ìŠµë‹ˆë‹¤.");
             }
             catch (System.Security.SecurityException)
             {
-                Debug.LogError("±ÇÇÑÀÌ ¾ø´Â »ç¿ëÀÚÀÔ´Ï´Ù.");
+                Debug.LogError("ê¶Œí•œì´ ì—†ëŠ” ì‚¬ìš©ìì…ë‹ˆë‹¤.");
             }
+        }
+
+        // ìŠ¬ë¡¯ì— ì €ì¥ëœ ë°ì´í„°ë¥¼ ë¶ˆëŸ¬ì™€ ë°˜ì˜í•˜ëŠ” í•¨ìˆ˜
+        // ìŠ¬ë¡¯ì— ì„¸ì´ë¸Œ íŒŒì¼ì´ ìˆëŠ”ì§€ HasSaveData ë©”ì†Œë“œë¡œ ì²´í¬í–ˆë‹¤ëŠ” ê°€ì •.
+        // TODO : ì €ì¥ë˜ì–´ ìˆëŠ” ê°’ì„ ë°˜ì˜í•˜ëŠ” ë™ì•ˆ, ë¡œë”© í™”ë©´ ë„ì›Œì•¼ í•¨.
+        // TODO : í”Œë ˆì´íƒ€ì„ ê°’ì„ ë°˜ì˜í•˜ì—¬, ë‹¤ì‹œ í”Œë ˆì´íƒ€ì„ì„ ì¬ê°œí•´ì•¼ í•¨.
+        public void LoadSaveData()
+        {
+            // ìŠ¬ë¡¯ì— í•´ë‹¹í•˜ëŠ” ì„¸ì´ë¸Œ íŒŒì¼ì´ ìˆëŠ”ì§€ í™•ì¸
+            string filePath = Path.Combine(folderPath, $"slot{selectSlotIndex}.es3");
+            if (File.Exists(filePath))
+            {
+                // ë°ì´í„°ë“¤ ë°˜ì˜
+                DataManager.Instance._events = ES3.Load("EventDatas", filePath, DataManager.Instance._events);
+                DataManager.Instance._evidences = ES3.Load("EvidenceDatas", filePath, DataManager.Instance._evidences);
+                DataManager.Instance._quiz = ES3.Load("QuizDatas", filePath, DataManager.Instance._quiz);
+
+                // ì´ë²¤íŠ¸ ìƒíƒœ ë°˜ì˜
+                EventManagerYKM.Instance.currentEventID = ES3.Load<string>("CurrentEventID", filePath);
+                EventManagerYKM.Instance.nextEventID = ES3.Load<string>("NextEventID", filePath);
+            }
+            else
+            {
+                Debug.LogError($"{filePath}ì— íŒŒì¼ì´ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
+            }
+        }
+
+        // ë§ˆì§€ë§‰ ì €ì¥ ì”¬ ì´ë¦„ ê°€ì ¸ì˜¤ê¸°
+        public string GetSceneName(int index)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{index}.es3");
+            return ES3.Load<string>("SceneName", filePath);
+        }
+
+        // ìŠ¬ë¡¯ì— í•´ë‹¹í•˜ëŠ” ì„¸ì´ë¸Œ íŒŒì¼ì´ ìˆëŠ”ì§€ í™•ì¸í•˜ëŠ” í•¨ìˆ˜
+        public bool HasSaveData(int index)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{index}.es3");
+            bool value = File.Exists(filePath) ? true : false;
+            return value;
+        }
+
+        // ìœ„ì¹˜, í”Œë ˆì´íƒ€ì„, ì €ì¥ì¼ì‹œ ë“± í…ìŠ¤íŠ¸ ë°ì´í„° ë¶ˆëŸ¬ì˜¤ê¸°
+        // ë°ì´í„° ì¡´ì¬ë¥¼ ê²€ì¦(HasSaveData) í›„ í˜¸ì¶œí•˜ëŠ” í•¨ìˆ˜. ìœ íš¨ì„± ê²€ì¦ ì™„ë£Œë˜ì—ˆë‹¤ê³  ê°€ì •í•˜ì— ì‘ì„±.
+        public string GetLocationData(int index)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{index}.es3");
+            return ES3.Load<string>("Location", filePath);
+        }
+        public string GetPlayTimeData(int index)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{index}.es3");
+            return PlayTime.Instance.FormatPlayTime(ES3.Load<float>("PlayTime", filePath));
+        }
+
+        public float GetPlayTimeFloatData(int index)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{index}.es3");
+            return ES3.Load<float>("PlayTime", filePath);
+        }
+        public string GetDateTimeData(int index)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{index}.es3");
+            return ES3.Load<string>("DateTime", filePath);
+        }
+
+        public Transform GetPlayerTransform(int index)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{index}.es3");
+            return ES3.Load<Transform>("PlayerTransform", filePath);
+        }
+
+        public List<InventorySlot> GetInventoryData(int chapterIndex)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{selectSlotIndex}.es3");
+            Debug.LogWarning("í˜„ì¬ ì„ íƒ ìŠ¬ë¡¯ : " + selectSlotIndex);
+            return ES3.Load($"InventoryData{chapterIndex}", filePath, new List<InventorySlot>());
+        }
+
+        // ìŠ¬ë¡¯ ë°ì´í„° ì‚­ì œí•˜ëŠ” í•¨ìˆ˜
+        public void DeleteSlotData(int index)
+        {
+            string filePath = Path.Combine(folderPath, $"slot{index}.es3");
+            ES3.DeleteFile(filePath);
+            selectSlotIndex = -1;
+        }
+
+        public void WhenContinueSceneLoaded()
+        {
+            Instantiate(_player, GetPlayerTransform(selectSlotIndex).position, GetPlayerTransform(selectSlotIndex).rotation);
+            foreach(GameObject ui in _essentialUIs)
+            {
+                Instantiate(ui);
+            }
+        }
+
+        public void DoAutoSaveDelay()
+        {
+            NooSphere.SaveManager.Instance.SetSlotIndex(1);
+            StartCoroutine(DoSave());
         }
     }
 }

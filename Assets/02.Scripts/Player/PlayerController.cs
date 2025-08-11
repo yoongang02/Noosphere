@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,22 +29,52 @@ public class PlayerController : Singleton<PlayerController>
     private Vector3 _moveDirection;
     private Animator _animator;
     private float _defaultSpeed;
-    public bool canMove = false; //대화시작
-    // public bool isNpcRayOn=false;
+    private bool _timelineStarted = false; // 타임라인 시작시 canmove 함수 못바꾸게
+    public bool IsTimelineLocked
+    {
+        get => _timelineStarted;
+        set
+        {
+            _timelineStarted = value;
+            if (_timelineStarted)
+            {
+                _canMove = false;
+            }
+        }
+    }
+
+    private bool _canMove = false;
+    public bool canMove
+    {
+        get => _canMove;
+        set
+        {
+            if (_timelineStarted && value)
+            {
+                _canMove = false;
+                return;
+            }
+
+            if (_canMove == value) return;
+            _canMove = value;
+        }
+    }
+    public bool blockLeftRight=false;//좌우 input 막기
     public GameObject _currentNPC;
     public GameObject _swapNpc;
     private float lastStepTime = 0f;
 
     public GameObject npcCam;
     public NpcState npcState;
-    
-    
+
+    private Vector3 _lastPos;
     private void Start()
     {
         _animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody>();
         _defaultSpeed = _moveSpeed;
         InputManager.Instance.moveAction += HandleInput;
+        _lastPos = transform.position;
         if (_rigidbody != null)
         {
             _rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
@@ -52,6 +82,9 @@ public class PlayerController : Singleton<PlayerController>
         }
         if (_mainCamera == null)
             _mainCamera = Camera.main;
+        
+        // ui canvas 할당
+        _uiCanvas = InventoryManager.Instance.transform.GetComponentInParent<Canvas>();
     }
 
     private void Update()
@@ -89,8 +122,8 @@ public class PlayerController : Singleton<PlayerController>
         // WASD 키 입력 처리
         if (Input.GetKey(KeyCode.W)) moveY = 1f;
         if (Input.GetKey(KeyCode.S)) moveY = -1f;
-        if (Input.GetKey(KeyCode.A)) moveX = -1f;
-        if (Input.GetKey(KeyCode.D)) moveX = 1f;
+        if (Input.GetKey(KeyCode.A)&&!blockLeftRight) moveX = -1f;
+        if (Input.GetKey(KeyCode.D)&&!blockLeftRight) moveX = 1f;
 
         Vector3 inputDirection = new Vector3(moveX, 0f, moveY).normalized;
         
@@ -114,7 +147,6 @@ public class PlayerController : Singleton<PlayerController>
             }
 
             Move(_moveDirection, currentSpeed);
-            
             // 발소리 처리
             bool isRunning = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
             float currentInterval = isRunning ? runInterval : stepInterval;
@@ -127,11 +159,12 @@ public class PlayerController : Singleton<PlayerController>
             {
                 currentSounds = isRunning ? runSounds : _walkSounds;
             }
-
-            if (Time.time >= lastStepTime + currentInterval)
+            float movedDistance = Vector3.Distance(transform.position, _lastPos);
+            if (movedDistance>0.01f&&Time.time >= lastStepTime + currentInterval)
             {
                 int randomIndex = UnityEngine.Random.Range(0, currentSounds.Count);
                 footstepSource.clip = currentSounds[randomIndex];
+                footstepSource.volume = SoundManager.Instance.sfxVolume;
                 footstepSource.Play();
                 lastStepTime = Time.time;
             }
@@ -140,7 +173,7 @@ public class PlayerController : Singleton<PlayerController>
             if (PlayerInteract.Instance.curTrigger != null && PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.canInteract)
             {
                 PlayerInteract.Instance.curTrigger.GetComponent<EventTrigger>().OnTriggerEnter(GetComponent<CapsuleCollider>());
-                NooSphere.Debug.LogWarning("트리거 내에서 이동했을 때 강제로 다시 트리거 엔터 호출");
+                //NooSphere.Debug.LogWarning("트리거 내에서 이동했을 때 강제로 다시 트리거 엔터 호출");
             }
             
         }
@@ -151,6 +184,7 @@ public class PlayerController : Singleton<PlayerController>
             currentVelocity.z = 0f;
             _rigidbody.velocity = currentVelocity;
         }
+        _lastPos = transform.position; 
     }
 
     private void Move(Vector3 direction,float speed)

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +12,11 @@ public class RoomInfoManager : MonoBehaviour
     private void OnEnable()
     {
         EventManagerYKM.Instance.curRoomInfo = this.roomInfo;
+
+        if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.ContinueGame)
+        {
+            WhenContinueGame();
+        }
 
         if (SceneManager.GetActiveScene().name == "Lounge")
         {
@@ -37,7 +42,20 @@ public class RoomInfoManager : MonoBehaviour
         {
             StartCoroutine(ShowRoomNumber());
         }
+
+        if(EventManagerYKM.Instance.currentEventID == "Event_D097")
+        {
+            DataManager.Instance._lockConditions["Lock_condition_001"].Lock();
+        }
         Debug.LogWarning($"현재 방 정보 : {roomInfo}");
+        InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curRoomInfo;
+    }
+
+
+    // 이어하기를 통해 이동된 씬일 경우의 작업
+    void WhenContinueGame()
+    {
+        NooSphere.SaveManager.Instance.WhenContinueSceneLoaded();
     }
 
     IEnumerator ShowRoomNumber()

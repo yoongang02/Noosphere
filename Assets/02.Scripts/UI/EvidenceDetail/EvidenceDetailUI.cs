@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -93,7 +93,7 @@ public class EvidenceDetailUI : UIBase
         //키보드 A - 이전 페이지 버튼 
         if (_prevPageBtn != null && _nextPageBtn != null)
         {
-            if (_prevPageBtn.activeSelf && Input.GetKeyDown(KeyCode.A))
+            if (_prevPageBtn.activeSelf && InputRouter.Instance.ConsumeA())
             {
                 RemoveAllListeners();
                 AddOnClickListener(ClickPrevPageEvent);
@@ -101,7 +101,7 @@ public class EvidenceDetailUI : UIBase
             }
 
             //키보드 D - 다음 페이지 버튼
-            if (_nextPageBtn.activeSelf && Input.GetKeyDown(KeyCode.D))
+            if (_nextPageBtn.activeSelf && InputRouter.Instance.ConsumeD())
             { 
                 RemoveAllListeners();
                 AddOnClickListener(ClickNextPageEvent);

@@ -12,13 +12,14 @@ public class FadeOutEffect : MonoBehaviour
     private void OnEnable()
     {
         SoundManager.Instance.StopAllSFX();
+        PlayerController.Instance.canMove = false;
         _fadeImage.color = new Color(0, 0, 0, 0);
         _fadeImage.DOFade(1f, 5f)
             .SetEase(Ease.InOutQuad).OnComplete(()=>
             {
                 EffectManager.Instance.OnEffectEnd?.Invoke();
                 if (!string.IsNullOrEmpty(_sceneName))
-                    SceneManager.LoadScene(_sceneName);
+                    SceneManager.LoadSceneAsync(_sceneName);
             });
         // todo 최종스테이지로
     }
