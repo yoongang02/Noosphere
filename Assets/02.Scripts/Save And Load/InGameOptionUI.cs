@@ -39,7 +39,7 @@ public class InGameOptionUI : DefaultUIBase
 
     public void OnClickSave()
     {
-
+        DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.saveUI);
     }
 
     public void OnClickOption()
