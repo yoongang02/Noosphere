@@ -42,7 +42,15 @@ public class SlotSaveUI : DefaultUIBase
 
     void InitSlotInfo()
     {
+        // 슬롯 번호 가져와서 반영하기
+        int slotIndex= NooSphere.SaveManager.Instance.selectSlotIndex - 1;
+        _titleText.text = $"슬롯 {slotIndex}에 데이터를 저장하시겠습니까?";
+        _slotTitle.text = $"슬롯 {slotIndex}";
 
+        // 슬롯 정보 가져오기
+        _slotLocationInfo.text = "저장 위치 : " + NooSphere.SaveManager.Instance.GetCurrentLocation();
+        _slotPlaytimeInfo.text = "플레이 타임 : " + NooSphere.SaveManager.Instance.GetCurrentPlayTime();
+        _slotDateInfo.text = "저장 일시 : " + NooSphere.SaveManager.Instance.GetCurrentDateTime();
     }
 
     public void ClickYesBtn()

@@ -227,5 +227,31 @@ namespace NooSphere
             NooSphere.SaveManager.Instance.SetSlotIndex(1);
             StartCoroutine(DoSave());
         }
+
+        public string GetCurrentLocation()
+        {
+            if (FindObjectOfType<RoomInfoManager>() is RoomInfoManager roomInfoManager)
+            {
+                return roomInfoManager.roomName;
+            }
+            else
+            {
+                Debug.LogError("플레이어의 현재 Location 값을 찾을 수 없습니다.");
+                return "Unknown Location";
+            }
+        }
+
+        public string GetCurrentPlayTime()
+        {
+            // 이 곳에 플레이타임 불러와서 저장해야 함.
+            float playTime = PlayTime.Instance.GetPlayTime();
+            return PlayTime.Instance.FormatPlayTime(playTime);
+        }
+
+        public string GetCurrentDateTime()
+        {
+            string currentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+            return currentTime;
+        }
     }
 }
