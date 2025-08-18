@@ -76,7 +76,16 @@ public class SaveUI : DefaultUIBase
     public void DoubleClickSaveSlot(int slotIndex)
     {
         NooSphere.SaveManager.Instance.SetSlotIndex(slotIndex);
-        DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.slotSaveUI);
+
+        bool hasData = NooSphere.SaveManager.Instance.HasSaveData(slotIndex);
+        if (hasData)
+        {
+            DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.slotOverwriteUI);
+        }
+        else
+        {
+            DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.slotSaveUI);
+        }
     }
 
     // 슬롯에 호버 진입했을 때
