@@ -21,8 +21,14 @@ public class MentalEnterProcess : MonoBehaviour
     [SerializeField] private GameObject _progressBarUI;
     [SerializeField] private EnterProgressBar _progressBarFill;
     [SerializeField] private bool _soundPlayed=false;
-    [SerializeField] private bool _isDrainingSoundPlaying = false; 
-    
+    [SerializeField] private bool _isDrainingSoundPlaying = false;
+
+    private void Start()
+    {
+        _progressBarUI = GameObject.Find("ProgressBar UI").transform.GetChild(0).gameObject;
+        _progressBarFill = _progressBarUI.GetComponentInChildren<EnterProgressBar>(true);
+    }
+
     void Update()
     {
         if (!UIManager.Instance.IsAnyUIOpen())
