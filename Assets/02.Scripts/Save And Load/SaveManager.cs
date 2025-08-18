@@ -253,5 +253,18 @@ namespace NooSphere
             string currentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
             return currentTime;
         }
+
+        // 전체 세이브 데이터 삭제
+        public void ResetAllSaveData()
+        {
+            DeleteSlotData(1);
+            DeleteSlotData(2);
+            DeleteSlotData(3);
+        }
+
+        public bool IsAnySaveDataExists()
+        {
+            return HasSaveData(1) || HasSaveData(2) || HasSaveData(3);
+        }
     }
 }

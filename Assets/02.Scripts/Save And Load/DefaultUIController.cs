@@ -15,6 +15,7 @@ public class DefaultUIController : Singleton<DefaultUIController>
     public DefaultUIBase slotSaveUI;
     public DefaultUIBase slotOverwriteUI;
     public DefaultUIBase slotCompleteUI;
+    public DefaultUIBase resetUI;
 
     public List<string> excludedOptionScenes = new List<string>();
 

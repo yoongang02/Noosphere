@@ -32,6 +32,11 @@ public class SlotOverwriteUI : DefaultUIBase
     public override void HandleKeyboardInput()
     {
         base.HandleKeyboardInput();
+
+        if (InputRouter.Instance.ConsumeEscape())
+        {
+            DefaultUIController.Instance.CloseTopUI();
+        }
     }
 
     void InitDefaultBtnState()
