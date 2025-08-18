@@ -28,8 +28,18 @@ public class UIManager : Singleton<UIManager>
     
     public Action OnSelectEnd;
     public bool isYesClicked = false;
+    public List<string> excludedOptionScenes = new List<string>();
+
     private void Update()
     {
+        foreach (string sceneName in excludedOptionScenes)
+        {
+            if (SceneManager.GetActiveScene().name == sceneName)
+            {
+                return; // 현재 씬이 제외된 씬 중 하나라면 UI를 열지 않음
+            }
+        }
+
         // ESC 버튼 입력 처리
         if (InputRouter.Instance.ConsumeEscape())
         {
