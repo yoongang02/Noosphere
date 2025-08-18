@@ -20,11 +20,13 @@ public class SaveBtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if(!isActive && btnIndex != 3) return;
         saveUI.HoverEnterBtn(btnIndex);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (!isActive && btnIndex != 3) return;
         saveUI.InitBtnState();
     }
 }

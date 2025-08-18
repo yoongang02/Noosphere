@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class SaveCompleteUI : DefaultUIBase
 {
-    [SerializeField] private float _waitTime = 1.5f;
+    [SerializeField] private float _waitTime;
     [SerializeField] private GameObject _savingUI;
     [SerializeField] private GameObject _completeUI;
     [SerializeField] private GameObject _firstSelectable;
@@ -18,7 +18,8 @@ public class SaveCompleteUI : DefaultUIBase
     public override void OnClose()
     {
         base.OnClose();
-        transform.GetChild(0).gameObject.SetActive(false);
+        _savingUI.SetActive(false);
+        _completeUI.SetActive(false);
     }
 
     public void ClickYesBtn()
@@ -31,7 +32,7 @@ public class SaveCompleteUI : DefaultUIBase
     {
         _savingUI.SetActive(true);
         StartCoroutine(NooSphere.SaveManager.Instance.DoSave());
-        yield return new WaitForSeconds(_waitTime);
+        yield return new WaitForSecondsRealtime(_waitTime);
         _savingUI.SetActive(false);
         _completeUI.SetActive(true);
         EventSystem.current.SetSelectedGameObject(null); // 먼저 비우고

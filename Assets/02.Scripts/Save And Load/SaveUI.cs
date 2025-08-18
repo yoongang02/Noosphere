@@ -33,8 +33,9 @@ public class SaveUI : DefaultUIBase
     public override void OnOpen()
     {
         base.OnOpen();
-
+        NooSphere.SaveManager.Instance.SetSlotIndex(2);
         transform.GetChild(0).gameObject.SetActive(true);
+
         InitSlotState();
         InitBtnState();
     }
@@ -186,9 +187,7 @@ public class SaveUI : DefaultUIBase
     // 슬롯 저장 버튼을 클릭할 경우
     public void ClickSlotSaveBtn()
     {
-        //if (!CanInteractWithBtn()) return;
-        //Debug.LogWarning("슬롯 저장 클릭");
-        //DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.saveUI);
+        DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.slotSaveUI);
     }
 
     // 슬롯 삭제 버튼을 클릭할 경우
