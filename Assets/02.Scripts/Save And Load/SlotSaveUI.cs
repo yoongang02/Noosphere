@@ -55,13 +55,9 @@ public class SlotSaveUI : DefaultUIBase
 
     public void ClickYesBtn()
     {
-        int index = NooSphere.SaveManager.Instance.selectSlotIndex;
-        // 슬롯 데이터 삭제
-        StartCoroutine(NooSphere.SaveManager.Instance.DoSave());
         // UI 닫기
         ClickNoBtn();
-        // 슬롯 UI 업데이트하기
-        FindAnyObjectByType<SaveUI>().UpdateSaveUI();
+        DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.slotCompleteUI);
     }
 
     public void ClickNoBtn()
