@@ -564,7 +564,7 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
             {
                 Debug.Log(_event.eventId + "자동 저장 실행");
                 NooSphere.SaveManager.Instance.SetSlotIndex(1);
-                StartCoroutine(NooSphere.SaveManager.Instance.DoSave());
+                StartCoroutine(NooSphere.SaveManager.Instance.DoAutoSave());
             }
         }
     }
@@ -579,6 +579,6 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         yield return new WaitForSeconds(_autoSaveDelayTime);
         Debug.Log(_event.eventId + "자동 저장 실행");
         NooSphere.SaveManager.Instance.SetSlotIndex(1);
-        StartCoroutine(NooSphere.SaveManager.Instance.DoSave());
+        StartCoroutine(NooSphere.SaveManager.Instance.DoAutoSave());
     }
 }

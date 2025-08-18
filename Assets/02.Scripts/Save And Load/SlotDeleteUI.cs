@@ -38,7 +38,10 @@ public class SlotDeleteUI : DefaultUIBase
         // UI 닫기
         ClickNoBtn();
         // 슬롯 UI 업데이트하기
-        FindAnyObjectByType<ResumeUI>().UpdateResumeUI();
+        if(DefaultUIController.Instance.IsUIOpen(DefaultUIController.Instance.saveUI))
+            FindAnyObjectByType<SaveUI>().UpdateSaveUI();
+        else if(DefaultUIController.Instance.IsUIOpen(DefaultUIController.Instance.resumeUI))
+            FindAnyObjectByType<ResumeUI>().UpdateResumeUI();
     }
 
     public void ClickNoBtn()

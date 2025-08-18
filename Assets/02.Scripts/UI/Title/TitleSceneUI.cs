@@ -40,6 +40,12 @@ public class TitleSceneUI : MonoBehaviour
     private void OnClickNewGameBtn()
     {
         SoundManager.Instance.PlaySFX("Soundresource_037");
+
+        if (NooSphere.SaveManager.Instance.IsAnySaveDataExists())
+        {
+            DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.resetUI);
+            return;
+        }
         NooSphere.SaveManager.Instance.SetLoadType(NooSphere.GameLoadType.NewGame);
         SceneChanger.Instance.ChangeScene("LoadingScene").Forget();
     }

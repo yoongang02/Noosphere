@@ -12,6 +12,11 @@ public class DefaultUIController : Singleton<DefaultUIController>
     public DefaultUIBase inGameOptionUI;
     public DefaultUIBase exitGameUI;
     public DefaultUIBase saveUI;
+    public DefaultUIBase slotSaveUI;
+    public DefaultUIBase slotOverwriteUI;
+    public DefaultUIBase slotCompleteUI;
+    public DefaultUIBase resetUI;
+    public DefaultUIBase savingUI;
 
     public List<string> excludedOptionScenes = new List<string>();
 

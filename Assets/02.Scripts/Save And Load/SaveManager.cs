@@ -17,12 +17,11 @@ namespace NooSphere
     {
         public GameLoadType CurrentLoadType { get; private set; }
         public int selectSlotIndex { get; private set; }
-        public event Action OnSaveStart;
-        public event Action<int> OnSaveFinish;
         public bool OnDoorAutoSave = false;
         private string folderPath;
         [SerializeField] private GameObject _player;
         [SerializeField] private List<GameObject> _essentialUIs = new List<GameObject>();
+        [SerializeField] private float _autoSaveDelay;
         private void Awake()
         {
             CurrentLoadType = GameLoadType.NewGame;
@@ -60,15 +59,29 @@ namespace NooSphere
                 Directory.CreateDirectory(folderPath);
             }
 
-            // 저장 시작 준비 -> 저장 중 UI 활성화 & 상호작용 막기
-            OnSaveStart?.Invoke();
-            yield return null;
-
             SaveCurrentState();
 
             yield return null;
+        }
+
+        public IEnumerator DoAutoSave()
+        {
+            // Root 하위에 Saves 폴더로 이어지는 경로 찾기
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            // 저장 시작 준비 -> 저장 중 UI 활성화 & 상호작용 막기
+            PlayerInteract.Instance.canInteract = false;
+            DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.savingUI);
+
+            SaveCurrentState();
+            yield return new WaitForSeconds(_autoSaveDelay);
+
             // 저장 끝 -> 저장 중 UI 비활성화 & 상호작용 풀기
-            OnSaveFinish?.Invoke(selectSlotIndex);
+            DefaultUIController.Instance.CloseTopUI();
+            PlayerInteract.Instance.canInteract = true;
         }
 
         // 자동 저장 혹은 사용자 임의 저장 시, 현재 상태를 저장하는 함수
@@ -225,7 +238,46 @@ namespace NooSphere
         public void DoAutoSaveDelay()
         {
             NooSphere.SaveManager.Instance.SetSlotIndex(1);
-            StartCoroutine(DoSave());
+            StartCoroutine(DoAutoSave());
+        }
+
+        public string GetCurrentLocation()
+        {
+            if (FindObjectOfType<RoomInfoManager>() is RoomInfoManager roomInfoManager)
+            {
+                return roomInfoManager.roomName;
+            }
+            else
+            {
+                Debug.LogError("플레이어의 현재 Location 값을 찾을 수 없습니다.");
+                return "Unknown Location";
+            }
+        }
+
+        public string GetCurrentPlayTime()
+        {
+            // 이 곳에 플레이타임 불러와서 저장해야 함.
+            float playTime = PlayTime.Instance.GetPlayTime();
+            return PlayTime.Instance.FormatPlayTime(playTime);
+        }
+
+        public string GetCurrentDateTime()
+        {
+            string currentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+            return currentTime;
+        }
+
+        // 전체 세이브 데이터 삭제
+        public void ResetAllSaveData()
+        {
+            DeleteSlotData(1);
+            DeleteSlotData(2);
+            DeleteSlotData(3);
+        }
+
+        public bool IsAnySaveDataExists()
+        {
+            return HasSaveData(1) || HasSaveData(2) || HasSaveData(3);
         }
     }
 }
