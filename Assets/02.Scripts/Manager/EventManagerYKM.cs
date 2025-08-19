@@ -1,13 +1,27 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Cysharp.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
+using System.IO;
 
-public class EventManagerYKM : Singleton<EventManagerYKM>
+public class EventManagerYKM : MonoBehaviour
 {
+    public static EventManagerYKM Instance { get; private set; }
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     //스테이지 번호
     public enum ChapterInfo
     {
@@ -25,34 +39,58 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     }
     public RoomInfo curRoomInfo;
     public ChapterInfo curChapterInfo;
-    
+
     //다음 이벤트 정보
     public string startEventID;
     public string currentEventID;
     public string nextEventID = "";
-    
+
     //이벤트 성공 여부 
     private bool _isEventSuccess = false;
     private bool _isQuizSolved = true;
     [SerializeField] private bool _isRepeatFalse = false;
     [SerializeField] private bool _isConditionMet = false;
-    
+
     //자동저장 딜레이 시간
     [SerializeField] private float _autoSaveDelayTime = 3f;
-    
-    void Awake()
-    {
-        //게임 시작 시, 스테이지 정보 초기화
-        curChapterInfo = ChapterInfo.Prologue;
-        curRoomInfo = RoomInfo.Room_101;
-        nextEventID = startEventID;
-    }
 
     void Start()
     {
-        ExecuteEvent(startEventID).Forget();
+        if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.NewGame)
+        {
+            Debug.LogWarning("이벤트 매니저 초기화 여기 실행 돼??" + NooSphere.SaveManager.Instance.CurrentLoadType);
+            curChapterInfo = ChapterInfo.Prologue;
+            curRoomInfo = RoomInfo.Room_101;
+            nextEventID = startEventID;
+
+            ExecuteEvent(startEventID).Forget();
+        }
+        else
+        {
+            InitState();
+        }
     }
- 
+
+    void InitState()
+    {
+        Debug.LogWarning("이벤트 매니저 초기화");
+        //게임 시작 시, 스테이지 정보 초기화
+        curChapterInfo = (ChapterInfo)InventoryManager.Instance.currentViewChapter;
+        if (FindObjectOfType<RoomInfoManager>() is RoomInfoManager roomInfoManager)
+        {
+            curRoomInfo = roomInfoManager.roomInfo;
+        }
+        string folderPath = Path.Combine(Application.persistentDataPath, "Saves");
+        int selectSlotIndex = NooSphere.SaveManager.Instance.selectSlotIndex;
+        string filePath = Path.Combine(folderPath, $"slot{selectSlotIndex}.es3");
+        currentEventID = ES3.Load<string>("CurrentEventID", filePath);
+        nextEventID = ES3.Load<string>("NextEventID", filePath);
+
+        PlayerController.Instance.canMove = true;
+        NooSphere.SaveManager.Instance.SetLoadType(NooSphere.GameLoadType.NewGame);
+        NooSphere.SaveManager.Instance.SetSlotIndex(-1);
+    }
+
     //현재 실행될 수 있는 이벤트인지 검사 -> 실행 가능하다면 플레이어에게 ? 띄우기
     public bool CheckExecutable(string eventID)
     {

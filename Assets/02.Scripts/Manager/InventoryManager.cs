@@ -262,7 +262,7 @@ public class InventoryManager : Singleton<InventoryManager>
         {
             Debug.LogWarning(item.evidenceId);
         }
-        NooSphere.SaveManager.Instance.SetLoadType(GameLoadType.NewGame);
-        NooSphere.SaveManager.Instance.SetSlotIndex(-1);
+        //NooSphere.SaveManager.Instance.SetLoadType(GameLoadType.NewGame);
+        //NooSphere.SaveManager.Instance.SetSlotIndex(-1);
     }
 }

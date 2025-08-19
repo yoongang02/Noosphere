@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class ArtResource0080 : MonoBehaviour
 {
-    private void Start()
+    private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
