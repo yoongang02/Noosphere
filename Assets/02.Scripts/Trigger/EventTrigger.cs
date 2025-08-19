@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -43,12 +43,12 @@ public class EventTrigger : MonoBehaviour
             PlayerInteract.Instance.curTrigger = this;
             if (!IsPlayerFront(other.transform))
             {
-                TriggerDebugScript.Instance.WhenNotFront();
+                //TriggerDebugScript.Instance.WhenNotFront();
                 return;
             }
             else
             {
-                TriggerDebugScript.Instance.WhenFront();
+                //TriggerDebugScript.Instance.WhenFront();
             }
 
 
