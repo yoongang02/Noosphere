@@ -376,11 +376,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.15
-  far clip plane: 5000
-  field of view: 60
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60.000004
   orthographic: 0
-  orthographic size: 10
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -404,8 +404,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6034762}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.26610935, y: -0.65512294, z: 0.26610953, w: 0.6551226}
-  m_LocalPosition: {x: 0.86199975, y: 2.21, z: 20.73}
+  m_LocalRotation: {x: -0.03256068, y: 0.8907179, z: -0.44875896, w: -0.06462796}
+  m_LocalPosition: {x: -1.39, y: 1.8, z: 22.43}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7153,6 +7153,8 @@ PlayableDirector:
     value: {fileID: 1485495375}
   - key: {fileID: -2473536159861001632, guid: 17e712119a3bf774c915e1ee5cf7e059, type: 2}
     value: {fileID: 1586056437}
+  - key: {fileID: -6137147774125327377, guid: 17e712119a3bf774c915e1ee5cf7e059, type: 2}
+    value: {fileID: 211873481}
   m_ExposedReferences:
     m_References:
     - 745a5ea05035dd44795f96ed6dd04cd7: {fileID: 1751076238}
@@ -7181,6 +7183,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: b8a035d9e3b51d74a823cd185fc5602b, type: 2}
     - {fileID: 11400000, guid: ee382337ada1c32418612d4309ad9bc0, type: 2}
     - {fileID: 11400000, guid: bb82fab2dac42634ca879eddd5b2b285, type: 2}
+    - {fileID: 11400000, guid: 5ad2ca6540f8fbc42a7a810cd014f941, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -7322,6 +7325,20 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: Soundresource_082
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 825619516}
+          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
+          m_MethodName: LoadAutoSave
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
 --- !u!95 &212550016 stripped
