@@ -117,6 +117,14 @@ namespace NooSphere
                 ES3.Save("NextEventID", EventManagerYKM.Instance.nextEventID, filePath);
                 Debug.LogWarning("현재 이벤트, 나중 이벤트" + EventManagerYKM.Instance.currentEventID + "," + EventManagerYKM.Instance.nextEventID);
 
+                // 정신세계 진입 관련 상태 저장
+                MentalEnterProcess mentalInfo = PlayerController.Instance.GetComponent<MentalEnterProcess>();
+                ES3.Save("CombackEventID", mentalInfo.GetComebackEventId(), filePath);
+                ES3.Save("IsInMental", PlayerInteract.Instance.isInMental, filePath);
+                ES3.Save("MentalInfo", mentalInfo.mentalInfo, filePath);
+                
+
+
                 if (FindObjectOfType<RoomInfoManager>() is RoomInfoManager roomInfoManager)
                 {
                     ES3.Save("Location",roomInfoManager.roomName, filePath);

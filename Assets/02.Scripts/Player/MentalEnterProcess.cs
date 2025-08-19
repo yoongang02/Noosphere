@@ -13,7 +13,7 @@ public class MentalEnterProcess : MonoBehaviour
     public bool isComplete = false;
     public MentalStructure mentalInfo;
     [SerializeField] private string _comebackEventId;
-    [SerializeField] private float _coolTime = 3f;
+    [SerializeField] private float _coolTime = 1.5f;
     [SerializeField] private bool _canEnter = true;
     [SerializeField] private bool _isForceQuit = false;
     
@@ -25,6 +25,7 @@ public class MentalEnterProcess : MonoBehaviour
 
     private void Start()
     {
+        _coolTime = 1.5f;
         _progressBarUI = GameObject.Find("ProgressBar UI").transform.GetChild(0).gameObject;
         _progressBarFill = _progressBarUI.GetComponentInChildren<EnterProgressBar>(true);
     }
@@ -35,8 +36,10 @@ public class MentalEnterProcess : MonoBehaviour
         {
             if (PlayerInteract.Instance.canInteract && _canEnter && !_startEnter && InputRouter.Instance.ConsumeR())
             {
+                Debug.LogWarning("R키를 눌러 정신세계 진입 시작");
                 if (PlayerInteract.Instance.isInMental)
                 {
+                    Debug.LogWarning("정신세계에서 현실세계로 돌아가기");
                     //정신세계 -> 현실세계 진입
                     if (mentalInfo != null)
                     {
@@ -347,5 +350,10 @@ public class MentalEnterProcess : MonoBehaviour
     public bool IsEnterNow()
     {
         return _startEnter;
+    }
+
+    public string GetComebackEventId()
+    {
+        return _comebackEventId;
     }
 }

@@ -80,15 +80,27 @@ public class EventManagerYKM : MonoBehaviour
         {
             curRoomInfo = roomInfoManager.roomInfo;
         }
+
+        // 경로 설정
         string folderPath = Path.Combine(Application.persistentDataPath, "Saves");
         int selectSlotIndex = NooSphere.SaveManager.Instance.selectSlotIndex;
         string filePath = Path.Combine(folderPath, $"slot{selectSlotIndex}.es3");
+        
+        // 이벤트 상태 초기화
         currentEventID = ES3.Load<string>("CurrentEventID", filePath);
         nextEventID = ES3.Load<string>("NextEventID", filePath);
 
-        PlayerController.Instance.canMove = true;
+        // 정신세계 진입 상태 초기화
+        MentalEnterProcess mentalInfo = PlayerController.Instance.GetComponent<MentalEnterProcess>();
+        mentalInfo.SetCombackEventId(ES3.Load<string>("CombackEventID", filePath));
+        PlayerInteract.Instance.isInMental = ES3.Load<bool>("IsInMental", filePath);
+        mentalInfo.mentalInfo = ES3.Load<MentalStructure>("MentalInfo", filePath);
+
+        // 이어하기 모든 단계 완료, 로드 상태 NewGame으로 초기화
         NooSphere.SaveManager.Instance.SetLoadType(NooSphere.GameLoadType.NewGame);
         NooSphere.SaveManager.Instance.SetSlotIndex(-1);
+
+        PlayerController.Instance.canMove = true;
     }
 
     //현재 실행될 수 있는 이벤트인지 검사 -> 실행 가능하다면 플레이어에게 ? 띄우기
