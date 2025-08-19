@@ -8,19 +8,20 @@ public class ArtResource0080 : MonoBehaviour
 {
     private void Start()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        if (EventManagerYKM.Instance.currentEventID != "Event_A001")
+        {
+            Destroy(this.gameObject);
+        }
+        //SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDestroy()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        //SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (NooSphere.SaveManager.Instance.CurrentLoadType == GameLoadType.ContinueGame)
-        {
-            Destroy(this.gameObject);
-        }
+        
     }
 }

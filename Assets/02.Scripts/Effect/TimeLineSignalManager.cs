@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -300,5 +300,10 @@ public class TimeLineSignalManager : MonoBehaviour
     public void ForceBlockPlayerMove()
     {
         PlayerController.Instance.canMove = false;
+    }
+
+    public void LoadAutoSave()
+    {
+
     }
 }

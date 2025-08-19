@@ -39,6 +39,7 @@ namespace NooSphere
             folderPath = Path.Combine(Application.persistentDataPath, "Saves");
             selectSlotIndex = -1;
         }
+
         public void SetLoadType(GameLoadType type)
         {
             CurrentLoadType = type;
@@ -114,6 +115,15 @@ namespace NooSphere
                 // 현재 이벤트 상태 저장
                 ES3.Save("CurrentEventID", EventManagerYKM.Instance.currentEventID, filePath);
                 ES3.Save("NextEventID", EventManagerYKM.Instance.nextEventID, filePath);
+                Debug.LogWarning("현재 이벤트, 나중 이벤트" + EventManagerYKM.Instance.currentEventID + "," + EventManagerYKM.Instance.nextEventID);
+
+                // 정신세계 진입 관련 상태 저장
+                MentalEnterProcess mentalInfo = PlayerController.Instance.GetComponent<MentalEnterProcess>();
+                ES3.Save("CombackEventID", mentalInfo.GetComebackEventId(), filePath);
+                ES3.Save("IsInMental", PlayerInteract.Instance.isInMental, filePath);
+                ES3.Save("MentalInfo", mentalInfo.mentalInfo, filePath);
+                
+
 
                 if (FindObjectOfType<RoomInfoManager>() is RoomInfoManager roomInfoManager)
                 {
@@ -155,10 +165,6 @@ namespace NooSphere
                 DataManager.Instance._events = ES3.Load("EventDatas", filePath, DataManager.Instance._events);
                 DataManager.Instance._evidences = ES3.Load("EvidenceDatas", filePath, DataManager.Instance._evidences);
                 DataManager.Instance._quiz = ES3.Load("QuizDatas", filePath, DataManager.Instance._quiz);
-
-                // 이벤트 상태 반영
-                EventManagerYKM.Instance.currentEventID = ES3.Load<string>("CurrentEventID", filePath);
-                EventManagerYKM.Instance.nextEventID = ES3.Load<string>("NextEventID", filePath);
             }
             else
             {
@@ -214,7 +220,7 @@ namespace NooSphere
         public List<InventorySlot> GetInventoryData(int chapterIndex)
         {
             string filePath = Path.Combine(folderPath, $"slot{selectSlotIndex}.es3");
-            Debug.LogWarning("현재 선택 슬롯 : " + selectSlotIndex);
+            //Debug.LogWarning("현재 선택 슬롯 : " + selectSlotIndex);
             return ES3.Load($"InventoryData{chapterIndex}", filePath, new List<InventorySlot>());
         }
 
@@ -228,11 +234,21 @@ namespace NooSphere
 
         public void WhenContinueSceneLoaded()
         {
+            Debug.LogWarning("세이브 매니저의 WhenContinueSceneLoaded 호출됨");
             Instantiate(_player, GetPlayerTransform(selectSlotIndex).position, GetPlayerTransform(selectSlotIndex).rotation);
             foreach(GameObject ui in _essentialUIs)
             {
+                Debug.Log(ui.name + " UI 인스턴스화");
                 Instantiate(ui);
             }
+
+            // 이벤트 상태 반영 -> EventManagerYKM이 여기서 생성되기 때문에, 이곳에서 초기화해주어야 함.
+            //string filePath = Path.Combine(folderPath, $"slot{selectSlotIndex}.es3");
+            //EventManagerYKM.Instance.currentEventID = ES3.Load<string>("CurrentEventID", filePath);
+            //EventManagerYKM.Instance.nextEventID = ES3.Load<string>("NextEventID", filePath);
+            //Debug.LogWarning("오브젝트 있는지? " + EventManagerYKM.Instance.gameObject);
+            //Debug.LogWarning("현재 이벤트, 나중 이벤트" + EventManagerYKM.Instance.currentEventID + "," + EventManagerYKM.Instance.nextEventID);
+            //Debug.LogWarning("현재 이벤트, 나중 이벤트" + ES3.Load<string>("CurrentEventID", filePath) + "," + ES3.Load<string>("NextEventID", filePath));
         }
 
         public void DoAutoSaveDelay()
