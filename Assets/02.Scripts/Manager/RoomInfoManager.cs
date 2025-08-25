@@ -9,13 +9,15 @@ public class RoomInfoManager : MonoBehaviour
     public string roomName;
     public EventManagerYKM.RoomInfo roomInfo;
 
-    private void Awake()
+    private void Start()
     {
-        if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.ContinueGame)
-        {
-            WhenContinueGame();
-        }
-
+        //if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.ContinueGame)
+        //{
+        //    WhenContinueGame();
+        //}
+        Debug.Log("이벤트 매니저 찾기!!" + FindObjectOfType<EventManagerYKM>().gameObject);
+        Debug.Log(EventManagerYKM.Instance.curRoomInfo + "CurRoomInfo");
+        Debug.Log(this.roomInfo + "roomInfo");
         EventManagerYKM.Instance.curRoomInfo = this.roomInfo;
 
         if (SceneManager.GetActiveScene().name == "Lounge")

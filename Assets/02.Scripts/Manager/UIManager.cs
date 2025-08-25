@@ -72,7 +72,8 @@ public class UIManager : Singleton<UIManager>
             }
             else
             {
-                keyGuideUI.SetActive(true);
+                if(keyGuideUI != null)
+                    keyGuideUI.SetActive(true);
             }
         }
 
@@ -109,19 +110,22 @@ public class UIManager : Singleton<UIManager>
         else
         {
 
-            if (PlayerInteract.Instance.GetComponent<MentalEnterProcess>().IsEnterNow() || InventoryManager.Instance.canOpenInventory)
+            if(FindObjectOfType<PlayerInteract>() != null && FindAnyObjectByType<InventoryManager>() != null)
             {
-                inventoryIcon.SetActive(false);
-                keyGuideUI.SetActive(false);
-                return;
+                if (FindObjectOfType<PlayerInteract>().GetComponent<MentalEnterProcess>().IsEnterNow() || InventoryManager.Instance.canOpenInventory)
+                {
+                    inventoryIcon.SetActive(false);
+                    keyGuideUI.SetActive(false);
+                    return;
+                }
             }
-            
             
 
             if (FindObjectOfType<HintImage>() == null)
             {
                 //인벤토리 아이콘 활성화
-                inventoryIcon.SetActive(true);
+                if(inventoryIcon != null)
+                    inventoryIcon.SetActive(true);
             }
         }
     }

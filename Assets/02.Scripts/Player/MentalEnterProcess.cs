@@ -172,6 +172,10 @@ public class MentalEnterProcess : MonoBehaviour
             mentalInfo = DataManager.Instance._mental[mentalId];
             if (!PlayerInteract.Instance.isInMental) _comebackEventId = mentalInfo.combackEventId;
             _startEnter = true;
+
+            _progressBarUI = GameObject.Find("ProgressBar UI").transform.GetChild(0).gameObject;
+            _progressBarFill = _progressBarUI.GetComponentInChildren<EnterProgressBar>(true);
+
             _progressBarUI.SetActive(true);
         }
         else

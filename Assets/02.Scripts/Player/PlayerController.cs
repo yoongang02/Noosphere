@@ -246,11 +246,18 @@ public class PlayerController : Singleton<PlayerController>
 
         if (_uiCanvas == null)
         {
-            _uiCanvas = GameObject.Find("UI Canvas").GetComponent<Canvas>();
+            Debug.Log("UI 찾기1 :  " + UIManager.Instance.gameObject.name);
+            Debug.Log("UI 찾기2 :  " + FindAnyObjectByType<HereIsUICanvas>().gameObject.name);
+            _uiCanvas = UIManager.Instance.transform.GetChild(0).GetComponent<Canvas>();
+            if (_uiCanvas.renderMode == RenderMode.ScreenSpaceCamera) _uiCanvas.worldCamera = _mainCamera;
         }
-        if(_uiCanvas.renderMode == RenderMode.ScreenSpaceCamera) _uiCanvas.worldCamera = _mainCamera;
-        
-        GameObject parent = GameObject.Find("-----[Cameras]");
+        else
+        {
+            if (_uiCanvas.renderMode == RenderMode.ScreenSpaceCamera) _uiCanvas.worldCamera = _mainCamera;
+        }
+
+
+            GameObject parent = GameObject.Find("-----[Cameras]");
         //dialogue camera 찾기
         foreach (Transform child in parent.transform)
         {

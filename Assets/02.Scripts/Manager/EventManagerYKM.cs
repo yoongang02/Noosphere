@@ -20,6 +20,20 @@ public class EventManagerYKM : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.NewGame)
+        {
+            Debug.LogWarning("이벤트 매니저 초기화 여기 실행 돼??" + NooSphere.SaveManager.Instance.CurrentLoadType);
+            curChapterInfo = ChapterInfo.Prologue;
+            curRoomInfo = RoomInfo.Room_101;
+            nextEventID = startEventID;
+
+            ExecuteEvent(startEventID).Forget();
+        }
+        else
+        {
+            InitState();
+        }
     }
 
     //스테이지 번호
@@ -53,23 +67,6 @@ public class EventManagerYKM : MonoBehaviour
 
     //자동저장 딜레이 시간
     [SerializeField] private float _autoSaveDelayTime = 3f;
-
-    void Start()
-    {
-        if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.NewGame)
-        {
-            Debug.LogWarning("이벤트 매니저 초기화 여기 실행 돼??" + NooSphere.SaveManager.Instance.CurrentLoadType);
-            curChapterInfo = ChapterInfo.Prologue;
-            curRoomInfo = RoomInfo.Room_101;
-            nextEventID = startEventID;
-
-            ExecuteEvent(startEventID).Forget();
-        }
-        else
-        {
-            InitState();
-        }
-    }
 
     void InitState()
     {

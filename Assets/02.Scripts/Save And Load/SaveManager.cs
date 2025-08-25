@@ -20,7 +20,7 @@ namespace NooSphere
         public bool OnDoorAutoSave = false;
         private string folderPath;
         [SerializeField] private GameObject _player;
-        [SerializeField] private List<GameObject> _essentialUIs = new List<GameObject>();
+        public List<GameObject> _essentialUIs = new List<GameObject>();
         [SerializeField] private float _autoSaveDelay;
         private void Awake()
         {
