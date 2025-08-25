@@ -208,6 +208,12 @@ public class TimeLineSignalManager : MonoBehaviour
         PlayRandomFootSteps(duration).Forget();
     }
 
+    public void StartBgm(string soundResource)
+    {
+        SoundManager.Instance.StopForceBGM();
+        SoundManager.Instance.PlayBGM(soundResource);
+    }
+
     #endregion
 
 

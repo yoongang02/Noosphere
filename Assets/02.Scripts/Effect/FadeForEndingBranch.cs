@@ -31,7 +31,7 @@ public class FadeForEndingBranch : MonoBehaviour
     public void StartFadeIn()
     {
         gameObject.SetActive(true);
-        SoundManager.Instance.StopAllSFX();
+        // SoundManager.Instance.StopAllSFX();
         PlayerController.Instance.canMove = false;
         _fadeImage.color = new Color(0, 0, 0, 0);
         _fadeImage.DOFade(1f, 3f);
