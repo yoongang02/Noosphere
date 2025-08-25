@@ -11,10 +11,6 @@ public class RoomInfoManager : MonoBehaviour
 
     private void Start()
     {
-        //if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.ContinueGame)
-        //{
-        //    WhenContinueGame();
-        //}
         Debug.Log("이벤트 매니저 찾기!!" + FindObjectOfType<EventManagerYKM>().gameObject);
         Debug.Log(EventManagerYKM.Instance.curRoomInfo + "CurRoomInfo");
         Debug.Log(this.roomInfo + "roomInfo");
@@ -51,13 +47,6 @@ public class RoomInfoManager : MonoBehaviour
         }
         Debug.LogWarning($"현재 방 정보 : {roomInfo}");
         InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curRoomInfo;
-    }
-
-
-    // 이어하기를 통해 이동된 씬일 경우의 작업
-    void WhenContinueGame()
-    {
-        NooSphere.SaveManager.Instance.WhenContinueSceneLoaded();
     }
 
     IEnumerator ShowRoomNumber()

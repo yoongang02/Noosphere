@@ -2,9 +2,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
-using System.IO;
 
 public class EventManagerYKM : MonoBehaviour
 {
@@ -68,6 +68,9 @@ public class EventManagerYKM : MonoBehaviour
     //자동저장 딜레이 시간
     [SerializeField] private float _autoSaveDelayTime = 3f;
 
+    //플레이어 프리팹
+    [SerializeField] private GameObject _player;
+
     void InitState()
     {
         Debug.LogWarning("이벤트 매니저 초기화");
@@ -86,6 +89,9 @@ public class EventManagerYKM : MonoBehaviour
         // 이벤트 상태 초기화
         currentEventID = ES3.Load<string>("CurrentEventID", filePath);
         nextEventID = ES3.Load<string>("NextEventID", filePath);
+
+        // 플레이어 위치, 회전 초기화
+        Instantiate(_player, NooSphere.SaveManager.Instance.GetPlayerTransform(selectSlotIndex).position, NooSphere.SaveManager.Instance.GetPlayerTransform(selectSlotIndex).rotation);
 
         // 정신세계 진입 상태 초기화
         MentalEnterProcess mentalInfo = PlayerController.Instance.GetComponent<MentalEnterProcess>();

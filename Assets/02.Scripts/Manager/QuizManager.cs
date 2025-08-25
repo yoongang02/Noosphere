@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -19,6 +19,10 @@ public class QuizManager : Singleton<QuizManager>
 
         if (_curQuiz.quizType == "input")
         {
+            if(inputFieldManager == null)
+            {
+                inputFieldManager = FindObjectOfType<InputFieldManager>();
+            }
             inputFieldManager.SetQuestionField(quizID);
         }
         else if (_curQuiz.quizType == "ui")

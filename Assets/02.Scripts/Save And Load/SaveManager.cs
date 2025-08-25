@@ -232,25 +232,6 @@ namespace NooSphere
             selectSlotIndex = -1;
         }
 
-        public void WhenContinueSceneLoaded()
-        {
-            Debug.LogWarning("세이브 매니저의 WhenContinueSceneLoaded 호출됨");
-            Instantiate(_player, GetPlayerTransform(selectSlotIndex).position, GetPlayerTransform(selectSlotIndex).rotation);
-            foreach(GameObject ui in _essentialUIs)
-            {
-                Debug.Log(ui.name + " UI 인스턴스화");
-                Instantiate(ui);
-            }
-
-            // 이벤트 상태 반영 -> EventManagerYKM이 여기서 생성되기 때문에, 이곳에서 초기화해주어야 함.
-            //string filePath = Path.Combine(folderPath, $"slot{selectSlotIndex}.es3");
-            //EventManagerYKM.Instance.currentEventID = ES3.Load<string>("CurrentEventID", filePath);
-            //EventManagerYKM.Instance.nextEventID = ES3.Load<string>("NextEventID", filePath);
-            //Debug.LogWarning("오브젝트 있는지? " + EventManagerYKM.Instance.gameObject);
-            //Debug.LogWarning("현재 이벤트, 나중 이벤트" + EventManagerYKM.Instance.currentEventID + "," + EventManagerYKM.Instance.nextEventID);
-            //Debug.LogWarning("현재 이벤트, 나중 이벤트" + ES3.Load<string>("CurrentEventID", filePath) + "," + ES3.Load<string>("NextEventID", filePath));
-        }
-
         public void DoAutoSaveDelay()
         {
             NooSphere.SaveManager.Instance.SetSlotIndex(1);
