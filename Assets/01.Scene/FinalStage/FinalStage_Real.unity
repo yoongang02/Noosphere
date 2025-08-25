@@ -26458,6 +26458,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 0bb300f866c40ae428fe16f782d15efa, type: 2}
     - {fileID: 11400000, guid: 1fe92cbb98def0c478d769163fcf18c4, type: 2}
     - {fileID: 11400000, guid: 969cf427493dfb64293059eeae8106fb, type: 2}
+    - {fileID: 11400000, guid: 4bacf70a2b17bf94e91eddf5468b052d, type: 2}
+    - {fileID: 11400000, guid: 5ad2ca6540f8fbc42a7a810cd014f941, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -26571,6 +26573,34 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 793658370}
+          m_TargetAssemblyTypeName: FadeForEndingBranch, Assembly-CSharp
+          m_MethodName: StartFadeIn
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 793658370}
+          m_TargetAssemblyTypeName: FadeForEndingBranch, Assembly-CSharp
+          m_MethodName: LoadEndingScene
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!320 &759951700
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -26580,7 +26610,7 @@ PlayableDirector:
   m_GameObject: {fileID: 759951697}
   m_Enabled: 1
   serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: 73b4d484e00a4eb43a53676eb2135326, type: 2}
+  m_PlayableAsset: {fileID: 11400000, guid: db7a9ac7fecaf34438c5b79edbad7cac, type: 2}
   m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
@@ -26594,7 +26624,7 @@ PlayableDirector:
     value: {fileID: 0}
   - key: {fileID: -2726093763793843905, guid: 6779adf41a5c21a4daa0394e0badcff8, type: 2}
     value: {fileID: 1837998416}
-  - key: {fileID: -2353746036739884312, guid: 6779adf41a5c21a4daa0394e0badcff8, type: 2}
+  - key: {fileID: 0}
     value: {fileID: 759951699}
   - key: {fileID: -6763980991643535442, guid: 6779adf41a5c21a4daa0394e0badcff8, type: 2}
     value: {fileID: 632091284}
@@ -26606,6 +26636,20 @@ PlayableDirector:
     value: {fileID: 632091284}
   - key: {fileID: 5140638981288072824, guid: 73b4d484e00a4eb43a53676eb2135326, type: 2}
     value: {fileID: 759951699}
+  - key: {fileID: -8016134057490836892, guid: 73b4d484e00a4eb43a53676eb2135326, type: 2}
+    value: {fileID: 895910199}
+  - key: {fileID: -2726093763793843905, guid: db7a9ac7fecaf34438c5b79edbad7cac, type: 2}
+    value: {fileID: 1837998416}
+  - key: {fileID: -6763980991643535442, guid: db7a9ac7fecaf34438c5b79edbad7cac, type: 2}
+    value: {fileID: 632091284}
+  - key: {fileID: -9160377523508712153, guid: db7a9ac7fecaf34438c5b79edbad7cac, type: 2}
+    value: {fileID: 759951699}
+  - key: {fileID: 2464740890651272361, guid: db7a9ac7fecaf34438c5b79edbad7cac, type: 2}
+    value: {fileID: 119375051}
+  - key: {fileID: 1053980802657962067, guid: db7a9ac7fecaf34438c5b79edbad7cac, type: 2}
+    value: {fileID: 759951699}
+  - key: {fileID: -3689284874729771388, guid: db7a9ac7fecaf34438c5b79edbad7cac, type: 2}
+    value: {fileID: 895910199}
   m_ExposedReferences:
     m_References: []
 --- !u!1001 &760192838
@@ -27259,6 +27303,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 4bacf70a2b17bf94e91eddf5468b052d, type: 2}
     - {fileID: 11400000, guid: 7d36500c2ac65cb4cbd84d5a7247ad51, type: 2}
     - {fileID: 11400000, guid: 0bb300f866c40ae428fe16f782d15efa, type: 2}
+    - {fileID: 11400000, guid: 5ad2ca6540f8fbc42a7a810cd014f941, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -27346,10 +27391,10 @@ MonoBehaviour:
           m_CallState: 2
     - m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 825619516}
-          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
-          m_MethodName: StartLastEffect
-          m_Mode: 5
+        - m_Target: {fileID: 793658370}
+          m_TargetAssemblyTypeName: FadeForEndingBranch, Assembly-CSharp
+          m_MethodName: StartFadeIn
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -27386,6 +27431,20 @@ MonoBehaviour:
             m_StringArgument: LookAround
             m_BoolArgument: 0
           m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 793658370}
+          m_TargetAssemblyTypeName: FadeForEndingBranch, Assembly-CSharp
+          m_MethodName: LoadEndingScene
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!320 &779282383
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -27409,7 +27468,7 @@ PlayableDirector:
     value: {fileID: 0}
   - key: {fileID: -2726093763793843905, guid: 6779adf41a5c21a4daa0394e0badcff8, type: 2}
     value: {fileID: 1837998416}
-  - key: {fileID: -2353746036739884312, guid: 6779adf41a5c21a4daa0394e0badcff8, type: 2}
+  - key: {fileID: 0}
     value: {fileID: 779282382}
   - key: {fileID: -6763980991643535442, guid: 6779adf41a5c21a4daa0394e0badcff8, type: 2}
     value: {fileID: 632091284}
@@ -27421,6 +27480,8 @@ PlayableDirector:
     value: {fileID: 779282382}
   - key: {fileID: -6536724265867618960, guid: 96845a2256f62dc4ba0e7d50cb9dbbeb, type: 2}
     value: {fileID: 119375051}
+  - key: {fileID: -5581580701690000298, guid: 96845a2256f62dc4ba0e7d50cb9dbbeb, type: 2}
+    value: {fileID: 895910199}
   m_ExposedReferences:
     m_References: []
 --- !u!1 &781442862
@@ -30493,6 +30554,12 @@ MonoBehaviour:
 --- !u!4 &895910195 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6806632386057320720, guid: 788ed82389619477a98998d9611c4b32,
+    type: 3}
+  m_PrefabInstance: {fileID: 895910192}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &895910199 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5290161552278181353, guid: 788ed82389619477a98998d9611c4b32,
     type: 3}
   m_PrefabInstance: {fileID: 895910192}
   m_PrefabAsset: {fileID: 0}
@@ -39509,6 +39576,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 1fe92cbb98def0c478d769163fcf18c4, type: 2}
     - {fileID: 11400000, guid: 969cf427493dfb64293059eeae8106fb, type: 2}
     - {fileID: 11400000, guid: bb82fab2dac42634ca879eddd5b2b285, type: 2}
+    - {fileID: 11400000, guid: 5ad2ca6540f8fbc42a7a810cd014f941, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -39568,10 +39636,10 @@ MonoBehaviour:
           m_CallState: 2
     - m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 825619516}
-          m_TargetAssemblyTypeName: TimeLineSignalManager, Assembly-CSharp
-          m_MethodName: StartLastEffect
-          m_Mode: 5
+        - m_Target: {fileID: 793658370}
+          m_TargetAssemblyTypeName: FadeForEndingBranch, Assembly-CSharp
+          m_MethodName: StartFadeIn
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -39650,6 +39718,20 @@ MonoBehaviour:
             m_StringArgument: Soundresource_082
             m_BoolArgument: 0
           m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 793658370}
+          m_TargetAssemblyTypeName: FadeForEndingBranch, Assembly-CSharp
+          m_MethodName: LoadEndingScene
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!320 &1140140977
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -39673,8 +39755,6 @@ PlayableDirector:
     value: {fileID: 0}
   - key: {fileID: -2726093763793843905, guid: 6779adf41a5c21a4daa0394e0badcff8, type: 2}
     value: {fileID: 1837998416}
-  - key: {fileID: -2353746036739884312, guid: 6779adf41a5c21a4daa0394e0badcff8, type: 2}
-    value: {fileID: 1140140976}
   - key: {fileID: -6763980991643535442, guid: 6779adf41a5c21a4daa0394e0badcff8, type: 2}
     value: {fileID: 632091284}
   - key: {fileID: -9160377523508712153, guid: 6779adf41a5c21a4daa0394e0badcff8, type: 2}
@@ -39683,6 +39763,8 @@ PlayableDirector:
     value: {fileID: 119375051}
   - key: {fileID: 1053980802657962067, guid: 6779adf41a5c21a4daa0394e0badcff8, type: 2}
     value: {fileID: 1140140976}
+  - key: {fileID: -3689284874729771388, guid: 6779adf41a5c21a4daa0394e0badcff8, type: 2}
+    value: {fileID: 895910199}
   m_ExposedReferences:
     m_References: []
 --- !u!1 &1140764223
@@ -46554,7 +46636,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 0.2
   m_Center: {x: 0, y: 0, z: 0}
@@ -49347,7 +49429,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1342989211}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
