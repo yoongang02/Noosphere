@@ -89,6 +89,11 @@ public class EventManagerYKM : MonoBehaviour
 
         // 플레이어 위치, 회전 초기화
         Instantiate(_player, NooSphere.SaveManager.Instance.GetPlayerTransform(selectSlotIndex).position, NooSphere.SaveManager.Instance.GetPlayerTransform(selectSlotIndex).rotation);
+        PlayerInteract.Instance.OnInteract = null;
+        PlayerInteract.Instance.OnEvidenceUse = null;
+        PlayerInteract.Instance.OnMentalInteract = null;
+        PlayerInteract.Instance.isInsideTrigger = false;
+        
 
         // 정신세계 진입 상태 초기화
         MentalEnterProcess mentalInfo = PlayerController.Instance.GetComponent<MentalEnterProcess>();
