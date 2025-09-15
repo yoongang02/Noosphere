@@ -132,6 +132,9 @@ public class ResumeUI : DefaultUIBase
         if (!CanInteractWithBtn()) return;
         Debug.LogWarning("슬롯 더블 클릭");
         NooSphere.SaveManager.Instance.SetLoadType(NooSphere.GameLoadType.ContinueGame);
+        
+        EventManagerYKM.Instance.SetEventSetUpFlag(false);
+
         DefaultUIController.Instance.CloseAllUI();
         
         SceneChanger.Instance.ChangeScene("LoadingScene").Forget();

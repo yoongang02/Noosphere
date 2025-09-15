@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EventManagerYKM : MonoBehaviour
 {
@@ -21,19 +22,12 @@ public class EventManagerYKM : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.NewGame)
-        {
-            Debug.LogWarning("이벤트 매니저 초기화 여기 실행 돼??" + NooSphere.SaveManager.Instance.CurrentLoadType);
-            curChapterInfo = ChapterInfo.Prologue;
-            curRoomInfo = RoomInfo.Room_101;
-            nextEventID = startEventID;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
 
-            ExecuteEvent(startEventID).Forget();
-        }
-        else
-        {
-            InitState();
-        }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     //스테이지 번호
@@ -70,6 +64,9 @@ public class EventManagerYKM : MonoBehaviour
 
     //플레이어 프리팹
     [SerializeField] private GameObject _player;
+
+    //이벤트 세팅 완료 flag
+    private bool _isEventSetupComplete = false;
 
     void InitState()
     {
@@ -633,5 +630,31 @@ public class EventManagerYKM : MonoBehaviour
         Debug.Log(_event.eventId + "자동 저장 실행");
         NooSphere.SaveManager.Instance.SetSlotIndex(1);
         StartCoroutine(NooSphere.SaveManager.Instance.DoAutoSave());
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        var isEventScene = FindAnyObjectByType<IsEventScene>();
+        if (isEventScene == null || _isEventSetupComplete) return;
+        Debug.LogWarning("씬 로드 완료 - 이벤트 씬임!!" + scene.name);
+        if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.NewGame)
+        {
+            Debug.LogWarning("이벤트 매니저 초기화 여기 실행 돼??" + NooSphere.SaveManager.Instance.CurrentLoadType);
+            curChapterInfo = ChapterInfo.Prologue;
+            curRoomInfo = RoomInfo.Room_101;
+            nextEventID = startEventID;
+
+            ExecuteEvent(startEventID).Forget();
+        }
+        else
+        {
+            InitState();
+        }
+        _isEventSetupComplete = true;
+    }
+
+    public void SetEventSetUpFlag(bool value)
+    {
+        _isEventSetupComplete = value;
     }
 }
