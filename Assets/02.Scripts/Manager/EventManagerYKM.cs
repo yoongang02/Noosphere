@@ -612,16 +612,18 @@ public class EventManagerYKM : MonoBehaviour
         nextEventID = _event.nextEventId;
 
         // autoSave가 true라면, 자동 저장 진행
-        if (_event.autoSave)
+        if (_event.autoSave && !_event.autoSaveComplete)
         {
             if (_event.autoSaveDelay == 2)
             {
+                _event.autoSaveComplete = true;
                 StartCoroutine(DoAutoSaveDelay(_event));
             }
             else if(_event.autoSaveDelay != 1)
             {
                 Debug.Log(_event.eventId + "자동 저장 실행");
                 NooSphere.SaveManager.Instance.SetSlotIndex(1);
+                _event.autoSaveComplete = true;
                 StartCoroutine(NooSphere.SaveManager.Instance.DoAutoSave());
             }
         }

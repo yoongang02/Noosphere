@@ -222,6 +222,7 @@ namespace NooSphere
             return ES3.Load<Transform>("PlayerTransform", filePath);
         }
 
+
         // 슬롯 데이터 삭제하는 함수
         public void DeleteSlotData(int index)
         {
