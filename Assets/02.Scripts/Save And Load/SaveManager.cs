@@ -22,6 +22,7 @@ namespace NooSphere
         [SerializeField] private GameObject _player;
         public List<GameObject> _essentialUIs = new List<GameObject>();
         [SerializeField] private float _autoSaveDelay;
+
         private void Awake()
         {
             CurrentLoadType = GameLoadType.NewGame;
