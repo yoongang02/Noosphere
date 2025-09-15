@@ -100,6 +100,9 @@ public class EventManagerYKM : MonoBehaviour
         NooSphere.SaveManager.Instance.SetLoadType(NooSphere.GameLoadType.NewGame);
         NooSphere.SaveManager.Instance.SetSlotIndex(-1);
 
+        // 인벤토리 설정
+        InventoryManager.Instance.LoadInventoryData();
+
         PlayerController.Instance.canMove = true;
     }
 
@@ -643,6 +646,9 @@ public class EventManagerYKM : MonoBehaviour
             curChapterInfo = ChapterInfo.Prologue;
             curRoomInfo = RoomInfo.Room_101;
             nextEventID = startEventID;
+
+            // 인벤토리 설정
+            InventoryManager.Instance.InitInventory();
 
             ExecuteEvent(startEventID).Forget();
         }
