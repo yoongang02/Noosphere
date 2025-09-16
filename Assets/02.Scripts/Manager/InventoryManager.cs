@@ -56,14 +56,6 @@ public class InventoryManager : Singleton<InventoryManager>
     private InventoryNavigator _navigator;
 
     public bool canOpenInventory = false;//컷씬 진행도중 인벤토리 열리는거 막기위함
-    void Start()
-    {
-        InitInventory();
-        if (NooSphere.SaveManager.Instance.CurrentLoadType == GameLoadType.ContinueGame)
-        {
-            LoadInventoryData();
-        }
-    }
 
     void Update()
     {
@@ -104,7 +96,7 @@ public class InventoryManager : Singleton<InventoryManager>
     }
     
     //인벤토리 초기화(맨 처음 실행 후, 다시 실행되지 않음)
-    void InitInventory()
+    public void InitInventory()
     {
         //챕터 정보 저장하기
         int chapterCount = Enum.GetValues(typeof(EventManagerYKM.RoomInfo)).Length;
@@ -251,18 +243,17 @@ public class InventoryManager : Singleton<InventoryManager>
         return false;
     }
 
-    void LoadInventoryData()
+    public void LoadInventoryData()
     {
-        chapterInventories[0].evidences = NooSphere.SaveManager.Instance.GetInventoryData(1);
-        chapterInventories[1].evidences = NooSphere.SaveManager.Instance.GetInventoryData(2);
-        chapterInventories[2].evidences = NooSphere.SaveManager.Instance.GetInventoryData(3);
-        chapterInventories[3].evidences = NooSphere.SaveManager.Instance.GetInventoryData(4);
-
-        foreach (var item in NooSphere.SaveManager.Instance.GetInventoryData(1))
+        InitInventory();
+        
+        Debug.Log("인벤토리 데이터 로드 시작");
+        foreach (var evidence in DataManager.Instance._evidences)
         {
-            Debug.LogWarning(item.evidenceId);
+            if (evidence.Value.isAcquired)
+            {
+                AddEvidence(evidence.Value);
+            }
         }
-        //NooSphere.SaveManager.Instance.SetLoadType(GameLoadType.NewGame);
-        //NooSphere.SaveManager.Instance.SetSlotIndex(-1);
     }
 }

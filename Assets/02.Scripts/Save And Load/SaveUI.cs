@@ -22,7 +22,9 @@ public class SaveUI : DefaultUIBase
         public TextMeshProUGUI dateTimeText;
     }
     [SerializeField] private List<SlotInfoTexts> slotInfoTexts = new List<SlotInfoTexts>();
-    [SerializeField] private List<Sprite> slotContentSprites = new List<Sprite>(); // 0 디폴트, 1 호버
+    [SerializeField] private List<Sprite> slotActiveSprites = new List<Sprite>();
+    [SerializeField] private List<Sprite> slotInactiveSprites = new List<Sprite>();
+    [SerializeField] private Sprite slotEmptySprite; // 저장된 데이터가 없을 때의 스프라이트
 
     [Header("Button 관련")]
     [Space(5)]
@@ -69,7 +71,7 @@ public class SaveUI : DefaultUIBase
             {
                 SetBackgroundOpacity(slotBackgrounds, i, 0);
             }
-            slotContents[i - 1].sprite = slotContentSprites[0];
+            slotContents[i - 1].sprite = SelectSlotSprite(slotIndex, true);
         }
     }
 
@@ -96,14 +98,61 @@ public class SaveUI : DefaultUIBase
             if (slotIndex == i)
             {
                 if (NooSphere.SaveManager.Instance.selectSlotIndex == i) continue;
-                slotContents[slotIndex - 1].sprite = slotContentSprites[1];
+                slotContents[slotIndex - 1].sprite = SelectSlotSprite(slotIndex, false);
             }
             else
             {
                 if (NooSphere.SaveManager.Instance.selectSlotIndex == i) continue;
-                slotContents[i - 1].sprite = slotContentSprites[0];
+                slotContents[i - 1].sprite = SelectSlotSprite(slotIndex, false);
             }
         }
+    }
+
+    private Sprite SelectSlotSprite(int slotIndex, bool isActive)
+    {
+        var hasData = NooSphere.SaveManager.Instance.HasSaveData(slotIndex);
+
+        if (!hasData)
+        {
+            return slotEmptySprite;
+        }
+
+        var location = NooSphere.SaveManager.Instance.GetLocationData(slotIndex);
+        if (isActive)
+        {
+            // 활성화 상태
+            switch (location)
+            {
+                case "Lounge":
+                    return slotActiveSprites[0];
+                case "Room_101":
+                    return slotActiveSprites[1];
+                case "Room_102":
+                    return slotActiveSprites[2];
+                case "Room_103":
+                    return slotActiveSprites[4];
+                case "Room_104":
+                    return slotActiveSprites[3];
+            }
+        }
+        else
+        {
+            // 비활성화 상태
+            switch (location)
+            {
+                case "Lounge":
+                    return slotInactiveSprites[0];
+                case "Room_101":
+                    return slotInactiveSprites[1];
+                case "Room_102":
+                    return slotInactiveSprites[2];
+                case "Room_103":
+                    return slotInactiveSprites[4];
+                case "Room_104":
+                    return slotInactiveSprites[3];
+            }
+        }
+        return slotEmptySprite;
     }
 
     void SetSlotText(int slotIndex)
