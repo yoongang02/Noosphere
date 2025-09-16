@@ -9,7 +9,8 @@ public class LoadingSceneUI : MonoBehaviour
 {
     [SerializeField] private Image _fadeImage;
     [SerializeField] private float _fadeDuration = 0.8f;
-    
+    [SerializeField] private float _minLoadingTime = 5f;
+
     private void Start()
     {
         StartLoading().Forget();
@@ -31,6 +32,7 @@ public class LoadingSceneUI : MonoBehaviour
         else if(NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.ContinueGame) // 이어하기 로딩이면
         {
             await DataManager.Instance.LoadSaveData();
+            await UniTask.Delay(TimeSpan.FromSeconds(_minLoadingTime));
             await FadeOut();
             
             // 플레이타임 설정

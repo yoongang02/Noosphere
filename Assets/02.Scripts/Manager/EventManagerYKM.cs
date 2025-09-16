@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EventManagerYKM : MonoBehaviour
 {
@@ -21,19 +22,12 @@ public class EventManagerYKM : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.NewGame)
-        {
-            Debug.LogWarning("이벤트 매니저 초기화 여기 실행 돼??" + NooSphere.SaveManager.Instance.CurrentLoadType);
-            curChapterInfo = ChapterInfo.Prologue;
-            curRoomInfo = RoomInfo.Room_101;
-            nextEventID = startEventID;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
 
-            ExecuteEvent(startEventID).Forget();
-        }
-        else
-        {
-            InitState();
-        }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     //스테이지 번호
@@ -71,6 +65,9 @@ public class EventManagerYKM : MonoBehaviour
     //플레이어 프리팹
     [SerializeField] private GameObject _player;
 
+    //이벤트 세팅 완료 flag
+    private bool _isEventSetupComplete = false;
+
     void InitState()
     {
         Debug.LogWarning("이벤트 매니저 초기화");
@@ -92,6 +89,11 @@ public class EventManagerYKM : MonoBehaviour
 
         // 플레이어 위치, 회전 초기화
         Instantiate(_player, NooSphere.SaveManager.Instance.GetPlayerTransform(selectSlotIndex).position, NooSphere.SaveManager.Instance.GetPlayerTransform(selectSlotIndex).rotation);
+        PlayerInteract.Instance.OnInteract = null;
+        PlayerInteract.Instance.OnEvidenceUse = null;
+        PlayerInteract.Instance.OnMentalInteract = null;
+        PlayerInteract.Instance.isInsideTrigger = false;
+        
 
         // 정신세계 진입 상태 초기화
         MentalEnterProcess mentalInfo = PlayerController.Instance.GetComponent<MentalEnterProcess>();
@@ -102,6 +104,9 @@ public class EventManagerYKM : MonoBehaviour
         // 이어하기 모든 단계 완료, 로드 상태 NewGame으로 초기화
         NooSphere.SaveManager.Instance.SetLoadType(NooSphere.GameLoadType.NewGame);
         NooSphere.SaveManager.Instance.SetSlotIndex(-1);
+
+        // 인벤토리 설정
+        InventoryManager.Instance.LoadInventoryData();
 
         PlayerController.Instance.canMove = true;
     }
@@ -607,16 +612,18 @@ public class EventManagerYKM : MonoBehaviour
         nextEventID = _event.nextEventId;
 
         // autoSave가 true라면, 자동 저장 진행
-        if (_event.autoSave)
+        if (_event.autoSave && !_event.autoSaveComplete)
         {
             if (_event.autoSaveDelay == 2)
             {
+                _event.autoSaveComplete = true;
                 StartCoroutine(DoAutoSaveDelay(_event));
             }
             else if(_event.autoSaveDelay != 1)
             {
                 Debug.Log(_event.eventId + "자동 저장 실행");
                 NooSphere.SaveManager.Instance.SetSlotIndex(1);
+                _event.autoSaveComplete = true;
                 StartCoroutine(NooSphere.SaveManager.Instance.DoAutoSave());
             }
         }
@@ -633,5 +640,34 @@ public class EventManagerYKM : MonoBehaviour
         Debug.Log(_event.eventId + "자동 저장 실행");
         NooSphere.SaveManager.Instance.SetSlotIndex(1);
         StartCoroutine(NooSphere.SaveManager.Instance.DoAutoSave());
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        var isEventScene = FindAnyObjectByType<IsEventScene>();
+        if (isEventScene == null || _isEventSetupComplete) return;
+        Debug.LogWarning("씬 로드 완료 - 이벤트 씬임!!" + scene.name);
+        if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.NewGame)
+        {
+            Debug.LogWarning("이벤트 매니저 초기화 여기 실행 돼??" + NooSphere.SaveManager.Instance.CurrentLoadType);
+            curChapterInfo = ChapterInfo.Prologue;
+            curRoomInfo = RoomInfo.Room_101;
+            nextEventID = startEventID;
+
+            // 인벤토리 설정
+            InventoryManager.Instance.InitInventory();
+
+            ExecuteEvent(startEventID).Forget();
+        }
+        else
+        {
+            InitState();
+        }
+        _isEventSetupComplete = true;
+    }
+
+    public void SetEventSetUpFlag(bool value)
+    {
+        _isEventSetupComplete = value;
     }
 }

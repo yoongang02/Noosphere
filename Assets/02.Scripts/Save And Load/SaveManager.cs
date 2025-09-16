@@ -22,6 +22,7 @@ namespace NooSphere
         [SerializeField] private GameObject _player;
         public List<GameObject> _essentialUIs = new List<GameObject>();
         [SerializeField] private float _autoSaveDelay;
+
         private void Awake()
         {
             CurrentLoadType = GameLoadType.NewGame;
@@ -105,12 +106,17 @@ namespace NooSphere
                 ES3.Save("QuizDatas", DataManager.Instance._quiz, filePath);
                 ES3.Save("PlayerTransform", PlayerController.Instance.transform, filePath);
                 ES3.Save("SceneName", SceneManager.GetActiveScene().name, filePath);
-                
+
                 // 인벤토리 챕터 별로 저장
-                ES3.Save("InventoryData1", InventoryManager.Instance.chapterInventories[0].evidences, filePath);
-                ES3.Save("InventoryData2", InventoryManager.Instance.chapterInventories[1].evidences, filePath);
-                ES3.Save("InventoryData3", InventoryManager.Instance.chapterInventories[2].evidences, filePath);
-                ES3.Save("InventoryData4", InventoryManager.Instance.chapterInventories[3].evidences, filePath);
+                List<string> evienceKeys = new List<string>();
+                foreach(var chapter in InventoryManager.Instance.chapterInventories)
+                {
+                    foreach(var evidence in chapter.Value.evidences)
+                    {
+                        evienceKeys.Add(evidence.evidenceId);
+                    }
+                }
+                ES3.Save("InventoryDatas", evienceKeys, filePath);
 
                 // 현재 이벤트 상태 저장
                 ES3.Save("CurrentEventID", EventManagerYKM.Instance.currentEventID, filePath);
@@ -217,12 +223,6 @@ namespace NooSphere
             return ES3.Load<Transform>("PlayerTransform", filePath);
         }
 
-        public List<InventorySlot> GetInventoryData(int chapterIndex)
-        {
-            string filePath = Path.Combine(folderPath, $"slot{selectSlotIndex}.es3");
-            //Debug.LogWarning("현재 선택 슬롯 : " + selectSlotIndex);
-            return ES3.Load($"InventoryData{chapterIndex}", filePath, new List<InventorySlot>());
-        }
 
         // 슬롯 데이터 삭제하는 함수
         public void DeleteSlotData(int index)

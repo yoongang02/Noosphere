@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -23,10 +23,11 @@ public class ClearTrigger : MonoBehaviour
          
          // 자동 저장 트리거인데, 문과의 상호작용일 경우
          EventStructure _event = DataManager.Instance._events[eventID];
-         Debug.Log(_event.eventId + " 자동 저장 트리거" + _event.autoSave + _event.autoSaveDelay);
-         if (_event.autoSave && _event.autoSaveDelay == 1)
+
+         if (_event.autoSave && _event.autoSaveDelay == 1 && !_event.autoSaveComplete)
          {
-            Debug.Log(_event.eventId + " 자동 저장 트리거 트루");
+            Debug.Log(_event.eventId + " 문 자동 저장 트리거 발동");
+            _event.autoSaveComplete = true;
             NooSphere.SaveManager.Instance.OnDoorAutoSave = true;
          }
          
