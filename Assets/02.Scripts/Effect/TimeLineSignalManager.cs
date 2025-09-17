@@ -56,16 +56,19 @@ public class TimeLineSignalManager : MonoBehaviour
 
     public void StartPlayerAnim(string playerAnim)
     {
+        _player = GameObject.Find("Player").GetComponent<Animator>();
         _player.SetBool(playerAnim, true);
     }
 
     public void EndPlayerAnim(string playerAnim)
     {
+        _player = GameObject.Find("Player").GetComponent<Animator>();
         _player.SetBool(playerAnim, false);
     }
 
     public void PlayerAnimTrigger(string playerAnim)
     {
+        _player = GameObject.Find("Player").GetComponent<Animator>();
         _player.SetTrigger(playerAnim);
     }
 
@@ -163,6 +166,11 @@ public class TimeLineSignalManager : MonoBehaviour
 
     public void OnLoadScene(string SceneName)
     {
+        if (_player == null)
+        {
+            _player = GameObject.Find("Player").GetComponent<Animator>();
+        }
+
         //돌아오는 정보 저장
         _player.gameObject.GetComponent<PlayerInteract>().isInMental = true;
         _player.gameObject.GetComponent<MentalEnterProcess>().SetCombackEventId("Event_C075");
@@ -282,6 +290,10 @@ public class TimeLineSignalManager : MonoBehaviour
 
     private async UniTaskVoid LookTarget(float duration)
     { 
+        if (_player == null)
+        {
+            _player = GameObject.Find("Player").GetComponent<Animator>();
+        }
         Transform playerTrans=_player.transform;
         Transform daugterTrans = GameObject.Find("Daughter").transform;
         float elapsed = 0f;
