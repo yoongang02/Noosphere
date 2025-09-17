@@ -37,7 +37,6 @@ public class TimeLineSignalManager : MonoBehaviour
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Animator>();
-        _playerSkin = GameObject.Find("Character_Main_Body").GetComponent<SkinnedMeshRenderer>();
         _mainCamera = Camera.main;
         if (_mainCamera != null)
         {
@@ -123,6 +122,7 @@ public class TimeLineSignalManager : MonoBehaviour
 
     public void SetPlayerMaterial(Material material)
     {
+        _playerSkin = GameObject.Find("Character_Main_Body").GetComponent<SkinnedMeshRenderer>();
         _playerSkin.material = material;
     }
 
