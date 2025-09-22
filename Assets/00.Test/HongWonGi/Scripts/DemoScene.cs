@@ -26,7 +26,7 @@ public class DemoScene : MonoBehaviour
 
     private void Start()
     {
-        _restartBtn.onClick.AddListener(() => SceneChanger.Instance.ChangeScene("StartScene"));
+        _restartBtn.onClick.AddListener(() => SceneChanger.Instance.ChangeScene("StartScene").Forget());
         SoundManager.Instance.PlayBGM("Soundresource_056");
     }
 }
