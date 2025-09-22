@@ -25,6 +25,9 @@ public class ResetUI : DefaultUIBase
     {
         NooSphere.SaveManager.Instance.ResetAllSaveData();
         ClickNoBtn();
+
+        NooSphere.SaveManager.Instance.SetLoadType(NooSphere.GameLoadType.NewGame);
+        SceneChanger.Instance.ChangeScene("LoadingScene").Forget();
     }
 
     public void ClickNoBtn()
