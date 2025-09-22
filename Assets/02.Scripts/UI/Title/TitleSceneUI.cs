@@ -47,6 +47,7 @@ public class TitleSceneUI : MonoBehaviour
             return;
         }
         NooSphere.SaveManager.Instance.SetLoadType(NooSphere.GameLoadType.NewGame);
+        _eventSys.enabled = false;
         SceneChanger.Instance.ChangeScene("LoadingScene").Forget();
     }
 
