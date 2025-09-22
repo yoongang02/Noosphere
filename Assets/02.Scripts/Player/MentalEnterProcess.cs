@@ -13,7 +13,7 @@ public class MentalEnterProcess : MonoBehaviour
     public bool isComplete = false;
     public MentalStructure mentalInfo;
     [SerializeField] private string _comebackEventId;
-    [SerializeField] private float _coolTime = 1.5f;
+    [SerializeField] private float _coolTime = 0.3f;
     [SerializeField] private bool _canEnter = true;
     [SerializeField] private bool _isForceQuit = false;
     
@@ -25,7 +25,7 @@ public class MentalEnterProcess : MonoBehaviour
 
     private void Start()
     {
-        _coolTime = 1.5f;
+        _coolTime = 0.3f;
         _progressBarUI = GameObject.Find("ProgressBar UI").transform.GetChild(0).gameObject;
         _progressBarFill = _progressBarUI.GetComponentInChildren<EnterProgressBar>(true);
     }
