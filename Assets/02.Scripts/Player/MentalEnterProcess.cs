@@ -177,6 +177,9 @@ public class MentalEnterProcess : MonoBehaviour
             _progressBarFill = _progressBarUI.GetComponentInChildren<EnterProgressBar>(true);
 
             _progressBarUI.SetActive(true);
+
+            // 플레이어 Lock 걸기
+            UIManager.Instance.LockPlayer();
         }
         else
         {
@@ -231,13 +234,19 @@ public class MentalEnterProcess : MonoBehaviour
         
         //성공적으로 도착한 경우, 쿨타임 시작
         StartCoroutine(StartCoolTime());
+
+        // 플레이어 Lock 해제
+        UIManager.Instance.UnLockPlayer();
     }
 
     async UniTaskVoid FailEnter()
     {
         //바 초기화
         InitProgressBar();
-        
+
+        // 플레이어 Lock 해제
+        UIManager.Instance.UnLockPlayer();
+
         //이동 실패 시 결과가 있다면 실행
         await EventManagerYKM.Instance.DoResult(mentalInfo.mentalFalseResults);
         
@@ -339,6 +348,9 @@ public class MentalEnterProcess : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         _isForceQuit = true;
         SoundManager.Instance.StopAllSFX();
+
+        // 플레이어 Lock 해제
+        UIManager.Instance.UnLockPlayer();
     }
 
     public void SetCombackEventId(string id)
