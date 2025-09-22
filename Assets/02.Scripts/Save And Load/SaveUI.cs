@@ -24,7 +24,7 @@ public class SaveUI : DefaultUIBase
     [SerializeField] private List<SlotInfoTexts> slotInfoTexts = new List<SlotInfoTexts>();
     [SerializeField] private List<Sprite> slotActiveSprites = new List<Sprite>();
     [SerializeField] private List<Sprite> slotInactiveSprites = new List<Sprite>();
-    [SerializeField] private Sprite slotEmptySprite; // 저장된 데이터가 없을 때의 스프라이트
+    [SerializeField] private List<Sprite> slotEmptySprites; // 저장된 데이터가 없을 때의 스프라이트 0: 비활성화, 1: 활성화
 
     [Header("Button 관련")]
     [Space(5)]
@@ -66,12 +66,13 @@ public class SaveUI : DefaultUIBase
             {
                 NooSphere.SaveManager.Instance.SetSlotIndex(slotIndex);
                 SetBackgroundOpacity(slotBackgrounds, slotIndex, 1);
+                slotContents[slotIndex - 1].sprite = SelectSlotSprite(slotIndex, true);
             }
             else
             {
                 SetBackgroundOpacity(slotBackgrounds, i, 0);
+                slotContents[i - 1].sprite = SelectSlotSprite(i, false);
             }
-            slotContents[i - 1].sprite = SelectSlotSprite(slotIndex, true);
         }
     }
 
@@ -97,13 +98,15 @@ public class SaveUI : DefaultUIBase
         {
             if (slotIndex == i)
             {
-                if (NooSphere.SaveManager.Instance.selectSlotIndex == i) continue;
-                slotContents[slotIndex - 1].sprite = SelectSlotSprite(slotIndex, false);
+                //if (NooSphere.SaveManager.Instance.selectSlotIndex == i) continue;
+                //slotContents[slotIndex - 1].sprite = SelectSlotSprite(slotIndex, false);
+                SetBackgroundOpacity(slotBackgrounds, slotIndex, 1);
             }
             else
             {
-                if (NooSphere.SaveManager.Instance.selectSlotIndex == i) continue;
-                slotContents[i - 1].sprite = SelectSlotSprite(slotIndex, false);
+                //if (NooSphere.SaveManager.Instance.selectSlotIndex == i) continue;
+                //slotContents[i - 1].sprite = SelectSlotSprite(slotIndex, false);
+                SetBackgroundOpacity(slotBackgrounds, i, 0);
             }
         }
     }
@@ -114,7 +117,14 @@ public class SaveUI : DefaultUIBase
 
         if (!hasData)
         {
-            return slotEmptySprite;
+            if (isActive)
+            {
+                return slotEmptySprites[1];
+            }
+            else
+            {
+                return slotEmptySprites[0];
+            }
         }
 
         var location = NooSphere.SaveManager.Instance.GetLocationData(slotIndex);
@@ -152,7 +162,7 @@ public class SaveUI : DefaultUIBase
                     return slotInactiveSprites[3];
             }
         }
-        return slotEmptySprite;
+        return slotEmptySprites[0];
     }
 
     void SetSlotText(int slotIndex)
