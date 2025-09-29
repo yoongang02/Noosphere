@@ -32,6 +32,13 @@ public class SaveUI : DefaultUIBase
     [SerializeField] private List<Image> buttonContents = new List<Image>();
     [SerializeField] private List<Sprite> buttonContentSprites = new List<Sprite>(); // 0 비활성화, 1 활성화
 
+    private KeyboardNavigationController _knc;
+
+    private void Start()
+    {
+        _knc = GetComponent<KeyboardNavigationController>();
+    }
+
     public override void OnOpen()
     {
         base.OnOpen();
@@ -233,6 +240,8 @@ public class SaveUI : DefaultUIBase
     public void HoverEnterBtn(int btnIndex)
     {
         if (btnIndex != 3 && !CanInteractWithBtn()) return;
+
+        UpdateAllSlotState();
 
         for (int i = 1; i <= 3; i++)
         {
