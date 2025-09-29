@@ -35,7 +35,8 @@ public class SaveUI : DefaultUIBase
     public override void OnOpen()
     {
         base.OnOpen();
-        NooSphere.SaveManager.Instance.SetSlotIndex(2);
+
+        HoverEnterSaveSlot(2);
         transform.GetChild(0).gameObject.SetActive(true);
 
         InitSlotState();
@@ -70,10 +71,12 @@ public class SaveUI : DefaultUIBase
             }
             else
             {
-                SetBackgroundOpacity(slotBackgrounds, i, 0);
+                if(slotIndex == 1 || slotIndex == 2 || slotIndex == 3) SetBackgroundOpacity(slotBackgrounds, i, 0);
                 slotContents[i - 1].sprite = SelectSlotSprite(i, false);
             }
         }
+
+        UpdateAllBtnState();
     }
 
     public void DoubleClickSaveSlot(int slotIndex)
@@ -130,18 +133,19 @@ public class SaveUI : DefaultUIBase
         var location = NooSphere.SaveManager.Instance.GetLocationData(slotIndex);
         if (isActive)
         {
+            Debug.Log("활성화된 슬롯의 위치: " + location);
             // 활성화 상태
             switch (location)
             {
                 case "Lounge":
                     return slotActiveSprites[0];
-                case "Room_101":
+                case "R-101":
                     return slotActiveSprites[1];
-                case "Room_102":
+                case "R-102":
                     return slotActiveSprites[2];
-                case "Room_103":
+                case "R-103":
                     return slotActiveSprites[4];
-                case "Room_104":
+                case "R-104":
                     return slotActiveSprites[3];
             }
         }
@@ -152,13 +156,13 @@ public class SaveUI : DefaultUIBase
             {
                 case "Lounge":
                     return slotInactiveSprites[0];
-                case "Room_101":
+                case "R-101":
                     return slotInactiveSprites[1];
-                case "Room_102":
+                case "R-102":
                     return slotInactiveSprites[2];
-                case "Room_103":
+                case "R-103":
                     return slotInactiveSprites[4];
-                case "Room_104":
+                case "R-104":
                     return slotInactiveSprites[3];
             }
         }
@@ -205,10 +209,8 @@ public class SaveUI : DefaultUIBase
     // auto 슬롯이 선택되어 있는 기본 상태
     void InitSlotState()
     {
-        bool hasData2 = NooSphere.SaveManager.Instance.HasSaveData(2);
-        bool hasData3 = NooSphere.SaveManager.Instance.HasSaveData(3);
-        if (hasData2) NooSphere.SaveManager.Instance.SetSlotIndex(2);
-        else if (hasData3) NooSphere.SaveManager.Instance.SetSlotIndex(3);
+        NooSphere.SaveManager.Instance.SetSlotIndex(-1);
+        HoverEnterSaveSlot(2);
 
         UpdateAllSlotState();
     }

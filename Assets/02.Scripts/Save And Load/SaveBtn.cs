@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class SaveBtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class SaveBtn : UIKeyboardNavigator, IPointerEnterHandler, IPointerExitHandler
 {
-    public bool isActive;
     public int btnIndex;
     private SaveUI saveUI;
     void Start()

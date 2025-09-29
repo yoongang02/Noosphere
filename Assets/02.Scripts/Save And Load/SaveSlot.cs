@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class SaveSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+public class SaveSlot : UIKeyboardNavigator, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public bool isActive;
     public int slotIndex;
     private SaveUI saveUI;
     void Start()
