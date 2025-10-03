@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class SlotOverwriteUI : DefaultUIBase
@@ -15,6 +16,8 @@ public class SlotOverwriteUI : DefaultUIBase
     [SerializeField] private TextMeshProUGUI _slotLocationInfo;
     [SerializeField] private TextMeshProUGUI _slotPlaytimeInfo;
     [SerializeField] private TextMeshProUGUI _slotDateInfo;
+    [SerializeField] private Image _slotImage;
+    [SerializeField] private List<Sprite> slotActiveSprites = new List<Sprite>();
     public override void OnOpen()
     {
         base.OnOpen();
@@ -56,6 +59,9 @@ public class SlotOverwriteUI : DefaultUIBase
         _slotLocationInfo.text = "저장 위치 : " + NooSphere.SaveManager.Instance.GetCurrentLocation();
         _slotPlaytimeInfo.text = "플레이 타임 : " + NooSphere.SaveManager.Instance.GetCurrentPlayTime();
         _slotDateInfo.text = "저장 일시 : " + NooSphere.SaveManager.Instance.GetCurrentDateTime();
+
+        // 슬롯 이미지 설정
+        SetSlotImage();
     }
 
     public void ClickYesBtn()
@@ -68,5 +74,34 @@ public class SlotOverwriteUI : DefaultUIBase
     public void ClickNoBtn()
     {
         DefaultUIController.Instance.CloseTopUI();
+    }
+
+    private void SetSlotImage()
+    {
+        _slotImage.sprite = GetSlotSprite();
+    }
+
+    private Sprite GetSlotSprite()
+    {
+        if (FindObjectOfType<RoomInfoManager>() is RoomInfoManager roomInfoManager)
+        {
+            var location = roomInfoManager.roomName;
+
+            switch (location)
+            {
+                case "Lounge":
+                    return slotActiveSprites[0];
+                case "R-101":
+                    return slotActiveSprites[1];
+                case "R-102":
+                    return slotActiveSprites[2];
+                case "R-103":
+                    return slotActiveSprites[4];
+                case "R-104":
+                    return slotActiveSprites[3];
+            }
+        }
+
+        return slotActiveSprites[0];
     }
 }
