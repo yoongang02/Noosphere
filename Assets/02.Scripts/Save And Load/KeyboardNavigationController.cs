@@ -7,6 +7,7 @@ public class KeyboardNavigationController : MonoBehaviour
 {
     public UIKeyboardNavigator curHoveredNavigator;
     public List<UIKeyboardNavigator> navigators = new List<UIKeyboardNavigator>();
+    private DefaultUIBase _parentUIBase;
 
     int _currentIndex = -1;
 
@@ -16,6 +17,13 @@ public class KeyboardNavigationController : MonoBehaviour
 
     void Start()
     {
+        _parentUIBase = GetComponentInParent<DefaultUIBase>();
+
+        if (_parentUIBase == null)
+        {
+            Debug.LogError("KeyboardNavigationController가 DefaultUIBase를 부모로 가지고 있지 않습니다.");
+        }
+
         // 시작 시 현재 포커스가 없거나 비활성이라면 첫 활성 항목으로
         if (curHoveredNavigator == null || !IsAvailable(curHoveredNavigator))
             HoverFirstAvailable();
@@ -24,6 +32,8 @@ public class KeyboardNavigationController : MonoBehaviour
     }
     void Update()
     {
+        if (!_parentUIBase.IsTopUI()) return;
+
         if (navigators == null || navigators.Count == 0) return;
 
         if (curHoveredNavigator == null || !IsAvailable(curHoveredNavigator))
