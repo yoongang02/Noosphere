@@ -83,7 +83,7 @@ public class MirrorDialogueManager : UIBase
     {
         isTyping = true;
         _dialogueText.text = "";
-
+        text = text.Replace("\\n", "\n");
         if (!isTyping)
         {
             _dialogueText.text = text;
