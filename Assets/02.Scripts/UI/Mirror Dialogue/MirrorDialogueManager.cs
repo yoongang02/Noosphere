@@ -34,7 +34,16 @@ public class MirrorDialogueManager : UIBase
         transform.GetChild(0).gameObject.SetActive(true);
         UIManager.Instance.cctvFrame.SetActive(true);
         EscapeUI.Instance.DisActive();
-        await TypeText(_curDialogue.Dialogue_Text_List[0].text);
+        for (int i = 0; i < _curDialogue.Dialogue_Text_List.Count; i++)
+        {
+            await TypeText(_curDialogue.Dialogue_Text_List[i].text);
+            if (i < _curDialogue.Dialogue_Text_List.Count - 1)
+            {
+                await UniTask.WaitUntil(() => 
+                    Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)
+                );
+            }
+        }
         SoundManager.Instance.StopSFX("Soundresource_076");
         HoverYesBtn();
         _btns.SetActive(true);
