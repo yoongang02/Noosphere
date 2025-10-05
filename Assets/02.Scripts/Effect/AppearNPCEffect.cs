@@ -53,12 +53,7 @@ public class AppearNPCEffect : MonoBehaviour
     private void OnDisable()
     {
         DOTween.Kill(_alphaMat);
-        var player=GameObject.FindWithTag("Player");
-        if (player != null)
-        {
-            int playerLayer=LayerMask.NameToLayer("Player");
-            SetLayerRecursively(player, playerLayer);
-        }
+       
     }
     void SetLayerRecursively(GameObject obj, int newLayer)
     {
