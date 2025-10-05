@@ -17,6 +17,13 @@ public class AppearNPCEffect : MonoBehaviour
     [SerializeField] private float _fadeInDuration = 1f;
     private void OnEnable()
     {
+        var player=GameObject.FindWithTag("Player");
+        if (player != null)
+        {
+            int playerLayer=LayerMask.NameToLayer("IgnoreMirrorCam - wall");
+            SetLayerRecursively(player, playerLayer);
+        }
+
         _npcObj.SetActive(true);
         // 알파값 초기화
         Color startColor = _alphaMat.GetColor("_BaseColor");
@@ -46,5 +53,19 @@ public class AppearNPCEffect : MonoBehaviour
     private void OnDisable()
     {
         DOTween.Kill(_alphaMat);
+        var player=GameObject.FindWithTag("Player");
+        if (player != null)
+        {
+            int playerLayer=LayerMask.NameToLayer("Player");
+            SetLayerRecursively(player, playerLayer);
+        }
+    }
+    void SetLayerRecursively(GameObject obj, int newLayer)
+    {
+        obj.layer = newLayer;
+        foreach (Transform child in obj.transform)
+        {
+            SetLayerRecursively(child.gameObject, newLayer);
+        }
     }
 }
