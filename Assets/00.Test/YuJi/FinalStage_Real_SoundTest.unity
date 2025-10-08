@@ -44575,7 +44575,7 @@ MonoBehaviour:
   footstepSource: {fileID: 1237544386}
   stepInterval: 0.5
   runInterval: 0.4
-  canMove: 1
+  blockLeftRight: 0
   _currentNPC: {fileID: 0}
   _swapNpc: {fileID: 0}
   npcCam: {fileID: 0}
@@ -55788,7 +55788,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 8abad3201c91e401a9cc383e4893ff80, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -55799,9 +55799,9 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 5
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -55834,7 +55834,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.675
       inSlope: 0
       outSlope: 0
       tangentMode: 0
