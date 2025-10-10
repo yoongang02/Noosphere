@@ -42,8 +42,6 @@ public class SaveUI : DefaultUIBase
     public override void OnOpen()
     {
         base.OnOpen();
-
-        HoverEnterSaveSlot(2);
         transform.GetChild(0).gameObject.SetActive(true);
 
         InitSlotState();
@@ -216,8 +214,7 @@ public class SaveUI : DefaultUIBase
     // auto 슬롯이 선택되어 있는 기본 상태
     void InitSlotState()
     {
-        NooSphere.SaveManager.Instance.SetSlotIndex(-1);
-        HoverEnterSaveSlot(2);
+        NooSphere.SaveManager.Instance.SetSlotIndex(2);
 
         UpdateAllSlotState();
     }
