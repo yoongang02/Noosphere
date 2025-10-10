@@ -63,14 +63,18 @@ public class EventTrigger : MonoBehaviour
                 {
                     Destroy(child.gameObject);
                 }
+
                 if (isDoor)
                 {
                     if (!isDoorOpen)
                     {
+                        // 방 이름 추가하기
+                        GameObject roomName = Instantiate(GetRoomName());
+                        roomName.transform.SetParent(parent, false);
                         GameObject interactionKey = Instantiate(InteractionMarkManager.Instance._openDoorKeyPrefab);
                         interactionKey.transform.SetParent(parent, false);
 
-                        if (gameObject.name == "EventInteractionTrigger - Experiment Room" && DataManager.Instance._quiz["Quiz_003"].isSolved)
+                        if (gameObject.name == "EventInteractionTrigger-R102" && DataManager.Instance._quiz["Quiz_003"].isSolved)
                         {
                             // 문 열기 액션 추가
                             PlayerInteract.Instance.OnInteract = null;
@@ -236,6 +240,26 @@ public class EventTrigger : MonoBehaviour
         PlayerInteract.Instance.OnInteract = null;
         PlayerInteract.Instance.OnMentalInteract = null;
         return false;
+    }
+
+    private GameObject GetRoomName()
+    {
+        int splitIndex = gameObject.name.LastIndexOf('-');
+        string roomName = gameObject.name.Substring(splitIndex+1, gameObject.name.Length - (splitIndex+1));
+
+        switch (roomName)
+        {
+            case "R101":
+                return InteractionMarkManager.Instance._R101Prefab;
+            case "R102":
+                return InteractionMarkManager.Instance._R102Prefab;
+            case "R103":
+                return InteractionMarkManager.Instance._R103Prefab;
+            case "R104":
+                return InteractionMarkManager.Instance._R104Prefab;
+            default:
+                return null;
+        }
     }
 }
 
