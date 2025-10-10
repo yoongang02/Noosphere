@@ -36,7 +36,7 @@ public class TimeLineSignalManager : MonoBehaviour
 
     private void Start()
     {
-        _player = GameObject.Find("Player").GetComponent<Animator>();
+        //_player = GameObject.Find("Player").GetComponent<Animator>();
         _mainCamera = Camera.main;
         if (_mainCamera != null)
         {
