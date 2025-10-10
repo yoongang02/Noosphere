@@ -22,7 +22,9 @@ public class ResumeUI : DefaultUIBase
         public TextMeshProUGUI dateTimeText;
     }
     [SerializeField] private List<SlotInfoTexts> slotInfoTexts = new List<SlotInfoTexts>();
-    [SerializeField] private List<Sprite> slotContentSprites = new List<Sprite>(); // 0 디폴트, 1 호버
+    [SerializeField] private List<Sprite> slotActiveSprites = new List<Sprite>();
+    [SerializeField] private List<Sprite> slotInactiveSprites = new List<Sprite>();
+    [SerializeField] private List<Sprite> slotEmptySprites; // 저장된 데이터가 없을 때의 스프라이트 0: 비활성화, 1: 활성화
 
     [Header("Button 관련")]
     [Space(5)]
@@ -98,13 +100,16 @@ public class ResumeUI : DefaultUIBase
             {
                 NooSphere.SaveManager.Instance.SetSlotIndex(slotIndex);
                 SetBackgroundOpacity(slotBackgrounds, slotIndex, 1);
+                slotContents[slotIndex - 1].sprite = SelectSlotSprite(slotIndex, true);
             }
             else
             {
                 SetBackgroundOpacity(slotBackgrounds, i, 0);
+                slotContents[i - 1].sprite = SelectSlotSprite(i, false);
             }
-            slotContents[i - 1].sprite = slotContentSprites[0];
         }
+
+        UpdateAllBtnState();
     }
 
     // 슬롯에 호버 진입했을 때
@@ -114,15 +119,72 @@ public class ResumeUI : DefaultUIBase
         {
             if (slotIndex == i)
             {
-                if (NooSphere.SaveManager.Instance.selectSlotIndex == i) continue;
-                slotContents[slotIndex - 1].sprite = slotContentSprites[1];
+                //if (NooSphere.SaveManager.Instance.selectSlotIndex == i) continue;
+                //slotContents[slotIndex - 1].sprite = slotContentSprites[1];
+                SetBackgroundOpacity(slotBackgrounds, slotIndex, 1);
             }
             else
             {
-                if (NooSphere.SaveManager.Instance.selectSlotIndex == i) continue;
-                slotContents[i - 1].sprite = slotContentSprites[0];
+                //if (NooSphere.SaveManager.Instance.selectSlotIndex == i) continue;
+                //slotContents[i - 1].sprite = slotContentSprites[0];
+                SetBackgroundOpacity(slotBackgrounds, i, 0);
             }
         }
+    }
+
+    private Sprite SelectSlotSprite(int slotIndex, bool isActive)
+    {
+        var hasData = NooSphere.SaveManager.Instance.HasSaveData(slotIndex);
+
+        if (!hasData)
+        {
+            if (isActive)
+            {
+                return slotEmptySprites[1];
+            }
+            else
+            {
+                return slotEmptySprites[0];
+            }
+        }
+
+        var location = NooSphere.SaveManager.Instance.GetLocationData(slotIndex);
+        if (isActive)
+        {
+            Debug.Log("활성화된 슬롯의 위치: " + location);
+            // 활성화 상태
+            switch (location)
+            {
+                case "Lounge":
+                    return slotActiveSprites[0];
+                case "R-101":
+                    return slotActiveSprites[1];
+                case "R-102":
+                    return slotActiveSprites[2];
+                case "R-103":
+                    return slotActiveSprites[4];
+                case "R-104":
+                    return slotActiveSprites[3];
+            }
+        }
+        else
+        {
+            // 비활성화 상태
+            switch (location)
+            {
+                case "Lounge":
+                    return slotInactiveSprites[0];
+                case "R-101":
+                    return slotInactiveSprites[1];
+                case "R-102":
+                    return slotInactiveSprites[2];
+                case "R-103":
+                    return slotInactiveSprites[4];
+                case "R-104":
+                    return slotInactiveSprites[3];
+            }
+        }
+        return slotEmptySprites[0];
     }
 
     // 슬롯을 더블 클릭하였을 때 = 게임 시작
@@ -180,6 +242,8 @@ public class ResumeUI : DefaultUIBase
     public void HoverEnterBtn(int btnIndex)
     {
         if (btnIndex != 3 && !CanInteractWithBtn()) return;
+
+        UpdateAllSlotState();
 
         for (int i = 1; i <= 3; i++)
         {
