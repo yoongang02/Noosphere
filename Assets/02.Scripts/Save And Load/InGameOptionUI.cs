@@ -17,8 +17,6 @@ public class InGameOptionUI : DefaultUIBase
         // 게임 일시 정지
         Time.timeScale = 0f;
 
-        EventSystem.current.firstSelectedGameObject = firstSelectable;
-
         // 튜토리얼 중에는 저장 버튼 비활성화
         if (DataManager.Instance._events.ContainsKey("Event_A010"))
         {
@@ -33,6 +31,9 @@ public class InGameOptionUI : DefaultUIBase
         }
 
         transform.GetChild(0).gameObject.SetActive(true);
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(firstSelectable.gameObject);
     }
 
     public override void OnClose()
@@ -43,6 +44,7 @@ public class InGameOptionUI : DefaultUIBase
         Time.timeScale = 1f;
 
         transform.GetChild(0).gameObject.SetActive(false);
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     public override void HandleKeyboardInput()
