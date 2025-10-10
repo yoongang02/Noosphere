@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting;
 
 public class InGameOptionUI : DefaultUIBase
 {
@@ -47,6 +48,10 @@ public class InGameOptionUI : DefaultUIBase
     public override void HandleKeyboardInput()
     {
         base.HandleKeyboardInput();
+        if (InputRouter.Instance.ConsumeEscape())
+        {
+            OnClickResume();
+        }
     }
     public void OnClickResume()
     {

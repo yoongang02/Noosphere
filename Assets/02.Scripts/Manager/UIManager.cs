@@ -52,6 +52,13 @@ public class UIManager : Singleton<UIManager>
             {
                 if(FindObjectOfType<MirrorDialogueManager>().IsTopUI()) return;
             }
+
+            if (!IsAnyUIOpen() && !DefaultUIController.Instance.IsAnyUIOpen() && PlayerInteract.Instance.canInteract)
+            {
+                Debug.Log("Escape key pressed, opening resume UI");
+                DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.inGameOptionUI);
+                return;
+            }
             CloseTopUI();
         }
         

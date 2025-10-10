@@ -33,15 +33,6 @@ public class DefaultUIController : Singleton<DefaultUIController>
                 return; // 현재 씬이 제외된 씬 중 하나라면 UI를 열지 않음
             }
         }
-
-        if (!UIManager.Instance.IsAnyUIOpen() && !IsAnyUIOpen() && PlayerInteract.Instance.canInteract)
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                Debug.Log("Escape key pressed, opening resume UI");
-                OpenUI(inGameOptionUI);
-            }
-        }
     }
 
     public void OpenUI(DefaultUIBase ui)
