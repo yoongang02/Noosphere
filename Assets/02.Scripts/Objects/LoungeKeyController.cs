@@ -12,6 +12,7 @@ public class LoungeKeyController : MonoBehaviour
     private void Update()
     {
         if (DataManager.Instance == null) return;
+        if (!DataManager.Instance._events.ContainsKey("Event_C064")) return;
         if (DataManager.Instance._events["Event_C064"].isExecuted)
         {
             foreach (var room in roomTriggerObjects)
