@@ -28,6 +28,7 @@ public class BrokeMirrorEffect : MonoBehaviour
     private void OnEnable()
     {
         MirrorPuzzleManager.Instance.isMirrorBroke = true;
+        SoundManager.Instance.PlaySFXNoEffect("Soundresource_054");
         _mirrorAnim.SetBool("IsBroke", true);
         _pointEffects.SetActive(true);
         _mirror.SetActive(false);
@@ -43,6 +44,6 @@ public class BrokeMirrorEffect : MonoBehaviour
     }
     public void OnAnimEnd()
     {
-        EffectManager.Instance.OnEffectEnd?.Invoke();
+        // EffectManager.Instance.OnEffectEnd?.Invoke();
     }
 }
