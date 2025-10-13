@@ -16,6 +16,7 @@ public class EndingScene : MonoBehaviour
 
     private void Start()
     {
+        SoundManager.Instance.PlaySFXNoEffect("Soundresource_130");
         if (DataManager.Instance._events["Event_D103"].isExecuted)
         {
             _friendObj.SetActive(false);

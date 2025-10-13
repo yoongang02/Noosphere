@@ -228,11 +228,16 @@ public class TimeLineSignalManager : MonoBehaviour
         SoundManager.Instance.PlayBGM(soundResource);
     }
 
-    public void StopBgm()
+    private async UniTaskVoid StopBgm()
     {
-        SoundManager.Instance.StopForceBGM();
+        SoundManager.Instance.StopBGM();
+        await UniTask.Delay(TimeSpan.FromSeconds(1.6f));
     }
 
+    public void StopBGM()
+    {
+        StopBgm().Forget();
+    }
 
     #endregion
 
