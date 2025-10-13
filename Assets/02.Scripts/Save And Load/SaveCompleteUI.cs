@@ -8,7 +8,6 @@ public class SaveCompleteUI : DefaultUIBase
     [SerializeField] private float _waitTime;
     [SerializeField] private GameObject _savingUI;
     [SerializeField] private GameObject _completeUI;
-    [SerializeField] private GameObject _firstSelectable;
     public override void OnOpen()
     {
         base.OnOpen();
@@ -35,7 +34,5 @@ public class SaveCompleteUI : DefaultUIBase
         yield return new WaitForSecondsRealtime(_waitTime);
         _savingUI.SetActive(false);
         _completeUI.SetActive(true);
-        EventSystem.current.SetSelectedGameObject(null); // 먼저 비우고
-        EventSystem.current.SetSelectedGameObject(_firstSelectable); // 새로 지정
     }
 }

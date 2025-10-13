@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TitleManager : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> _objects;
+    [SerializeField] private List<DefaultUIBase> _UIs;
 
     private void Start()
     {
@@ -44,11 +44,11 @@ public class TitleManager : MonoBehaviour
         // 랜덤 값에 따라 하나만 활성화
         if (randomValue == 0)
         {
-            _objects[0].SetActive(true);
+            DefaultUIController.Instance.OpenUI(_UIs[0]);
         }
         else
         {
-            _objects[1].SetActive(true);
+            DefaultUIController.Instance.OpenUI(_UIs[1]);
         }
     }
 }
