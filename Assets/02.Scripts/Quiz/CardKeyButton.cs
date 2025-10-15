@@ -3,16 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class CardKeyButton : MonoBehaviour
 {
     [SerializeField] private ButtonEventChannel _eventChannel;
     [SerializeField] private string _cardKeyEvidenceID;
     [SerializeField] private Button _button;
-    [SerializeField] private TextMeshProUGUI _buttonText;
-    [SerializeField] private GameObject _cardObj;
+    [SerializeField] private Image _cardImg;
+    [SerializeField] private Sprite _normalSpr;
+    [SerializeField] private Sprite _selectedSprite;
     [SerializeField] private string _takeEventID;
     [SerializeField] private string _returnEventID;
     private bool _isTakenCard;
@@ -43,6 +46,8 @@ public class CardKeyButton : MonoBehaviour
             _eventChannel.RaiseEvent(_cardKeyEvidenceID);
             //인벤토리에 추가
             InventoryManager.Instance.AddEvidence(DataManager.Instance._evidences[_cardKeyEvidenceID]);
+            _cardImg.sprite = _selectedSprite;
+            _button.transition = Selectable.Transition.None;
 
             DialogueManager.Instance.SetDialogue(_takeEventID);
         }
@@ -52,9 +57,11 @@ public class CardKeyButton : MonoBehaviour
             _eventChannel.RaiseReturnEvent(_cardKeyEvidenceID);
             //인벤토리에 있는 카드키 제거
             InventoryManager.Instance.RemoveEvidence(DataManager.Instance._evidences[_cardKeyEvidenceID]);
-            
+            _cardImg.sprite = _normalSpr;
             DialogueManager.Instance.SetDialogue(_returnEventID);
+            _button.transition = Selectable.Transition.SpriteSwap;
         }
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     private void OnOtherButtonClicked(string clickedButtonId)//클릭한 버튼이외에 다른 버튼들 이벤트 전달
@@ -62,14 +69,11 @@ public class CardKeyButton : MonoBehaviour
         if(clickedButtonId != _cardKeyEvidenceID)
         {
             Debug.Log($"Button {_cardKeyEvidenceID} received event from Button {clickedButtonId}");
-            _buttonText.text = "사용 불가";
             _button.interactable = false;
             _isTakenCard = false;
         }
         else
         {
-            _cardObj.SetActive(false);
-            _buttonText.text = "반납 하기";
             _isTakenCard = true;
         }
     }
@@ -77,19 +81,32 @@ public class CardKeyButton : MonoBehaviour
     {
         if(returnedButtonId != _cardKeyEvidenceID)
         {
-            _buttonText.text = "사용 가능";
             _button.interactable = true;
         }
         else
         {
-            _cardObj.SetActive(true);
-            _buttonText.text = "사용 가능";
             _isTakenCard = false;
         }
     }
 
-    public void InitCardKey()
+    public void InitCardKey(bool isAcquired, bool noOwned)
     {
-        _eventChannel.OnButtonClicked?.Invoke(_cardKeyEvidenceID);
+        if (isAcquired)
+        {
+            _isTakenCard = true;
+            _cardImg.sprite = _selectedSprite;
+            _button.transition = Selectable.Transition.None;
+
+            _eventChannel.OnButtonClicked?.Invoke(_cardKeyEvidenceID);
+        }
+        else
+        {
+            _isTakenCard = false;
+            _cardImg.sprite = _normalSpr;
+            _button.transition = Selectable.Transition.SpriteSwap;
+
+            //하나도 획득된 게 없으면 사용 가능, 있으면 잠금
+            _button.interactable = noOwned;
+        }
     }
 }
