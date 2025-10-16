@@ -8,10 +8,8 @@ using UnityEngine.UI;
 
 public class SettingUI : DefaultUIBase
 {
-    [SerializeField] private GameObject _creditUI;
     [Header("세팅 버튼")]
     [SerializeField] private Button _exitBtn;
-    [SerializeField] private Button _creditBtn;
     [SerializeField] private Button _okBtn;
     [SerializeField] private Slider _soundVolumeSlider;
     [SerializeField] private Slider _bgmVolumeSlider;
@@ -56,7 +54,6 @@ public class SettingUI : DefaultUIBase
         _bgmVolumeSlider.onValueChanged.AddListener(BgmVolumeChanged);
         _okBtn.onClick.AddListener(OnClickOkBtn);
         _exitBtn.onClick.AddListener(OnClickExitBtn);
-        _creditBtn.onClick.AddListener(() => { DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.creditUI); });
     }
     private void InitSetting()
     {
@@ -90,7 +87,6 @@ public class SettingUI : DefaultUIBase
         ES3.Save("BgmVolume", bgmVolume, "Setting.es3");
         ES3.Save("SoundVolume", soundVolume, "Setting.es3");
         ES3.Save("ScreenMode", _fullScreenToggle.isOn, "Setting.es3");
-
         DefaultUIController.Instance.CloseTopUI();
     }
 
