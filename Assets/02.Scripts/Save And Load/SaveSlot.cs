@@ -5,21 +5,14 @@ using UnityEngine.EventSystems;
 
 public class SaveSlot : UIKeyboardNavigator, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    private KeyboardNavigationController navigationController;
     private SaveUI saveUI;
     void Start()
     {
         saveUI = GetComponentInParent<SaveUI>();
-        navigationController = GetComponentInParent<KeyboardNavigationController>();
 
         if (saveUI == null)
         {
             Debug.LogError("SaveUI가 부모 오브젝트에 부착되어 있지 않습니다.");
-        }
-
-        if(navigationController == null)
-        {
-            Debug.LogError("KeyboardNavigationController가 부모 오브젝트에 부착되어 있지 않습니다.");
         }
     }
     public void OnPointerClick(PointerEventData eventData)
@@ -36,7 +29,6 @@ public class SaveSlot : UIKeyboardNavigator, IPointerClickHandler, IPointerEnter
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        navigationController.curHoveredNavigator = this;
         saveUI.HoverEnterSaveSlot(slotIndex);
     }
 

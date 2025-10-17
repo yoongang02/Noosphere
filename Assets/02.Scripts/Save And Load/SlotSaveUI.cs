@@ -7,8 +7,6 @@ using UnityEngine.UI;
 
 public class SlotSaveUI : DefaultUIBase
 {
-    [SerializeField] private GameObject firstSelectable;
-
     [Header("슬롯 관련")]
     [Space(5)]
     [SerializeField] private TextMeshProUGUI _titleText;
@@ -22,7 +20,6 @@ public class SlotSaveUI : DefaultUIBase
     {
         base.OnOpen();
         InitSlotInfo();
-        InitDefaultBtnState();
         transform.GetChild(0).gameObject.SetActive(true);
     }
 
@@ -35,13 +32,6 @@ public class SlotSaveUI : DefaultUIBase
     public override void HandleKeyboardInput()
     {
         base.HandleKeyboardInput();
-    }
-
-    void InitDefaultBtnState()
-    {
-        
-        EventSystem.current.SetSelectedGameObject(null); // 먼저 비우고
-        EventSystem.current.SetSelectedGameObject(firstSelectable); // 새로 지정
     }
 
     void InitSlotInfo()
