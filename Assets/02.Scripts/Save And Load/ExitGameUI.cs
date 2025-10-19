@@ -5,9 +5,12 @@ using UnityEngine.EventSystems;
 
 public class ExitGameUI : DefaultUIBase
 {
+    [SerializeField] private GameObject firstSelectable;
     public override void OnOpen()
     {
         base.OnOpen();
+
+        EventSystem.current.firstSelectedGameObject = firstSelectable;
         transform.GetChild(0).gameObject.SetActive(true);
     }
 

@@ -8,6 +8,7 @@ using Unity.VisualScripting;
 
 public class InGameOptionUI : DefaultUIBase
 {
+    [SerializeField] private GameObject firstSelectable;
     [SerializeField] private Button _saveBtn;
     public override void OnOpen()
     {
@@ -30,6 +31,9 @@ public class InGameOptionUI : DefaultUIBase
         }
 
         transform.GetChild(0).gameObject.SetActive(true);
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(firstSelectable.gameObject);
     }
 
     public override void OnClose()
