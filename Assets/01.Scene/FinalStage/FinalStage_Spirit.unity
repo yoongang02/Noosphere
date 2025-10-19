@@ -170,9 +170,10 @@ GameObject:
   m_Component:
   - component: {fileID: 6034765}
   - component: {fileID: 6034764}
-  - component: {fileID: 6034763}
   - component: {fileID: 6034766}
   - component: {fileID: 6034767}
+  - component: {fileID: 6034768}
+  - component: {fileID: 6034769}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -180,14 +181,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &6034763
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6034762}
-  m_Enabled: 1
 --- !u!20 &6034764
 Camera:
   m_ObjectHideFlags: 0
@@ -334,6 +327,28 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6034768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6034762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 0}
+--- !u!81 &6034769
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6034762}
+  m_Enabled: 1
 --- !u!4 &8375618 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 878131810069327901, guid: 9d799aa38f9009b4c948dc75441ec88f,
@@ -16710,6 +16725,74 @@ PrefabInstance:
       addedObject: {fileID: 882596830}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4604193a6d283644d84376f47125b6fb, type: 3}
+--- !u!1001 &559765761
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1517879425116300656, guid: 2fb8bb9c56407e949bb61477fc36264e,
+        type: 3}
+      propertyPath: m_Name
+      value: SoundManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 7890610026503814689, guid: 2fb8bb9c56407e949bb61477fc36264e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7890610026503814689, guid: 2fb8bb9c56407e949bb61477fc36264e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7890610026503814689, guid: 2fb8bb9c56407e949bb61477fc36264e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7890610026503814689, guid: 2fb8bb9c56407e949bb61477fc36264e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7890610026503814689, guid: 2fb8bb9c56407e949bb61477fc36264e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7890610026503814689, guid: 2fb8bb9c56407e949bb61477fc36264e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7890610026503814689, guid: 2fb8bb9c56407e949bb61477fc36264e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7890610026503814689, guid: 2fb8bb9c56407e949bb61477fc36264e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7890610026503814689, guid: 2fb8bb9c56407e949bb61477fc36264e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7890610026503814689, guid: 2fb8bb9c56407e949bb61477fc36264e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2fb8bb9c56407e949bb61477fc36264e, type: 3}
 --- !u!1001 &564418545
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26330,6 +26413,31 @@ PrefabInstance:
         type: 3}
       propertyPath: _sprintMultiplier
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 664446102120234659, guid: 788ed82389619477a98998d9611c4b32,
+        type: 3}
+      propertyPath: _waterFootstepEvent.Path
+      value: event:/underwaterfootsteps
+      objectReference: {fileID: 0}
+    - target: {fileID: 664446102120234659, guid: 788ed82389619477a98998d9611c4b32,
+        type: 3}
+      propertyPath: _waterFootstepEvent.Guid.Data1
+      value: 542623594
+      objectReference: {fileID: 0}
+    - target: {fileID: 664446102120234659, guid: 788ed82389619477a98998d9611c4b32,
+        type: 3}
+      propertyPath: _waterFootstepEvent.Guid.Data2
+      value: 1317443874
+      objectReference: {fileID: 0}
+    - target: {fileID: 664446102120234659, guid: 788ed82389619477a98998d9611c4b32,
+        type: 3}
+      propertyPath: _waterFootstepEvent.Guid.Data3
+      value: 1839484553
+      objectReference: {fileID: 0}
+    - target: {fileID: 664446102120234659, guid: 788ed82389619477a98998d9611c4b32,
+        type: 3}
+      propertyPath: _waterFootstepEvent.Guid.Data4
+      value: -12406964
       objectReference: {fileID: 0}
     - target: {fileID: 754714180747594080, guid: 788ed82389619477a98998d9611c4b32,
         type: 3}
@@ -65489,6 +65597,7 @@ SceneRoots:
   - {fileID: 610236036}
   - {fileID: 41325737}
   - {fileID: 1735229488}
+  - {fileID: 559765761}
   - {fileID: 1439902803}
   - {fileID: 185520504}
   - {fileID: 23051028}
