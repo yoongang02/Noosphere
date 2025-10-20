@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class DefaultUIBase : MonoBehaviour
 {
+    [SerializeField] private GameObject firstSelectable;
+    public GameObject FirstSelectable => firstSelectable;
     private void Update()
     {
         if (IsTopUI())
@@ -19,6 +22,18 @@ public class DefaultUIBase : MonoBehaviour
     {
         SoundManager.Instance.PlaySFX("Soundresource_037");
         Debug.Log($"#{gameObject.name}이(가) 열렸습니다.");
+        
+        if (FirstSelectable != null)
+        {
+            Debug.Log($"{FirstSelectable.name}을 firstSelect");
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(FirstSelectable);
+        }
+        else
+        {
+            Debug.Log($"firstSelect을 비움");
+            EventSystem.current.SetSelectedGameObject(null);
+        }
     }
 
     public virtual void OnClose()

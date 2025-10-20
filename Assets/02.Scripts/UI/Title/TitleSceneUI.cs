@@ -7,19 +7,24 @@ using UnityEngine.InputSystem.XR;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class TitleSceneUI : MonoBehaviour
+public class TitleSceneUI : DefaultUIBase
 {
     [SerializeField] private Button _loadGameBtn;
     [SerializeField] private Button _newGameBtn;
     [SerializeField] private Button _creditBtn;
     [SerializeField] private Button _settingBtn;
     [SerializeField] private Button _exitBtn;
-    public EventSystem _eventSys;
-    private bool _hasFirstHoverOccurred = false;
-    private void OnEnable()
+    
+    public override void OnOpen()
     {
-        _eventSys.firstSelectedGameObject = _newGameBtn.gameObject;
-        _hasFirstHoverOccurred = false; 
+        base.OnOpen();
+        transform.GetChild(0).gameObject.SetActive(true);
+    }
+
+    public override void OnClose()
+    {
+        base.OnClose();
+        transform.GetChild(0).gameObject.SetActive(false);
     }
 
     private void Start()
@@ -47,7 +52,6 @@ public class TitleSceneUI : MonoBehaviour
             return;
         }
         NooSphere.SaveManager.Instance.SetLoadType(NooSphere.GameLoadType.NewGame);
-        _eventSys.enabled = false;
         SceneChanger.Instance.ChangeScene("LoadingScene").Forget();
     }
 
@@ -58,7 +62,6 @@ public class TitleSceneUI : MonoBehaviour
 
     private void OnClickSettingBtn()
     {
-        _eventSys.sendNavigationEvents = false;
         DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.settingUI);
     }
 
@@ -75,15 +78,5 @@ public class TitleSceneUI : MonoBehaviour
     public void OnHoverSound()
     {
         SoundManager.Instance.PlaySFX("Soundresource_035");
-    }
-
-    public void OnFirstHover()
-    {
-        if (!_hasFirstHoverOccurred)
-        {
-            _eventSys.SetSelectedGameObject(null);
-            _hasFirstHoverOccurred = false;
-        }
-
     }
 }
