@@ -24,7 +24,7 @@ public class TitleSceneUI : DefaultUIBase
     public override void OnClose()
     {
         base.OnClose();
-        transform.GetChild(0).gameObject.SetActive(false);
+        //transform.GetChild(0).gameObject.SetActive(false);
     }
 
     private void Start()

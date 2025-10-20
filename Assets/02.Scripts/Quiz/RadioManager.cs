@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -18,6 +18,7 @@ public class RadioManager : UIBase
     [Header("RadioUI")] [SerializeField] private List<DialBtn> _dialBtn;
     [SerializeField] private TextMeshProUGUI _radioText;
     [SerializeField] private Button _powerBtn;
+    [SerializeField] private AudioSource _audioSource;
 
     [Header("WorldDialogueUI")] [SerializeField]
     private TextMeshProUGUI _realText;
@@ -195,8 +196,14 @@ public class RadioManager : UIBase
             if (_alreadyShowDialogue && _isSkipping) break;
 
             DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
+
             int randomNum = Random.Range(48, 54); // 48~53
-            SoundManager.Instance.PlaySFX($"Soundresource_0{randomNum}");
+            // 랜덤으로 6개 중에 효과음 하나 선택해서, 그걸 오디오 소스에 반영하기
+            Debug.Log("Random Sound Num : " + randomNum);
+            _audioSource.clip = SoundManager.Instance.GetSoundData($"Soundresource_0{randomNum}", false).soundClip;
+            if (_audioSource.isPlaying) _audioSource.Stop();
+            _audioSource.Play();
+
             _realText.text = $"<mark=#00000055>{mirrorDialogue.Dialogue_Text_List[i].text}</mark>";
 
             // 페이드 인
@@ -248,6 +255,7 @@ public class RadioManager : UIBase
         }
 
         SoundManager.Instance.StopAllSFX();
+        _audioSource.Stop();
         DataManager.Instance._lockConditions["Lock_condition_003"].UnLock();
         QuizManager.Instance.OnQuizEnd?.Invoke();
     }
@@ -288,7 +296,13 @@ public class RadioManager : UIBase
             {
                 _realText.text = $"<mark=#00000055>{realDialogue.Dialogue_Text_List[i].text}</mark>";
                 int randomNum = Random.Range(48, 54); // 48~53
-                SoundManager.Instance.PlaySFX($"Soundresource_0{randomNum}");
+
+                // 랜덤으로 6개 중에 효과음 하나 선택해서, 그걸 오디오 소스에 반영하기
+                Debug.Log("Random Sound Num : " + randomNum);
+                _audioSource.clip = SoundManager.Instance.GetSoundData($"Soundresource_0{randomNum}",false).soundClip;
+                if (_audioSource.isPlaying) _audioSource.Stop();
+                _audioSource.Play();
+                //SoundManager.Instance.PlaySFX($"Soundresource_0{randomNum}");
             }
 
             if (i < mirrorDialogue.Dialogue_Text_List.Count)

@@ -1172,6 +1172,7 @@ MonoBehaviour:
   - {fileID: 1539126466}
   _radioText: {fileID: 1539126465}
   _powerBtn: {fileID: 1539126464}
+  _audioSource: {fileID: 753842279}
   _realText: {fileID: 90500881}
   _mirrorText: {fileID: 90500880}
   radioAnswer: 95.7MHz
@@ -8881,8 +8882,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 8300000, guid: c21fc001dc9554877b86bf4d607b60a9, type: 3}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -8892,9 +8893,9 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 5
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -8927,7 +8928,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.671
       inSlope: 0
       outSlope: 0
       tangentMode: 0

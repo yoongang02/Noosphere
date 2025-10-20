@@ -381,4 +381,24 @@ public class SoundManager : Singleton<SoundManager>
         audioSource.minDistance = data.minDistance;
         audioSource.maxDistance = data.maxDistance;
     }
+
+    public SoundData GetSoundData(string id, bool isBGM)
+    {
+        if (isBGM)
+        {
+            if (_bgmDictionary.TryGetValue(id, out SoundData bgmData))
+            {
+                return bgmData;
+            }
+        }
+        else
+        {
+            if (_sfxDictionary.TryGetValue(id, out SoundData sfxData))
+            {
+                return sfxData;
+            }
+        }
+        Debug.LogWarning("SoundData를 찾을 수 없습니다.");
+        return null;
+    }
 }
