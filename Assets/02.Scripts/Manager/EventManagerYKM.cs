@@ -93,7 +93,12 @@ public class EventManagerYKM : MonoBehaviour
         PlayerInteract.Instance.OnEvidenceUse = null;
         PlayerInteract.Instance.OnMentalInteract = null;
         PlayerInteract.Instance.isInsideTrigger = false;
-        
+
+        // 카메라 초기화
+        if(FindAnyObjectByType<AssignPlayer>() is AssignPlayer assignPlayer)
+        {
+            //assignPlayer.DoAssign();
+        }
 
         // 정신세계 진입 상태 초기화
         MentalEnterProcess mentalInfo = PlayerController.Instance.GetComponent<MentalEnterProcess>();
