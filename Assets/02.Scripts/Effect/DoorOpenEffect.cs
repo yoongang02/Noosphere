@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,12 +13,23 @@ public class DoorOpenEffect : MonoBehaviour
    {
       _closeDoor.SetActive(false);
       _clearTrigger.SetActive(true);
-      SoundManager.Instance.PlaySFX("Soundresource_082");
-      
+
+      if(GetComponent<AudioSource>() != null)
+      {
+            Debug.Log("Door Open 3D Sound Play");
+            AudioSource audioSource = GetComponent<AudioSource>();
+            if (audioSource.isPlaying) audioSource.Stop();
+            audioSource.Play();
+      }
+      else
+      {
+        SoundManager.Instance.PlaySFX("Soundresource_082");
+      }
+
       // 문 다 열리면 EventTrigger의 isDoorOpen
       if (transform.parent.GetComponentInChildren<EventTrigger>() != null)
       {
-         transform.parent.GetComponentInChildren<EventTrigger>().isDoorOpen = true;
+        transform.parent.GetComponentInChildren<EventTrigger>().isDoorOpen = true;
       }
    }
 
