@@ -56,19 +56,19 @@ public class TimeLineSignalManager : MonoBehaviour
 
     public void StartPlayerAnim(string playerAnim)
     {
-        _player = GameObject.Find("Player").GetComponent<Animator>();
+        _player = GameObject.FindWithTag("Player").GetComponent<Animator>();
         _player.SetBool(playerAnim, true);
     }
 
     public void EndPlayerAnim(string playerAnim)
     {
-        _player = GameObject.Find("Player").GetComponent<Animator>();
+        _player = GameObject.FindWithTag("Player").GetComponent<Animator>();
         _player.SetBool(playerAnim, false);
     }
 
     public void PlayerAnimTrigger(string playerAnim)
     {
-        _player = GameObject.Find("Player").GetComponent<Animator>();
+        _player = GameObject.FindWithTag("Player").GetComponent<Animator>();
         _player.SetTrigger(playerAnim);
     }
 

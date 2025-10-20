@@ -60,7 +60,7 @@ public class EventManagerYKM : MonoBehaviour
     [SerializeField] private bool _isConditionMet = false;
 
     //자동저장 딜레이 시간
-    [SerializeField] private float _autoSaveDelayTime = 3f;
+    [SerializeField] private float _autoSaveDelayTime = 2.5f;
 
     //플레이어 프리팹
     [SerializeField] private GameObject _player;
@@ -619,6 +619,7 @@ public class EventManagerYKM : MonoBehaviour
         // autoSave가 true라면, 자동 저장 진행
         if (_event.autoSave && !_event.autoSaveComplete)
         {
+            Debug.Log(_event.autoSaveDelay + "자동 저장 딜레이 옵션");
             if (_event.autoSaveDelay == 2)
             {
                 _event.autoSaveComplete = true;
@@ -641,8 +642,8 @@ public class EventManagerYKM : MonoBehaviour
 
     IEnumerator DoAutoSaveDelay(EventStructure _event)
     {
-        yield return new WaitForSeconds(_autoSaveDelayTime);
-        Debug.Log(_event.eventId + "자동 저장 실행");
+        yield return new WaitForSecondsRealtime(_autoSaveDelayTime);
+        Debug.Log(_event.eventId + "자동 저장 딜레이 실행");
         NooSphere.SaveManager.Instance.SetSlotIndex(1);
         StartCoroutine(NooSphere.SaveManager.Instance.DoAutoSave());
     }
