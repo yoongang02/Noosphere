@@ -20,7 +20,8 @@ public class DoorOpenEffect : MonoBehaviour
             AudioSource audioSource = GetComponent<AudioSource>();
             if (audioSource.isPlaying) audioSource.Stop();
             audioSource.Play();
-      }
+            audioSource.volume = SoundManager.Instance.sfxVolume;
+        }
       else
       {
         SoundManager.Instance.PlaySFX("Soundresource_082");

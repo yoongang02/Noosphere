@@ -203,6 +203,7 @@ public class RadioManager : UIBase
             _audioSource.clip = SoundManager.Instance.GetSoundData($"Soundresource_0{randomNum}", false).soundClip;
             if (_audioSource.isPlaying) _audioSource.Stop();
             _audioSource.Play();
+            _audioSource.volume = SoundManager.Instance.sfxVolume;
 
             _realText.text = $"<mark=#00000055>{mirrorDialogue.Dialogue_Text_List[i].text}</mark>";
 
