@@ -9,6 +9,7 @@ public class DefaultUIBase : MonoBehaviour
 {
     [SerializeField] private GameObject firstSelectable;
     public GameObject FirstSelectable => firstSelectable;
+    public bool noSound = false;
     private void Update()
     {
         if (IsTopUI())
@@ -20,7 +21,8 @@ public class DefaultUIBase : MonoBehaviour
 
     public virtual void OnOpen()
     {
-        SoundManager.Instance.PlaySFX("Soundresource_037");
+        if(!noSound)
+            SoundManager.Instance.PlaySFX("Soundresource_037");
         Debug.Log($"#{gameObject.name}이(가) 열렸습니다.");
         
         if (FirstSelectable != null)
@@ -38,7 +40,8 @@ public class DefaultUIBase : MonoBehaviour
 
     public virtual void OnClose()
     {
-        SoundManager.Instance.PlaySFX("Soundresource_036");
+        if(!noSound)
+            SoundManager.Instance.PlaySFX("Soundresource_036");
         Debug.Log($"#{gameObject.name}이(가) 닫혔습니다.");
     }
 

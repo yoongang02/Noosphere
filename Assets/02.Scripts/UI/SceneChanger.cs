@@ -45,7 +45,7 @@ public class SceneChanger : Singleton<SceneChanger>
                 SoundManager.Instance.StopBGM();
             })
             .AsyncWaitForCompletion();
-        
+        DefaultUIController.Instance.CloseAllUI();
         await LoadScene(sceneName);
     }
     
