@@ -13,6 +13,7 @@ public class LoadingSceneUI : MonoBehaviour
 
     private void Start()
     {
+        SceneTracker.previousSceneName = SceneManager.GetActiveScene().name;
         StartLoading().Forget();
     }
     private async UniTaskVoid StartLoading()

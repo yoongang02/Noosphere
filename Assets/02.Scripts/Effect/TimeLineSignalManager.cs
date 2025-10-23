@@ -172,6 +172,7 @@ public class TimeLineSignalManager : MonoBehaviour
         }
 
         //돌아오는 정보 저장
+        SceneTracker.previousSceneName = SceneManager.GetActiveScene().name;
         _player.gameObject.GetComponent<PlayerInteract>().isInMental = true;
         _player.gameObject.GetComponent<MentalEnterProcess>().SetCombackEventId("Event_C075");
         SceneManager.LoadSceneAsync(SceneName);
