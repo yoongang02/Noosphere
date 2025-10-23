@@ -393,6 +393,7 @@ public class RadioManager : UIBase
         }
 
         SoundManager.Instance.StopAllSFX();
+        _audioSource.Stop();
         DataManager.Instance._lockConditions["Lock_condition_003"].UnLock();
         QuizManager.Instance.OnQuizEnd?.Invoke();
     }
