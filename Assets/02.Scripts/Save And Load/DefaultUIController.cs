@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class DefaultUIController : Singleton<DefaultUIController>
@@ -56,6 +57,12 @@ public class DefaultUIController : Singleton<DefaultUIController>
         if (uiStack.Count > 0)
         {
             this.topUI = uiStack.Peek();
+            EventSystem.current.SetSelectedGameObject(null);
+            if (this.topUI.FirstSelectable != null)
+            {
+                Debug.Log($"{this.topUI.FirstSelectable.name}을 firstSelect");
+                EventSystem.current.SetSelectedGameObject(this.topUI.FirstSelectable);
+            }
         }
         else
         {

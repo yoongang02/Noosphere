@@ -41997,6 +41997,7 @@ GameObject:
   - component: {fileID: 1839103945}
   - component: {fileID: 1839103946}
   - component: {fileID: 1839103947}
+  - component: {fileID: 1839103948}
   m_Layer: 0
   m_Name: Friend's Room Virtual Camera
   m_TagString: Untagged
@@ -42080,6 +42081,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1839103948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1839103944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e92fbf4e55f85d40904dd87561b04c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dialogueCamera: {fileID: 1094607515}
+  isDialogueCamera: 1
 --- !u!1 &1843493282
 GameObject:
   m_ObjectHideFlags: 0

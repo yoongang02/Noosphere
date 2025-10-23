@@ -5,6 +5,7 @@ using UnityEditor.Rendering.Universal;
 using UnityEngine;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
+using UnityEngine.SceneManagement;
 public class AppearNPCEffect : MonoBehaviour
 {
   
@@ -18,7 +19,7 @@ public class AppearNPCEffect : MonoBehaviour
     private void OnEnable()
     {
         var player=GameObject.FindWithTag("Player");
-        if (player != null)
+        if (player != null&&SceneManager.GetActiveScene().name=="Stage1Map_spirit")
         {
             int playerLayer=LayerMask.NameToLayer("IgnoreMirrorCam - wall");
             SetLayerRecursively(player, playerLayer);

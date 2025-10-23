@@ -286,4 +286,9 @@ public class PlayerController : Singleton<PlayerController>
             }
         }
     }
+
+    public void SetDialogueCam(Cinemachine.CinemachineVirtualCamera cam)
+    {
+        _dialogueCamera = cam;
+    }
 }
