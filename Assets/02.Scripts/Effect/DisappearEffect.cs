@@ -5,7 +5,17 @@ using UnityEngine;
 
 public class DisappearEffect : MonoBehaviour
 {
-    private bool _playerTrigger = false;
+    [SerializeField]private bool _playerTrigger ;
+    [SerializeField] private string _evidenceID;
+
+    private void Start()
+    {
+        if (DataManager.Instance._evidences[_evidenceID].isAcquired)
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -13,11 +23,20 @@ public class DisappearEffect : MonoBehaviour
             _playerTrigger = true;
         }
     }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            _playerTrigger = false;
+        }
+    }
+
     private void Update()
     {
-        if ( _playerTrigger && InputRouter.Instance.ConsumeE())
+        if ( _playerTrigger&&Input.GetKeyDown(KeyCode.E))
         {
-           Destroy(gameObject);
+           gameObject.SetActive(false);
         }
     }
 }
