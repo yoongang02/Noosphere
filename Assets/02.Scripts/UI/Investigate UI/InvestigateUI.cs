@@ -129,7 +129,7 @@ public class InvestigateUI : UIBase
         {
             //아트 리소스 내 증거물 인벤토리 이미지 가져오기
             ArtResourceStructure artResource = DataManager.Instance._artResources[evidence.artresourceId];
-            _evidenceImage.sprite = artResource.GetSpriteFromFilePath(artResource.filePathInventoryThumbnail);
+            _evidenceImage.sprite = artResource.GetSpriteFromFilePath(artResource.filePathInventoryDetail);
         }
         else
         {
