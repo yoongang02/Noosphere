@@ -9,32 +9,26 @@ public class RoomInfoManager : MonoBehaviour
     public string roomName;
     public EventManagerYKM.RoomInfo roomInfo;
 
-    private void OnEnable()
+    private void Start()
     {
+        Debug.Log("이벤트 매니저 찾기!!" + FindObjectOfType<EventManagerYKM>().gameObject);
+        Debug.Log(EventManagerYKM.Instance.curRoomInfo + "CurRoomInfo");
+        Debug.Log(this.roomInfo + "roomInfo");
         EventManagerYKM.Instance.curRoomInfo = this.roomInfo;
-
-        if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.ContinueGame)
-        {
-            WhenContinueGame();
-        }
 
         if (SceneManager.GetActiveScene().name == "Lounge")
         {
-            if (EventManagerYKM.Instance.curChapterInfo == EventManagerYKM.ChapterInfo.Stage1)
+            if (DataManager.Instance._events.ContainsKey("Event_A031") && DataManager.Instance._events.ContainsKey("Event_B067"))
             {
-                EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_102;
-            }
-            else if (EventManagerYKM.Instance.curChapterInfo == EventManagerYKM.ChapterInfo.Stage2)
-            {
-                // 스테이지1 클리어 안하고 나왔으면
-                if (!DataManager.Instance._events["Event_B067"].isExecuted)
+                if(DataManager.Instance._events["Event_A031"].isExecuted)
                 {
+                    if (DataManager.Instance._events["Event_B067"].isExecuted)
+                    {
+                        EventManagerYKM.Instance.curChapterInfo = EventManagerYKM.ChapterInfo.Stage2;
+                        EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_104;
+                    }
                     EventManagerYKM.Instance.curChapterInfo = EventManagerYKM.ChapterInfo.Stage1;
                     EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_102;
-                }
-                else
-                {
-                    EventManagerYKM.Instance.curRoomInfo = EventManagerYKM.RoomInfo.Room_104;
                 }
             }
         }
@@ -49,13 +43,6 @@ public class RoomInfoManager : MonoBehaviour
         }
         Debug.LogWarning($"현재 방 정보 : {roomInfo}");
         InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curRoomInfo;
-    }
-
-
-    // 이어하기를 통해 이동된 씬일 경우의 작업
-    void WhenContinueGame()
-    {
-        NooSphere.SaveManager.Instance.WhenContinueSceneLoaded();
     }
 
     IEnumerator ShowRoomNumber()

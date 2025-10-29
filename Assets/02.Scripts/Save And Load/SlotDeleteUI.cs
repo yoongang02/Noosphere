@@ -5,11 +5,9 @@ using UnityEngine.EventSystems;
 
 public class SlotDeleteUI : DefaultUIBase
 {
-    [SerializeField] private GameObject firstSelectable;
     public override void OnOpen()
     {
         base.OnOpen();
-        InitDefaultBtnState();
         transform.GetChild(0).gameObject.SetActive(true);
     }
 
@@ -23,13 +21,7 @@ public class SlotDeleteUI : DefaultUIBase
     {
         base.HandleKeyboardInput();
     }
-
-    void InitDefaultBtnState()
-    {
-        EventSystem.current.SetSelectedGameObject(null); // 먼저 비우고
-        EventSystem.current.SetSelectedGameObject(firstSelectable); // 새로 지정
-    }
-
+    
     public void ClickYesBtn()
     {
         int index = NooSphere.SaveManager.Instance.selectSlotIndex;
@@ -38,7 +30,10 @@ public class SlotDeleteUI : DefaultUIBase
         // UI 닫기
         ClickNoBtn();
         // 슬롯 UI 업데이트하기
-        FindAnyObjectByType<ResumeUI>().UpdateResumeUI();
+        if(DefaultUIController.Instance.IsUIOpen(DefaultUIController.Instance.saveUI))
+            FindAnyObjectByType<SaveUI>().UpdateSaveUI();
+        else if(DefaultUIController.Instance.IsUIOpen(DefaultUIController.Instance.resumeUI))
+            FindAnyObjectByType<ResumeUI>().UpdateResumeUI();
     }
 
     public void ClickNoBtn()

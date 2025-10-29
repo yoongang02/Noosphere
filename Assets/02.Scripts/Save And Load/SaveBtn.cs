@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class SaveBtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class SaveBtn : UIKeyboardNavigator, IPointerEnterHandler, IPointerExitHandler
 {
-    public bool isActive;
-    public int btnIndex;
     private SaveUI saveUI;
     void Start()
     {
@@ -20,11 +18,13 @@ public class SaveBtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (!isActive && btnIndex != 3) return;
         saveUI.HoverEnterBtn(btnIndex);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (!isActive && btnIndex != 3) return;
         saveUI.InitBtnState();
     }
 }

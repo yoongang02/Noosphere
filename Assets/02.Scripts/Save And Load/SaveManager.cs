@@ -17,12 +17,12 @@ namespace NooSphere
     {
         public GameLoadType CurrentLoadType { get; private set; }
         public int selectSlotIndex { get; private set; }
-        public event Action OnSaveStart;
-        public event Action<int> OnSaveFinish;
         public bool OnDoorAutoSave = false;
         private string folderPath;
         [SerializeField] private GameObject _player;
-        [SerializeField] private List<GameObject> _essentialUIs = new List<GameObject>();
+        public List<GameObject> _essentialUIs = new List<GameObject>();
+        [SerializeField] private float _autoSaveDelay;
+
         private void Awake()
         {
             CurrentLoadType = GameLoadType.NewGame;
@@ -40,6 +40,7 @@ namespace NooSphere
             folderPath = Path.Combine(Application.persistentDataPath, "Saves");
             selectSlotIndex = -1;
         }
+
         public void SetLoadType(GameLoadType type)
         {
             CurrentLoadType = type;
@@ -60,15 +61,29 @@ namespace NooSphere
                 Directory.CreateDirectory(folderPath);
             }
 
-            // 저장 시작 준비 -> 저장 중 UI 활성화 & 상호작용 막기
-            OnSaveStart?.Invoke();
-            yield return null;
-
             SaveCurrentState();
 
             yield return null;
+        }
+
+        public IEnumerator DoAutoSave()
+        {
+            // Root 하위에 Saves 폴더로 이어지는 경로 찾기
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            // 저장 시작 준비 -> 저장 중 UI 활성화 & 상호작용 막기
+            PlayerInteract.Instance.canInteract = false;
+            DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.savingUI);
+
+            SaveCurrentState();
+            yield return new WaitForSeconds(_autoSaveDelay);
+
             // 저장 끝 -> 저장 중 UI 비활성화 & 상호작용 풀기
-            OnSaveFinish?.Invoke(selectSlotIndex);
+            DefaultUIController.Instance.CloseTopUI();
+            PlayerInteract.Instance.canInteract = true;
         }
 
         // 자동 저장 혹은 사용자 임의 저장 시, 현재 상태를 저장하는 함수
@@ -91,16 +106,30 @@ namespace NooSphere
                 ES3.Save("QuizDatas", DataManager.Instance._quiz, filePath);
                 ES3.Save("PlayerTransform", PlayerController.Instance.transform, filePath);
                 ES3.Save("SceneName", SceneManager.GetActiveScene().name, filePath);
-                
+
                 // 인벤토리 챕터 별로 저장
-                ES3.Save("InventoryData1", InventoryManager.Instance.chapterInventories[0].evidences, filePath);
-                ES3.Save("InventoryData2", InventoryManager.Instance.chapterInventories[1].evidences, filePath);
-                ES3.Save("InventoryData3", InventoryManager.Instance.chapterInventories[2].evidences, filePath);
-                ES3.Save("InventoryData4", InventoryManager.Instance.chapterInventories[3].evidences, filePath);
+                List<string> evienceKeys = new List<string>();
+                foreach(var chapter in InventoryManager.Instance.chapterInventories)
+                {
+                    foreach(var evidence in chapter.Value.evidences)
+                    {
+                        evienceKeys.Add(evidence.evidenceId);
+                    }
+                }
+                ES3.Save("InventoryDatas", evienceKeys, filePath);
 
                 // 현재 이벤트 상태 저장
                 ES3.Save("CurrentEventID", EventManagerYKM.Instance.currentEventID, filePath);
                 ES3.Save("NextEventID", EventManagerYKM.Instance.nextEventID, filePath);
+                Debug.LogWarning("현재 이벤트, 나중 이벤트" + EventManagerYKM.Instance.currentEventID + "," + EventManagerYKM.Instance.nextEventID);
+
+                // 정신세계 진입 관련 상태 저장
+                MentalEnterProcess mentalInfo = PlayerController.Instance.GetComponent<MentalEnterProcess>();
+                ES3.Save("CombackEventID", mentalInfo.GetComebackEventId(), filePath);
+                ES3.Save("IsInMental", PlayerInteract.Instance.isInMental, filePath);
+                ES3.Save("MentalInfo", mentalInfo.mentalInfo, filePath);
+                
+
 
                 if (FindObjectOfType<RoomInfoManager>() is RoomInfoManager roomInfoManager)
                 {
@@ -142,10 +171,6 @@ namespace NooSphere
                 DataManager.Instance._events = ES3.Load("EventDatas", filePath, DataManager.Instance._events);
                 DataManager.Instance._evidences = ES3.Load("EvidenceDatas", filePath, DataManager.Instance._evidences);
                 DataManager.Instance._quiz = ES3.Load("QuizDatas", filePath, DataManager.Instance._quiz);
-
-                // 이벤트 상태 반영
-                EventManagerYKM.Instance.currentEventID = ES3.Load<string>("CurrentEventID", filePath);
-                EventManagerYKM.Instance.nextEventID = ES3.Load<string>("NextEventID", filePath);
             }
             else
             {
@@ -198,12 +223,6 @@ namespace NooSphere
             return ES3.Load<Transform>("PlayerTransform", filePath);
         }
 
-        public List<InventorySlot> GetInventoryData(int chapterIndex)
-        {
-            string filePath = Path.Combine(folderPath, $"slot{selectSlotIndex}.es3");
-            Debug.LogWarning("현재 선택 슬롯 : " + selectSlotIndex);
-            return ES3.Load($"InventoryData{chapterIndex}", filePath, new List<InventorySlot>());
-        }
 
         // 슬롯 데이터 삭제하는 함수
         public void DeleteSlotData(int index)
@@ -213,19 +232,49 @@ namespace NooSphere
             selectSlotIndex = -1;
         }
 
-        public void WhenContinueSceneLoaded()
-        {
-            Instantiate(_player, GetPlayerTransform(selectSlotIndex).position, GetPlayerTransform(selectSlotIndex).rotation);
-            foreach(GameObject ui in _essentialUIs)
-            {
-                Instantiate(ui);
-            }
-        }
-
         public void DoAutoSaveDelay()
         {
             NooSphere.SaveManager.Instance.SetSlotIndex(1);
-            StartCoroutine(DoSave());
+            StartCoroutine(DoAutoSave());
+        }
+
+        public string GetCurrentLocation()
+        {
+            if (FindObjectOfType<RoomInfoManager>() is RoomInfoManager roomInfoManager)
+            {
+                return roomInfoManager.roomName;
+            }
+            else
+            {
+                Debug.LogError("플레이어의 현재 Location 값을 찾을 수 없습니다.");
+                return "Unknown Location";
+            }
+        }
+
+        public string GetCurrentPlayTime()
+        {
+            // 이 곳에 플레이타임 불러와서 저장해야 함.
+            float playTime = PlayTime.Instance.GetPlayTime();
+            return PlayTime.Instance.FormatPlayTime(playTime);
+        }
+
+        public string GetCurrentDateTime()
+        {
+            string currentTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+            return currentTime;
+        }
+
+        // 전체 세이브 데이터 삭제
+        public void ResetAllSaveData()
+        {
+            DeleteSlotData(1);
+            DeleteSlotData(2);
+            DeleteSlotData(3);
+        }
+
+        public bool IsAnySaveDataExists()
+        {
+            return HasSaveData(1) || HasSaveData(2) || HasSaveData(3);
         }
     }
 }

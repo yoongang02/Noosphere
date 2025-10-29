@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -36,8 +36,7 @@ public class TimeLineSignalManager : MonoBehaviour
 
     private void Start()
     {
-        _player = GameObject.Find("Player").GetComponent<Animator>();
-        _playerSkin = GameObject.Find("Character_Main_Body").GetComponent<SkinnedMeshRenderer>();
+        //_player = GameObject.Find("Player").GetComponent<Animator>();
         _mainCamera = Camera.main;
         if (_mainCamera != null)
         {
@@ -57,16 +56,19 @@ public class TimeLineSignalManager : MonoBehaviour
 
     public void StartPlayerAnim(string playerAnim)
     {
+        _player = GameObject.FindWithTag("Player").GetComponent<Animator>();
         _player.SetBool(playerAnim, true);
     }
 
     public void EndPlayerAnim(string playerAnim)
     {
+        _player = GameObject.FindWithTag("Player").GetComponent<Animator>();
         _player.SetBool(playerAnim, false);
     }
 
     public void PlayerAnimTrigger(string playerAnim)
     {
+        _player = GameObject.FindWithTag("Player").GetComponent<Animator>();
         _player.SetTrigger(playerAnim);
     }
 
@@ -123,6 +125,7 @@ public class TimeLineSignalManager : MonoBehaviour
 
     public void SetPlayerMaterial(Material material)
     {
+        _playerSkin = GameObject.Find("Character_Main_Body").GetComponent<SkinnedMeshRenderer>();
         _playerSkin.material = material;
     }
 
@@ -163,6 +166,11 @@ public class TimeLineSignalManager : MonoBehaviour
 
     public void OnLoadScene(string SceneName)
     {
+        if (_player == null)
+        {
+            _player = GameObject.Find("Player").GetComponent<Animator>();
+        }
+
         //돌아오는 정보 저장
         _player.gameObject.GetComponent<PlayerInteract>().isInMental = true;
         _player.gameObject.GetComponent<MentalEnterProcess>().SetCombackEventId("Event_C075");
@@ -206,6 +214,29 @@ public class TimeLineSignalManager : MonoBehaviour
     public void StartRandomSound(float duration)
     {
         PlayRandomFootSteps(duration).Forget();
+    }
+
+    public void StartBgm(string soundResource)
+    {
+        StartBgmAsync(soundResource).Forget();
+    }
+
+    private async UniTaskVoid StartBgmAsync(string soundResource)
+    {
+        SoundManager.Instance.StopBGM();
+        await UniTask.Delay(TimeSpan.FromSeconds(1.6f)); // 페이드아웃 대기
+        SoundManager.Instance.PlayBGM(soundResource);
+    }
+
+    private async UniTaskVoid StopBgm()
+    {
+        SoundManager.Instance.StopBGM();
+        await UniTask.Delay(TimeSpan.FromSeconds(1.6f));
+    }
+
+    public void StopBGM()
+    {
+        StopBgm().Forget();
     }
 
     #endregion
@@ -276,6 +307,10 @@ public class TimeLineSignalManager : MonoBehaviour
 
     private async UniTaskVoid LookTarget(float duration)
     { 
+        if (_player == null)
+        {
+            _player = GameObject.Find("Player").GetComponent<Animator>();
+        }
         Transform playerTrans=_player.transform;
         Transform daugterTrans = GameObject.Find("Daughter").transform;
         float elapsed = 0f;
@@ -300,5 +335,10 @@ public class TimeLineSignalManager : MonoBehaviour
     public void ForceBlockPlayerMove()
     {
         PlayerController.Instance.canMove = false;
+    }
+
+    public void LoadAutoSave()
+    {
+
     }
 }

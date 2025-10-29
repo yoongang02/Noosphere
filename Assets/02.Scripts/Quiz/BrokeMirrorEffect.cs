@@ -28,8 +28,10 @@ public class BrokeMirrorEffect : MonoBehaviour
     private void OnEnable()
     {
         MirrorPuzzleManager.Instance.isMirrorBroke = true;
-        _mirrorAnim.SetBool("IsBroke", true);
         _pointEffects.SetActive(true);
+        if (DataManager.Instance._events["Event_B099"].isExecuted) return;
+        SoundManager.Instance.PlaySFXNoEffect("Soundresource_054");
+        _mirrorAnim.SetBool("IsBroke", true);
         _mirror.SetActive(false);
         _brokeMirror.SetActive(true);
         DOTween.To(
@@ -43,6 +45,6 @@ public class BrokeMirrorEffect : MonoBehaviour
     }
     public void OnAnimEnd()
     {
-        EffectManager.Instance.OnEffectEnd?.Invoke();
+        // EffectManager.Instance.OnEffectEnd?.Invoke();
     }
 }

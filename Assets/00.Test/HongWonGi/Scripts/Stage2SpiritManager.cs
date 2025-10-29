@@ -6,8 +6,10 @@ using UnityEngine;
 
 public class Stage2SpiritManager : MonoBehaviour
 {
-    private void Awake()
+    private void Start()
     {
+        if (DataManager.Instance._events["Event_C074"].isExecuted) return;
+        
         EffectManager.Instance.ReverseProcessEffect().Forget();
     }
 }

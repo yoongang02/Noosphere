@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class DefaultUIController : Singleton<DefaultUIController>
@@ -12,6 +13,11 @@ public class DefaultUIController : Singleton<DefaultUIController>
     public DefaultUIBase inGameOptionUI;
     public DefaultUIBase exitGameUI;
     public DefaultUIBase saveUI;
+    public DefaultUIBase slotSaveUI;
+    public DefaultUIBase slotOverwriteUI;
+    public DefaultUIBase slotCompleteUI;
+    public DefaultUIBase resetUI;
+    public DefaultUIBase savingUI;
 
     public List<string> excludedOptionScenes = new List<string>();
 
@@ -26,15 +32,6 @@ public class DefaultUIController : Singleton<DefaultUIController>
             if (SceneManager.GetActiveScene().name == sceneName)
             {
                 return; // 현재 씬이 제외된 씬 중 하나라면 UI를 열지 않음
-            }
-        }
-
-        if (!UIManager.Instance.IsAnyUIOpen() && !IsAnyUIOpen() && PlayerInteract.Instance.canInteract)
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                Debug.Log("Escape key pressed, opening resume UI");
-                OpenUI(inGameOptionUI);
             }
         }
     }
@@ -60,6 +57,12 @@ public class DefaultUIController : Singleton<DefaultUIController>
         if (uiStack.Count > 0)
         {
             this.topUI = uiStack.Peek();
+            EventSystem.current.SetSelectedGameObject(null);
+            if (this.topUI.FirstSelectable != null)
+            {
+                Debug.Log($"{this.topUI.FirstSelectable.name}을 firstSelect");
+                EventSystem.current.SetSelectedGameObject(this.topUI.FirstSelectable);
+            }
         }
         else
         {

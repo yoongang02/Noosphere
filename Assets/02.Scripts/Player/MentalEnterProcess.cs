@@ -13,7 +13,7 @@ public class MentalEnterProcess : MonoBehaviour
     public bool isComplete = false;
     public MentalStructure mentalInfo;
     [SerializeField] private string _comebackEventId;
-    [SerializeField] private float _coolTime = 3f;
+    [SerializeField] private float _coolTime = 0.1f;
     [SerializeField] private bool _canEnter = true;
     [SerializeField] private bool _isForceQuit = false;
     
@@ -21,16 +21,25 @@ public class MentalEnterProcess : MonoBehaviour
     [SerializeField] private GameObject _progressBarUI;
     [SerializeField] private EnterProgressBar _progressBarFill;
     [SerializeField] private bool _soundPlayed=false;
-    [SerializeField] private bool _isDrainingSoundPlaying = false; 
-    
+    [SerializeField] private bool _isDrainingSoundPlaying = false;
+
+    private void Start()
+    {
+        _coolTime = 0.1f;
+        _progressBarUI = GameObject.Find("ProgressBar UI").transform.GetChild(0).gameObject;
+        _progressBarFill = _progressBarUI.GetComponentInChildren<EnterProgressBar>(true);
+    }
+
     void Update()
     {
         if (!UIManager.Instance.IsAnyUIOpen())
         {
             if (PlayerInteract.Instance.canInteract && _canEnter && !_startEnter && InputRouter.Instance.ConsumeR())
             {
+                Debug.LogWarning("R키를 눌러 정신세계 진입 시작");
                 if (PlayerInteract.Instance.isInMental)
                 {
+                    Debug.LogWarning("정신세계에서 현실세계로 돌아가기");
                     //정신세계 -> 현실세계 진입
                     if (mentalInfo != null)
                     {
@@ -163,7 +172,14 @@ public class MentalEnterProcess : MonoBehaviour
             mentalInfo = DataManager.Instance._mental[mentalId];
             if (!PlayerInteract.Instance.isInMental) _comebackEventId = mentalInfo.combackEventId;
             _startEnter = true;
+
+            _progressBarUI = GameObject.Find("ProgressBar UI").transform.GetChild(0).gameObject;
+            _progressBarFill = _progressBarUI.GetComponentInChildren<EnterProgressBar>(true);
+
             _progressBarUI.SetActive(true);
+
+            // 플레이어 Lock 걸기
+            UIManager.Instance.LockPlayer();
         }
         else
         {
@@ -218,13 +234,19 @@ public class MentalEnterProcess : MonoBehaviour
         
         //성공적으로 도착한 경우, 쿨타임 시작
         StartCoroutine(StartCoolTime());
+
+        // 플레이어 Lock 해제
+        UIManager.Instance.UnLockPlayer();
     }
 
     async UniTaskVoid FailEnter()
     {
         //바 초기화
         InitProgressBar();
-        
+
+        // 플레이어 Lock 해제
+        UIManager.Instance.UnLockPlayer();
+
         //이동 실패 시 결과가 있다면 실행
         await EventManagerYKM.Instance.DoResult(mentalInfo.mentalFalseResults);
         
@@ -326,6 +348,9 @@ public class MentalEnterProcess : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         _isForceQuit = true;
         SoundManager.Instance.StopAllSFX();
+
+        // 플레이어 Lock 해제
+        UIManager.Instance.UnLockPlayer();
     }
 
     public void SetCombackEventId(string id)
@@ -341,5 +366,10 @@ public class MentalEnterProcess : MonoBehaviour
     public bool IsEnterNow()
     {
         return _startEnter;
+    }
+
+    public string GetComebackEventId()
+    {
+        return _comebackEventId;
     }
 }

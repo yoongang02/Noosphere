@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting;
 
 public class InGameOptionUI : DefaultUIBase
 {
-    [SerializeField] private GameObject firstSelectable;
+    [SerializeField] private Button _saveBtn;
     public override void OnOpen()
     {
         base.OnOpen();
@@ -14,7 +16,19 @@ public class InGameOptionUI : DefaultUIBase
         // 게임 일시 정지
         Time.timeScale = 0f;
 
-        EventSystem.current.firstSelectedGameObject = firstSelectable;
+        // 튜토리얼 중에는 저장 버튼 비활성화
+        if (DataManager.Instance._events.ContainsKey("Event_A010"))
+        {
+            if (DataManager.Instance._events["Event_A010"].isExecuted)
+            {
+                _saveBtn.interactable = true;
+            }
+            else
+            {
+                _saveBtn.interactable = false;
+            }
+        }
+
         transform.GetChild(0).gameObject.SetActive(true);
     }
 
@@ -26,11 +40,16 @@ public class InGameOptionUI : DefaultUIBase
         Time.timeScale = 1f;
 
         transform.GetChild(0).gameObject.SetActive(false);
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     public override void HandleKeyboardInput()
     {
         base.HandleKeyboardInput();
+        if (InputRouter.Instance.ConsumeEscape())
+        {
+            OnClickResume();
+        }
     }
     public void OnClickResume()
     {

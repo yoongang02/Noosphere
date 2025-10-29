@@ -17,8 +17,6 @@ public class KeyPadBtn : MonoBehaviour
 
     private void OnClickKeyPadNum()
     {
-        int randNum = Random.Range(78, 82);
-        SoundManager.Instance.PlaySFX($"Soundresource_0{randNum}");
         KeyPadManager.Instance.SetDialText(_keyPadNum);
     }
     

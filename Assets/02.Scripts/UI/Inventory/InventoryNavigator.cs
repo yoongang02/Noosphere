@@ -35,6 +35,7 @@ public class InventoryNavigator : UIBase
 
     [Space(5)] [Header("카드 키 사용 정보")] public bool isUsingCardKey = false;
     public List<EventTrigger.KeyInfo> keyInfos = new List<EventTrigger.KeyInfo>();
+    [SerializeField] int previousChapter = -1;
 
     public override void OnOpen()
     {
@@ -52,13 +53,21 @@ public class InventoryNavigator : UIBase
             _openBtn.SetActive(true);
             _useBtn.SetActive(false);
         }
+
+        // 카드 키 사용일 경우, R101 챕터 열기
+        if (isUsingCardKey)
+        {
+            previousChapter = InventoryManager.Instance.currentViewChapter;
+            InventoryManager.Instance.currentViewChapter = 0; // R101 챕터
+        }
         
-        _inventoryWindow.SetActive(true);
-        SoundManager.Instance.PlaySFX("Soundresource_042");
-        EscapeUI.Instance.Active();
         //InventoryManager.Instance.currentViewChapter = (int)EventManagerYKM.Instance.curRoomInfo;
         //인벤토리 열었을 때, 현재 상태를 바탕으로 인벤토리 업데이트 진행
         SetChapterSelected(InventoryManager.Instance.currentViewChapter);
+
+        _inventoryWindow.SetActive(true);
+        SoundManager.Instance.PlaySFX("Soundresource_042");
+        EscapeUI.Instance.Active();
     }
 
     public override void OnClose()
@@ -405,6 +414,13 @@ public class InventoryNavigator : UIBase
                 
             isUsingCardKey = false;
             keyInfos = null;
+
+            // 카드 키 사용 후, 이전 챕터로 돌아가기
+            if (previousChapter != -1)
+            {
+                InventoryManager.Instance.currentViewChapter = previousChapter;
+                previousChapter = -1;
+            }
         }
     }
 

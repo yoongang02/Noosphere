@@ -10,7 +10,7 @@ public class SceneChanger : Singleton<SceneChanger>
     public CanvasGroup _fadeImg;
     float fadeDuration = 1.5f;
 
-    private void Start()
+    private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -45,7 +45,7 @@ public class SceneChanger : Singleton<SceneChanger>
                 SoundManager.Instance.StopBGM();
             })
             .AsyncWaitForCompletion();
-        
+        DefaultUIController.Instance.CloseAllUI();
         await LoadScene(sceneName);
     }
     

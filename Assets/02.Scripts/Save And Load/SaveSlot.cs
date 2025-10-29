@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class SaveSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+public class SaveSlot : UIKeyboardNavigator, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public bool isActive;
-    public int slotIndex;
     private SaveUI saveUI;
     void Start()
     {
@@ -19,9 +17,6 @@ public class SaveSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     }
     public void OnPointerClick(PointerEventData eventData)
     {
-        bool hasData = NooSphere.SaveManager.Instance.HasSaveData(slotIndex);
-        if (!hasData) return;
-
         if (eventData.clickCount == 1)
         {
             saveUI.ClickSaveSlot(slotIndex);
@@ -34,15 +29,11 @@ public class SaveSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        bool hasData = NooSphere.SaveManager.Instance.HasSaveData(slotIndex);
-        if (!hasData) return;
         saveUI.HoverEnterSaveSlot(slotIndex);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        bool hasData = NooSphere.SaveManager.Instance.HasSaveData(slotIndex);
-        if (!hasData) return;
         saveUI.UpdateAllSlotState();
     }
 }

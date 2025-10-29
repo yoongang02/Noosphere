@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.SceneManagement;
-
+using FMODUnity;
 // 플레이어 이동관련 함수
 //플레이어 이동방식 변경
 // 최초 작성자: 홍원기
@@ -23,6 +23,7 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private List<AudioClip> runSounds;
     [SerializeField] private List<AudioClip> _waterWalkSounds;
     [SerializeField] private AudioSource footstepSource;
+    [SerializeField] private EventReference _waterFootstepEvent;
     [SerializeField] private float stepInterval = 0.5f;
     [SerializeField] private float runInterval = 0.2f;
     private bool _isWater;
@@ -108,22 +109,22 @@ public class PlayerController : Singleton<PlayerController>
         npcState.SetState(NPCState.Idle);
         _dialogueCamera.transform.gameObject.SetActive(false);
     } 
-    private void HandleInput()
+  private void HandleInput()
     {
         if (!canMove)
         {
-            _rigidbody.velocity = Vector3.zero; //velocity
+            _rigidbody.velocity = Vector3.zero;
             _animator.SetFloat("MoveSpeed", 0f);
             return;
         }
+        
         float moveX = 0f;
         float moveY = 0f;
 
-        // WASD 키 입력 처리
         if (Input.GetKey(KeyCode.W)) moveY = 1f;
         if (Input.GetKey(KeyCode.S)) moveY = -1f;
-        if (Input.GetKey(KeyCode.A)&&!blockLeftRight) moveX = -1f;
-        if (Input.GetKey(KeyCode.D)&&!blockLeftRight) moveX = 1f;
+        if (Input.GetKey(KeyCode.A) && !blockLeftRight) moveX = -1f;
+        if (Input.GetKey(KeyCode.D) && !blockLeftRight) moveX = 1f;
 
         Vector3 inputDirection = new Vector3(moveX, 0f, moveY).normalized;
         
@@ -139,7 +140,6 @@ public class PlayerController : Singleton<PlayerController>
 
             _moveDirection = (cameraForward * inputDirection.z + cameraRight * inputDirection.x).normalized;
 
-            // 이동 속도 설정
             float currentSpeed = _defaultSpeed;
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
             {
@@ -147,35 +147,22 @@ public class PlayerController : Singleton<PlayerController>
             }
 
             Move(_moveDirection, currentSpeed);
-            // 발소리 처리
+            
+            // 발자국 소리 처리
             bool isRunning = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
             float currentInterval = isRunning ? runInterval : stepInterval;
-            List<AudioClip> currentSounds;
-            if (_isWater)
-            {
-                currentSounds = _waterWalkSounds;
-            }
-            else
-            {
-                currentSounds = isRunning ? runSounds : _walkSounds;
-            }
+            
             float movedDistance = Vector3.Distance(transform.position, _lastPos);
-            if (movedDistance>0.01f&&Time.time >= lastStepTime + currentInterval)
+            if (movedDistance > 0.01f && Time.time >= lastStepTime + currentInterval)
             {
-                int randomIndex = UnityEngine.Random.Range(0, currentSounds.Count);
-                footstepSource.clip = currentSounds[randomIndex];
-                footstepSource.volume = SoundManager.Instance.sfxVolume;
-                footstepSource.Play();
+                PlayFootstepSound(isRunning);
                 lastStepTime = Time.time;
             }
 
-            
             if (PlayerInteract.Instance.curTrigger != null && PlayerInteract.Instance.isInsideTrigger && PlayerInteract.Instance.canInteract)
             {
                 PlayerInteract.Instance.curTrigger.GetComponent<EventTrigger>().OnTriggerEnter(GetComponent<CapsuleCollider>());
-                //NooSphere.Debug.LogWarning("트리거 내에서 이동했을 때 강제로 다시 트리거 엔터 호출");
             }
-            
         }
         else
         {
@@ -184,19 +171,44 @@ public class PlayerController : Singleton<PlayerController>
             currentVelocity.z = 0f;
             _rigidbody.velocity = currentVelocity;
         }
+        
         _lastPos = transform.position; 
     }
 
-    private void Move(Vector3 direction,float speed)
+    private void PlayFootstepSound(bool isRunning)
     {
-      
+        // 물속일 때는 FMOD 사용
+        if (_isWater)
+        {
+            FMOD.Studio.EventInstance footstepInstance = RuntimeManager.CreateInstance(_waterFootstepEvent);
+    
+            FMOD.ATTRIBUTES_3D attributes = RuntimeUtils.To3DAttributes(transform.position);
+    
+            footstepInstance.set3DAttributes(attributes);
+            
+            footstepInstance.setVolume(SoundManager.Instance.sfxVolume);
+    
+            footstepInstance.start();
+            footstepInstance.release();
+        }
+        else
+        {
+            // 일반 상태일 때는 AudioClip 사용
+            List<AudioClip> currentSounds = isRunning ? runSounds : _walkSounds;
+            int randomIndex = UnityEngine.Random.Range(0, currentSounds.Count);
+            footstepSource.clip = currentSounds[randomIndex];
+            footstepSource.volume = SoundManager.Instance.sfxVolume;
+            footstepSource.Play();
+        }
+    }
+
+    private void Move(Vector3 direction, float speed)
+    {
         if (direction != Vector3.zero)
         {
             transform.rotation = Quaternion.LookRotation(direction);
-
-            // velocity를 사용한 이동
             Vector3 targetVelocity = direction * speed;
-            targetVelocity.y = _rigidbody.velocity.y; // 현재 수직 속도 유지
+            targetVelocity.y = _rigidbody.velocity.y;
             _rigidbody.velocity = targetVelocity;
         }
     }
@@ -246,12 +258,17 @@ public class PlayerController : Singleton<PlayerController>
 
         if (_uiCanvas == null)
         {
-            _uiCanvas = GameObject.Find("UI Canvas").GetComponent<Canvas>();
+            Debug.Log("UI 찾기1 :  " + UIManager.Instance.gameObject.name);
+            Debug.Log("UI 찾기2 :  " + FindAnyObjectByType<HereIsUICanvas>().gameObject.name);
+            _uiCanvas = UIManager.Instance.transform.GetChild(0).GetComponent<Canvas>();
+            if (_uiCanvas.renderMode == RenderMode.ScreenSpaceCamera) _uiCanvas.worldCamera = _mainCamera;
         }
-        if(_uiCanvas.renderMode == RenderMode.ScreenSpaceCamera) _uiCanvas.worldCamera = _mainCamera;
-        
+        else
+        {
+            if (_uiCanvas.renderMode == RenderMode.ScreenSpaceCamera) _uiCanvas.worldCamera = _mainCamera;
+        }
+
         GameObject parent = GameObject.Find("-----[Cameras]");
-        //dialogue camera 찾기
         foreach (Transform child in parent.transform)
         {
             if (child.name == "Dialogue Camera") 
@@ -268,5 +285,10 @@ public class PlayerController : Singleton<PlayerController>
                 }
             }
         }
+    }
+
+    public void SetDialogueCam(Cinemachine.CinemachineVirtualCamera cam)
+    {
+        _dialogueCamera = cam;
     }
 }

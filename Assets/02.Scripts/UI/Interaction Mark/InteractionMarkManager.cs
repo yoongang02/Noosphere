@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -11,6 +11,12 @@ public class InteractionMarkManager : Singleton<InteractionMarkManager>
     public GameObject _useEvidenceKeyPrefab; // 증거물 사용하기 키 UI
     public GameObject _openDoorKeyPrefab; // 문 열기 UI
     public GameObject _talkNpcPrefab; // NPC 대화 UI
+
+    [Header("방 이름")]
+    public GameObject _R101Prefab;
+    public GameObject _R102Prefab;
+    public GameObject _R103Prefab;
+    public GameObject _R104Prefab;
 
 
     // 상호작용 키 활성화 함수
@@ -34,6 +40,12 @@ public class InteractionMarkManager : Singleton<InteractionMarkManager>
             {
                 if (!eventTrigger.isDoorOpen)
                 {
+                    if(eventID == "Event_B028")
+                    {
+                        GameObject roomName = Instantiate(_R101Prefab);
+                        roomName.transform.SetParent(parent, false);
+                    }
+
                     interactionKey = Instantiate(_openDoorKeyPrefab);
                     interactionKey.transform.SetParent(parent, false);
                 }

@@ -8,10 +8,12 @@ public class PointEffect : MonoBehaviour
 {
     [SerializeField] private float _frontAngle = 40f;
     [SerializeField] private EventTrigger _researchTrigger;
+    [SerializeField] private Transform _researcher;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && IsPlayerFront(other.GetComponent<Transform>()))
+        if (other.CompareTag("Player"))
         {
+            PlayerInteract.Instance.gameObject.transform.LookAt(_researcher);
             PlayerInteract.Instance.isInsideTrigger = true;
             PlayerInteract.Instance.curTrigger = _researchTrigger;
             

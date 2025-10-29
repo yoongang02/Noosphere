@@ -1,13 +1,35 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
-using Cysharp.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class EventManagerYKM : Singleton<EventManagerYKM>
+public class EventManagerYKM : MonoBehaviour
 {
+    public static EventManagerYKM Instance { get; private set; }
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
     //스테이지 번호
     public enum ChapterInfo
     {
@@ -25,34 +47,75 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
     }
     public RoomInfo curRoomInfo;
     public ChapterInfo curChapterInfo;
-    
+
     //다음 이벤트 정보
     public string startEventID;
     public string currentEventID;
     public string nextEventID = "";
-    
+
     //이벤트 성공 여부 
     private bool _isEventSuccess = false;
     private bool _isQuizSolved = true;
     [SerializeField] private bool _isRepeatFalse = false;
     [SerializeField] private bool _isConditionMet = false;
-    
+
     //자동저장 딜레이 시간
-    [SerializeField] private float _autoSaveDelayTime = 3f;
-    
-    void Awake()
+    [SerializeField] private float _autoSaveDelayTime = 2.5f;
+
+    //플레이어 프리팹
+    [SerializeField] private GameObject _player;
+
+    //이벤트 세팅 완료 flag
+    private bool _isEventSetupComplete = false;
+
+    void InitState()
     {
+        Debug.LogWarning("이벤트 매니저 초기화");
         //게임 시작 시, 스테이지 정보 초기화
-        curChapterInfo = ChapterInfo.Prologue;
-        curRoomInfo = RoomInfo.Room_101;
-        nextEventID = startEventID;
+        curChapterInfo = (ChapterInfo)InventoryManager.Instance.currentViewChapter;
+        if (FindObjectOfType<RoomInfoManager>() is RoomInfoManager roomInfoManager)
+        {
+            curRoomInfo = roomInfoManager.roomInfo;
+        }
+
+        // 경로 설정
+        string folderPath = Path.Combine(Application.persistentDataPath, "Saves");
+        int selectSlotIndex = NooSphere.SaveManager.Instance.selectSlotIndex;
+        string filePath = Path.Combine(folderPath, $"slot{selectSlotIndex}.es3");
+        
+        // 이벤트 상태 초기화
+        currentEventID = ES3.Load<string>("CurrentEventID", filePath);
+        nextEventID = ES3.Load<string>("NextEventID", filePath);
+
+        // 플레이어 위치, 회전 초기화
+        Instantiate(_player, NooSphere.SaveManager.Instance.GetPlayerTransform(selectSlotIndex).position, NooSphere.SaveManager.Instance.GetPlayerTransform(selectSlotIndex).rotation);
+        PlayerInteract.Instance.OnInteract = null;
+        PlayerInteract.Instance.OnEvidenceUse = null;
+        PlayerInteract.Instance.OnMentalInteract = null;
+        PlayerInteract.Instance.isInsideTrigger = false;
+
+        // 카메라 초기화
+        if(FindAnyObjectByType<AssignPlayer>() is AssignPlayer assignPlayer)
+        {
+            //assignPlayer.DoAssign();
+        }
+
+        // 정신세계 진입 상태 초기화
+        MentalEnterProcess mentalInfo = PlayerController.Instance.GetComponent<MentalEnterProcess>();
+        mentalInfo.SetCombackEventId(ES3.Load<string>("CombackEventID", filePath));
+        PlayerInteract.Instance.isInMental = ES3.Load<bool>("IsInMental", filePath);
+        mentalInfo.mentalInfo = ES3.Load<MentalStructure>("MentalInfo", filePath);
+
+        // 이어하기 모든 단계 완료, 로드 상태 NewGame으로 초기화
+        NooSphere.SaveManager.Instance.SetLoadType(NooSphere.GameLoadType.NewGame);
+        NooSphere.SaveManager.Instance.SetSlotIndex(-1);
+
+        // 인벤토리 설정
+        InventoryManager.Instance.LoadInventoryData();
+
+        PlayerController.Instance.canMove = true;
     }
 
-    void Start()
-    {
-        ExecuteEvent(startEventID).Forget();
-    }
- 
     //현재 실행될 수 있는 이벤트인지 검사 -> 실행 가능하다면 플레이어에게 ? 띄우기
     public bool CheckExecutable(string eventID)
     {
@@ -554,17 +617,20 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
         nextEventID = _event.nextEventId;
 
         // autoSave가 true라면, 자동 저장 진행
-        if (_event.autoSave)
+        if (_event.autoSave && !_event.autoSaveComplete)
         {
+            Debug.Log(_event.autoSaveDelay + "자동 저장 딜레이 옵션");
             if (_event.autoSaveDelay == 2)
             {
+                _event.autoSaveComplete = true;
                 StartCoroutine(DoAutoSaveDelay(_event));
             }
             else if(_event.autoSaveDelay != 1)
             {
                 Debug.Log(_event.eventId + "자동 저장 실행");
                 NooSphere.SaveManager.Instance.SetSlotIndex(1);
-                StartCoroutine(NooSphere.SaveManager.Instance.DoSave());
+                _event.autoSaveComplete = true;
+                StartCoroutine(NooSphere.SaveManager.Instance.DoAutoSave());
             }
         }
     }
@@ -576,9 +642,38 @@ public class EventManagerYKM : Singleton<EventManagerYKM>
 
     IEnumerator DoAutoSaveDelay(EventStructure _event)
     {
-        yield return new WaitForSeconds(_autoSaveDelayTime);
-        Debug.Log(_event.eventId + "자동 저장 실행");
+        yield return new WaitForSecondsRealtime(_autoSaveDelayTime);
+        Debug.Log(_event.eventId + "자동 저장 딜레이 실행");
         NooSphere.SaveManager.Instance.SetSlotIndex(1);
-        StartCoroutine(NooSphere.SaveManager.Instance.DoSave());
+        StartCoroutine(NooSphere.SaveManager.Instance.DoAutoSave());
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        var isEventScene = FindAnyObjectByType<IsEventScene>();
+        if (isEventScene == null || _isEventSetupComplete) return;
+        Debug.LogWarning("씬 로드 완료 - 이벤트 씬임!!" + scene.name);
+        if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.NewGame)
+        {
+            Debug.LogWarning("이벤트 매니저 초기화 여기 실행 돼??" + NooSphere.SaveManager.Instance.CurrentLoadType);
+            curChapterInfo = ChapterInfo.Prologue;
+            curRoomInfo = RoomInfo.Room_101;
+            nextEventID = startEventID;
+
+            // 인벤토리 설정
+            InventoryManager.Instance.InitInventory();
+
+            ExecuteEvent(startEventID).Forget();
+        }
+        else
+        {
+            InitState();
+        }
+        _isEventSetupComplete = true;
+    }
+
+    public void SetEventSetUpFlag(bool value)
+    {
+        _isEventSetupComplete = value;
     }
 }

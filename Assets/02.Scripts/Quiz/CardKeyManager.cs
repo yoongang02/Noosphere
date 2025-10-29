@@ -41,15 +41,20 @@ public class CardKeyManager : UIBase
 
     void InitCardKey()
     {
-        int index = 1;
-        foreach (var key in _cardKeys)
+        bool hasAnyAcquired = false;
+        foreach (string key in _cardKeys)
         {
             if (DataManager.Instance._evidences[key].isAcquired)
             {
-                _cardKeyButtons[index-1].InitCardKey();
-                return;
+                hasAnyAcquired = true;
+                break;
             }
-            index++;
+        }
+        for (int i = 0; i < _cardKeys.Length; i++)
+        {
+            string key = _cardKeys[i];
+            bool isAcquired = DataManager.Instance._evidences[key].isAcquired;
+            _cardKeyButtons[i].InitCardKey(isAcquired, !hasAnyAcquired);
         }
     }
 }

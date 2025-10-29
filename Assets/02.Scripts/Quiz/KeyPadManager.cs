@@ -10,7 +10,7 @@ public class KeyPadManager : UIBase
     private string _curQuizID;
     private QuizStructure _curQuiz;
     [SerializeField] private TextMeshProUGUI _inputText;
-    
+    private bool isOpen = false;
     private static KeyPadManager _instance;
     public static KeyPadManager Instance
     {
@@ -40,7 +40,28 @@ public class KeyPadManager : UIBase
 
         _instance = this;
     }
-    
+
+    private void Update()
+    {
+        if (!isOpen) return;
+        for (int i = 0; i <= 9; i++)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha0 + i) || Input.GetKeyDown(KeyCode.Keypad0 + i))
+            {
+                SetDialText(i.ToString());
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            SetDialText("-1");
+        }
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            CheckAnswer();
+        }
+    }
+
     public override void OnOpen(string quizID)
     {
         base.OnOpen(quizID);
@@ -50,6 +71,7 @@ public class KeyPadManager : UIBase
         _curQuiz = DataManager.Instance._quiz[_curQuizID];
         Debug.Log($"# quiz id : {quizID}, _curQuiz : {_curQuiz}");
         transform.GetChild(0).gameObject.SetActive(true);
+        isOpen = true;
         _inputText.text ="";
     }
     public override void OnClose()
@@ -57,10 +79,13 @@ public class KeyPadManager : UIBase
         base.OnClose();
         transform.GetChild(0).gameObject.SetActive(false);
         UIManager.Instance.cctvFrame.SetActive(true);
+        isOpen = false;
         QuizManager.Instance.OnQuizEnd?.Invoke();
     }
     public void SetDialText(string number)
     {
+        int randNum = Random.Range(78, 82);
+        SoundManager.Instance.PlaySFX($"Soundresource_0{randNum}");
         if (number == "-1")
         {
             if (_inputText.text.Length > 0)

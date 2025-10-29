@@ -28,8 +28,18 @@ public class UIManager : Singleton<UIManager>
     
     public Action OnSelectEnd;
     public bool isYesClicked = false;
+    public List<string> excludedOptionScenes = new List<string>();
+
     private void Update()
     {
+        foreach (string sceneName in excludedOptionScenes)
+        {
+            if (SceneManager.GetActiveScene().name == sceneName)
+            {
+                return; // 현재 씬이 제외된 씬 중 하나라면 UI를 열지 않음
+            }
+        }
+
         // ESC 버튼 입력 처리
         if (InputRouter.Instance.ConsumeEscape())
         {
@@ -41,6 +51,13 @@ public class UIManager : Singleton<UIManager>
             if (FindObjectOfType<MirrorDialogueManager>() != null)
             {
                 if(FindObjectOfType<MirrorDialogueManager>().IsTopUI()) return;
+            }
+
+            if (!IsAnyUIOpen() && !DefaultUIController.Instance.IsAnyUIOpen() && PlayerInteract.Instance.canInteract)
+            {
+                Debug.Log("Escape key pressed, opening resume UI");
+                DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.inGameOptionUI);
+                return;
             }
             CloseTopUI();
         }
@@ -62,7 +79,8 @@ public class UIManager : Singleton<UIManager>
             }
             else
             {
-                keyGuideUI.SetActive(true);
+                if(keyGuideUI != null)
+                    keyGuideUI.SetActive(true);
             }
         }
 
@@ -99,19 +117,22 @@ public class UIManager : Singleton<UIManager>
         else
         {
 
-            if (PlayerInteract.Instance.GetComponent<MentalEnterProcess>().IsEnterNow() || InventoryManager.Instance.canOpenInventory)
+            if(FindObjectOfType<PlayerInteract>() != null && FindAnyObjectByType<InventoryManager>() != null)
             {
-                inventoryIcon.SetActive(false);
-                keyGuideUI.SetActive(false);
-                return;
+                if (FindObjectOfType<PlayerInteract>().GetComponent<MentalEnterProcess>().IsEnterNow() || InventoryManager.Instance.canOpenInventory)
+                {
+                    inventoryIcon.SetActive(false);
+                    keyGuideUI.SetActive(false);
+                    return;
+                }
             }
-            
             
 
             if (FindObjectOfType<HintImage>() == null)
             {
                 //인벤토리 아이콘 활성화
-                inventoryIcon.SetActive(true);
+                if(inventoryIcon != null)
+                    inventoryIcon.SetActive(true);
             }
         }
     }

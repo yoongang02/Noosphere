@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+﻿using Unity.VisualScripting;
 using UnityEngine;
 
 public class EventStructure
@@ -19,7 +19,8 @@ public class EventStructure
     public string nextEventId;
     public bool autoSave;
     public int autoSaveDelay; // 1 : 문, 2 : N초 딜레이
-    
+    public bool autoSaveComplete; //자동 저장 완료 여부
+
     //이벤트 실행 여부
     public bool isExecuted = false;
     

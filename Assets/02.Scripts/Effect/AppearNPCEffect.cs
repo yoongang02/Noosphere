@@ -5,6 +5,7 @@ using UnityEditor.Rendering.Universal;
 using UnityEngine;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
+using UnityEngine.SceneManagement;
 public class AppearNPCEffect : MonoBehaviour
 {
   
@@ -17,6 +18,13 @@ public class AppearNPCEffect : MonoBehaviour
     [SerializeField] private float _fadeInDuration = 1f;
     private void OnEnable()
     {
+        var player=GameObject.FindWithTag("Player");
+        if (player != null&&SceneManager.GetActiveScene().name=="Stage1Map_spirit")
+        {
+            int playerLayer=LayerMask.NameToLayer("IgnoreMirrorCam - wall");
+            SetLayerRecursively(player, playerLayer);
+        }
+
         _npcObj.SetActive(true);
         // 알파값 초기화
         Color startColor = _alphaMat.GetColor("_BaseColor");
@@ -46,5 +54,14 @@ public class AppearNPCEffect : MonoBehaviour
     private void OnDisable()
     {
         DOTween.Kill(_alphaMat);
+       
+    }
+    void SetLayerRecursively(GameObject obj, int newLayer)
+    {
+        obj.layer = newLayer;
+        foreach (Transform child in obj.transform)
+        {
+            SetLayerRecursively(child.gameObject, newLayer);
+        }
     }
 }
