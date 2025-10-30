@@ -289,6 +289,7 @@ public class TimeLineSignalManager : MonoBehaviour
 
     public void StartFadeIn()
     {
+        SoundManager.Instance.StopBGM(2f);
         FadeIn().Forget();
     }
 
