@@ -182,21 +182,21 @@ public class SoundManager : Singleton<SoundManager>
             return;
         }
 
-        StopBGM();
+        StopBGM(1.5f);
         SetAudioSource(_bgmSource, soundData);
         _bgmSource.loop = true;
-        _bgmSource.volume = soundData.volume*bgmVolume;
+        _bgmSource.volume = 0;
   
         _bgmSource.Play();
         DOTween.To(() => _bgmSource.volume, x => _bgmSource.volume = x, soundData.volume * bgmVolume, 1f);
     }
 
     public void StopForceBGM() => _bgmSource.Stop();
-    public void StopBGM()
+    public void StopBGM(float duration)
     {
         if (_bgmSource.isPlaying)
         {
-            DOTween.To(() => _bgmSource.volume, x => _bgmSource.volume = x, 0f, 1.5f)
+            DOTween.To(() => _bgmSource.volume, x => _bgmSource.volume = x, 0f, duration)
                 .OnComplete(() => _bgmSource.Stop());
         }
         

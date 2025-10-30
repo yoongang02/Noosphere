@@ -224,14 +224,14 @@ public class TimeLineSignalManager : MonoBehaviour
 
     private async UniTaskVoid StartBgmAsync(string soundResource)
     {
-        SoundManager.Instance.StopBGM();
+        SoundManager.Instance.StopBGM(1.5f);
         await UniTask.Delay(TimeSpan.FromSeconds(1.6f)); // 페이드아웃 대기
         SoundManager.Instance.PlayBGM(soundResource);
     }
 
     private async UniTaskVoid StopBgm()
     {
-        SoundManager.Instance.StopBGM();
+        SoundManager.Instance.StopBGM(1.5f);
         await UniTask.Delay(TimeSpan.FromSeconds(1.6f));
     }
 
