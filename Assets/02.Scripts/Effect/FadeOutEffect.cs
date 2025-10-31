@@ -13,6 +13,8 @@ public class FadeOutEffect : MonoBehaviour
     {
         SoundManager.Instance.StopAllSFX();
         SoundManager.Instance.StopBGM(4);
+        UIManager.Instance.inventoryIcon.SetActive(false);
+        InventoryManager.Instance.canOpenInventory = true;
         PlayerController.Instance.canMove = false;
         _fadeImage.color = new Color(0, 0, 0, 0);
         _fadeImage.DOFade(1f, 5f)
