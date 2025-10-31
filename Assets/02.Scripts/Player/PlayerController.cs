@@ -86,6 +86,14 @@ public class PlayerController : Singleton<PlayerController>
         
         // ui canvas 할당
         _uiCanvas = InventoryManager.Instance.transform.GetComponentInParent<Canvas>();
+        if (SceneManager.GetActiveScene().name== "FinalStage_Spirit")
+        {
+            _isWater = true;
+        }
+        else
+        {
+            _isWater = false;
+        }
     }
 
     private void Update()
