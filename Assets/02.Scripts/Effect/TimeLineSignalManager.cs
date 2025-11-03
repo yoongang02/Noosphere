@@ -289,6 +289,8 @@ public class TimeLineSignalManager : MonoBehaviour
 
     public void StartFadeIn()
     {
+        UIManager.Instance.inventoryIcon.SetActive(false);
+        InventoryManager.Instance.canOpenInventory = true;
         SoundManager.Instance.StopBGM(2f);
         FadeIn().Forget();
     }

@@ -17,6 +17,8 @@ public class EndingScene : MonoBehaviour
     private void Start()
     {
         SoundManager.Instance.PlaySFXNoEffect("Soundresource_130");
+        InventoryManager.Instance.canOpenInventory = true;
+        UIManager.Instance.inventoryIcon.SetActive(false);
         if (DataManager.Instance._events["Event_D103"].isExecuted)
         {
             _friendObj.SetActive(false);
