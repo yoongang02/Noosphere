@@ -179,8 +179,17 @@ public class EvidenceDetailUI : UIBase
                 Destroy(child.gameObject);
             }
         }
+
+        GameObject prefab;
+        if (artResource.artresourceId == "Artresource_0016")
+        {
+            prefab = artResource.GetPrefabFromFilePath(true);
+        }
+        else
+        {
+            prefab = artResource.GetPrefabFromFilePath(false);
+        }
         
-        GameObject prefab = artResource.GetPrefabFromFilePath();
         if (prefab != null)
         {
             Instantiate(prefab, _objectUI.transform);

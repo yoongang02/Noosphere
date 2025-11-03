@@ -1,4 +1,5 @@
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Localization.Settings;
 
 public class ArtResourceStructure
 {
@@ -27,9 +28,20 @@ public class ArtResourceStructure
         return resultSprite;
     }
 
-    public GameObject GetPrefabFromFilePath()
+    public GameObject GetPrefabFromFilePath(bool isLocalized)
     {
-        GameObject resultGameObject = Resources.Load<GameObject>(filePathEvidencePrefab);
+        GameObject resultGameObject;
+        if (isLocalized)
+        {
+            string localInfo = LocalizationSettings.SelectedLocale.Identifier.Code;
+            string localizedPath = filePathEvidencePrefab.Replace("LOCAL", localInfo);
+
+            resultGameObject = Resources.Load<GameObject>(localizedPath);
+        }
+        else
+        {
+            resultGameObject = Resources.Load<GameObject>(filePathEvidencePrefab);
+        }
 
         if (resultGameObject == null)
         {
