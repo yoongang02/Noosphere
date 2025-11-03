@@ -8,6 +8,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
+using UnityEngine.Localization.Settings;
+
+public class EvidenceConstants
+{
+    public static readonly string EvidenceNameTable = "EvidenceName";
+    public static readonly string EvidenceContentTable = "EvidenceDescription";
+}
 
 public class InventoryNavigator : UIBase
 {
@@ -235,8 +242,8 @@ public class InventoryNavigator : UIBase
             EvidenceStructure evidence = DataManager.Instance._evidences[slot.GetComponent<InventorySlotInfo>().evidenceId];
             
             // 증거물 이름과 설명 업데이트
-            _evidenceName.text = evidence.evidenceName;
-            _evidenceContent.text = evidence.evidenceTextDisplay;
+            _evidenceName.text = LocalizationSettings.StringDatabase.GetLocalizedString(EvidenceConstants.EvidenceNameTable, evidence.evidenceName, LocalizationSettings.SelectedLocale);
+            _evidenceContent.text = LocalizationSettings.StringDatabase.GetLocalizedString(EvidenceConstants.EvidenceContentTable, evidence.evidenceTextDisplay, LocalizationSettings.SelectedLocale);
             
             // 증거물 디테일 배경 업데이트
             if (evidence.evidenceType == 'R')
