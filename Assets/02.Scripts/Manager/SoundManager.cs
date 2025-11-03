@@ -21,7 +21,8 @@ public class SoundManager : Singleton<SoundManager>
     [SerializeField]
     private List<AudioSource> _sfxSources = new List<AudioSource>(); // SFX를 재생하는 AudioSource 리스트
     [SerializeField] private int _maxSFXPoolSize = 10;
-
+    private const string BGM_FADE_ID = "BGM_FADE";
+    private Tween _bgmFadeTween;
     public float sfxVolume;
     public float bgmVolume;
     /* 사운드 Data 시트에 따라 업데이트 하고 싶으면, 이 주석 제거한 뒤 실행하면 생성됨.
@@ -168,38 +169,60 @@ public class SoundManager : Singleton<SoundManager>
 */
     public void PlayBGM(string id)
     {
-        SoundData soundData = _bgmDictionary[id];
-        if (soundData == null || soundData.soundClip == null)
+        // 🔴 이전 씬에서 걸린 페이드 트윈 제거(DDOL이라 꼭 필요)
+        DOTween.Kill(BGM_FADE_ID, complete: false);
+        if (_bgmFadeTween != null && _bgmFadeTween.IsActive()) _bgmFadeTween.Kill();
+        _bgmFadeTween = null;
+
+        if (!_bgmDictionary.TryGetValue(id, out var data) || data?.soundClip == null)
         {
-            Debug.LogWarning("SoundData가 유효하지 않습니다.");
+            Debug.LogWarning("SoundData가 유효하지 않습니다."); return;
+        }
+
+        // 같은 곡 재생 최적화는 '트윈 킬' 이후에 검사해야 안전
+        if (_bgmSource.clip == data.soundClip && _bgmSource.isPlaying)
+        {
+            // 혹시 볼륨이 0으로 남았을 수 있으니 복구
+            _bgmSource.volume = data.volume * bgmVolume;
             return;
         }
 
-        // 현재 재생 중인 BGM과 같다면 다시 재생할 필요 없음
-        if (_bgmSource.clip == soundData.soundClip && _bgmSource.isPlaying)
-        {
-            Debug.Log("현재 재생 중인 BGM과 동일합니다.");
-            return;
-        }
-
-        StopBGM(1.5f);
-        SetAudioSource(_bgmSource, soundData);
+        _bgmSource.Stop();                 // 이전 클립 정리
+        SetAudioSource(_bgmSource, data);  // 클립/설정 반영
         _bgmSource.loop = true;
-        _bgmSource.volume = 0;
-  
+        _bgmSource.volume = 0f;
         _bgmSource.Play();
-        DOTween.To(() => _bgmSource.volume, x => _bgmSource.volume = x, soundData.volume * bgmVolume, 1f);
+
+        DOTween.To(() => _bgmSource.volume, x => _bgmSource.volume = x,
+            data.volume * bgmVolume, 1f);
     }
 
     public void StopForceBGM() => _bgmSource.Stop();
+    // public void StopBGM(float duration)
+    // {
+    //     if (_bgmSource.isPlaying)
+    //     {
+    //         DOTween.To(() => _bgmSource.volume, x => _bgmSource.volume = x, 0f, duration)
+    //             .OnComplete(() => _bgmSource.Stop());
+    //     }
+    //     
+    // }
+    
     public void StopBGM(float duration)
     {
+        if (_bgmFadeTween != null && _bgmFadeTween.IsActive()) _bgmFadeTween.Kill();
+
         if (_bgmSource.isPlaying)
         {
-            DOTween.To(() => _bgmSource.volume, x => _bgmSource.volume = x, 0f, duration)
-                .OnComplete(() => _bgmSource.Stop());
+            _bgmFadeTween = DOTween
+                .To(() => _bgmSource.volume, x => _bgmSource.volume = x, 0f, duration)
+                .SetId(BGM_FADE_ID)
+                .OnComplete(() =>
+                {
+                    _bgmSource.Stop();
+                    _bgmFadeTween = null;
+                });
         }
-        
     }
     public void PlaySFX(string id)
     {
