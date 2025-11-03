@@ -3,9 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+public class LocalizationConstants
+{
+    public static readonly string UITextTable = "UIText";
+}
 public class ResumeUI : DefaultUIBase
 {
     [Header("Slot 관련")]
@@ -68,9 +73,12 @@ public class ResumeUI : DefaultUIBase
 
         if (hasData)
         {
-            slotInfoTexts[listIndex].locationText.text = "저장 위치 : " + NooSphere.SaveManager.Instance.GetLocationData(slotIndex);
-            slotInfoTexts[listIndex].playTimeText.text = "플레이 타임 : " + NooSphere.SaveManager.Instance.GetPlayTimeData(slotIndex);
-            slotInfoTexts[listIndex].dateTimeText.text = "저장 일시 : " + NooSphere.SaveManager.Instance.GetDateTimeData(slotIndex);
+            string location = LocalizationSettings.StringDatabase.GetLocalizedString(LocalizationConstants.UITextTable, "UI_Local_010", LocalizationSettings.SelectedLocale);
+            string playTime = LocalizationSettings.StringDatabase.GetLocalizedString(LocalizationConstants.UITextTable, "UI_Local_011", LocalizationSettings.SelectedLocale);
+            string dateTime = LocalizationSettings.StringDatabase.GetLocalizedString(LocalizationConstants.UITextTable, "UI_Local_012", LocalizationSettings.SelectedLocale);
+            slotInfoTexts[listIndex].locationText.text = location + " : " + NooSphere.SaveManager.Instance.GetLocationData(slotIndex);
+            slotInfoTexts[listIndex].playTimeText.text = playTime + " : " + NooSphere.SaveManager.Instance.GetPlayTimeData(slotIndex);
+            slotInfoTexts[listIndex].dateTimeText.text = dateTime + " : " + NooSphere.SaveManager.Instance.GetDateTimeData(slotIndex);
         }
 
         slotInfoTexts[listIndex].locationText.gameObject.SetActive(hasData);
