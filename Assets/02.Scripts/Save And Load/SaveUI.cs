@@ -267,6 +267,11 @@ public class SaveUI : DefaultUIBase
     public void ClickSlotDeleteBtn()
     {
         if (!CanInteractWithBtn()) return;
+
+        int curSelectedSlotIndex = NooSphere.SaveManager.Instance.selectSlotIndex;
+        bool hasData = NooSphere.SaveManager.Instance.HasSaveData(curSelectedSlotIndex);
+        if (!hasData) return;
+
         Debug.LogWarning("슬롯 삭제 클릭");
         DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.slotDeleteUI);
     }
@@ -329,8 +334,11 @@ public class SaveUI : DefaultUIBase
     {
         int curSelectedSlotIndex = NooSphere.SaveManager.Instance.selectSlotIndex;
 
-        if (curSelectedSlotIndex == 1 || curSelectedSlotIndex == 2 || curSelectedSlotIndex == 3) return true;
-        return false;
+        if (curSelectedSlotIndex == 1 || curSelectedSlotIndex == 2 || curSelectedSlotIndex == 3)
+        {
+            return true;
+        }
+        else return false;
     }
 
 

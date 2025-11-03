@@ -277,6 +277,11 @@ public class ResumeUI : DefaultUIBase
     public void ClickSlotDeleteBtn()
     {
         if (!CanInteractWithBtn()) return;
+        
+        int curSelectedSlotIndex = NooSphere.SaveManager.Instance.selectSlotIndex;
+        bool hasData = NooSphere.SaveManager.Instance.HasSaveData(curSelectedSlotIndex);
+        if (!hasData) return;
+
         Debug.LogWarning("슬롯 삭제 클릭");
         DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.slotDeleteUI);
     }
