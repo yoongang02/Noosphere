@@ -10,5 +10,8 @@ public class FinalStageRealStart : MonoBehaviour
     {
         DataManager.Instance._lockConditions["Lock_condition_001"].Lock();
         EventManagerYKM.Instance.ExecuteEvent("Event_D098").Forget();
+        UIManager.Instance.inventoryIcon.SetActive(false);
+        InventoryManager.Instance.canOpenInventory = true;
+        
     }
 }

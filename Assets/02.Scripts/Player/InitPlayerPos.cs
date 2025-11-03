@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class InitPlayerPos : MonoBehaviour
 {
+    [SerializeField] private string _eventID;
     private void Awake()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -18,9 +19,14 @@ public class InitPlayerPos : MonoBehaviour
     
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Transform player = GameObject.FindWithTag("Player").transform;
-        player.position = gameObject.transform.position;
-        player.rotation = gameObject.transform.rotation;
+
+        if (!DataManager.Instance._events[_eventID].isExecuted)
+        {
+            Transform player = GameObject.FindWithTag("Player").transform;
+            player.position = gameObject.transform.position;
+            player.rotation = gameObject.transform.rotation;    
+        }
+        
         if(scene.name == "FinalStage_Spirit") EventManagerYKM.Instance.ExecuteEvent("Event_D085").Forget();
     }
 }

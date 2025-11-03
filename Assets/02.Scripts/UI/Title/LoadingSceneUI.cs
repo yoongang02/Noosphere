@@ -49,7 +49,7 @@ public class LoadingSceneUI : MonoBehaviour
     private async UniTask FadeOut()
     {
         _fadeImage.color = new Color(0, 0, 0, 0);
-        SoundManager.Instance.StopBGM();
+        SoundManager.Instance.StopBGM(1.5f);
         await _fadeImage.DOFade(1, _fadeDuration).AsyncWaitForCompletion();
     }
 }
