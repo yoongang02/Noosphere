@@ -51,8 +51,19 @@ public class TitleSceneUI : DefaultUIBase
             DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.resetUI);
             return;
         }
+
+        DisableBtnEvent();
         NooSphere.SaveManager.Instance.SetLoadType(NooSphere.GameLoadType.NewGame);
         SceneChanger.Instance.ChangeScene("LoadingScene").Forget();
+    }
+
+    private void DisableBtnEvent()
+    {
+        _loadGameBtn.onClick.RemoveAllListeners();
+        _newGameBtn.onClick.RemoveAllListeners();
+        _creditBtn.onClick.RemoveAllListeners();
+        _settingBtn.onClick.RemoveAllListeners();
+        _exitBtn.onClick.RemoveAllListeners();
     }
 
     private void OnClickCreditBtn()
