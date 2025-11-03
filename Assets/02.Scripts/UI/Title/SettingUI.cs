@@ -19,6 +19,9 @@ public class SettingUI : DefaultUIBase
     [SerializeField] private TextMeshProUGUI _soundText;
     [SerializeField] private TextMeshProUGUI _bgmText;
 
+    [Header("언어")]
+    [SerializeField] private LocalizationManager _localizationManager;
+
     private void Awake()
     {
         Init();
@@ -78,6 +81,9 @@ public class SettingUI : DefaultUIBase
         _bgmVolumeSlider.onValueChanged.AddListener(BgmVolumeChanged);
         _soundVolumeSlider.onValueChanged.AddListener(SoundVolumeChanged);
         _okBtn.interactable = false;
+
+        // 언어 관련 설정
+        _localizationManager.InitLocalization();
     }
 
     private void OnClickOkBtn()
@@ -87,6 +93,10 @@ public class SettingUI : DefaultUIBase
         ES3.Save("BgmVolume", bgmVolume, "Setting.es3");
         ES3.Save("SoundVolume", soundVolume, "Setting.es3");
         ES3.Save("ScreenMode", _fullScreenToggle.isOn, "Setting.es3");
+
+        // 언어 관련 설정 적용
+        _localizationManager.ApplyLocalization();
+
         DefaultUIController.Instance.CloseTopUI();
     }
 
@@ -130,6 +140,9 @@ public class SettingUI : DefaultUIBase
             Screen.SetResolution(1280, 720, false);
         }
 
+        // 언어 관련 설정 적용
+        _localizationManager.WithdrawLocalization();
+
         EventSystem.current.sendNavigationEvents = true;
         DefaultUIController.Instance.CloseTopUI();
     }
@@ -148,6 +161,11 @@ public class SettingUI : DefaultUIBase
         SoundManager.Instance._bgmSource.volume = value;
         int intValue = Mathf.RoundToInt(value * 100);
         _bgmText.text = $"{intValue}%";
+        _okBtn.interactable = true;
+    }
+
+    public void OnLocalChanged()
+    {
         _okBtn.interactable = true;
     }
 
