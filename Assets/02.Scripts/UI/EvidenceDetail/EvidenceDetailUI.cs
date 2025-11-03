@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.Localization.Settings;
 
 public class EvidenceDetailUI : UIBase
 {
@@ -201,6 +202,8 @@ public class EvidenceDetailUI : UIBase
         
         for (int page = 0; page < _totalPage; page++)
         {
+            string localInfo = LocalizationSettings.SelectedLocale.Identifier.Code;
+            imgPath = imgPath.Replace("LOCAL",localInfo);
             int lastUnderscoreIndex = imgPath.LastIndexOf('_'); 
             string prefix = imgPath.Substring(0, lastUnderscoreIndex + 1);
             string modifiedString = $"{prefix}{page:D2}";
