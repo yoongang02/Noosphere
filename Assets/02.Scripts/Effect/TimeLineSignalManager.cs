@@ -269,7 +269,7 @@ public class TimeLineSignalManager : MonoBehaviour
         {
             DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
             string text = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.DialogueTable,
-                doorDialogue.Dialogue_Text_List[i].key, LocalizationSettings.SelectedLocale);
+                doorDialogue.Dialogue_Text_List[i].text, LocalizationSettings.SelectedLocale);
             string processedText = text.Replace("\\n", "<br>");
             _realText.text = $"<mark=#00000055>{processedText}</mark>";
 

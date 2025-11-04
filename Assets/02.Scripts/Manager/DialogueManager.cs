@@ -141,7 +141,7 @@ public class DialogueManager : UIBase
             // 타이핑 시작
             string speakerName = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.CharacterTable, _curDialogue.Dialogue_Text_List[_currentLineIndex].characterId, LocalizationSettings.SelectedLocale);
             _speakerText.text = speakerName;
-            await TypeText(_curDialogue.Dialogue_Text_List[_currentLineIndex].key);
+            await TypeText(_curDialogue.Dialogue_Text_List[_currentLineIndex].text);
             // 타이핑이 완료되었거나 스킵되었을 때만 다음 라인으로 진행
             _currentLineIndex++;
         }

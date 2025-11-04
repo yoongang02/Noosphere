@@ -52,10 +52,11 @@ public class DialogueCSVParser
                     }
 
                     DialogueStructure.DialougeText dialougeText = new DialogueStructure.DialougeText();
-                    dialougeText.key = currentDialogue.dialogueKey;
+                    dialougeText.text = currentDialogue.dialogueText;
                     dialougeText.tutorialID = currentDialogue.tutorialId;
                     dialougeText.characterId = currentDialogue.characterId;
                     
+                    Debug.Log(dialougeText.text);
                     currentDialogue.Dialogue_Text_List.Add(dialougeText);
                     dictionary[currentDialogueId] = currentDialogue;
                 }
@@ -85,9 +86,11 @@ public class DialogueCSVParser
                         }
         
                         DialogueStructure.DialougeText dialougeText = new DialogueStructure.DialougeText();
-                        dialougeText.key = additionalText;
+                        dialougeText.text = additionalText;
                         dialougeText.tutorialID = tutorialID;
                         dialougeText.characterId = characterID;
+                        
+                        Debug.Log(dialougeText.text);
         
                         currentDialogue.Dialogue_Text_List.Add(dialougeText);
                     }

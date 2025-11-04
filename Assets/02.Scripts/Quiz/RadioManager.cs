@@ -206,7 +206,7 @@ public class RadioManager : UIBase
             _audioSource.Play();
             _audioSource.volume = SoundManager.Instance.sfxVolume;
 
-            string radioText = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.DialogueTable, mirrorDialogue.Dialogue_Text_List[i].key, LocalizationSettings.SelectedLocale);
+            string radioText = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.DialogueTable, mirrorDialogue.Dialogue_Text_List[i].text, LocalizationSettings.SelectedLocale);
             _realText.text = $"<mark=#00000055>{radioText}</mark>";
 
             // 페이드 인
@@ -298,7 +298,7 @@ public class RadioManager : UIBase
             if (i < realDialogue.Dialogue_Text_List.Count)
             {
                 string radioText = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.DialogueTable,
-                    realDialogue.Dialogue_Text_List[i].key, LocalizationSettings.SelectedLocale);
+                    realDialogue.Dialogue_Text_List[i].text, LocalizationSettings.SelectedLocale);
                 _realText.text = $"<mark=#00000055>{radioText}</mark>";
                 int randomNum = Random.Range(48, 54); // 48~53
 
@@ -313,7 +313,7 @@ public class RadioManager : UIBase
             if (i < mirrorDialogue.Dialogue_Text_List.Count)
             {
                 string mirrorText = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.DialogueTable,
-                    mirrorDialogue.Dialogue_Text_List[i].key, LocalizationSettings.SelectedLocale);
+                    mirrorDialogue.Dialogue_Text_List[i].text, LocalizationSettings.SelectedLocale);
                 _mirrorText.text = $"<mark=#00000055>{mirrorText}</mark>";
             }
 
