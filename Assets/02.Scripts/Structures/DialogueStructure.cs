@@ -7,7 +7,7 @@ public class DialogueStructure
 {
     public class DialougeText
     {
-        public string text;
+        public string key;
         public string tutorialID;
         public string characterId;
     }
@@ -16,7 +16,7 @@ public class DialogueStructure
     public string characterId;
     public string triggerType;
     public string interactionType;
-    public string dialogueText;
+    public string dialogueKey;
     public string nextDialougeId;
     public string tutorialId;
     public List<DialougeText> Dialogue_Text_List;

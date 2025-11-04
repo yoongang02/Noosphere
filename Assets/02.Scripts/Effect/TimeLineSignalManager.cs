@@ -7,6 +7,8 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using Cinemachine;
 using TMPro;
+using UnityEngine.Localization.Settings;
+using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -266,7 +268,9 @@ public class TimeLineSignalManager : MonoBehaviour
         for (int i = 0; i < doorDialogue.Dialogue_Text_List.Count; i++)
         {
             DataManager.Instance._lockConditions["Lock_condition_003"].Lock();
-            string processedText = doorDialogue.Dialogue_Text_List[i].text.Replace("\\n", "<br>");
+            string text = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.DialogueTable,
+                doorDialogue.Dialogue_Text_List[i].key, LocalizationSettings.SelectedLocale);
+            string processedText = text.Replace("\\n", "<br>");
             _realText.text = $"<mark=#00000055>{processedText}</mark>";
 
             await _realText.DOFade(1f, _fadeDuration).AsyncWaitForCompletion();

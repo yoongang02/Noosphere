@@ -38,6 +38,8 @@ public class DialogueCSVParser
                     currentDialogueId = dialogueId;
                     currentDialogue = new DialogueStructure();
                     currentDialogue.dialogueId = dialogueId;
+                    
+                    
                     currentDialogue.Dialogue_Text_List = new List<DialogueStructure.DialougeText>();
     
                     for (int j = 1; j < headers.Length && j < values.Length; j++)
@@ -50,7 +52,7 @@ public class DialogueCSVParser
                     }
 
                     DialogueStructure.DialougeText dialougeText = new DialogueStructure.DialougeText();
-                    dialougeText.text = currentDialogue.dialogueText;
+                    dialougeText.key = currentDialogue.dialogueKey;
                     dialougeText.tutorialID = currentDialogue.tutorialId;
                     dialougeText.characterId = currentDialogue.characterId;
                     
@@ -83,7 +85,7 @@ public class DialogueCSVParser
                         }
         
                         DialogueStructure.DialougeText dialougeText = new DialogueStructure.DialougeText();
-                        dialougeText.text = additionalText;
+                        dialougeText.key = additionalText;
                         dialougeText.tutorialID = tutorialID;
                         dialougeText.characterId = characterID;
         

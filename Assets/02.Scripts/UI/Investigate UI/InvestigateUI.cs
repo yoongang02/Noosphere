@@ -122,8 +122,8 @@ public class InvestigateUI : UIBase
     //증거물 조사 UI의 정보 세팅하기
     public void SetInvestigateUI(EvidenceStructure evidence)
     {
-        _evidenceName.text = LocalizationSettings.StringDatabase.GetLocalizedString(EvidenceConstants.EvidenceNameTable, evidence.evidenceName, LocalizationSettings.SelectedLocale);
-        _evidenceDescription.text = LocalizationSettings.StringDatabase.GetLocalizedString(EvidenceConstants.EvidenceContentTable, evidence.evidenceTextDisplay, LocalizationSettings.SelectedLocale);
+        _evidenceName.text = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.EvidenceNameTable, evidence.evidenceName, LocalizationSettings.SelectedLocale);
+        _evidenceDescription.text = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.EvidenceContentTable, evidence.evidenceTextDisplay, LocalizationSettings.SelectedLocale);
 
         //아트 리소스 불러오기
         if (DataManager.Instance._artResources.ContainsKey(evidence.artresourceId))

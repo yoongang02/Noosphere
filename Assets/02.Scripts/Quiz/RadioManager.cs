@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using UnityEngine.Localization.Settings;
 using Random = UnityEngine.Random;
 
 public class RadioManager : UIBase
@@ -205,7 +206,8 @@ public class RadioManager : UIBase
             _audioSource.Play();
             _audioSource.volume = SoundManager.Instance.sfxVolume;
 
-            _realText.text = $"<mark=#00000055>{mirrorDialogue.Dialogue_Text_List[i].text}</mark>";
+            string radioText = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.DialogueTable, mirrorDialogue.Dialogue_Text_List[i].key, LocalizationSettings.SelectedLocale);
+            _realText.text = $"<mark=#00000055>{radioText}</mark>";
 
             // 페이드 인
             Tween fadeInTween = _realText.DOFade(1f, _fadeDuration);
@@ -295,7 +297,9 @@ public class RadioManager : UIBase
             // 각 텍스트가 있을 경우에만 표시
             if (i < realDialogue.Dialogue_Text_List.Count)
             {
-                _realText.text = $"<mark=#00000055>{realDialogue.Dialogue_Text_List[i].text}</mark>";
+                string radioText = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.DialogueTable,
+                    realDialogue.Dialogue_Text_List[i].key, LocalizationSettings.SelectedLocale);
+                _realText.text = $"<mark=#00000055>{radioText}</mark>";
                 int randomNum = Random.Range(48, 54); // 48~53
 
                 // 랜덤으로 6개 중에 효과음 하나 선택해서, 그걸 오디오 소스에 반영하기
@@ -308,7 +312,9 @@ public class RadioManager : UIBase
 
             if (i < mirrorDialogue.Dialogue_Text_List.Count)
             {
-                _mirrorText.text = $"<mark=#00000055>{mirrorDialogue.Dialogue_Text_List[i].text}</mark>";
+                string mirrorText = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.DialogueTable,
+                    mirrorDialogue.Dialogue_Text_List[i].key, LocalizationSettings.SelectedLocale);
+                _mirrorText.text = $"<mark=#00000055>{mirrorText}</mark>";
             }
 
             // 동시에 페이드 인

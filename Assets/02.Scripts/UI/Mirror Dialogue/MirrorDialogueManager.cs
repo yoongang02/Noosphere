@@ -36,7 +36,7 @@ public class MirrorDialogueManager : UIBase
         EscapeUI.Instance.DisActive();
         for (int i = 0; i < _curDialogue.Dialogue_Text_List.Count; i++)
         {
-            await TypeText(_curDialogue.Dialogue_Text_List[i].text);
+            await TypeText(_curDialogue.Dialogue_Text_List[i].key);
             if (i < _curDialogue.Dialogue_Text_List.Count - 1)
             {
                 await UniTask.WaitUntil(() => 
