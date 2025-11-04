@@ -36,6 +36,7 @@ public class MirrorDialogueManager : UIBase
         EscapeUI.Instance.DisActive();
         for (int i = 0; i < _curDialogue.Dialogue_Text_List.Count; i++)
         {
+            SoundManager.Instance.StopSFX("Soundresource_076");
             await TypeText(_curDialogue.Dialogue_Text_List[i].key);
             if (i < _curDialogue.Dialogue_Text_List.Count - 1)
             {
@@ -44,7 +45,6 @@ public class MirrorDialogueManager : UIBase
                 );
             }
         }
-        SoundManager.Instance.StopSFX("Soundresource_076");
         HoverYesBtn();
         _btns.SetActive(true);
     }
@@ -111,14 +111,14 @@ public class MirrorDialogueManager : UIBase
     
     public void HoverYesBtn()
     {
-        SetButtonSelected(_yesBtn, UnityExtension.HexColor(RedColor));
+        SetButtonSelected(_yesBtn, UnityExtension.HexColor(PinkColor));
         SetButtonSelected(_noBtn, UnityExtension.HexColor(WhiteColor));
         _curSelectedBtn = _yesBtn;
     }
 
     public void HoverNoBtn()
     {
-        SetButtonSelected(_noBtn,UnityExtension.HexColor(RedColor));
+        SetButtonSelected(_noBtn,UnityExtension.HexColor(PinkColor));
         SetButtonSelected(_yesBtn,UnityExtension.HexColor(WhiteColor));
         _curSelectedBtn = _noBtn;
     }

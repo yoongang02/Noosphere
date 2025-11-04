@@ -16,6 +16,7 @@ public class LocalConstants
     public static readonly string EvidenceContentTable = "EvidenceDescription";
     public static readonly string DialogueTable = "Dialogue";
     public static readonly string CharacterTable = "Character";
+    public static readonly string UITextTable = "UIText";
 }
 
 public class InventoryNavigator : UIBase

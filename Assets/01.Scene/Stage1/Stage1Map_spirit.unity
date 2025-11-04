@@ -6572,6 +6572,7 @@ GameObject:
   - component: {fileID: 515439352}
   - component: {fileID: 515439351}
   - component: {fileID: 515439353}
+  - component: {fileID: 515439354}
   m_Layer: 5
   m_Name: NoBtn
   m_TagString: Untagged
@@ -6595,7 +6596,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -105}
+  m_AnchoredPosition: {x: 50, y: -90}
   m_SizeDelta: {x: 300, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &515439351
@@ -6618,7 +6619,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "- \uC544\uB2C8\uC694\n"
+  m_text: "- \uC544\uB2C8\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5b491149416dbfb41b0110e22a2d432c, type: 2}
   m_sharedMaterial: {fileID: 8574785440883820942, guid: 5b491149416dbfb41b0110e22a2d432c,
@@ -6646,8 +6647,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 39.1
-  m_fontSizeBase: 39.1
+  m_fontSize: 42.5
+  m_fontSizeBase: 42.5
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6656,9 +6657,9 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: -13
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: -16
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -6709,6 +6710,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _navigator: {fileID: 1265927920}
+--- !u!114 &515439354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 515439349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:42de818360f826146837fcd8f95ff601
+    m_TableEntryReference:
+      m_KeyId: 325758596669440
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 515439351}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &521356013
 GameObject:
   m_ObjectHideFlags: 0
@@ -10074,7 +10115,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -350}
+  m_AnchoredPosition: {x: 0, y: -360}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &854972069
@@ -10095,9 +10136,9 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 1
-  m_Spacing: 30
+  m_Spacing: 15
   m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
@@ -14090,6 +14131,7 @@ GameObject:
   - component: {fileID: 1189786978}
   - component: {fileID: 1189786980}
   - component: {fileID: 1189786979}
+  - component: {fileID: 1189786981}
   m_Layer: 5
   m_Name: Speaker
   m_TagString: Untagged
@@ -14214,6 +14256,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1189786977}
   m_CullTransparentMesh: 1
+--- !u!114 &1189786981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1189786977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:a1cbb1e0bbe3747228379a4f1995a14f
+    m_TableEntryReference:
+      m_KeyId: 132845133826
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1189786979}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  references:
+    version: 2
+    RefIds: []
 --- !u!1001 &1220826594
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15309,6 +15391,7 @@ GameObject:
   - component: {fileID: 1270668465}
   - component: {fileID: 1270668464}
   - component: {fileID: 1270668466}
+  - component: {fileID: 1270668467}
   m_Layer: 5
   m_Name: YesBtn
   m_TagString: Untagged
@@ -15355,7 +15438,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "- \uB124"
+  m_text: "- \uC751"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5b491149416dbfb41b0110e22a2d432c, type: 2}
   m_sharedMaterial: {fileID: 8574785440883820942, guid: 5b491149416dbfb41b0110e22a2d432c,
@@ -15383,8 +15466,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 39.1
-  m_fontSizeBase: 39.1
+  m_fontSize: 42.5
+  m_fontSizeBase: 42.5
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -15393,9 +15476,9 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: -13
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: -16
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -15446,6 +15529,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _navigator: {fileID: 1265927920}
+--- !u!114 &1270668467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1270668462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:42de818360f826146837fcd8f95ff601
+    m_TableEntryReference:
+      m_KeyId: 325755417387008
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1270668464}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  references:
+    version: 2
+    RefIds: []
 --- !u!1001 &1273537440
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24302,8 +24425,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7346917783249044870, guid: c954b6e97a714482b9f5c516a6110d77,
         type: 3}
+      propertyPath: m_lineSpacing
+      value: -16
+      objectReference: {fileID: 0}
+    - target: {fileID: 7346917783249044870, guid: c954b6e97a714482b9f5c516a6110d77,
+        type: 3}
       propertyPath: m_fontSizeBase
       value: 42.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7346917783249044870, guid: c954b6e97a714482b9f5c516a6110d77,
+        type: 3}
+      propertyPath: m_characterSpacing
+      value: -13
       objectReference: {fileID: 0}
     - target: {fileID: 7346917783249044870, guid: c954b6e97a714482b9f5c516a6110d77,
         type: 3}
