@@ -6,6 +6,7 @@ using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
 using TMPro;
+using UnityEngine.Localization.Settings;
 using Random = UnityEngine.Random;
 
 
@@ -16,8 +17,7 @@ public class IntroSceneController : MonoBehaviour
     [SerializeField] private PlayableDirector _introTimeLine;
     [SerializeField] private VideoPlayer _introVideo;
     [SerializeField] private Button _skipBtn;
-    [Header("대사관련")] 
-    [SerializeField] private TextMeshProUGUI dialogueText;
+    [Header("대사관련")] [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private GameObject _dialogueGroup;
     [SerializeField] private TextMeshProUGUI _speakerText;
     [SerializeField] float _letterDelay = 0.05f;
@@ -36,7 +36,6 @@ public class IntroSceneController : MonoBehaviour
         textRectTransform.pivot = new Vector2(0, 0.5f);
         // SoundManager.Instance.StopAllSFX();
         // _introTimeLine.p
-       
     }
 
     //void Update()
@@ -81,24 +80,30 @@ public class IntroSceneController : MonoBehaviour
     {
         _introVideo.Play();
     }
+
     public void StartVfx(string soundResource)
     {
         SoundManager.Instance.PlaySFXNoEffect(soundResource);
     }
-    public void ShowDialogue(string fullText)
-    {
+
+    public void ShowDialogue(string dialogueInfo)
+    {       
+        int colonIndex = dialogueInfo.IndexOf(":");
+        
+        string dialogueID=dialogueInfo.Substring(colonIndex+1).Trim();
+        
+        DialogueStructure mirrorDialogue = DataManager.Instance._dialogue[dialogueID];
+        
+        // string speaker =LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.DialogueTable,
+        //     mirrorDialogue.characterId,
+        //     LocalizationSettings.SelectedLocale);
+        string speaker = dialogueInfo.Substring(0, colonIndex).Trim();
+        
+        string text = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.DialogueTable,
+            mirrorDialogue.Dialogue_Text_List[0].text,
+            LocalizationSettings.SelectedLocale);
+        
         _dialogueGroup.SetActive(true);
-
-        string speaker = "";
-        string text = fullText;
-
-        if (fullText.Contains(":"))
-        {
-            int colonIndex = fullText.IndexOf(":");
-            speaker = fullText.Substring(0, colonIndex).Trim();
-            text = fullText.Substring(colonIndex + 1).Trim();
-        }
-
         _speakerText.text = speaker;
         TypeText(text).Forget();
     }
