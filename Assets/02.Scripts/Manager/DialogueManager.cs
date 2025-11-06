@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using TMPro;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -138,7 +139,8 @@ public class DialogueManager : UIBase
             //튜토리얼 있으면 실행
             TutorialManager.Instance.ShowTutorial(_curDialogue.Dialogue_Text_List[_currentLineIndex].tutorialID);
             // 타이핑 시작
-            _speakerText.text = _curDialogue.Dialogue_Text_List[_currentLineIndex].characterId;
+            string speakerName = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.CharacterTable, _curDialogue.Dialogue_Text_List[_currentLineIndex].characterId, LocalizationSettings.SelectedLocale);
+            _speakerText.text = speakerName;
             await TypeText(_curDialogue.Dialogue_Text_List[_currentLineIndex].text);
             // 타이핑이 완료되었거나 스킵되었을 때만 다음 라인으로 진행
             _currentLineIndex++;
@@ -186,8 +188,9 @@ public class DialogueManager : UIBase
             }
         }
     }
-    private async UniTask TypeText(string text)
+    private async UniTask TypeText(string key)
     {
+        string text = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.DialogueTable, key, LocalizationSettings.SelectedLocale);
         isTyping = true;
 
         dialogueText.alpha = 0;
@@ -302,22 +305,22 @@ public class DialogueManager : UIBase
     {
         switch (speaker)
         {
-            case "(나)":
+            case "Character_Local_001":
                 SoundManager.Instance.PlayLoopingSound("Soundresource_026");
                 break;
-            case "(닥터 로만)":
+            case "Character_Local_002":
                 SoundManager.Instance.PlayLoopingSound("Soundresource_027");
                 break;
-            case "(레이)":
+            case "Character_Local_003":
                 SoundManager.Instance.PlayLoopingSound("Soundresource_077");
                 break;
-            case "(다프네)":
+            case "Character_Local_004":
                 SoundManager.Instance.PlayLoopingSound("Soundresource_076");
                 break;
             case "":
                 SoundManager.Instance.PlayLoopingSound("Soundresource_075");
                 break;
-            case "(엘리즈 레인)":
+            case "Character_Local_005":
                 SoundManager.Instance.PlayLoopingSound("Soundresource_076");
                 break;
         }

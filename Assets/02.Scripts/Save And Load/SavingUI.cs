@@ -8,6 +8,7 @@ public class SavingUI : DefaultUIBase
     {
         base.OnOpen();
         transform.GetChild(0).gameObject.SetActive(true);
+        SoundManager.Instance.PlaySFX("Soundresource_131");
     }
 
     public override void OnClose()

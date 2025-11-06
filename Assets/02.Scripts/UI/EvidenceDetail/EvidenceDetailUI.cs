@@ -531,6 +531,7 @@ public class EvidenceDetailUI : UIBase
 
     public void CloseUI()
     {
+        Debug.Log("UI 닫기 버튼 마우스 클릭함");
         UIManager.Instance.CloseTopUI();
     }
 }

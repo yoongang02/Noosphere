@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
 public class SlotSaveUI : DefaultUIBase
@@ -38,13 +39,20 @@ public class SlotSaveUI : DefaultUIBase
     {
         // 슬롯 번호 가져와서 반영하기
         int slotIndex= NooSphere.SaveManager.Instance.selectSlotIndex - 1;
-        _titleText.text = $"슬롯 {slotIndex}에 데이터를 저장하시겠습니까?";
-        _slotTitle.text = $"슬롯 {slotIndex}";
+
+        string titleString = LocalizationSettings.StringDatabase.GetLocalizedString(LocalizationConstants.UITextTable, "UI_Local_035", LocalizationSettings.SelectedLocale);
+        titleString = titleString.Replace("NUMBER", slotIndex.ToString());
+        _titleText.text = titleString;
+        string slotString = LocalizationSettings.StringDatabase.GetLocalizedString(LocalizationConstants.UITextTable, "UI_Local_063", LocalizationSettings.SelectedLocale);
+        _slotTitle.text = slotString + " " + slotIndex.ToString();
 
         // 슬롯 정보 가져오기
-        _slotLocationInfo.text = "저장 위치 : " + NooSphere.SaveManager.Instance.GetCurrentLocation();
-        _slotPlaytimeInfo.text = "플레이 타임 : " + NooSphere.SaveManager.Instance.GetCurrentPlayTime();
-        _slotDateInfo.text = "저장 일시 : " + NooSphere.SaveManager.Instance.GetCurrentDateTime();
+        string location = LocalizationSettings.StringDatabase.GetLocalizedString(LocalizationConstants.UITextTable, "UI_Local_010", LocalizationSettings.SelectedLocale);
+        string playTime = LocalizationSettings.StringDatabase.GetLocalizedString(LocalizationConstants.UITextTable, "UI_Local_011", LocalizationSettings.SelectedLocale);
+        string dateTime = LocalizationSettings.StringDatabase.GetLocalizedString(LocalizationConstants.UITextTable, "UI_Local_012", LocalizationSettings.SelectedLocale);
+        _slotLocationInfo.text = location + " : " + NooSphere.SaveManager.Instance.GetCurrentLocation();
+        _slotPlaytimeInfo.text = playTime + " : " + NooSphere.SaveManager.Instance.GetCurrentPlayTime();
+        _slotDateInfo.text = dateTime + " : " + NooSphere.SaveManager.Instance.GetCurrentDateTime();
 
         // 슬롯 이미지 설정
         SetSlotImage();

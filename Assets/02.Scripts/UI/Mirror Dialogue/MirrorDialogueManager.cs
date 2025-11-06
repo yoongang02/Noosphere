@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Localization.Settings;
 
 public class MirrorDialogueManager : UIBase
 {
@@ -30,21 +31,22 @@ public class MirrorDialogueManager : UIBase
         _curQuizID = quizID;
         _curQuiz = DataManager.Instance._quiz[_curQuizID];
         _curDialogue = DataManager.Instance._dialogue["Dialogue_0030"];
-        SoundManager.Instance.PlaySFX("Soundresource_076");
+        
         transform.GetChild(0).gameObject.SetActive(true);
         UIManager.Instance.cctvFrame.SetActive(true);
         EscapeUI.Instance.DisActive();
         for (int i = 0; i < _curDialogue.Dialogue_Text_List.Count; i++)
         {
+            SoundManager.Instance.PlaySFX("Soundresource_076");
             await TypeText(_curDialogue.Dialogue_Text_List[i].text);
             if (i < _curDialogue.Dialogue_Text_List.Count - 1)
             {
                 await UniTask.WaitUntil(() => 
                     Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)
                 );
+                SoundManager.Instance.StopSFX("Soundresource_076");
             }
         }
-        SoundManager.Instance.StopSFX("Soundresource_076");
         HoverYesBtn();
         _btns.SetActive(true);
     }
@@ -88,8 +90,10 @@ public class MirrorDialogueManager : UIBase
         }
     }
 
-    private async UniTask TypeText(string text)
+    private async UniTask TypeText(string key)
     {
+        string text = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.DialogueTable, key,
+            LocalizationSettings.SelectedLocale);
         isTyping = true;
         _dialogueText.text = "";
         text = text.Replace("\\n", "\n");
@@ -111,14 +115,14 @@ public class MirrorDialogueManager : UIBase
     
     public void HoverYesBtn()
     {
-        SetButtonSelected(_yesBtn, UnityExtension.HexColor(RedColor));
+        SetButtonSelected(_yesBtn, UnityExtension.HexColor(PinkColor));
         SetButtonSelected(_noBtn, UnityExtension.HexColor(WhiteColor));
         _curSelectedBtn = _yesBtn;
     }
 
     public void HoverNoBtn()
     {
-        SetButtonSelected(_noBtn,UnityExtension.HexColor(RedColor));
+        SetButtonSelected(_noBtn,UnityExtension.HexColor(PinkColor));
         SetButtonSelected(_yesBtn,UnityExtension.HexColor(WhiteColor));
         _curSelectedBtn = _noBtn;
     }

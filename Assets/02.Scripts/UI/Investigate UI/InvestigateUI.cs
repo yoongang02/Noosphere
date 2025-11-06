@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.Localization.Settings;
+using UnityEngine.UI;
 
 public class InvestigateUI : UIBase
 {
@@ -121,9 +122,9 @@ public class InvestigateUI : UIBase
     //증거물 조사 UI의 정보 세팅하기
     public void SetInvestigateUI(EvidenceStructure evidence)
     {
-        _evidenceName.text = evidence.evidenceName;
-        _evidenceDescription.text = evidence.evidenceTextDisplay;
-        
+        _evidenceName.text = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.EvidenceNameTable, evidence.evidenceName, LocalizationSettings.SelectedLocale);
+        _evidenceDescription.text = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.EvidenceContentTable, evidence.evidenceTextDisplay, LocalizationSettings.SelectedLocale);
+
         //아트 리소스 불러오기
         if (DataManager.Instance._artResources.ContainsKey(evidence.artresourceId))
         {
