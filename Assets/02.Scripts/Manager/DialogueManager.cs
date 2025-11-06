@@ -317,7 +317,7 @@ public class DialogueManager : UIBase
             case "Character_Local_004":
                 SoundManager.Instance.PlayLoopingSound("Soundresource_076");
                 break;
-            case "":
+            case "Character_Local_006":
                 SoundManager.Instance.PlayLoopingSound("Soundresource_075");
                 break;
             case "Character_Local_005":
