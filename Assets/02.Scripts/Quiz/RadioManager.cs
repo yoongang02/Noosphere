@@ -303,6 +303,7 @@ public class RadioManager : UIBase
             {
                 string radioText = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.DialogueTable,
                     realDialogue.Dialogue_Text_List[i].text, LocalizationSettings.SelectedLocale);
+                radioText = radioText.Replace("\\n", "\n");
                 _realText.text = $"<mark=#00000055>{radioText}</mark>";
                 int randomNum = Random.Range(48, 54); // 48~53
 
@@ -318,6 +319,7 @@ public class RadioManager : UIBase
             {
                 string mirrorText = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.DialogueTable,
                     mirrorDialogue.Dialogue_Text_List[i].text, LocalizationSettings.SelectedLocale);
+                mirrorText = mirrorText.Replace("\\n", "\n");
                 _mirrorText.text = $"<mark=#00000055>{mirrorText}</mark>";
             }
 
