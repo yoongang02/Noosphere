@@ -26,7 +26,7 @@ public class DemoScene : MonoBehaviour
 
     private void Start()
     {
-        _restartBtn.onClick.AddListener(() => SceneChanger.Instance.ChangeScene("StartScene").Forget());
+        _restartBtn.onClick.AddListener(OnClickStartBtn);
         if(SoundManager.Instance._bgmSource.isPlaying) return;
         if (DataManager.Instance._events["Event_D104"].isExecuted)
         {
@@ -38,5 +38,11 @@ public class DemoScene : MonoBehaviour
             SoundManager.Instance.StopForceBGM();
             SoundManager.Instance.PlayBGM("Soundresource_124");
         }
+    }
+
+    private void OnClickStartBtn()
+    {
+        SceneChanger.Instance.ChangeScene("StartScene").Forget();
+        SoundManager.Instance.PlaySFXNoEffect("Soundresource_037");
     }
 }
