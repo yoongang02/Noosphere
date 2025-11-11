@@ -16,13 +16,20 @@ public class EndingScene : MonoBehaviour
 
     private void Start()
     {
+        Init();
+    }
+
+    private void Init()
+    {
         SoundManager.Instance.PlaySFXNoEffect("Soundresource_130");
         InventoryManager.Instance.canOpenInventory = true;
-        UIManager.Instance.inventoryIcon.SetActive(false);
+       
+        PlayerController.Instance.gameObject.SetActive(false);
         if (DataManager.Instance._events["Event_D103"].isExecuted)
         {
             _friendObj.SetActive(false);
         }
+        
     }
 
     public void SetAnim()
@@ -43,6 +50,7 @@ public class EndingScene : MonoBehaviour
     private async UniTask FadeIn()
     {
         _fadeImage.color = new Color(0, 0, 0, 1);
+        UIManager.Instance.inventoryIcon.SetActive(false);
         await _fadeImage.DOFade(0, _fadeDuration).AsyncWaitForCompletion();
     }
     public void StartFadeOut()
