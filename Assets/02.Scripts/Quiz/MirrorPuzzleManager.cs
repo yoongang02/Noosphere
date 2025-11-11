@@ -67,7 +67,7 @@ public class MirrorPuzzleManager : UIBase
         _curQuizID = quizID;
         _curQuiz = DataManager.Instance._quiz[_curQuizID];
         Debug.Log($"# quiz id : {quizID}, _curQuiz : {_curQuiz}");
-        
+        MirrorPiecesStateInit();
         ResetAllPieces();
         transform.GetChild(0).gameObject.SetActive(true);
     }
@@ -138,4 +138,19 @@ public class MirrorPuzzleManager : UIBase
     {
         OnResetPuzzle?.Invoke();
     }
+    private void MirrorPiecesStateInit()
+    {
+        foreach (var kv in _mirrorPiecesDictionary)
+        {
+            string mirrorID = kv.Key;
+            GameObject mirrorObj = kv.Value;
+            bool acquired = false;
+            if (DataManager.Instance._evidences.TryGetValue(mirrorID, out var ev))
+            {
+                acquired = ev.isAcquired;
+            }
+            mirrorObj.SetActive(acquired);
+        }
+    }
+
 }
