@@ -39,6 +39,7 @@ public class MirrorDialogueManager : UIBase
         {
             SoundManager.Instance.PlaySFX("Soundresource_076");
             await TypeText(_curDialogue.Dialogue_Text_List[i].text);
+            SoundManager.Instance.StopSFX("Soundresource_076");
             if (i < _curDialogue.Dialogue_Text_List.Count - 1)
             {
                 await UniTask.WaitUntil(() => 
