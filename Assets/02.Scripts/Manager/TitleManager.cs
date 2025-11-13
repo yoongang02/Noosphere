@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Localization.Settings;
+using System.Globalization;
 
 public class TitleManager : MonoBehaviour
 {
@@ -34,7 +35,25 @@ public class TitleManager : MonoBehaviour
             width = 1280;
             height = 720;
         }
-
+        
+        if (ES3.KeyExists("Language", "Setting.es3"))
+        {
+            int localIdx = ES3.Load<int>("Language", "Setting.es3");
+            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[localIdx];
+        }
+        else
+        {  
+            if (Application.systemLanguage.ToString() == "Korean")
+            {
+                LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[1];
+                ES3.Save("Language", 1, "Setting.es3");
+            }
+            else
+            {
+                LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[0];
+                ES3.Save("Language", 0, "Setting.es3");
+            }
+        }
         Screen.SetResolution(width, height, isFullScreen);
     }
 

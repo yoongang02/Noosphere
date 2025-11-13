@@ -58,11 +58,6 @@ public class LocalizationManager : MonoBehaviour
         {
             _localIndex = ES3.Load<int>("Language", "Setting.es3");
         }
-        else
-        {
-            _localIndex = 0;
-            ES3.Save("Language", _localIndex, "Setting.es3");
-        }
         LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[_localIndex];
         UpdateText();
     }
