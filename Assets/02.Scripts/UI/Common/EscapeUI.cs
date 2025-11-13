@@ -15,6 +15,7 @@ public class EscapeUI : Singleton<EscapeUI>, IPointerClickHandler
             if (FindObjectOfType<HintImage>() != null)
             {
                 FindObjectOfType<HintImage>().gameObject.SetActive(false);
+                SoundManager.Instance.PlaySFX("Soundresource_036");
                 DisActive();
                 UIManager.Instance.cctvFrame.SetActive(true);
                 UIManager.Instance.inventoryIcon.SetActive(true);
