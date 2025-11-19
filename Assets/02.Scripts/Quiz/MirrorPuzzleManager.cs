@@ -45,8 +45,8 @@ public class MirrorPuzzleManager : UIBase
         _mirrorPiecesDictionary.Add("Evidence_019",_mirrorPieces[0]);
         _mirrorPiecesDictionary.Add("Evidence_020",_mirrorPieces[1]);
         _mirrorPiecesDictionary.Add("Evidence_021",_mirrorPieces[2]);
-        _mirrorPiecesDictionary.Add("Evidence_022",_mirrorPieces[3]);
-        _mirrorPiecesDictionary.Add("Evidence_023",_mirrorPieces[4]);
+        _mirrorPiecesDictionary.Add("Evidence_023",_mirrorPieces[3]);
+        _mirrorPiecesDictionary.Add("Evidence_022",_mirrorPieces[4]);
     }
     
     [SerializeField] private GameObject _mirrorPanel;

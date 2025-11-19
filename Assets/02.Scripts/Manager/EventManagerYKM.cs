@@ -107,7 +107,7 @@ public class EventManagerYKM : MonoBehaviour
         mentalInfo.mentalInfo = ES3.Load<MentalStructure>("MentalInfo", filePath);
 
         // 이어하기 모든 단계 완료, 로드 상태 NewGame으로 초기화
-        NooSphere.SaveManager.Instance.SetLoadType(NooSphere.GameLoadType.NewGame);
+        //NooSphere.SaveManager.Instance.SetLoadType(NooSphere.GameLoadType.NewGame);
         NooSphere.SaveManager.Instance.SetSlotIndex(-1);
 
         // 인벤토리 설정

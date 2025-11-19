@@ -55,6 +55,8 @@ public class UIManager : Singleton<UIManager>
 
             if (!IsAnyUIOpen() && !DefaultUIController.Instance.IsAnyUIOpen() && PlayerInteract.Instance.canInteract)
             {
+                CannotOpenOptionUI exception = FindObjectOfType<CannotOpenOptionUI>();
+                if (exception != null) return;
                 Debug.Log("Escape key pressed, opening resume UI");
                 DefaultUIController.Instance.OpenUI(DefaultUIController.Instance.inGameOptionUI);
                 return;
