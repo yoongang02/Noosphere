@@ -252,6 +252,11 @@ public class InventoryManager : Singleton<InventoryManager>
         {
             if (evidence.Value.isAcquired)
             {
+                // 일기장 속 닥터와 딸 사진 증거물로 획득되지 않도록 예외처리
+                if (evidence.Value.evidenceId == "Evidence_008")
+                {
+                    continue;
+                }
                 AddEvidence(evidence.Value);
             }
         }
