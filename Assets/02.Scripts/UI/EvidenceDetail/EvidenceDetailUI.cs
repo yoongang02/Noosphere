@@ -59,6 +59,9 @@ public class EvidenceDetailUI : UIBase
         {
             transform.GetChild(0).gameObject.SetActive(true);
         }
+
+        // 나가기 버튼 활성화
+        EscapeUI.Instance.Active();
     }
 
     public override void OnClose()
