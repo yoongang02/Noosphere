@@ -33,7 +33,6 @@ public class SetLoungeCamera : MonoBehaviour
 
     private void AssignPlayer()
     {
-        if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.ContinueGame) return;
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {

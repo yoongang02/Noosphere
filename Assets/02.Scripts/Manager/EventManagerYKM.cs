@@ -4,8 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using NooSphere;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Debug = UnityEngine.Debug;
 
 public class EventManagerYKM : MonoBehaviour
 {
@@ -88,11 +90,7 @@ public class EventManagerYKM : MonoBehaviour
         nextEventID = ES3.Load<string>("NextEventID", filePath);
 
         // 플레이어 위치, 회전 초기화
-        Instantiate(_player, NooSphere.SaveManager.Instance.GetPlayerTransform(selectSlotIndex).position, NooSphere.SaveManager.Instance.GetPlayerTransform(selectSlotIndex).rotation);
-        PlayerInteract.Instance.OnInteract = null;
-        PlayerInteract.Instance.OnEvidenceUse = null;
-        PlayerInteract.Instance.OnMentalInteract = null;
-        PlayerInteract.Instance.isInsideTrigger = false;
+        SetPlayerPosFromSaveData();
 
         // 카메라 초기화
         if(FindAnyObjectByType<AssignPlayer>() is AssignPlayer assignPlayer)
@@ -114,6 +112,8 @@ public class EventManagerYKM : MonoBehaviour
         InventoryManager.Instance.LoadInventoryData();
 
         PlayerController.Instance.canMove = true;
+
+        StartCoroutine(CompleteLoad());
     }
 
     //현재 실행될 수 있는 이벤트인지 검사 -> 실행 가능하다면 플레이어에게 ? 띄우기
@@ -664,6 +664,10 @@ public class EventManagerYKM : MonoBehaviour
             InventoryManager.Instance.InitInventory();
 
             ExecuteEvent(startEventID).Forget();
+            
+            // LoadComplete로 상태 변경해서 SetPlayerPos와 SetPlayerLoungePos에서
+            // 플레이어 위치 설정해주는 경우를 처음 이어하기 했을 때와 그 이후의 경우로 구분할 수 있도록 함.
+            NooSphere.SaveManager.Instance.SetLoadType(GameLoadType.LoadComplete);
         }
         else
         {
@@ -675,5 +679,25 @@ public class EventManagerYKM : MonoBehaviour
     public void SetEventSetUpFlag(bool value)
     {
         _isEventSetupComplete = value;
+    }
+
+    
+    // SetPlayerPos와 SetPlayerLoungePos에서 이어하기 시, 플레이어 위치를 세이브 데이터의 위치로 설정하는 함수
+    void SetPlayerPosFromSaveData()
+    {
+        NooSphere.Debug.LogWarning("이어하기 시 실행되는 플레이어 위치 설정");
+        int selectSlotIndex = NooSphere.SaveManager.Instance.selectSlotIndex;
+        Instantiate(_player, NooSphere.SaveManager.Instance.GetPlayerTransform(selectSlotIndex).position, NooSphere.SaveManager.Instance.GetPlayerTransform(selectSlotIndex).rotation);
+        PlayerInteract.Instance.OnInteract = null;
+        PlayerInteract.Instance.OnEvidenceUse = null;
+        PlayerInteract.Instance.OnMentalInteract = null;
+        PlayerInteract.Instance.isInsideTrigger = false;
+    }
+
+    private IEnumerator CompleteLoad()
+    {
+        yield return new WaitForSeconds(2f);
+        NooSphere.SaveManager.Instance.SetLoadType(GameLoadType.LoadComplete);
+        NooSphere.Debug.LogWarning("로드 타입 로드 완료로 변경");
     }
 }
