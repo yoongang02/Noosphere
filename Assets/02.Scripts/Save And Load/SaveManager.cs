@@ -11,7 +11,8 @@ namespace NooSphere
     public enum GameLoadType
     {
         NewGame,
-        ContinueGame
+        ContinueGame,
+        LoadComplete
     }
     public class SaveManager : Singleton<SaveManager>
     {

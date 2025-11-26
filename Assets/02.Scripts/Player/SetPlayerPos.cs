@@ -19,20 +19,22 @@ public class SetPlayerPos : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if(NooSphere.SaveManager.Instance.CurrentLoadType == GameLoadType.ContinueGame) return;
-        
-        if (SceneTracker.previousMentalState == false && PlayerInteract.Instance.isInMental == false)
+        if (NooSphere.SaveManager.Instance.CurrentLoadType != GameLoadType.ContinueGame)
         {
-            GameObject player = GameObject.FindWithTag("Player");
-            player.transform.position = transform.position;
-            player.transform.rotation = transform.rotation;
-        }
+            NooSphere.Debug.LogWarning("이어하기 이후 또는 새게임 시 실행되는 플레이어 위치 설정");
+            if (SceneTracker.previousMentalState == false && PlayerInteract.Instance.isInMental == false)
+            {
+                GameObject player = GameObject.FindWithTag("Player");
+                player.transform.position = transform.position;
+                player.transform.rotation = transform.rotation;
+            }
         
-        if (NooSphere.SaveManager.Instance.OnDoorAutoSave)
-        {
-            NooSphere.Debug.LogWarning("문 상호작용 자동 저장");
-            NooSphere.SaveManager.Instance.OnDoorAutoSave = false;
-            NooSphere.SaveManager.Instance.DoAutoSaveDelay();
+            if (NooSphere.SaveManager.Instance.OnDoorAutoSave)
+            {
+                NooSphere.Debug.LogWarning("문 상호작용 자동 저장");
+                NooSphere.SaveManager.Instance.OnDoorAutoSave = false;
+                NooSphere.SaveManager.Instance.DoAutoSaveDelay();
+            }
         }
     }
 }
