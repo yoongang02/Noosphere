@@ -8,7 +8,7 @@ public class ClueObjectController : MonoBehaviour
      [SerializeField] private float _scaleSpeed = 0.1f; 
      [SerializeField] private float _minScale = 0.1f;   
      [SerializeField] private float _maxScale = 3f;    
-     [SerializeField] private float _rotationSpeed = 30f;
+     [SerializeField] private float _rotationSpeed;
      private Vector3 _previousMousePosition;
      [SerializeField] private RectTransform parentPanel;
      [SerializeField] private Canvas parentCanvas;
@@ -76,8 +76,8 @@ public class ClueObjectController : MonoBehaviour
                Vector3 deltaMousePosition = Input.mousePosition - _previousMousePosition;
                _previousMousePosition = Input.mousePosition;
 
-               float rotationX = deltaMousePosition.y * _rotationSpeed * Time.deltaTime;
-               float rotationY = -deltaMousePosition.x * _rotationSpeed * Time.deltaTime;
+               float rotationX = deltaMousePosition.y * _rotationSpeed;
+               float rotationY = -deltaMousePosition.x * _rotationSpeed;
 
                transform.Rotate(Vector3.up, rotationY, Space.World);
                transform.Rotate(Vector3.right, rotationX, Space.World);
@@ -88,8 +88,8 @@ public class ClueObjectController : MonoBehaviour
 
           if (Mathf.Abs(horizontal) > 0.01f || Mathf.Abs(vertical) > 0.01f)
           {
-               float rotateY = horizontal * _rotationSpeed*1.5f * Time.deltaTime;
-               float rotateX = -vertical * _rotationSpeed*1.5f * Time.deltaTime;
+               float rotateY = horizontal * _rotationSpeed * 1.5f;
+               float rotateX = -vertical * _rotationSpeed * 1.5f;
 
                transform.Rotate(Vector3.right, rotateX, Space.World);
                transform.Rotate(Vector3.up, rotateY, Space.World);
