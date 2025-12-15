@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.Localization.Settings;
 
 public class ComputerBtn : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private Sprite _emailSpr;
+    [SerializeField] private string _tableEntryName; // Localization 테이블 엔트리 이름
     [SerializeField] private Image _targetImage;
     [SerializeField] private string _btnId; // 버튼 식별자
     [SerializeField] private ButtonEventChannel _eventChannel; // SO 참조
@@ -28,7 +29,8 @@ public class ComputerBtn : MonoBehaviour
     private void OnBtnClick()
     {
         _eventChannel.RaiseEvent(_btnId);
-        _targetImage.sprite = _emailSpr;
+        Sprite emailSprite = LocalizationSettings.AssetDatabase.GetLocalizedAsset<Sprite>("ImageTables", _tableEntryName, LocalizationSettings.SelectedLocale);
+        _targetImage.sprite = emailSprite;
         SoundManager.Instance.PlaySFX("Soundresource_035");
     }
 
@@ -39,7 +41,8 @@ public class ComputerBtn : MonoBehaviour
         // 선택된 버튼인 경우 이미지 업데이트
         if (clickedBtnId == _btnId)
         {
-            _targetImage.sprite = _emailSpr;
+            Sprite emailSprite = LocalizationSettings.AssetDatabase.GetLocalizedAsset<Sprite>("ImageTables", _tableEntryName, LocalizationSettings.SelectedLocale);
+            _targetImage.sprite = emailSprite;
         }
     }
 
