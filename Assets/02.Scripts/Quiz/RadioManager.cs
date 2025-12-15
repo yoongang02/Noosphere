@@ -176,7 +176,7 @@ public class RadioManager : UIBase
     {
         // 스킵 관련 초기화
         _isSkipping = false;
-
+        SetTextColor();
         // 스킵 버튼 상태 설정
         if (_skipBtn != null && DataManager.Instance._events[_radioEventID].isExecuted && _curQuiz.isSolved)
         {
@@ -208,6 +208,7 @@ public class RadioManager : UIBase
             _audioSource.volume = SoundManager.Instance.sfxVolume;
 
             string radioText = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.DialogueTable, mirrorDialogue.Dialogue_Text_List[i].text, LocalizationSettings.SelectedLocale);
+            radioText = radioText.Replace("\\n", "\n");
             _realText.text = $"<mark=#00000055>{radioText}</mark>";
 
             // 페이드 인
@@ -268,6 +269,7 @@ public class RadioManager : UIBase
     {
         // 스킵 관련 초기화
         _isSkipping = false;
+        SetTextColor();
 
         // 스킵 버튼 상태 설정
         if (_skipBtn != null && DataManager.Instance._events[_radioEventID].isExecuted && _curQuiz.isSolved)
@@ -452,32 +454,32 @@ public class RadioManager : UIBase
 
     private async UniTask GetMirrorPiece()
     {
-        /*
-        UIManager.Instance.OpenUI(UIManager.Instance.investigateUI, DataManager.Instance._evidences["Evidence_023"]);
-        //yes, no 선택 기다리기
-        await WaitForInvestigateEndAsync();
-        Debug.LogWarning($"Investigate UI 버튼 선택 다 기다림.");
-
-        //yes라면
-        if (UIManager.Instance.isYesClicked)
-        {
-            Debug.LogWarning("Investigate UI에서 YES를 선택함.");
-
-            //증거물 상세 ui가 닫힐 때까지 기다리기
-            await UniTask.WaitUntil(() => !UIManager.Instance.IsAnyUIOpen());
-            Debug.LogWarning("창 닫힐 때까지 다 기다림.");
-        }
-        else
-        {
-            //no라면
-            Debug.LogWarning("Investigate UI에서 NO를 선택함.");
-        }
-        */
+       
         DialogueManager.Instance.SetDialogue("Dialogue_0065");
         DataManager.Instance._evidences["Evidence_023"].AcquireEvidence();
         MirrorPuzzleManager.Instance.GetMirrorPiece("Evidence_023");
         await UniTask.Yield();
     }
+    private void SetTextColor()
+    {
+        string locale = LocalizationSettings.SelectedLocale.ToString();
 
+        if (locale == "Chinese (Simplified) (zh)")
+        {
+            _realText.color = HexToColor("B3B3B3");
+            if(_mirrorText!=null) _mirrorText.color = HexToColor("BE0000");
+        }
+        else
+        {
+            _realText.color = HexToColor("FFFFFF");
+            if(_mirrorText!=null) _mirrorText.color = HexToColor("FF0000");
+        }
+    }
+
+    private Color HexToColor(string hex)
+    {
+        ColorUtility.TryParseHtmlString($"#{hex}", out Color color);
+        return color;
+    }
   
 }
