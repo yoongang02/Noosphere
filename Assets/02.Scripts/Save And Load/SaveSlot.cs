@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class SaveSlot : UIKeyboardNavigator, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+public class SaveSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    [SerializeField] private int slotIndex;
     private SaveUI saveUI;
     void Start()
     {
