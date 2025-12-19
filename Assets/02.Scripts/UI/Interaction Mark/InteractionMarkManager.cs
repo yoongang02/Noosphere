@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class InteractionMarkManager : Singleton<InteractionMarkManager>
+public class InteractionMarkManager : MonoBehaviour
 {
+    public static InteractionMarkManager Instance { get; private set; }
     [Header("키 UI들")]
     public GameObject _interactionKeyPrefab; // 상호작용 키 UI
     public GameObject _enterMentalKeyPrefab; // 세계 진입 키 UI
@@ -18,6 +19,18 @@ public class InteractionMarkManager : Singleton<InteractionMarkManager>
     public GameObject _R103Prefab;
     public GameObject _R104Prefab;
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     // 상호작용 키 활성화 함수
     public void EnableInteractionMarkUI(Transform trigger, string eventID)
