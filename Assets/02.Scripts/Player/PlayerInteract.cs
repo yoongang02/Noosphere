@@ -23,7 +23,7 @@ public class PlayerInteract : Singleton<PlayerInteract>
     [Space(5)] [Header("증거물 사용")] public bool isUsingEvidence = false;
     void Update()
     {
-        if (!UIManager.Instance.IsAnyUIOpen())
+        if (!UIManager.Instance.IsAnyUIOpen() && !DefaultUIController.Instance.IsAnyUIOpen())
         {
             //E키를 이용한 상호작용
             if (canInteract && InputRouter.Instance.ConsumeE())
