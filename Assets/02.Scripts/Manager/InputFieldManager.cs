@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using TMPro;
+using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using Debug = NooSphere.Debug;
 
@@ -105,18 +106,23 @@ public class InputFieldManager : UIBase
 
     private string AnswerName()
     {
-        string local = LocalizationSettings.SelectedLocale.ToString();
+        Locale locale = LocalizationSettings.SelectedLocale;
+        var locales = LocalizationSettings.AvailableLocales.Locales;
+        int index = locales.IndexOf(locale);
         string answer="";
-        switch (local)
+        switch (index)
         {
-            case"English (en)":
+            case 0:
                 answer= "Rachel Ko";
                 break;
-            case "Korean (ko)":
+            case 1:
                 answer="레이첼 코";
                 break;
-            case "Chinese (Simplified)(zh)" :
-                answer="雷切尔科";
+            case 2:
+                answer="雷切尔·科";
+                break;
+            default:
+                answer= "Rachel Ko";
                 break;
         }
         return answer;
