@@ -23,6 +23,7 @@ public class LoadingSceneUI : MonoBehaviour
         if (NooSphere.SaveManager.Instance.CurrentLoadType == NooSphere.GameLoadType.NewGame)
         {
             await DataManager.Instance.InitializeData();
+            await UniTask.Delay(TimeSpan.FromSeconds(_minLoadingTime));
             await FadeOut();
             
             // 플레이타임 설정
