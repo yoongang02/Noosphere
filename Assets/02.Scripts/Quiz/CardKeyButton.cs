@@ -79,7 +79,7 @@ public class CardKeyButton : MonoBehaviour
         else
         {
             _isTakenCard = true;
-            InitTextState();
+            Selected();
         }
     }
     private void OnCardStateReturn(string returnedButtonId)
@@ -135,4 +135,5 @@ public class CardKeyButton : MonoBehaviour
         _returnText.SetActive(false);
         _cardKeyStateText.SetActive(false);
     }
+   
 }
