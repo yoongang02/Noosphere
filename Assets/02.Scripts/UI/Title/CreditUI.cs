@@ -13,8 +13,10 @@ public class CreditUI : DefaultUIBase
     {
         base.OnOpen();
 
-        _creditImg.rectTransform.anchoredPosition = new Vector2(0, -1024);
-        _creditImg.rectTransform.DOAnchorPosY(2048f, 30f).SetEase(Ease.Linear);
+        _creditImg.rectTransform.anchoredPosition = new Vector2(0, -1450);
+        _creditImg.rectTransform.DOAnchorPosY(2048f, 30f)
+            .SetDelay(1.0f)
+            .SetEase(Ease.Linear);
 
         transform.GetChild(0).gameObject.SetActive(true);
     }
