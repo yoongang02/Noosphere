@@ -91,13 +91,13 @@ public class IntroSceneController : MonoBehaviour
         int colonIndex = dialogueInfo.IndexOf(":");
         
         string dialogueID=dialogueInfo.Substring(colonIndex+1).Trim();
-        
+        string speakerID = dialogueInfo.Substring(0, colonIndex).Trim();
         DialogueStructure mirrorDialogue = DataManager.Instance._dialogue[dialogueID];
         
-        // string speaker =LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.DialogueTable,
-        //     mirrorDialogue.characterId,
-        //     LocalizationSettings.SelectedLocale);
-        string speaker = dialogueInfo.Substring(0, colonIndex).Trim();
+        string speaker =LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.CharacterTable,
+            speakerID,
+            LocalizationSettings.SelectedLocale);
+        // string speaker = dialogueInfo.Substring(0, colonIndex).Trim();
         
         string text = LocalizationSettings.StringDatabase.GetLocalizedString(LocalConstants.DialogueTable,
             mirrorDialogue.Dialogue_Text_List[0].text,
@@ -105,7 +105,7 @@ public class IntroSceneController : MonoBehaviour
         
         _dialogueGroup.SetActive(true);
         _speakerText.text = speaker;
-        TypeText(text).Forget();
+        TypeText(text,speakerID).Forget();
     }
 
     public void CloseDialogue()
@@ -113,7 +113,7 @@ public class IntroSceneController : MonoBehaviour
         _dialogueGroup.SetActive(false);
     }
 
-    private async UniTask TypeText(string text)
+    private async UniTask TypeText(string text, string speakerID)
     {
         isTyping = true;
         dialogueText.alpha = 0;
@@ -132,7 +132,7 @@ public class IntroSceneController : MonoBehaviour
         dialogueText.text = "";
         dialogueText.alpha = 1;
 
-        StartDialogueSound(_speakerText.text);
+        StartDialogueSound(speakerID);
         // SoundManager.Instance.PlayLoopingSound("Soundresource_027");
         if (!isTyping)
         {
@@ -156,23 +156,23 @@ public class IntroSceneController : MonoBehaviour
     {
         switch (speaker)
         {
-            case "(나)":
+            case "Character_Local_001":
                 SoundManager.Instance.PlayLoopingSound("Soundresource_026");
                 break;
-            case "(닥터 로만)":
+            case "Character_Local_002":
                 SoundManager.Instance.PlayLoopingSound("Soundresource_027");
                 break;
-            case "(레이)":
+            case "Character_Local_003":
                 SoundManager.Instance.PlayLoopingSound("Soundresource_077");
                 break;
-            case "(다프네)":
+            case "Character_Local_004":
                 SoundManager.Instance.PlayLoopingSound("Soundresource_076");
                 break;
-            case "":
+            case "Character_Local_006":
                 SoundManager.Instance.PlayLoopingSound("Soundresource_075");
                 break;
-            case "(엘리즈 레인)":
-                SoundManager.Instance.PlayLoopingSound("Soundresource_075");
+            case "Character_Local_005":
+                SoundManager.Instance.PlayLoopingSound("Soundresource_076");
                 break;
         }
     }
