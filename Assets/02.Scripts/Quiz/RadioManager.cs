@@ -9,6 +9,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine.Localization.Settings;
 using Random = UnityEngine.Random;
+using Debug = NooSphere.Debug;
 
 public class RadioManager : UIBase
 {

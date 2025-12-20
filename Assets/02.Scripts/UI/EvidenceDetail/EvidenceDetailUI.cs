@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Localization.Settings;
+using Debug = NooSphere.Debug;
 
 public class EvidenceDetailUI : UIBase
 {

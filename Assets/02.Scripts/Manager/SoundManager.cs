@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine.Audio;
+using Debug = NooSphere.Debug;
 
 public class SoundManager : Singleton<SoundManager>
 {

@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Localization.Settings;
+using Debug = NooSphere.Debug;
 
 public class MirrorDialogueManager : UIBase
 {

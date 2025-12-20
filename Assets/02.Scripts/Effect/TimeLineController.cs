@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
+using Debug = NooSphere.Debug;
 
 public class TimeLineController : MonoBehaviour
 {

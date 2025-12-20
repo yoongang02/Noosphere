@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
+using Debug = NooSphere.Debug;
 
 
 public class DialogueManager : UIBase

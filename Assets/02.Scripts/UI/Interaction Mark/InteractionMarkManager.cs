@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Debug = NooSphere.Debug;
 
 public class InteractionMarkManager : MonoBehaviour
 {

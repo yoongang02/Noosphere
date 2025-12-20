@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Debug = NooSphere.Debug;
 
 public class CardKeyButton : MonoBehaviour
 {

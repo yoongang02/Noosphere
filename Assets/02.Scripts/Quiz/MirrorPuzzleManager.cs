@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Debug = NooSphere.Debug;
 
 public class MirrorPuzzleManager : UIBase
 { 

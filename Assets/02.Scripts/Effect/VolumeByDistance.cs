@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using Cysharp.Threading.Tasks;
+using Debug = NooSphere.Debug;
 
 public class VolumeByDistance : MonoBehaviour
 {

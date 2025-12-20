@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using System.Globalization;
+using Debug = NooSphere.Debug;
 
 public class TitleManager : MonoBehaviour
 {

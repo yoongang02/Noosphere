@@ -5,6 +5,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine.Localization.Settings;
+using Debug = NooSphere.Debug;
 
 public class InputFieldManager : UIBase
 {

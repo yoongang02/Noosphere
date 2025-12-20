@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Video;
 using UnityEngine.UI;
 using DG.Tweening;
+using Debug = NooSphere.Debug;
 
 
 public class EffectManager : Singleton<EffectManager>

@@ -11,6 +11,7 @@ using UnityEngine.Localization.Settings;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
+using Debug = NooSphere.Debug;
 
 public class TimeLineSignalManager : MonoBehaviour
 {

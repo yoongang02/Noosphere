@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
+using Debug = NooSphere.Debug;
 
 public class FirstEndingBranch : MonoBehaviour
 {

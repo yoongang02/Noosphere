@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Debug = NooSphere.Debug;
 
 public class MentalEnterProcess : MonoBehaviour
 {

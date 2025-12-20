@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Debug = NooSphere.Debug;
 
 public class DoorOpenEffect : MonoBehaviour
 {

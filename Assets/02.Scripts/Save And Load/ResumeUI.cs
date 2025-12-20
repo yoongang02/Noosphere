@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Debug = NooSphere.Debug;
 
 public class LocalizationConstants
 {

@@ -1,5 +1,6 @@
 ﻿using Unity.VisualScripting;
 using UnityEngine;
+using Debug = NooSphere.Debug;
 
 public class EventStructure
 {

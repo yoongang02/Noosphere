@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Debug = NooSphere.Debug;
 
 public class ClearTrigger : MonoBehaviour
 {

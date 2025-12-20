@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.SceneManagement;
 using FMODUnity;
+using Debug = NooSphere.Debug;
 // 플레이어 이동관련 함수
 //플레이어 이동방식 변경
 // 최초 작성자: 홍원기

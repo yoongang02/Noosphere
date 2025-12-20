@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Debug = NooSphere.Debug;
 public class LoadingSceneUI : MonoBehaviour
 {
     [SerializeField] private Image _fadeImage;

@@ -1,13 +1,11 @@
 ﻿using Cysharp.Threading.Tasks;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using NooSphere;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Debug = UnityEngine.Debug;
+using Debug = NooSphere.Debug;
 
 public class EventManagerYKM : MonoBehaviour
 {

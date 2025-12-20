@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
 using UnityEngine.Localization.Settings;
+using Debug = NooSphere.Debug;
 
 public class LocalConstants
 {

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Debug = NooSphere.Debug;
 
 public class QuizManager : Singleton<QuizManager>
 {

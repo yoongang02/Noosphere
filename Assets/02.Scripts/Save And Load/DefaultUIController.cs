@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using Debug = NooSphere.Debug;
 
 public class DefaultUIController : Singleton<DefaultUIController>
 {

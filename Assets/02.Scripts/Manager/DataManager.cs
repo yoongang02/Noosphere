@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Debug = NooSphere.Debug;
 
 public class DataManager : Singleton<DataManager>
 {
