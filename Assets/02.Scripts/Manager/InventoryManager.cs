@@ -60,7 +60,7 @@ public class InventoryManager : Singleton<InventoryManager>
     void Update()
     {
         //인벤토리 열기
-        if (!UIManager.Instance.IsAnyUIOpen())
+        if (!UIManager.Instance.IsAnyUIOpen() && !DefaultUIController.Instance.IsAnyUIOpen())
         {
             if (canOpenInventory)
                 return;

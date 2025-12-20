@@ -33,7 +33,7 @@ public class MentalEnterProcess : MonoBehaviour
 
     void Update()
     {
-        if (!UIManager.Instance.IsAnyUIOpen())
+        if (!UIManager.Instance.IsAnyUIOpen() && !DefaultUIController.Instance.IsAnyUIOpen())
         {
             if (PlayerInteract.Instance.canInteract && _canEnter && !_startEnter && InputRouter.Instance.ConsumeR())
             {
