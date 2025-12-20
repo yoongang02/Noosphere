@@ -24,7 +24,8 @@ public class EndingScene : MonoBehaviour
         SoundManager.Instance.PlaySFXNoEffect("Soundresource_130");
         InventoryManager.Instance.canOpenInventory = true;
        
-        PlayerController.Instance.gameObject.SetActive(false);
+        Destroy(PlayerController.Instance.gameObject);
+        //PlayerController.Instance.gameObject.SetActive(false);
         if (DataManager.Instance._events["Event_D103"].isExecuted)
         {
             _friendObj.SetActive(false);
